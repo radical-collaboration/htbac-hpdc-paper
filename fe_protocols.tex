@@ -1,0 +1,53 @@
+We have designed two free energy calculation protocols with the demands of clinical
+decision support and drug design applications in mind: ESMACS (enhanced
+sampling of molecular dynamics with approximation of continuum
+solvent)~\cite{Wan2017brd4} and TIES (thermodynamic integration with enhanced
+sampling)~\cite{Bhati2017}. 
+The former protocol is based on variants of the molecular mechanics Poisson-Boltzmann 
+surface area (MMPBSA) end-point method, the latter on the `alchemical' thermodynamic 
+integration (TI) approach. 
+In both cases, ensembles of MD simulations are employed to perform averaging and
+to obtain tight control of error bounds in our estimates. 
+In addition, the ability to run replica simulations concurrently means that, as long as
+sufficient compute resources are available, turn around times can be significantly 
+reduced compared to the generation of single long trajectories.
+Due to their shared philosophical underpinning both protocols share similar middleware 
+requirements.
+
+
+
+Each replica within the ESMACS protocol consists of a series of simulation
+steps followed by post production analysis. 
+Generally, an ESMACS replica will contain between 3 and 12 equilibration 
+simulation steps followed by a production MD run, all of which are conducted in 
+the NAMD package~\cite{Phillips2005}. 
+The first step is system minimization, the following steps involve the gradual release 
+of positional constraints upon the structure and the heating to a physiologically realistic 
+temperature. 
+Upon completion of the MD simulation, free energy computation (via MMPBSA and potentially 
+normal mode analysis) is performed using AmberTools~\cite{amber14, Case2005, MillerIII2012}.
+
+The ESMACS protocol is highly customizable. Both the number of simulation 
+replicas in the ensemble and the lengths of their runs can be varied to
+obtain optimal performance for any given system. Using replicas that only
+vary in the initial velocities assigned to the atoms of the system we have
+defined a standard protocol which prescribes a 25 replica ensemble, each run
+consisting of 2 ns of equilibration and 4 ns of production simulation. Our
+protocol has produced bootstrap errors of below 1.5 kcal mol$^{-1}$ (despite
+replica values varying by more than 10 kcal mol$^{-1}$) for a varied range of
+systems including small molecules bound to kinases and more flexible peptide
+ligands binding to MHC proteins \cite{Wan2015, Wright2014, Wan2017brd4}.
+In these systems, the error we obtained more than halves between ensembles of
+5 and 25 replicas but increases in ensemble size have generally produced only
+small improvements. More generally though, there may be cases where it is
+important to increase the sampling of phase space either through expanding
+the ensemble or by considering multiple initial configurations.
+
+The ESMACS protocol can also be extended to account for adaptation energies
+involved in altering the conformation of the protein or ligand during
+binding. Almost all MMPBSA studies in the literature use the so-called
+1-trajectory method, in which the energies of protein-inhibitor complexes,
+receptor proteins and ligands are extracted from the MD trajectories of the
+complexes alone. The ESMACS protocol can additionally use separate ligand and
+receptor trajectories to account for adaptation energies, providing further
+motivation to deploy the protocol via flexible and scalable middleware.
