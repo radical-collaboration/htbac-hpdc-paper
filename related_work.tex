@@ -1,0 +1,69 @@
+\cite{Wan2017brd4}
+
+The strength of drug binding is determined by a thermodynamic property known
+as the binding free energy (or binding affinity). 
+One promising technology for estimating binding free energies and the influence 
+of protein and ligand composition upon them is molecular dynamics (MD)
+~\cite{Karplus2005}. 
+Our previous work \cite{Sadiq2010, Wan2011} has demonstrated that running multiple 
+MD simulations based on the same system and varying only in initial velocities
+offers a highly efficient method of obtaining accurate and reproducible
+estimates of the binding affinity. 
+We term this approach ensemble molecular dynamics, ``ensemble'' here referring to 
+the set of individual (replica) simulations conducted for the same physical system. 
+In this Section we discuss the advantages to this approach.
+
+% ---------------------------------------------------------------------------
+\subsection{Ensemble Molecular Dynamics Simulations}
+
+Atomistically detailed models of the drug and target protein can be used as the
+starting point for MD simulations to study the influence of changes in 
+either drug or protein composition on drug binding. 
+The chemistry of the system is encoded in what is known as a potential
+~\cite{Karplus2002}. 
+In the parameterization of the models, each atom is assigned a mass and a charge,
+with the chemical bonds between them modeled as springs with varying
+stiffness.
+Newtonian mechanics is then used to follow the dynamics of the protein and drug and, 
+using the principles of statistical mechanics, estimates of thermodynamic properties 
+obtained from simulations of single particles.
+
+The potentials used in the simulations are completely under the control of
+the user. 
+This allows the user to manipulate the system in ways which would
+not be possible in experiments. 
+A particularly powerful example of this are
+the so called ``alchemical'' simulations in which the potential used in the
+simulation changes, from representing a particular starting system into one 
+describing a related target system during execution. 
+This allows for the calculation of free energy differences between the two 
+systems, such as those induced by a protein mutation.
+
+MD simulations can reveal how interactions change as a result of chemical alterations,
+and account for the molecular basis of drug efficacy. 
+This understanding can form the basis for structure-based drug design as well as helping 
+to target existing therapies based on protein sequence. 
+However, correctly capturing the system behavior poses at least two major 
+challenges: The approximations made in the potential must be accurate enough representations 
+of the real system chemistry; and sufficient sampling of phase space is also required.
+
+In order for MD simulations to attain widespread use in inductrial (and potemtially 
+clincal) settings, it is necessary that results can be obtained in a timely fashion.
+This typically means that results are required in a mattre of days (or at most a week) 
+in order that the results can feed into decision making processes.
+The necessity for rapid turn around times places additional demands on
+simulation protocols which need to be optimized to gain results with a short
+turn around time. 
+Further to the scientific and practical considerations
+outlined above, it is vital that reliable uncertainty estimates are
+provided alongside all quantitative results for simulations to provide
+actionable predictions.
+
+We have developed a number of free energy calculation protocols based on the
+use of ensemble molecular dynamics simulations with the aim of meeting these
+requirements~\cite{Sadiq2008, Sadiq2010, Wan2017brd4, Wan2017trk}. 
+Basing these computations on the direct calculation of ensemble averages facilitates
+the determination of statistically meaningful results along with complete
+control of errors. 
+The use of the ensemble approaches however, necessitates the use of middleware to 
+provide reliable coordination and distribution mechanisms with low performance overheads.
