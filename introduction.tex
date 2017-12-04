@@ -35,36 +35,36 @@ employed.
 
 In this work we explore the use of HTBAC in a prototypical exploration of novel 
 compounds binding to a target protein.
-In this case we look to reproduce a collaboration run between UCL and GlaxoSmithKline to study a congeneric series of drug candidates binding to the BRD4 protein (inhibitors of which have shown promising preclinical efficacy in pathologies ranging from cancer to
+In this case we look to reproduce a collaboration run between UCL and GlaxoSmithKline 
+to study a congeneric series of drug candidates binding to the BRD4 protein (inhibitors 
+of which have shown promising preclinical efficacy in pathologies ranging from cancer to
 inflammation)~\cite{Wan2017brd4}.
+This study compared two different protocols, known as TIES and ESMACS, both based on an 
+ensemble simulation philosophy.
+In this appraoch multiple simulations are executed based on the same input system description, 
+providing enhanced sampling and reduced time to completion.
+TIES is based on rigourous, but computationally expensive, calculations of relative free
+energies (i.e. results provide a comparison between two drugs).
+ESMACS, in contrast, provides absolute binding free energies at low computational cost, 
+but to achieve this coarse grains many of the details of the system being studied.
+The results of the simplifications employed by ESMACS is that its performance is heavily 
+system dependent.
+In this work we will demonstrate the use of HT-BAC to adaptively run the 
+two protocols, altering the amount of compute allocated to each.
+This mimics the real world application of these technologies as most drug design 
+projects have limited resources and must make trade-offs between the needs for rigour
+and to covera wide range of chemical space whilst achieving a time to completion of studies 
+comparable to those of high throughput chemistry.
 
-
-%Recent work that used molecular simulations to provide input to machine
-%learning models~\cite{Ash2017} required simulations of 87 compounds even if
-%they were designed merely to distinguish the highly active from weak
-%inhibitors of the ERK2 kinase. If we wish to build on such studies to help
-%inform later stages of the drug discovery pipeline, in which much more subtle
-%alterations are involved, it is likely a much larger number of simulations
-%will be required. This is before we begin to consider the influence of
-%mutations or the selectivity of drugs to the more than 500 different
-%genes in the human kinome~\cite{Li2016}.
-
-In the next Section, we provide details of ensemble molecular dynamics
-approach and its advantages over the single trajectory
-approach. 
-We also introduce the ESMACS and related protocols to compute
-binding affinities using ensemble based approaches. 
-In Section 3, we discuss
-the computational challenges associated with the scalable execution of
-multiple, and possibly concurrently executing protocols. 
-Section 4 introduces
-RADICAL-Cybertools -- a suite of building blocks to address the challenges
-outlined in Section 3. 
-In Section 5 we introduce HTBAC and describe how it
-uses RADICAL-Cybertools to manage the execution of binding affinity calculations
-at extreme scales. 
-Experiments to characterize the performance and scalability
-of HTBAC on the Blue Waters supercomputer are discussed in Section 6. 
-We
-conclude with a discussion of the impact of HTBAC, implication for binding
+In the next section we review previous work using ensemble molecular dynamics and outline 
+the challenges faced in bringing this approach up to extreme scale.
+In Section 3, we discuss how HTBAC has been designed and implemented in order to meet the 
+computational challenges associated with the scalable execution of multiple, and possibly 
+concurrently executing protocols. 
+Section 4 provides details of the TIES and ESMACS protocols and how these have been mapped 
+to teh abstractions underlying HTBAC. 
+In Sections 5 and 6 we describe the design and then results of a series of experiments 
+characterizing the performance and scalability of HTBAC on the Blue Waters and Titan 
+supercomputers.
+We conclude with a discussion of the impact of HTBAC, implications for binding
 affinity calculations and near-term future work.
