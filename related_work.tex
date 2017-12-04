@@ -1,14 +1,21 @@
-\cite{Wan2017brd4}
-
 The strength of drug binding is determined by a thermodynamic property known
 as the binding free energy (or binding affinity). 
 One promising technology for estimating binding free energies and the influence 
 of protein and ligand composition upon them is molecular dynamics (MD)
-~\cite{Karplus2005}. 
-Our previous work \cite{Sadiq2010, Wan2011} has demonstrated that running multiple 
-MD simulations based on the same system and varying only in initial velocities
-offers a highly efficient method of obtaining accurate and reproducible
-estimates of the binding affinity. 
+~\cite{Karplus2005}.
+
+We have demonstrated the lack of reproducibility of individual simulations in both 
+HIV-1 protease and MHC systems, with calculations for the same protein-ligand combination
+using almost identical initial conditions producing widely varying results (binding affinities 
+varying by up to 12 kcal mol $^{-1}$ for small molecules, whilst flexible ligands can vary even
+more)~\cite{Wan2015, Sadiq2010, Wright2014}. 
+Indeed, our work has revealed how completely unreliable single simulation based 
+approaches are.
+However, we have shown that averaging across multiple runs can reliably produce results in
+agreement with previously published experimental findings~\cite{Sadiq2010,
+Wan2011, Wright2014, Bhati2017, Wan2017brd4, Wan2017trk}, and correctly
+predicted the results of experimental studies performed by colleagues in
+collaboration~\cite{Bunney2015}. 
 We term this approach ensemble molecular dynamics, ``ensemble'' here referring to 
 the set of individual (replica) simulations conducted for the same physical system. 
 In this Section we discuss the advantages to this approach.
@@ -46,8 +53,15 @@ to target existing therapies based on protein sequence.
 However, correctly capturing the system behavior poses at least two major 
 challenges: The approximations made in the potential must be accurate enough representations 
 of the real system chemistry; and sufficient sampling of phase space is also required.
+Our previous work demonstrated \cite{Sadiq2010, Wan2011} that running multiple 
+MD simulations based on the same system and varying only in initial velocities
+offers a highly efficient method of obtaining accurate and reproducible
+estimates of the binding affinity.
+While the accuracy of force fields could be a source of error, we know from our work to 
+date that the very large fluctuations in trajectory-based calculations account for the lion’s 
+share of the variance (hence also uncertainty) of the results.
 
-In order for MD simulations to attain widespread use in inductrial (and potemtially 
+In order for MD simulations to attain widespread use in industrial (and potentially 
 clincal) settings, it is necessary that results can be obtained in a timely fashion.
 This typically means that results are required in a mattre of days (or at most a week) 
 in order that the results can feed into decision making processes.
@@ -61,9 +75,10 @@ actionable predictions.
 
 We have developed a number of free energy calculation protocols based on the
 use of ensemble molecular dynamics simulations with the aim of meeting these
-requirements~\cite{Sadiq2008, Sadiq2010, Wan2017brd4, Wan2017trk}. 
+requirements~\cite{Sadiq2008, Sadiq2010, Wan2017brd4, Wan2017trk}.
 Basing these computations on the direct calculation of ensemble averages facilitates
 the determination of statistically meaningful results along with complete
 control of errors. 
-The use of the ensemble approaches however, necessitates the use of middleware to 
-provide reliable coordination and distribution mechanisms with low performance overheads.
+As we scale up to larger datasets the use of the ensemble approaches will increasingly 
+necessitate the use of middleware to  provide reliable coordination and distribution 
+mechanisms with low performance overheads.
