@@ -1,0 +1,70 @@
+In recent years, developments in both algorithms and hardware (in particular 
+GPGPUs) have led to increasing interest in the use of molecular simulation to 
+estimate the strength of macromolecular binding free energies \cite{DeVivo2016}. 
+The same molecular simulation technologies that can be employed both in the
+design new therapeutics and to investigate the origins of drug resistance in 
+pathologies such as cancer and HIV. 
+
+Creating simulation protocols which have well defined uncertainty and produce
+statistically meaningful results represents a significant computational challenge. 
+Furthermore, it is highly likely that differences among investigated systems will 
+demand different protocols and that changes may be requires as studies progress. 
+For example, drug design programmes often require the rapid screening of thousands 
+of candidate compounds to filter out the worst binders before using more sensitive 
+methods to refine the structure. 
+Not all changes induced in protein shape or behavior are local to the drug binding 
+site and, in some cases, simulation protocols will need to adjust to account for 
+complex interactions between drugs and their targets within individual studies.
+
+For molecular simulations to truly influence decison making in industrial and 
+clinical settings, the dual challenges of
+scale (thousands of concurrent multi-stage pipelines) and sophistication
+(adaptive selection of binding affinity protocols based upon system behaviour and statistical uncertainty) will need to be tackled. 
+Tools that facilitate the scalable and automated computation of varied binding 
+free energy calculations on high-performance computing resources are necessary. 
+To achieve that goal, we introduce the High-Throughput Binding Affinity Calculator 
+(HTBAC).
+HTBAC provides a domain specific interface to leverage recent advances in abstracting 
+the relatonships between building blocks in workflow systems to facilitate the building 
+and automation of rapid and accurate calculation of binding affinities.
+We demonstrate how HTBAC scales almost perfectly to hundreds of concurrent
+pipelines of binding affinity calculations on a leadership class machine. 
+This permits the rapid time-to-solution that is essentially invariant of the size
+of candidate ligands as well as the type and number of protocols concurrently
+employed.
+
+In this work we explore the use of HTBAC in a prototypical exploration of novel 
+compounds binding to a target protein.
+In this case we look to reproduce a collaboration run between UCL and GlaxoSmithKline to study a congeneric series of drug candidates binding to the BRD4 protein (inhibitors of which have shown promising preclinical efficacy in pathologies ranging from cancer to
+inflammation)~\cite{Wan2017brd4}.
+
+
+%Recent work that used molecular simulations to provide input to machine
+%learning models~\cite{Ash2017} required simulations of 87 compounds even if
+%they were designed merely to distinguish the highly active from weak
+%inhibitors of the ERK2 kinase. If we wish to build on such studies to help
+%inform later stages of the drug discovery pipeline, in which much more subtle
+%alterations are involved, it is likely a much larger number of simulations
+%will be required. This is before we begin to consider the influence of
+%mutations or the selectivity of drugs to the more than 500 different
+%genes in the human kinome~\cite{Li2016}.
+
+In the next Section, we provide details of ensemble molecular dynamics
+approach and its advantages over the single trajectory
+approach. 
+We also introduce the ESMACS and related protocols to compute
+binding affinities using ensemble based approaches. 
+In Section 3, we discuss
+the computational challenges associated with the scalable execution of
+multiple, and possibly concurrently executing protocols. 
+Section 4 introduces
+RADICAL-Cybertools -- a suite of building blocks to address the challenges
+outlined in Section 3. 
+In Section 5 we introduce HTBAC and describe how it
+uses RADICAL-Cybertools to manage the execution of binding affinity calculations
+at extreme scales. 
+Experiments to characterize the performance and scalability
+of HTBAC on the Blue Waters supercomputer are discussed in Section 6. 
+We
+conclude with a discussion of the impact of HTBAC, implication for binding
+affinity calculations and near-term future work.
