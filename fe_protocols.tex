@@ -36,19 +36,15 @@ smaller system at lower computational cost.
 In the case of ESMACS, upon completion of the MD simulation, free energy computation 
 (via MMPBSA and potentially normal mode analysis) is performed using 
 AmberTools~\cite{amber14, Case2005, MillerIII2012}.
+In both cases short serial jobs are then required to provide summary statistics.
 
 Both protocols can are highly customizable, for example the number of simulation replicas in the 
 ensemble and the lengths of their runs can be varied.
-In addition, 
-
 More generally though, there may be cases where it is important to increase the sampling of phase 
 space either through expanding the ensemble or by considering multiple initial configurations.
 In addition, the ESMACS protocol can also be extended to account for adaptation energies involved 
 in altering the conformation of the protein or ligand during binding through the use of separate 
-component simulations. 
-Almost all MMPBSA studies in the literature use the so-called 1-trajectory method, in which the 
-energies of protein-inhibitor complexes, receptor proteins and ligands are extracted from the MD 
-trajectories of the complexes alone. 
+component simulations.
 
 %High level description of MD step here%
 
