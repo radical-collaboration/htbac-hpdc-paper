@@ -1,5 +1,8 @@
 ## The target is now ISC 2017
 
+[TIES WORKFLOW Diagram](https://docs.google.com/drawings/d/1VcM0DN5AhuxmoyMfPo6qiojx4pc604fDPYGfQjgMkoI/edit?ts=5a106fc2)
+
+
 Conference Proceeding Guidelines/Format of Paper:
 
 http://www.springer.com/us/computer-science/lncs/conference-proceedings-guidelines
