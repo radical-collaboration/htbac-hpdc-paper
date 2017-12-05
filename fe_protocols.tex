@@ -14,40 +14,42 @@ reduced compared to the generation of single long trajectories.
 Due to their shared philosophical underpinning both protocols share similar middleware 
 requirements.
 
+The current implementation of both TIES and ESMACS uses the the NAMD package~\cite{Phillips2005}
+to conduct the simulations.
+Conceptually, each replica simulation consists of three stages: minimization, equilibration 
+and production MD.
+In practice the equilibration phase is broken into multiple steps to ensure that the size of the 
+simulation box does not alter too much over the simulation.
+During these steps positional constraints are gradually released from the structure and the 
+system is heated to a physiologically realistic temperature.
+Whilst both protocols share a common workflow for individual replicas, the make up of the 
+ensemble is different.
+All ESMACS replicas sample using the same system description, in TIES sub-ensembles are executed 
+at diffent points along a transformation parameter, $\lambda$.
+As $\lambda$ increases from zero to one the system description transforms from containing an 
+initial drug to a target via a series of hybrid states.
+Typically, an ESMACS ensemble will contain 25 replicas and a TIES ensemble 65 replicas evenly 
+distributed between 13 $\lambda$ values.
+In order to obtain a meaningful TIES result it is necessary to not only simulate the drug pair 
+in the protein but also in an aqueous environemnt, adding a further 65 replicas albeit it using a
+smaller system at lower computational cost.
+In the case of ESMACS, upon completion of the MD simulation, free energy computation 
+(via MMPBSA and potentially normal mode analysis) is performed using 
+AmberTools~\cite{amber14, Case2005, MillerIII2012}.
 
+Both protocols can are highly customizable, for example the number of simulation replicas in the 
+ensemble and the lengths of their runs can be varied.
+In addition, 
 
-Each replica within the ESMACS protocol consists of a series of simulation
-steps followed by post production analysis. 
-Generally, an ESMACS replica will contain between 3 and 12 equilibration 
-simulation steps followed by a production MD run, all of which are conducted in 
-the NAMD package~\cite{Phillips2005}. 
-The first step is system minimization, the following steps involve the gradual release 
-of positional constraints upon the structure and the heating to a physiologically realistic 
-temperature. 
-Upon completion of the MD simulation, free energy computation (via MMPBSA and potentially 
-normal mode analysis) is performed using AmberTools~\cite{amber14, Case2005, MillerIII2012}.
+More generally though, there may be cases where it is important to increase the sampling of phase 
+space either through expanding the ensemble or by considering multiple initial configurations.
+In addition, the ESMACS protocol can also be extended to account for adaptation energies involved 
+in altering the conformation of the protein or ligand during binding through the use of separate 
+component simulations. 
+Almost all MMPBSA studies in the literature use the so-called 1-trajectory method, in which the 
+energies of protein-inhibitor complexes, receptor proteins and ligands are extracted from the MD 
+trajectories of the complexes alone. 
 
-The ESMACS protocol is highly customizable. Both the number of simulation 
-replicas in the ensemble and the lengths of their runs can be varied to
-obtain optimal performance for any given system. Using replicas that only
-vary in the initial velocities assigned to the atoms of the system we have
-defined a standard protocol which prescribes a 25 replica ensemble, each run
-consisting of 2 ns of equilibration and 4 ns of production simulation. Our
-protocol has produced bootstrap errors of below 1.5 kcal mol$^{-1}$ (despite
-replica values varying by more than 10 kcal mol$^{-1}$) for a varied range of
-systems including small molecules bound to kinases and more flexible peptide
-ligands binding to MHC proteins \cite{Wan2015, Wright2014, Wan2017brd4}.
-In these systems, the error we obtained more than halves between ensembles of
-5 and 25 replicas but increases in ensemble size have generally produced only
-small improvements. More generally though, there may be cases where it is
-important to increase the sampling of phase space either through expanding
-the ensemble or by considering multiple initial configurations.
+%High level description of MD step here%
 
-The ESMACS protocol can also be extended to account for adaptation energies
-involved in altering the conformation of the protein or ligand during
-binding. Almost all MMPBSA studies in the literature use the so-called
-1-trajectory method, in which the energies of protein-inhibitor complexes,
-receptor proteins and ligands are extracted from the MD trajectories of the
-complexes alone. The ESMACS protocol can additionally use separate ligand and
-receptor trajectories to account for adaptation energies, providing further
-motivation to deploy the protocol via flexible and scalable middleware.
+%Describe generic TIES & ESMACS workflows%
