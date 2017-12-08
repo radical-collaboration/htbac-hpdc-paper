@@ -1,0 +1,28 @@
+Design and Methods
+
+Weak Scalability Design: 
+
+Both ESMACS and TIES protocols consist of pipelines that represent replicas. The ESMACS protocol requires 25 pipelines, while TIES requires 65 pipelines. In both protocols, each pipeline contains four stages. Each stage contains a single task. EnTK manages the queueing of the tasks in accordance with the order and concurrency mandated by stages and pipelines: For each pipeline, each stage is executed sequentially while pipelines are executed concurrently.  
+
+We previously demonstrated weak scaling of the ESMACS protocol in [ref SC] where we showed that a single ESMACS instance could run up to 128 concurrent pipelines. In here we expand upon this work to show weak scalability for growing the number of protocol instances while adhering to the required number of pipelines for each protocol. By design of each protocol, an increase in the number of instances simply means an increase in the number of pipelines. Therefore our previous ESMACS experiment referenced in [ref SC] already demonstrates the scalability of ESMACS as a growth in the number of pipelines. 
+
+The first weak scalability experiment demonstrates the behavior of HTBAC, EnTK and RP using the multiple instances of
+the TIES protocol. By design of weak scaling, the ratio between the number of pipelines and cores are kept constant. At every scale we introduce twice as many protocol instances. The goal is to isolate and understand
+the impact of increasing the number of instances, thereby the execution workload. 
+
+The next weak scalability experiment replicates the design of the first experiment using a combination of TIES and ESMACS instances. The comparison of experiment 1 and 2 shows the ability to execute procotols with different resource requirements using one pilot. 
+
+Strong scalability design: Next we repeat the same design of the weak scalability experiments but examine performance of strong scaling when fixing the number of pipelines and varying the resources. The comparison between weak and strong scalability demonstrates the overhead introduced by load balancing and scheduling tasks in multiple generations. 
+	
+%Strong scaling argument: If you go big enough you start to encounter high rates of failures on the machines. Part of the reason to do both is to find the sweet spot between weak/strong scaling. 
+
+Experimental Setup
+
+We perform weak (and strong) scalability experiments on NCSA Blue Waters--a 13.3. petaFLOPS Cray, with 32 Interlago cores/50 GB RAM per node, Cray Gemini, Lustre shared file system.	
+
+Overhead of HTBAC, EnTK and RP
+
+EnTK consists of multiple active components interacting with each other in order to support the execution of ensemble based applications. This process includes various events such as validation of the workflow, validation of the resource description, submission of resource request, creation of tasks, translation of tasks to and from the runtime system amongst several others. In order to understand the contribution of the various events in Ensemble Toolkit, termed as EnTK overhead, to the total time to run, we construct the following experiments.
+
+Time to run = Toverhead_entk + Toverhead_rp + Texecution 
+
