@@ -1,0 +1,46 @@
+The Pipeline-Stage-Task (PST) framework developed by the Radical team, and the Ensemble Tool Kit (EnTK) build on top of it, offers a flexible way to express the molecular dynamics simulation workflows present in academia (cite?). Here we present a proposed mapping between the two ideas (the PST and the MD layers) that is both simulation engine and protocol agnostic and allows for the compact expression of ensembles frequently used in binding affinity calculations.
+
+\subsection{Overview}
+
+The framework, called High Throughput Binding Affinity Calculator (HT-BAC), is made up of the following components: Simulation, Ensemble, [System], Step, Workflow.% Should we have this the other way, as this is th eorder I present it?
+
+\subsection{Workflow}
+
+The highest level abstraction is the Workflow. It is a container for the sequential units that are the simulation steps itself. It contains meta-information about the job, like the resource configuration it will be running on, the total number of cores (nodes) required to fullfil the needs of the simulations and profiling mechanims to measure execution time.
+
+\subsection{Step}
+
+The workflow containts an ordered list of \emph{steps}. Steps are the basic building blocks of binding affinity calculations. Without going into the details of the why, they are usually
+\begin{enumerate*}[label=(\roman*)]
+  \item minimization (some form of local optimization of atom coordinates),
+  \item heating,
+  \item equilibration and
+  \item production run.
+\end{enumerate*}
+Additionally there is one or more steps of analysis at the end. The key point, is that these steps \emph{have} to be run consecutively, as they are dependent on the previous one. This is ensured by the \texttt{Stage} objects of EnTK. Each step a list of \texttt{ensembles}.
+
+\subsection{Ensembles}
+
+Ensembles in HTBAC are a powerful construct that allows for extreme generalizations. At their core they are a nondestructively multi (forward) traversable \emph{iteratable}. The underlying iterator yields a function that modifies a \texttt{Simulation} object to reflect the current state of the ensemble. This is similar to the iteratee construct, the only difference being that the function is applied to the \emph{same} data consecutively (as opossed to chunks of a stream of data).
+
+
+\subsubsection{System}
+
+(correctly System\emph{s}) is also an Ensemble. This allows for multiple systems to be tested in the same single run. A common scenario is the calculations of the binding affinity of a set of ligands with the same protein.
+System itself is just a collection of file paths pointing to descriptions of the system, like the system structure, topology etc. This class also provides the core/node requirments per single run, and reads some of the system descriptions to fill in the configuration file.
+
+\subsection{Simulation}
+
+Simulation is the lowest level building block. It maps to the Task object in the PST model, and deals with executing the simulation engine, collecting input for it, and modifing the configuration of the simulation to reflect the ensembles that it is in.
+
+
+
+Notes:
+
+- sandboxing, copy/link mechanimcs
+- the ensemble[iterable]
+- system is an ensemble iterator
+- analysis steps require less
+- composabe
+- multi-traversable, forward-traversable, non-destructively
+- adaptability
