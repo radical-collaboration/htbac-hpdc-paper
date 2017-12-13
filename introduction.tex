@@ -23,8 +23,7 @@ scale (thousands of concurrent multi-stage pipelines) and sophistication
 Tools that facilitate the scalable and automated computation of varied binding 
 free energy calculations on high-performance computing resources are necessary. 
 To achieve that goal, we introduce the High-Throughput Binding Affinity Calculator 
-(HTBAC).
-HTBAC provides a domain specific interface to leverage recent advances in abstracting 
+(HTBAC), which provides a domain specific interface to leverage recent advances in abstracting 
 the relatonships between building blocks in workflow systems to facilitate the building 
 and automation of rapid and accurate calculation of binding affinities.
 We demonstrate how HTBAC scales almost perfectly to hundreds of concurrent
@@ -49,14 +48,24 @@ ESMACS, in contrast, provides absolute binding free energies at low computationa
 but to achieve this coarse grains many of the details of the system being studied.
 The results of the simplifications employed by ESMACS is that its performance is heavily 
 system dependent.
-In this work we will demonstrate the use of HT-BAC to adaptively run the 
-two protocols, altering the amount of compute allocated to each.
-This mimics the real world application of these technologies as most drug design 
+In the real world application of these technologies, drug design 
 projects have limited resources and must make trade-offs between the needs for rigour
-and to covera wide range of chemical space whilst achieving a time to completion of studies 
-comparable to those of high throughput chemistry.
+and coverage of a wide range of chemical space. 
+This means that many projects will combine the use of both protocols and in this work we 
+demonstrate the use of HT-BAC to adaptively run both protocols, including mixed protocol runs.
+Both protocols can involve the running sets of simulations which require very different levels 
+of computational power.
+We demonstrate how HTBAC can reallocate cores from completed (small, ligand only) simulations 
+to ongoing simulations (of the protein-ligand complex).
+This is the first step to providing more flexible resource reallocations schemes where 
+resources can be moved between simulations run using different protocols or systems, 
+for example if convergence of the binding affinity has been reached by one but not another
+simulation.
+This adaptability makes it easier to manage complex programmes where efficient use of 
+resources is required in order to achieve a time to completion of studies comparable 
+to those of high throughput chemistry.
 
-In the next section we review previous work using ensemble molecular dynamics and outline 
+In the next section, we review previous work using ensemble molecular dynamics and outline 
 the challenges faced in bringing this approach up to extreme scale.
 In Section 3, we discuss how HTBAC has been designed and implemented in order to meet the 
 computational challenges associated with the scalable execution of multiple, and possibly 
