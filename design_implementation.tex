@@ -1,46 +1,65 @@
-The Pipeline-Stage-Task (PST) framework developed by the Radical team, and the Ensemble Tool Kit (EnTK) build on top of it, offers a flexible way to express the molecular dynamics simulation workflows present in academia (cite?). Here we present a proposed mapping between the two ideas (the PST and the MD layers) that is both simulation engine and protocol agnostic and allows for the compact expression of ensembles frequently used in binding affinity calculations.
+The Pipeline-Stage-Task (PST) framework developed by the Radical team (cite), and the Ensemble Toolkit (EnTK) built on top of it, offers a flexible way to express the molecular dynamics simulation workflows present in academia (cite) in terms of the radical pilot execution environment. Here we present a proposed mapping between the two (the PST and the MD layers) that is both simulation engine and protocol agnostic and allows for the compact expression of ensembles frequently used in binding affinity calculations.
 
 \subsection{Overview}
 
-The framework, called High Throughput Binding Affinity Calculator (HT-BAC), is made up of the following components: Simulation, Ensemble, [System], Step, Workflow.% Should we have this the other way, as this is th eorder I present it?
+The framework, called High Throughput Binding Affinity Calculator (HT-BAC), a python library, is made up of the following components: Workflow, Step, Ensembles and Simulation. These four object are all that is neccessary to describe the complex binding affinity caluculations in a generic way.
 
 \subsection{Workflow}
 
-The highest level abstraction is the Workflow. It is a container for the sequential units that are the simulation steps itself. It contains meta-information about the job, like the resource configuration it will be running on, the total number of cores (nodes) required to fullfil the needs of the simulations and profiling mechanims to measure execution time.
+The highest level abstraction is the Workflow. It is a container for the sequential units that are the simulation steps themselfs, and also contains meta-information about the job, like the resource description that the job will be running on, the total number of cores (nodes) required to fullfil the needs of the simulations and profiling mechanims to measure execution time.
+
+The total number of cores is automatically calculated. Every system that is run (a system being a protein ligand complex) specifies the number of cores that it requires. This is a straightforward question, and usually 1-4 nodes are allocated. Then, based on factors like the number os parallel runs, the total core count is calculated.
 
 \subsection{Step}
 
-The workflow containts an ordered list of \emph{steps}. Steps are the basic building blocks of binding affinity calculations. Without going into the details of the why, they are usually
+The workflow containts an ordered list of \emph{steps}. Steps give orderd to the basic building blocks of binding affinity calculations. Usually they are
 \begin{enumerate*}[label=(\roman*)]
   \item minimization (some form of local optimization of atom coordinates),
   \item heating,
   \item equilibration and
   \item production run.
 \end{enumerate*}
-Additionally there is one or more steps of analysis at the end. The key point, is that these steps \emph{have} to be run consecutively, as they are dependent on the previous one. This is ensured by the \texttt{Stage} objects of EnTK. Each step a list of \texttt{ensembles}.
+Additionally there is one or more steps of analysis at the end. The key point, is that these steps \emph{have} to be run consecutively, as they are dependent on the previous one. This is ensured by the \texttt{Stage} objects of EnTK. Each step has list of \texttt{Ensemble}s and a \texttt{Simulation} object.
 
 \subsection{Ensembles}
 
-Ensembles in HTBAC are a powerful construct that allows for extreme generalizations. At their core they are a nondestructively multi (forward) traversable \emph{iteratable}. The underlying iterator yields a function that modifies a \texttt{Simulation} object to reflect the current state of the ensemble. This is similar to the iteratee construct, the only difference being that the function is applied to the \emph{same} data consecutively (as opossed to chunks of a stream of data).
+Ensembles in HTBAC are a powerful construct that allows for extreme generalizations. At their core they are a nondestructively multi (forward) traversable \emph{iteratable}s. The underlying iterator yields a function that modifies a \texttt{Simulation} object to reflect the current state of the ensemble. This is similar to the iteratee construct, the only difference being that the function is applied to the \emph{same} data consecutively (as opossed to chunks of a stream of data).
 
+The Simulations are then generated for every Step based on what ensembles are attached to it. This is done by taking the \texttt{product} of all the ensembles, meaning that we go over every possible combination of ensemble states, and create a simulation from it. This is equivalent to an $n$ level deep for-loop, where $n$ is not known beforehand.
 
 \subsubsection{System}
 
-(correctly System\emph{s}) is also an Ensemble. This allows for multiple systems to be tested in the same single run. A common scenario is the calculations of the binding affinity of a set of ligands with the same protein.
-System itself is just a collection of file paths pointing to descriptions of the system, like the system structure, topology etc. This class also provides the core/node requirments per single run, and reads some of the system descriptions to fill in the configuration file.
+(correctly System\emph{s}) is in fact also an Ensemble. This allows for multiple systems to be tested in the same \emph{single} run. A common scenario is the calculations of the binding affinity of a set of ligands with the same protein. System itself is just a collection of file paths pointing to descriptions of the system, like the system structure, topology etc. This class also provides the core/node requirments per single run, and reads some of the system descriptions from files to fill in the configuration settings.
+
+\subsubsection{Replica}
+
+is the next Ensemble that is build into HTBAC. The theory and benefits of  running multiple simulation has been documented in literature (cite). We think this is a crutial part of every simulation, but until now it was difficult for a researcher writing a simulation to add support for multiple replica runs. With HTBAC, this burden reduces to adding a Replica ensemble to Steps, specifying how may concurrent simulations to run. The package deals with allocating resources, sandboxing the runs, and collecting data from them, for later analysis.
+
+\subsubsection{Lambda Window:}
+
+the TIES protocol, besides requiring multiple replicas, also has another axis of multiplication. A parameter, $\lambda \in [0, 1]$ has to be set for values between its extremes and a simulation has to be run for each. The values form a function of energy and are integrated to get the desired results, the \emph{relative} binding free energy.
+
 
 \subsection{Simulation}
 
-Simulation is the lowest level building block. It maps to the Task object in the PST model, and deals with executing the simulation engine, collecting input for it, and modifing the configuration of the simulation to reflect the ensembles that it is in.
+Simulation is the lowest level building block. It maps to the \texttt{Task} object in the PST model, and deals with executing the simulation engine, collecting input for it, and modifing the configuration of the simulation to reflect the ensembles that it is in.
 
+The main driver of a simulation is the configuration file. This file containts the specific settings of the Molecular Dynamics simulation, including the thermostat, barostat, constraints, long range force calculation methods and more. Some of the settings are general and apply to every simulation of a given step, but some are specific to the Ensemble that the simulation is in. After the ensemble modifies properties of the Simulation, these get propagated and written to the configuration file to be read by the executable.
 
+\subsection{Sandboxing}
 
-Notes:
+Sandboxing mechanims are built into the Radical stack for every layer. Each separate run has it's own sanbox, and inside each run, all the Tasks have their own sandbox too. This means that there is no unintented interference between Tasks, and data can be confidently analyised inside each sandbox. This mechanism also simplyfies the input data referencing, as the input in \emph{guaranteed} to be in the sandbox, and can be referenced relative to it. We recommend this sandboxing system for all simulations.
 
-- sandboxing, copy/link mechanimcs
-- the ensemble[iterable]
-- system is an ensemble iterator
-- analysis steps require less
-- composabe
-- multi-traversable, forward-traversable, non-destructively
-- adaptability
+\subsubsection{Data flow}
+
+while sandboxing offers a powerful way to separate the simulations, by the inherent nature of workflows, output data from one simulation is required as input for the next one. Simulation objects can find their previous couterparts by way of the ensemble that they are in. Then data is transfered via \textbf{copy-on-demand}, i.e. data is copied \emph{only} if it is known to be edited during execution, otherwise only a symbolic link is created to point to the original location of the file. This drasticly reduces the copy overhead, while still keeping the sandboxes separate.
+
+\subsection{Adaptability}
+
+Once we tackle the barrier between the local workflow creation and the remote execution, new features become availble, and readily usable by scientists. Intraprotocol adaptability is one such new feature.
+
+\subsubsection{Intraprotocol adaptability}
+
+while conceptually simple, tradiational execution patters used in academia makes this very hard. In HTBAC variables like replica size, specific lambda windows or simulatable system are settable on demand, the execution of which is automatically handeled by the library. To illustrate: a common scenario is the non adequate convergence of the statistical results after running a given number of replicas. In HTBAC the replica number can be changed, rerun and the results reevaluated. Additionally, logic can be written, to dynamically add more replicas until a given convergence tolerance has been reached.
+
+\subsubsection{Interprotocol adaptability}
