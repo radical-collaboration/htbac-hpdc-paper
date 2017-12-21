@@ -1,12 +1,135 @@
-The Pipeline-Stage-Task (PST) framework developed by the Radical team (cite), and the Ensemble Toolkit (EnTK) built on top of it, offers a flexible way to express the molecular dynamics simulation workflows present in academia (cite) in terms of the radical pilot execution environment. Here we present a proposed mapping between the two (the PST and the MD layers) that is both simulation engine and protocol agnostic and allows for the compact expression of ensembles frequently used in binding affinity calculations.
+\subsection{Computational Challenges}
 
-\subsection{Overview}
+	In section 2, we described two examples of ensemble-based protocols 
+where each protocol contains multiple simulation steps followed by 
+multiple aggregate statistical analysis steps. Steps vary in data input 
+dependencies, computational resource requirements and MD execution engines. 
+We define each step as a computational \textbf{task}  while the aggregation of these 
+steps alongside their dependencies are defined as a workflow. Subsets of these 
+tasks are defined as \textbf{workloads}, i.e. tasks whose dependencies have been 
+satisfied at a particular time and may be executed concurrently. Each ensemble 
+member requires an identical workflow with slight input parameter modifications. 
 
-The framework, called High Throughput Binding Affinity Calculator (HT-BAC), a python library, is made up of the following components: Workflow, Step, Ensembles and Simulation. These four object are all that is neccessary to describe the complex binding affinity caluculations in a generic way.
+	Most advances in high-performance biosimulation computing have 
+focused on the scale, performance and optimization of single long simulations. 
+However, due to the end of Dennard scaling, emerging applications now express 
+multiple, shorter ensemble-based simulations, yet are limited to software 
+solutions that can execute scalable heterogeneous computational tasks. Furthermore,
+statistically meaningful results derived from simulations are of critical interest,
+as they can leverage additional sampling of simulations which could lead to an  
+improvement in free energy calculations precision. However, such decisions cannot 
+be made a priori and requires post mortem user intervention in order to analyze and 
+spawn additional simulations.
 
-\subsection{Workflow}
+%To encode an algorithm into a set of tasks requires a workflow system that exposes 
+%an interface to describe tasks, dependencies, and an 
+%execution pattern. Once the algorithm is encoded into a set of tasks, 
+%the workflow system is required to translate tasks into executables, coordinate 
+%task dependencies, and acquire and manage resources. 
 
-The highest level abstraction is the Workflow. It is a container for the sequential units that are the simulation steps themselfs, and also contains meta-information about the job, like the resource description that the job will be running on, the total number of cores (nodes) required to fullfil the needs of the simulations and profiling mechanims to measure execution time.
+	Many workflow management systems have emerged in response to automate ensemble-based 
+workflows. Several workflows expose a monolithic design that provides
+end-to-end capabilities to execute workflows on heterogeneous and distributed
+cyberinfrastructure. Other workflow systems entail a complicated interface model
+and the large overhead to integrate application workflows prevents the user from 
+prototyping quickly and with greater flexibility. Furthermore, performance and 
+resource utilization are necessary to ensure scalability of tasks, with minimal 
+overhead in scheduling. In addition, current workflow management systems do not 
+provide adequate support for dynamic workflow capability in workflow models  
+can be modified or adjusted on-the-fly. We define \textbf{adaptivity} as the ability to 
+revisit a prior execution decision based on a runtime evaluation. Composing adaptive
+simulation workflows incorporates additional parallelism, redistribution of 
+resources, and analyzing the performance and functionality of added adaptivity. 
+
+	In response to these challenges and requirements, and the absence of middleware
+providing scalability and generality to scientific HPC applications, we discuss the
+design and implementation of HTBAC, which builds upon the RADICAL-Cybertools (RCT), 
+a set of software building blocks that eschew monolithic workloads. RCT is
+engineered to scale across diverse computing platforms with the rapid ability to 
+design a multitude of workflows. HTBAC promotes biosimulation protocols to 
+high-level programming abstractions to enable the user to specify and efficiently 
+grow protocols, thereby enabling concurrent screening of drug candidates with the
+added functionality to guide simulations in real-time. 
+
+\subsection{RADICAL-HTBAC}
+
+	Efficient execution of binding affinity calculation protocols on different 
+cyberinfrastructure poses several technical challenges, none of which 
+are of interest to domain scientists. This suggests three requirements for HTBAC\@: 
+(1) enabling the execution of multiple protocols on heterogeneous cyberinfrastructure; 
+(2) abstract the complexity of building protocols, execution and resource management 
+from the user; and (3) providing adaptive features to enables changes to the workflow,
+i.e. the task-graph during runtime, based on decisions generated by previous tasks. 
+
+\subsection{Implementation}
+
+	HTBAC is a workflow system implemented in Python, and uses RCT as the runtime 
+system and to build ensemble-based workflows. Ensemble Toolkit (EnTK), the 
+topmost layer of RCT simplifies the process of creating ensemble-based applications 
+with complex coordination and communication requirements. The EnTK API exposes 
+the PST model which consists of three components: \textbf{Pipeline}, \textbf{Stage}, 
+and \textbf{Task}, in order to encode the BAC protocols into workflows. Once the 
+workflow is described, it is submitted to the \b{Application Manager} which sets 
+up multiple processes, threads and a RabbitMQ message queue for communication. 
+EnTK identifies tasks which have dependencies satisfied and can be executed 
+concurrently. EnTK's \textbf{Execution Manager} uses the underlying runtime system, 
+RADICAL-Pilot to execute the tasks on specific target resources. 
+
+	In our earlier work [cite] we demonstrated how we applied the PST model to implement 
+the ESMACS protocol into an EnTK worfklow. Here we expand upon this work to further 
+abstract the protocol implementation details and resource information from the user.
+Domain scientists can leverage the generalization of HTBAC and only need to define 
+the ensemble parameters. 
+
+	HTBAC exposes two components \textbf{Runner Handle} and 
+\textbf{Workflow}. The \textbf{Workflow} component is a container that implements the 
+ESMACS and TIES as EnTK workflows. The \textbf{Workflow} abstraction enables the user to
+select a protocol, physical system, number of replicas, and lambda windows 
+(for alchemical pertubations). This allows for multiple protocol instances to be 
+specified in a single run, in order to study a range of physical systems. 
+
+	The theory and benefits of  running multiple simulation has been documented in 
+literature (cite). We think this is a crutial part of every simulation, but until 
+now it was difficult for a researcher writing an ensemble application for biosimulation 
+to add support for multiple replica runs. With HTBAC, this burden is minimized by 
+adding the number of \textbf{Replicas} to the \textbf{Workflow} object, which 
+specifed the number of concurrent simulations. The package deals with allocating 
+resources, sandboxing the runs, and collecting data from them, for later analysis.
+
+	Furthermore, the TIES protocol enables the user to control the lambda parameters:
+which is a another axis of running additional simulations. 
+A parameter, $\lambda \in [0, 1]$ is set for values between extremes and a 
+simulation has to be run for every $\lambda$ value. The values form a 
+function of energy and are integrated to obtain the desired results, 
+the \emph{relative} binding free energy.
+
+
+%\subsubsection{System}
+
+%Systems This allows for multiple systems to be tested in the same \emph{single} run. 
+%A common scenario is the calculations of the binding affinity of a set of ligands 
+%with the same protein. System itself is just a collection of file paths pointing to 
+%descriptions of the system, like the system structure, topology etc. This class also 
+%provides the core/node requirments per single run, and reads some of the system 
+%descriptions from files to fill in the configuration settings.
+
+
+
+%The Pipeline-Stage-Task (PST) framework developed by the Radical team (cite), 
+%and the Ensemble Toolkit (EnTK) built on top of it, offers a flexible way to 
+%express the molecular dynamics simulation workflows present in academia (cite) 
+%in terms of the radical pilot execution environment. Here we present a proposed 
+%mapping between the two (the PST and the MD layers) that is both simulation engine 
+%and protocol agnostic and allows for the compact expression of ensembles frequently
+%used in binding affinity calculations.
+
+%\subsection{Overview}
+
+%The framework, called High Throughput Binding Affinity Calculator (HT-BAC), a python library, is made up of the following components: Workflow, Step, Ensembles and Simulation. These four object are all that is neccessary to describe the complex binding affinity caluculations in a generic way.
+
+%\subsection{Workflow}
+
+%The highest level abstraction is the Workflow. It is a container for the sequential units that are the simulation steps themselfs, and also contains meta-information about the job, like the resource description that the job will be running on, the total number of cores (nodes) required to fullfil the needs of the simulations and profiling mechanims to measure execution time.
 
 The total number of cores is automatically calculated. Every system that is run (a system being a protein ligand complex) specifies the number of cores that it requires. This is a straightforward question, and usually 1-4 nodes are allocated. Then, based on factors like the number os parallel runs, the total core count is calculated.
 
@@ -26,19 +149,6 @@ Additionally there is one or more steps of analysis at the end. The key point, i
 Ensembles in HTBAC are a powerful construct that allows for extreme generalizations. At their core they are a nondestructively multi (forward) traversable \emph{iteratable}s. The underlying iterator yields a function that modifies a \texttt{Simulation} object to reflect the current state of the ensemble. This is similar to the iteratee construct, the only difference being that the function is applied to the \emph{same} data consecutively (as opossed to chunks of a stream of data).
 
 The Simulations are then generated for every Step based on what ensembles are attached to it. This is done by taking the \texttt{product} of all the ensembles, meaning that we go over every possible combination of ensemble states, and create a simulation from it. This is equivalent to an $n$ level deep for-loop, where $n$ is not known beforehand.
-
-\subsubsection{System}
-
-(correctly System\emph{s}) is in fact also an Ensemble. This allows for multiple systems to be tested in the same \emph{single} run. A common scenario is the calculations of the binding affinity of a set of ligands with the same protein. System itself is just a collection of file paths pointing to descriptions of the system, like the system structure, topology etc. This class also provides the core/node requirments per single run, and reads some of the system descriptions from files to fill in the configuration settings.
-
-\subsubsection{Replica}
-
-is the next Ensemble that is build into HTBAC. The theory and benefits of  running multiple simulation has been documented in literature (cite). We think this is a crutial part of every simulation, but until now it was difficult for a researcher writing a simulation to add support for multiple replica runs. With HTBAC, this burden reduces to adding a Replica ensemble to Steps, specifying how may concurrent simulations to run. The package deals with allocating resources, sandboxing the runs, and collecting data from them, for later analysis.
-
-\subsubsection{Lambda Window:}
-
-the TIES protocol, besides requiring multiple replicas, also has another axis of multiplication. A parameter, $\lambda \in [0, 1]$ has to be set for values between its extremes and a simulation has to be run for each. The values form a function of energy and are integrated to get the desired results, the \emph{relative} binding free energy.
-
 
 \subsection{Simulation}
 
