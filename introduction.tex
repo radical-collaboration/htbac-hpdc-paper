@@ -5,21 +5,11 @@ The same molecular simulation technologies that can be employed both in the
 design new therapeutics and to investigate the origins of drug resistance in 
 pathologies such as cancer and HIV. 
 
-Creating simulation protocols which have well defined uncertainty and produce
-statistically meaningful results represents a significant computational challenge. 
-Furthermore, it is highly likely that differences among investigated systems will 
-demand different protocols and that changes may be requires as studies progress. 
-For example, drug design programmes often require the rapid screening of thousands 
-of candidate compounds to filter out the worst binders before using more sensitive 
-methods to refine the structure. 
-Not all changes induced in protein shape or behavior are local to the drug binding 
-site and, in some cases, simulation protocols will need to adjust to account for 
-complex interactions between drugs and their targets within individual studies.
-
 For molecular simulations to truly influence decison making in industrial and 
-clinical settings, the dual challenges of
-scale (thousands of concurrent multi-stage pipelines) and sophistication
-(adaptive selection of binding affinity protocols based upon system behaviour and statistical uncertainty) will need to be tackled. 
+clinical settings, the dual challenges of scale (thousands of concurrent 
+multi-stage pipelines) and sophistication (adaptive sampling or selection of 
+binding affinity protocols based upon system behaviour and statistical 
+uncertainty) will need to be tackled. 
 Tools that facilitate the scalable and automated computation of varied binding 
 free energy calculations on high-performance computing resources are necessary. 
 To achieve that goal, we introduce the High-Throughput Binding Affinity Calculator 
@@ -31,6 +21,14 @@ pipelines of binding affinity calculations on a leadership class machine.
 This permits the rapid time-to-solution that is essentially invariant of the size
 of candidate ligands as well as the type and number of protocols concurrently
 employed.
+We demonstrate how HTBAC facilitate flexible resource reallocations schemes where 
+resources can be moved between simulations run using different protocols or systems, 
+for example if one calculation has converged whilst another has not.
+This adaptability makes it easier to manage complex programmes where efficient use of 
+resources is required in order to achieve a time to completion of studies comparable 
+to those of high throughput chemistry.
+This functionality provides the foundations from which we develop adaptable simulation
+schemes which automatically handle different system characteristics.
 
 In this work we explore the use of HTBAC in a prototypical exploration of novel 
 compounds binding to a target protein.
@@ -40,7 +38,7 @@ of which have shown promising preclinical efficacy in pathologies ranging from c
 inflammation)~\cite{Wan2017brd4}.
 This study compared two different protocols, known as TIES and ESMACS, both based on an 
 ensemble simulation philosophy.
-In this appraoch multiple simulations are executed based on the same input system description, 
+In this approach multiple simulations are executed based on the same input system description, 
 providing enhanced sampling and reduced time to completion.
 TIES is based on rigourous, but computationally expensive, calculations of relative free
 energies (i.e. results provide a comparison between two drugs).
@@ -48,22 +46,25 @@ ESMACS, in contrast, provides absolute binding free energies at low computationa
 but to achieve this coarse grains many of the details of the system being studied.
 The results of the simplifications employed by ESMACS is that its performance is heavily 
 system dependent.
-In the real world application of these technologies, drug design 
-projects have limited resources and must make trade-offs between the needs for rigour
-and coverage of a wide range of chemical space. 
+In the real world application of these technologies, drug design projects have limited 
+resources and must make trade-offs between the needs for rigour and coverage of a wide 
+range of chemical space. 
+Initially large numbers of compounds must be screened to eliminate poor binders (using ESMACS), 
+later more accurate methods (such as TIES) are needed as good binders are refined and improved.
 This means that many projects will combine the use of both protocols and in this work we 
-demonstrate the use of HT-BAC to adaptively run both protocols, including mixed protocol runs.
+demonstrate the use of HTBAC to adaptively run both protocols, including mixed protocol runs.
 Both protocols can involve the running sets of simulations which require very different levels 
 of computational power.
-We demonstrate how HTBAC can reallocate cores from completed (small, ligand only) simulations 
-to ongoing simulations (of the protein-ligand complex).
-This is the first step to providing more flexible resource reallocations schemes where 
-resources can be moved between simulations run using different protocols or systems, 
-for example if convergence of the binding affinity has been reached by one but not another
-simulation.
-This adaptability makes it easier to manage complex programmes where efficient use of 
-resources is required in order to achieve a time to completion of studies comparable 
-to those of high throughput chemistry.
+
+Further to the use of a common framework to improve the ease of deployment and efficiency of 
+execution of existing protocols we show how HTBAC can aid the development of enhanced approaches.
+The TIES protocol is highly sensitive to the chemical details of the compounds being studied,
+which means that different runs may require different sampling strategies to achieve optimal 
+time to convergence.
+We have developed an adaptive variant of TIES which automatically increases the sampling in 
+areas where it is needed for each system, allowing more rapid convergence of calculations.
+Furthermore, this approach facilitates a data driven approach to future protocol 
+refinement.
 
 In the next section, we review previous work using ensemble molecular dynamics and outline 
 the challenges faced in bringing this approach up to extreme scale.
