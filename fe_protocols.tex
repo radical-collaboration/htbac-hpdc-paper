@@ -24,24 +24,35 @@ During these steps positional constraints are gradually released from the struct
 system is heated to a physiologically realistic temperature.
 Whilst both protocols share a common workflow for individual replicas, the make up of the 
 ensemble is different.
-All ESMACS replicas sample using the same system description, in TIES sub-ensembles are executed 
+
+In the case of ESMACS, an ensemble consists of a set of identical simulations differing only in
+the initial velocities assigned to each atom.
+Upon completion of the MD simulation, free energy computation (via MMPBSA and potentially normal 
+mode analysis) is performed using AmberTools~\cite{amber14, Case2005, MillerIII2012}.
+
+Whereas, all ESMACS replicas sample using the same system description, in TIES sub-ensembles are executed 
 at diffent points along a transformation parameter, $\lambda$.
 As $\lambda$ increases from zero to one the system description transforms from containing an 
 initial drug to a target via a series of hybrid states.
-Typically, an ESMACS ensemble will contain 25 replicas and a TIES ensemble 65 replicas evenly 
-distributed between 13 $\lambda$ values.
+The change in free energy associated with this transformation is calculated by integrating the 
+values of the $dU/d\lambda$ across the full set of $\lambda$ windows simulated.
+Obtaining accurate and precise results from TIES requires that the $\lambda$ windows correctly 
+capture the changes of $dU/d\lambda$ over the transformation.
+This behaviour may vary considerably between systems.
+Typically, windows are evenly spaced between 0 and 1 with the spacing between them set before 
+execution at a distance determined by the simulator to be sufficient for a wide raneg of systems. 
+Typically, a TIES ensemble 65 replicas evenly distributed between 13 $\lambda$ windows
 In order to obtain a meaningful TIES result it is necessary to not only simulate the drug pair 
 in the protein but also in an aqueous environemnt, adding a further 65 replicas albeit it using a
 smaller system at lower computational cost.
-In the case of ESMACS, upon completion of the MD simulation, free energy computation 
-(via MMPBSA and potentially normal mode analysis) is performed using 
-AmberTools~\cite{amber14, Case2005, MillerIII2012}.
-In both cases short serial jobs are then required to provide summary statistics.
 
+Following simulation (and in the case of ESMACS free energy analysis steps) both protocols require
+the execution of short serial steps to provide summary statistics.
 Both protocols can are highly customizable, for example the number of simulation replicas in the 
 ensemble and the lengths of their runs can be varied.
 More generally though, there may be cases where it is important to increase the sampling of phase 
-space either through expanding the ensemble or by considering multiple initial configurations.
+space possibly through expanding the ensemble or in TIES changing the distributon of $\lambda$ 
+windows.
 In addition, the ESMACS protocol can also be extended to account for adaptation energies involved 
 in altering the conformation of the protein or ligand during binding through the use of separate 
 component simulations.
