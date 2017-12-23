@@ -7,15 +7,18 @@ Design and Methods
 
 % add in pseudo plots for weak, strong, 
 
-For both free energy protocols ESMACS and TIES, each protocol instance represents 
-a single EnTK pipeline. Both protocols requires a new pipeline to study each 
-physical system. Pipelines are executed concurrently. For the TIES protocol, 
-each pipeline consists of six stages. EnTK manages the queueing of the tasks in 
-accordance with the order and concurrency mandated by stages and pipelines.
-Each of the simulation stages contains a task for every unique $\lambda$-replica 
-combination. In the nonadaptive workflow scenario, the first 11 $\lambda$ windows 
-consist of the following values: 
-$L$ is a vector with 
+For both free energy protocols ESMACS and TIES, each protocol instance
+represents a single EnTK pipeline. Both protocols requires a new pipeline to
+study each physical system. \jhanote{the above two sentences need to be
+clarified. not sure why they are in the experiments section.} Pipelines are
+executed concurrently. For the TIES protocol, each pipeline consists of six
+stages. EnTK manages the queueing of the tasks in accordance with the order
+and concurrency mandated by stages and pipelines. \jhanote{.. need clean
+separation of implementation details from design of experiments} Each of the simulation
+stages contains a task for every unique $\lambda$-replica combination. 
+
+In the non-adaptive workflow scenario, the first 11 $\lambda$ windows consist
+of the following values: $L$ is a vector with
 \begin{flalign}
 L &= \{ x_i: x_i\in[0,1]\; and\; x_{i+1} = x_i + \delta \}, where\ \delta\ is\ 0.1.
 %&$$L=\{ x_i: x_i\in[0,1]\; and\; x_{i+1} = x_i + \delta \}$$%, where $\delta$ is $0.1$.
@@ -31,13 +34,17 @@ an aggregate analysis over all $\lambda$ windows for each replica. The second
 analysis stage consists of one task that aggregates the previous results and 
 computes a single average across all replicas.
 
-	In the adaptive workflow scenario, we adapt the workflow by increasing the 
-number of $\lambda$ windows during runtime. Since the simulation results can 
-indicate where additional $\lambda$ windows would increase resolution, we break
-down the single production simulation stage from the nonadaptive workflow 
-into multiple stages for the adaptive workflow, where each stage runs only 
-a single ns duration. We start the workflow with only five $\lambda$ parameters 
-that consist of the following values:
+	In the adaptive workflow scenario, we adapt the workflow by increasing the
+number of $\lambda$ windows during {\bf runtime}. \jhanote{It is unclear what
+decision is being made at runtime?} Since the simulation results can indicate
+where additional $\lambda$ windows would increase resolution, we break down
+the single production simulation stage from the nonadaptive workflow into
+multiple stages for the adaptive workflow, where each stage runs only a single
+ns duration. \jhanote{Is the following correct: The adaptive scenario is
+related to the decision that determines the values of $\lambda$ and not when
+the decision is made. If correct, please make explicit and clear} We start the
+workflow with only five $\lambda$ parameters that consist of the following
+values:
 
 \begin{flalign}
 L &= \{ x_i: x_i\in[0,1]\; and\; x_{i+1} = x_i + \delta \}, where\ \delta\ is\ 0.25.
