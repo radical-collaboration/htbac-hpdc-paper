@@ -1,4 +1,4 @@
-## The target is now ISC 2017
+## The target is now ISC 2018
 
 * [Adaptive TIES Workflow](https://docs.google.com/drawings/d/1iqKxGDjABZQCbf-ObGWhXFcOzL7wLKOm5Ao-_wZxh7I/edit?usp=sharing) 
 * [TIES Workflow Diagram](https://docs.google.com/drawings/d/11vqTumd7co-5mBJW8YzTuWMB6w_yC-TKKLB0imIuwq4/edit?usp=sharing)
