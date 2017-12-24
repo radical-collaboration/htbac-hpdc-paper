@@ -1,7 +1,13 @@
-We have already briefly introduced our two free energy calculation 
+The basic use case for HTBAC is to enable large scale free energy studies of 
+protein-ligand binding using ensemble simulations.
+We have already briefly introduced two free energy calculation 
 protocols, ESMACS and TIES ~\cite{Wan2017brd4, Bhati2017}, with reference to the comparative rigour of the former relative to the later. 
-Here we provide more details of their implementation.
-In both cases, ensembles of MD simulations are employed to perform averaging and to obtain tight control of error bounds in our estimates. 
+Here we provide more details of their practical specifications and of the 
+protein system we used to benchmark and refine them in this work.
+
+\subsection{ESMACS and TIES}
+
+In both protocols, ensembles of MD simulations are employed to perform averaging and to obtain tight control of error bounds in our estimates. 
 In addition, the ability to run replica simulations concurrently means that, as long as sufficient compute resources are available, turn around times can be significantly reduced compared to the generation of single long trajectories.
 Due to their shared philosophical underpinning both protocols share similar middleware requirements.
 

@@ -1,0 +1,34 @@
+\subsection{Target protein: BRD4}
+
+Bromodomain-containing proteins, and in particular the four members of the 
+BET (bromodomain and extra terminal domain) family, are currently a major 
+focus of research in the pharmaceutical industry.
+Small molecule inhibitors of these proteins have shown promising preclinical 
+efficacy in pathologies ranging from cancer to inflammation. 
+Indeed, several compounds are progressing through early stage clinical  
+trials and are showing exciting early results~\cite{Theodoulou2016}. 
+One of the most widley studied targets in this family is the first 
+bromodomain of bromodomain-containing protein 4 (BRD4-BD1) for which  
+extensive crystallographic and ligand binding data are available~\cite{Chung2011, Bamborough2012, Chung2012}.
+
+We have previously investigated a congeneric series of ligands binding to 
+BRD4-BD1 (we shall from now on refer to this are simply BRD4) using both 
+ESMACS and TIES.
+This was performed in the context of a blind test of the protocols in 
+collaboration with GlaxoSmithKline~\cite{Wan2017brd4}.
+The goal was to benchmark the ESMACS and TIES protocols in a relaistic drug discovery scenario.
+In the original study, we investigated chemical structures of 16 ligands based on a single tetrahydroquinoline (THQ) scaffold ~\cite{Gosmini2014}.
+Here we focus on the first seven of these ligands to test and refine 
+the protocols used and the way in which they were executed.
+The results of our previous work provide a benchmark of both accuracy and 
+statistical uncertainty to which we can compare our new results.
+
+Initial coordinates for the protein-ligand system where taken from the X-ray crystal structure PDB ID: 4BJX ~\cite{Wyce2013}.
+This structure contains a ligand based on the THQ template and other ligands were alligned with this common scaffold.
+Preparation and setup of the simulations were implemented using 
+our automated tool, BAC~\cite{Sadiq2008}.
+This process including parametrization of the compounds, solvation of the complexes, electrostatic neutralization of the systems by adding counterions and generation of configurations files for the simulations. 
+The AMBER ff99SB-ILDN~\cite{Lindorff-Larsen2010} force field was used for the protein, and TIP3P was used for water molecules. 
+Compound parameters were produced using the general AMBER force field (GAFF)~\cite{Wang2004} with Gaussian 03~\cite{Frisch} to optimize compound geometries and to determine electrostatic potentials at the Hartree–Fock level with 6-31G** basis functions. 
+The restrained electrostatic potential (RESP) module in the AMBER package~\cite{Case2005} was used to calculate the partial atomic charges for the compounds. 
+All systems were solvated in orthorhombic water boxes with a minimum extension from the protein of 14 \AA\ (the resulting systems contain approximately 40 thousand atoms).
