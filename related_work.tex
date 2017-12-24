@@ -3,14 +3,22 @@ as the binding free energy (or binding affinity).
 One promising technology for estimating binding free energies and the influence 
 of protein and ligand composition upon them is molecular dynamics (MD)
 ~\cite{Karplus2005}.
+A diversity of methodologies have been developed to calculate binding affinities MD sampling~\cite{Mobley2012, } and blind tests show that many 
+have considerable predictive potential~\cite{Mey2017, Yin2017}.
+We have designed two protocols with the demands of clinical decision support and drug design applications in mind: 
+ESMACS (enhanced sampling of molecular dynamics with approximation of 
+continuum solvent)~\cite{Wan2017brd4} and TIES (thermodynamic integration  
+with enhanced sampling)~\cite{Bhati2017}. 
+The former protocol is based on variants of the molecular mechanics 
+Poisson-Boltzmann surface area (MMPBSA), which is an `approximate' end-point method~\cite{Massova1999}.
+The latter on the rigorous `alchemical' thermodynamic integration (TI) approach~\cite{Straatsma1988}.
 
-We have demonstrated the lack of reproducibility of individual simulations in both 
-HIV-1 protease and MHC systems, with calculations for the same protein-ligand combination
+Using these protocols, we have demonstrated the lack of reproducibility of individual simulations for a variety of protein systems, with calculations for the same protein-ligand combination
 using almost identical initial conditions producing widely varying results (binding affinities 
 varying by up to 12 kcal mol $^{-1}$ for small molecules, whilst flexible ligands can vary even
 more)~\cite{Wan2015, Sadiq2010, Wright2014}. 
-Indeed, our work has revealed how completely unreliable single simulation based 
-approaches are.
+Indeed, our work has revealed how completely unreliable single simulation 
+based approaches are.
 However, we have shown that averaging across multiple runs can reliably produce results in
 agreement with previously published experimental findings~\cite{Sadiq2010,
 Wan2011, Wright2014, Bhati2017, Wan2017brd4, Wan2017trk}, and correctly
