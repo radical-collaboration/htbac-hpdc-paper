@@ -1,18 +1,3 @@
-In recent years, developments in both algorithms and hardware (in particular
-GPGPUs) have led to increasing interest in the use of molecular simulation to
-estimate the strength of macromolecular binding free energies
-\cite{DeVivo2016}. The same molecular simulation technologies can be employed
-both in the design of new therapeutics and the investigation of the origins of
-drug resistance in pathologies such as cancer and HIV.
-
-For molecular simulations to truly influence decison making in industrial and
-clinical settings, the dual challenges of scale (thousands of concurrent
-multi-stage pipelines) and sophistication (adaptive sampling or selection of
-binding affinity protocols based upon system behaviour and statistical
-uncertainty) will need to be tackled. 
-
-\jhanote{Proposed new opening in next paragraph. OK?}
-
 Recent developments in both algorithms and architectures (in particular
 GPGPUs) have led to increasing interest in the use of molecular simulation to
 estimate the strength of macromolecular binding free energies
@@ -77,26 +62,34 @@ including mixed protocol runs. Both protocols can involve the running sets of
 simulations which require very different levels of computational power.
 Further to the use of a common framework to improve the ease of deployment and
 efficiency of execution of existing protocols we show how HTBAC can aid the
-development of enhanced approaches. The TIES protocol is highly sensitive to
-the chemical details of the compounds being studied, which means that
-different runs may require different sampling strategies to achieve optimal
-time to convergence. We have developed an adaptive variant of TIES which
-automatically increases the sampling in areas where it is needed for each
-system, allowing more rapid convergence of calculations. Furthermore, this
-approach facilitates a data driven approach to future protocol refinement.
+development of enhanced approaches. 
+The TIES protocol is highly sensitive to the chemical details of the compounds being studied, which means that different runs may require different sampling strategies to achieve optimal time to convergence. 
+We have developed an adaptive variant of TIES which automatically increases the sampling in areas where it is needed for each system, allowing more rapid convergence of calculations. 
+Furthermore, this approach facilitates a data driven approach to future
+protocol refinement.
 
 \jhanote{Mention how this work brings us a step closer to realizing the
 concept of "digital twin" i.e., computational modeling of experiments with
 high-fidelity}
 
+This approach not only allows us to tailor the protocol to the particular system but to provide meaningful statistical uncertainties for all of our models.
+These developments fit into a wider vision in which the use of flexible and 
+responsive computational protocols allow us to produce accurate, precise and 
+reproducible estimates of the free energy of binding.
+Not only would this allow for wider uptake of computational techniques in industrial settings but opens up possibilities of using these technologies 
+in clinical decison support scenarios.
+By creating a `digital twin' where the target protein is based on the real patients genetic sequence the individuals response to different treatements could be predicted.
+This appraoch would be applicable even in the case of rare variants where insufficient data is available for statistical methods to be informative.
+
 In the next section, we review previous work using ensemble molecular dynamics
 and outline the challenges faced in bringing this approach up to extreme
 scale. In Section 3, we discuss how HTBAC has been designed and implemented in
 order to meet the computational challenges associated with the scalable
-execution of multiple, and possibly concurrently executing protocols. Section
-4 provides details of the TIES and ESMACS protocols and how these have been
-mapped to teh abstractions underlying HTBAC. In Sections 5 and 6 we describe
+execution of multiple, and possibly concurrently executing protocols. Section 4 provides details of the TIES and ESMACS protocols and how these 
+have been mapped to the abstractions underlying HTBAC. 
+In Sections 5 and 6 we describe
 the design and then results of a series of experiments characterizing the
 performance and scalability of HTBAC on the Blue Waters and Titan
-supercomputers. We conclude with a discussion of the impact of HTBAC,
+supercomputers. 
+We conclude with a discussion of the impact of HTBAC,
 implications for binding affinity calculations and near-term future work.
