@@ -34,17 +34,17 @@ an aggregate analysis over all $\lambda$ windows for each replica. The second
 analysis stage consists of one task that aggregates the previous results and 
 computes a single average across all replicas.
 
-	In the adaptive workflow scenario, we adapt the workflow by increasing the
-number of $\lambda$ windows during {\bf runtime}. \jhanote{It is unclear what
-decision is being made at runtime?} Since the simulation results can indicate
-where additional $\lambda$ windows would increase resolution, we break down
+In the adaptive workflow, over the course of a run we alter the number of $\lambda$ windows being simulated depending on the difference between the $dU/d\lambda$ measured between adjacent windows.
+Increasing the number of $\lambda$ windows in regions of rapid change will 
+increase the accuracy of the overall integral to a greater to degree than an
+arbitrarily placed window.
+In order to access the $dU/d\lambda$ values during runtime, we break down
 the single production simulation stage from the nonadaptive workflow into
-multiple stages for the adaptive workflow, where each stage runs only a single
-ns duration. \jhanote{Is the following correct: The adaptive scenario is
-related to the decision that determines the values of $\lambda$ and not when
-the decision is made. If correct, please make explicit and clear} We start the
-workflow with only five $\lambda$ parameters that consist of the following
-values:
+multiple stages for the adaptive workflow.
+Each stage in the adaptive workflow produces only 1 ns of simulation.
+Once each stage is complete a decision is made as to whether more $\lambda$ windows are required, and if so where they should be placed. 
+We start the workflow with only five $\lambda$ parameters that consist of 
+the following values:
 
 \begin{flalign}
 L &= \{ x_i: x_i\in[0,1]\; and\; x_{i+1} = x_i + \delta \}, where\ \delta\ is\ 0.25.
