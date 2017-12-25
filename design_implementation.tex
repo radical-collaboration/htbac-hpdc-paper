@@ -1,27 +1,31 @@
 % ---------------------------------------------------------------------------
 \subsection{Computational Challenges}
 
-In section 2, we described two examples of ensemble-based protocols where
-each protocol contains multiple simulation steps followed by multiple
-aggregate statistical analysis steps. Steps vary in data input dependencies,
-computational resource requirements and MD execution engines. We define each
-step as a computational \textbf{task} and the aggregation of these steps
-alongside their dependencies as a \textbf{workflow}. Subsets of these tasks
-are defined as \textbf{workloads}, i.e., tasks whose dependencies have been
-satisfied at a particular point in time and may be executed concurrently.
-Each protocols' ensemble requires an identical workflow with input parameter
-modifications.
+\jhanote{This paragraph does not belong in this subsection, as there are no
+challenges inherent in the paragraph. Also, the paragraph is getting into
+implementation details, whereas challenges are independent of the details.
+Thus, propose this moves to another subsection.} In section 2, we described
+two examples of ensemble-based protocols where each protocol contains multiple
+simulation steps followed by multiple aggregate statistical analysis steps.
+Steps vary in data input dependencies, computational resource requirements and
+MD execution engines. We define each step as a computational \textbf{task} and
+the aggregation of these steps alongside their dependencies as a
+\textbf{workflow}. Subsets of these tasks are defined as \textbf{workloads},
+i.e., tasks whose dependencies have been satisfied at a particular point in
+time and may be executed concurrently. Each protocols' ensemble requires an
+identical workflow with input parameter modifications.
 
-Most advances in high-performance biosimulation computing have focused on the
-scale, performance and optimization of single long simulations. However, due
-to the end of Dennard scaling, emerging applications now express multiple,
-shorter ensemble-based simulations, yet there are limited software solutions
-that can execute scalable heterogeneous computational tasks. Furthermore,
-statistically meaningful results derived from simulations are of critical
-interest, as they can leverage additional sampling of simulations which could
-lead to an improvement in free energy calculations precision. However, such
-decisions cannot be made a priori and requires postmortem user intervention
-in order to analyze and spawn additional simulations.
+Most advances in high-performance computing have focused on the scale,
+performance and optimization of single long simulations. However, due to the
+end of Dennard scaling and methodological advances, many applications are now
+formulated using multiple, shorter ensemble-based simulations. Yet, there are
+limited software solutions that can execute scalable heterogeneous
+computational tasks. Furthermore, statistically meaningful results derived
+from simulations are of critical interest, as they can leverage additional
+sampling of simulations which could lead to an improvement in free energy
+calculations precision. Such decisions typically, cannot be made {\it a
+priori} and require postmortem user intervention in order to analyze and spawn
+additional simulations.
 
 % To encode an algorithm into a set of tasks requires a workflow system that
 % exposes an interface to describe tasks, dependencies, and an execution
@@ -29,46 +33,56 @@ in order to analyze and spawn additional simulations.
 % system is required to translate tasks into executables, coordinate task
 % dependencies, and acquire and manage resources.
 
+\jhanote{I'm changing the order of paragraphs: promoting adaptivity, as we
+seem to be building the case for decision making.}
+
+We define \textbf{adaptivity} as the ability to revisit a prior execution
+decision based on a runtime evaluation. Adapting workflows at runtime requires
+incorporating additional parallelism, redistributing of resources across
+tasks, and analyzing the performance and functionality of added adaptivity to
+evaluate its benefits and further design.
+
 Many workflow management can be used to automate ensemble-based workflows but
-suffer of several limitations. Among these, two of the most relevant are long time to adoption and lack of dynamic capabilities.
+suffer of several limitations. Among these, two of the most relevant are long
+time to adoption and lack of dynamic capabilities.
 % monolithic designs provide end-to-end capabilities to execute workflows on
 % heterogeneous and distributed cyberinfrastructure. Other workflow systems
 % entail
-Workflow system with featureful but Complex interface models impose
+Workflow system with featureful but complex interface models impose
 substantial overhead when integrating application workflows in the runtime
 system, preventing users from quick and flexible applications prototyping.
 % Furthermore, performance and resource utilization are necessary to ensure
 % scalability of tasks, with minimal overhead in scheduling.
 In addition, current workflow management systems do not provide adequate
 support for dynamic capabilities, limiting the possibility to modify workflow
-models at runtime.
+models at runtime. \jhanote{I would also explain what is meant by dynamic
+capabilities. Do you mean dynamic resource utilization?}
 
 [**mtnote: Here, I would explain why dynamic capabilities are fundamental for
 ensemble-based protocols**]
-
-We define \textbf{adaptivity} as the ability to revisit a prior execution
-decision based on a runtime evaluation. Adapting workflows at runtime
-requires incorporating additional parallelism, redistributing of resources
-across tasks, and analyzing the performance and functionality of added
-adaptivity to evaluate its benefits and further design.
-
-In response to these challenges and requirements, and the absence of
-middleware providing scalability and generality to applications for
-ensemble-based protocols executed on HPC, we discuss the design and
-implementation of HTBAC, which builds upon the RADICAL-Cybertools (RCT), a
-set of software building blocks that eschew monolithic workloads. RCT is
-engineered to scale across diverse computing platforms with the rapid ability
-to design a multitude of workflows. HTBAC promotes biosimulation protocols to
-high-level programming abstractions to enable the user to specify and
-efficiently grow protocols, thereby enabling concurrent screening of drug
-candidates with the added functionality to guide simulations in real-time.
 
 
 % ---------------------------------------------------------------------------
 \subsection{HTBAC}
 
+
 \jhanote{I don't think we should call it RADICAL-HTBAC. Its just HTBAC as its a
 joint effort between UCL and RADICAL}
+
+\jhanote{Moving HTBAC introduction to HTBAC section. The challenges provide a
+hook to the previous subsection}
+
+In response to these challenges and requirements, and the absence of
+middleware providing scalability and generality to applications for ensemble-
+based protocols executed on HPC, we discuss the design and implementation of
+HTBAC, which builds upon the RADICAL-Cybertools (RCT), a set of software
+building blocks that eschew monolithic workloads. RCT is engineered to scale
+across diverse computing platforms with the rapid ability to design a
+multitude of workflows. HTBAC promotes biosimulation protocols to high-level
+programming abstractions to enable the user to specify and efficiently grow
+protocols, thereby enabling concurrent screening of drug candidates with the
+added functionality to guide simulations in real-time.
+
 
 Efficient execution of binding affinity calculation protocols on different
 cyberinfrastructure poses several technical challenges, none of which are of
