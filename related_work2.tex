@@ -1,0 +1,91 @@
+The strength of drug binding is determined by a thermodynamic property known
+as the binding free energy (or binding affinity). One promising technology for
+estimating binding free energies and the influence of protein and ligand
+composition upon them is molecular dynamics (MD) ~\cite{Karplus2005}. A
+diversity of methodologies have been developed to calculate binding affinities
+MD sampling~\cite{Mobley2012} and blind tests show that many have considerable
+predictive potential~\cite{Mey2017, Yin2017}. We have designed two protocols
+with the demands of clinical decision support and drug design applications in
+mind: ESMACS (enhanced sampling of molecular dynamics with approximation of
+continuum solvent)~\cite{Wan2017brd4} and TIES (thermodynamic integration with
+enhanced sampling)~\cite{Bhati2017}. The former protocol is based on variants
+of the molecular mechanics Poisson-Boltzmann surface area (MMPBSA), which is
+an `approximate' end-point method~\cite{Massova1999}. The latter on the
+rigorous `alchemical' thermodynamic integration (TI)
+approach~\cite{Straatsma1988}. 
+
+Using these protocols, we have demonstrated the lack of reproducibility of
+individual simulations for a variety of protein systems, with calculations for
+the same protein-ligand combination using almost identical initial conditions
+producing widely varying results (binding affinities varying by up to 12 kcal
+mol $^{-1}$ for small molecules, whilst flexible ligands can vary even
+more)~\cite{Wan2015, Sadiq2010, Wright2014}. Indeed, our work has revealed how
+completely unreliable single simulation based approaches are. However, we have
+shown that averaging across multiple runs can reliably produce results in
+agreement with previously published experimental findings~\cite{Sadiq2010,
+Wan2011, Wright2014, Bhati2017, Wan2017brd4, Wan2017trk}, and correctly
+predicted the results of experimental studies performed by colleagues in
+collaboration~\cite{Bunney2015}. We term this approach ensemble molecular
+dynamics, ``ensemble'' here referring to the set of individual (replica)
+simulations conducted for the same physical system. 
+
+Both TIES and ESMACS protocols are ensemble based. In addition to accuracy and
+precision, in order for MD simulations to attain widespread use in industrial
+(and potentially clincal) settings, it is necessary that results can be
+obtained soon enough in order that the results can feed into decision making
+processes. The necessity for rapid turn around times places additional demands
+on simulation protocols which need to be optimized to gain results with a
+short turn around time. Further to the scientific and practical considerations
+outlined above, it is vital that reliable uncertainty estimates are provided
+alongside all quantitative results for simulations to provide actionable
+predictions.
+
+We have developed a number of free energy calculation protocols based on the
+use of ensemble molecular dynamics simulations with the aim of meeting these
+requirements~\cite{Sadiq2008, Sadiq2010, Wan2017brd4, Wan2017trk}. Basing
+these computations on the direct calculation of ensemble averages facilitates
+the determination of statistically meaningful results along with complete
+control of errors. As we scale up to larger datasets the use of the ensemble
+approaches will increasingly necessitate the use of middleware to  provide
+reliable coordination and distribution mechanisms with low performance
+overheads.
+
+
+
+
+% Atomistically detailed models of the drug and target protein can be used as
+% the starting point for MD simulations to study the influence of changes in
+% either drug or protein composition on drug binding. The chemistry of the
+% system is encoded in what is known as a potential ~\cite{Karplus2002}. In the
+% parameterization of the models, each atom is assigned a mass and a charge,
+% with the chemical bonds between them modeled as springs with varying
+% stiffness. Newtonian mechanics is then used to follow the dynamics of the
+% protein and drug and, using the principles of statistical mechanics, estimates
+% of thermodynamic properties obtained from simulations of single particles.
+
+% The potentials used in the simulations are completely under the control of the
+% user. This allows the user to manipulate the system in ways which would not be
+% possible in experiments. A particularly powerful example of this are the so
+% called ``alchemical'' simulations in which the potential used in the
+% simulation changes, from representing a particular starting system into one
+% describing a related target system during execution. This allows for the
+% calculation of free energy differences between the two systems, such as those
+% induced by a protein mutation.
+
+% MD simulations can reveal how interactions change as a result of chemical
+% alterations, and account for the molecular basis of drug efficacy. This
+% understanding can form the basis for structure-based drug design as well as
+% helping to target existing therapies based on protein sequence. However,
+% correctly capturing the system behavior poses at least two major challenges:
+% The approximations made in the potential must be accurate enough
+% representations of the real system chemistry; and sufficient sampling of phase
+% space is also required. Our previous work demonstrated \cite{Sadiq2010,
+% Wan2011} that running multiple MD simulations based on the same system and
+% varying only in initial velocities offers a highly efficient method of
+% obtaining accurate and reproducible estimates of the binding affinity. While
+% the accuracy of force fields could be a source of error, we know from our work
+% to date that the very large fluctuations in trajectory-based calculations
+% account for the lion’s share of the variance (hence also uncertainty) of the
+% results.
+
+
