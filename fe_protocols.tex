@@ -19,19 +19,23 @@ In practice the equilibration phase is broken into multiple steps to ensure that
 simulation box does not alter too much over the simulation.
 During these steps positional constraints are gradually released from the structure and the 
 system is heated to a physiologically realistic temperature.
-Whilst both protocols share a common workflow for individual replicas, the make up of the 
-ensemble is different.
+Whilst both protocols share a common workflow for individual replicas, the make up of the ensemble is different.
 
 In the case of ESMACS, an ensemble consists of a set of identical simulations differing only in
 the initial velocities assigned to each atom.
 Upon completion of the MD simulation, free energy computation (via MMPBSA and potentially normal 
 mode analysis) is performed using AmberTools~\cite{amber14, Case2005, MillerIII2012}.
 
-Whereas, all ESMACS replicas sample using the same system description, in TIES sub-ensembles are executed 
-at diffent points along a transformation parameter, $\lambda$.
-As $\lambda$ increases from zero to one the system description transforms from containing an 
-initial drug to a target via a series of hybrid states.
-The change in free energy associated with this transformation is calculated by integrating the 
+TIES is a so called ``alchemical'' method in which the fact that the potential used to decribe the system is user definable to transform one 
+system into another.
+This allows for the calculation of free energy differences between the two 
+systems, such as those induced by an alteration to a candidate drug.
+Typically a transformation parameter (called $\lambda$) is defined such that as it increases from zero to one the system description transforms from containing an 
+initial drug to a target compound via a series of hybrid states.
+Sampling along $\lambda$ is then required in order to compute the difference in binding free energy.
+Consequently, whereas in ESMACS all replicas sample using the same system description, 
+in TIES sub-ensembles are executed at diffent points along $\lambda$.
+The change in free energy associated with the transformation is calculated by integrating the 
 values of the $dU/d\lambda$ across the full set of $\lambda$ windows simulated.
 Obtaining accurate and precise results from TIES requires that the $\lambda$ windows correctly 
 capture the changes of $dU/d\lambda$ over the transformation.
