@@ -142,25 +142,27 @@ allows for multiple protocol instances to be specified in a single run.}
 abstraction/component? clearly this is something that is already done in EnTK and
 elsewhere, so nothing specific to the protocol itself}
 
-The theory and benefits of running multiple simulation has been documented in
-literature (cite). We think this \jhanote{What is "this"?} is a crutial part
-of every simulation, but until now it was difficult for a researcher writing
-an ensemble application for biosimulation to add support for multiple replica
-runs. \jhanote{As discussed in SC17 paper before, consistency in use of
-replica, ensemble, multiple simulation will reduce confusion.} With HTBAC,
-this burden is minimized by adding the number of \textbf{Replicas} to the
+In Section \ref{sec:related-work} we highlighted how an ensemble simulation 
+approach can both aid sampling and provide improved uncertainty quantification for MD based free energy calculations.
+Despite these crucial advantages, it remains non-trivial for field 
+researchers to write biosimulation applications or protocols supporting 
+multiple replica runs. 
+With HTBAC, this burden is minimized by adding the number of \textbf{Replicas} to the
 \textbf{Workflow} object, which specifed the number of concurrent simulations.
 The package deals with allocating resources, sandboxing the runs, and
 collecting data from them, for later analysis. \jhanote{Why is Replica in bold
 face? Is it an explicit object/class? Or is it a parameter/configuration?}
 
-\jhanote{Is this specific to the TIES protocol or to the protocol class. Needs
-clarification.} Furthermore, the TIES protocol enables the user to control the
-lambda parameters: which is a another axis of running additional simulations.
-A parameter, $\lambda \in [0, 1]$ is set for values between extremes and a
-simulation has to be run for every $\lambda$ value. The values form a function
-of energy and are integrated to obtain the desired results, the
-\emph{relative} binding free energy.
+%\jhanote{Is this specific to the TIES protocol or to the protocol class. Needs
+%clarification.} 
+The same approach has been expanded to facilitate the creation of 
+sub-ensembles where the simulation configuration is altered programatically.
+An example of this is the implementation ofthe TIES protocol,
+where the user controls the $\lambda$ parameter values used in simulatios to control which hybrid system states are sampled.
+%A parameter, $\lambda \in [0, 1]$ is set for values between extremes and a
+%simulation has to be run for every $\lambda$ value. The values form a function
+%of energy and are integrated to obtain the desired results, the
+%\emph{relative} binding free energy.
 
 
 %\subsubsection{System}
