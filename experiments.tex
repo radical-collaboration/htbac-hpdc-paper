@@ -34,17 +34,18 @@ an aggregate analysis over all $\lambda$ windows for each replica. The second
 analysis stage consists of one task that aggregates the previous results and 
 computes a single average across all replicas.
 
-In the adaptive workflow, over the course of a run we alter the number of $\lambda$ windows being simulated depending on the difference between the $dU/d\lambda$ measured between adjacent windows.
-Increasing the number of $\lambda$ windows in regions of rapid change will 
-increase the accuracy of the overall integral to a greater to degree than an
-arbitrarily placed window.
-In order to access the $dU/d\lambda$ values during runtime, we break down
-the single production simulation stage from the nonadaptive workflow into
-multiple stages for the adaptive workflow.
-Each stage in the adaptive workflow produces only 1 ns of simulation.
-Once each stage is complete a decision is made as to whether more $\lambda$ windows are required, and if so where they should be placed. 
-We start the workflow with only five $\lambda$ parameters that consist of 
-the following values:
+In the adaptive workflow, over the course of a run we alter the number of
+$\lambda$ windows being simulated depending on the difference between the
+$dU/d\lambda$ measured between adjacent windows. Increasing the number of
+$\lambda$ windows in regions of rapid change will increase the accuracy of the
+overall integral to a greater degree than an arbitrarily placed window. In
+order to access the $dU/d\lambda$ values during runtime, we break down the
+single production simulation stage from the nonadaptive workflow into multiple
+stages for the adaptive workflow. Each stage in the adaptive workflow produces
+only 1 ns of simulation. Once each stage is complete a decision is made as to
+whether more $\lambda$ windows are required, and if so where they should be
+placed. We start the workflow with only five $\lambda$ parameters that consist
+of the following values:
 
 \begin{flalign}
 L &= \{ x_i: x_i\in[0,1]\; and\; x_{i+1} = x_i + \delta \}, where\ \delta\ is\ 0.25.
@@ -61,18 +62,31 @@ stage, \texttt{s4.4}, runs for the remaining 2 ns durations.
 
 We previously demonstrated weak scaling of the ESMACS protocol in [ref SC] where 
 we showed that a single ESMACS instance could run up to 128 concurrent pipelines. 
-In here we expand upon this work to show weak scalability for the TIES protocol 
-by growing the number of protocol instances while adhering to the required number of 
-pipelines. By design of each protocol, an increase in the number of instances simply 
-means an increase in the number of pipelines. Therefore our previous ESMACS experiment 
-referenced in [ref SC] already demonstrates the scalability of ESMACS as a growth in 
-the number of pipelines.
+\jhanote{1 sentence about how pipelines in ESMACS were simpler than TIES? else the
+reader will say: you did 128 pipelines already... why should I be impressed by a
+small number of pipelines. Important to highlight that the scalability is over
+PROTOCOL INSTANCES and not pipeline instances.}
 
-The first weak scalability experiment demonstrates the behavior of HTBAC, EnTK and 
-RP using the multiple instances of the TIES protocol. By design of weak scaling, 
-the ratio between the number of pipelines and cores are kept constant. At every scale 
-we introduce twice as many protocol instances. The goal is to isolate and understand
-the impact of increasing the number of instances, thereby the execution workload.
+Here we show weak scalability for the TIES protocol by growing the number of
+protocol instances while adhering to the required number of pipelines. By
+design of each protocol, an increase in the number of instances simply means
+an increase in the number of pipelines. Therefore our previous ESMACS
+experiment referenced in [ref SC] already demonstrates the scalability of
+ESMACS as a growth in the number of pipelines.
+
+The first weak scalability experiment demonstrates the behavior of HTBAC, EnTK
+and RP using the multiple instances of the TIES protocol. By design of weak
+scaling, the ratio between the number of pipelines and cores are kept
+constant. \jhanote{This is some what inconsistent with Fig. 2, which  shows
+constant ratio between protocol instances and resources used} As the number of
+cores (measure of resource) changes by a factor of 2, we introduce twice as
+many protocol instances. As designed, the weak scaling property provides
+insight into the size of the workload that can be investigated in a given
+amount of time.
+
+
+% The goal is to isolate and understand the impact of
+% increasing the number of instances, thereby the execution workload.
 
 
 \begin{figure}
