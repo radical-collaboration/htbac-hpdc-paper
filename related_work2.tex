@@ -1,17 +1,29 @@
 The strength of ligand binding is determined by a thermodynamic property known
-as the binding free energy (or binding affinity). One promising technology for
+as the binding free energy (or binding affinity). 
+One promising technology for
 estimating binding free energies and the influence of protein and ligand
-composition upon them is molecular dynamics (MD) ~\cite{Karplus2005}. A
-diversity of methodologies have been developed to calculate binding affinities
+composition upon them is molecular dynamics (MD) ~\cite{Karplus2005}. 
+A diversity of methodologies have been developed to calculate binding affinities
 MD sampling~\cite{Mobley2012} and blind tests show that many have considerable
-predictive potential~\cite{Mey2017, Yin2017}. We have designed two protocols
+predictive potential~\cite{Mey2017, Yin2017}.
+The development of commercial approaches that claim accuracy of below 1 
+kcal mol$^{-1}$~\cite{Wang2015} has led to increased interest from the 
+pharmaceutical industry~\cite{Ganesan2017}.
+The same technologies have also shown promise in analysing the influence of 
+protein mutations on drug binding~\cite{Mondal2016, Bunney2015}.
+These developments have also spurred renewed interest in the factors affecting 
+the performance of different free energy methods~\cite{Aldeghi2017, Cappel2016}.
+%Machine learning \cite{Ash2017}
+
+We have designed two protocols
 with the demands of clinical decision support and drug design applications in
 mind: ESMACS (enhanced sampling of molecular dynamics with approximation of
 continuum solvent)~\cite{Wan2017brd4} and TIES (thermodynamic integration with
-enhanced sampling)~\cite{Bhati2017}. The former protocol is based on variants
+enhanced sampling)~\cite{Bhati2017}. 
+The former protocol is based on variants
 of the molecular mechanics Poisson-Boltzmann surface area (MMPBSA), which is
-an `approximate' end-point method~\cite{Massova1999}. The latter on the
-rigorous `alchemical' thermodynamic integration (TI)
+an ``approximate'' end-point method~\cite{Massova1999}. 
+The latter on the rigorous ``alchemical'' thermodynamic integration (TI)
 approach~\cite{Straatsma1988}. 
 
 Using these protocols, we have demonstrated the lack of reproducibility of
