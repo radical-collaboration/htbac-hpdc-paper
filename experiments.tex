@@ -91,7 +91,7 @@ amount of time.
 
 \begin{figure}
   \centering
-   \includegraphics[width=\columnwidth]{figures/weak_scaling_TIES_instances.pdf}
+   \includegraphics[width=\columnwidth]{figures/weak_scaling_TIES_instances_5,000_timesteps}
   \caption{Overheads of HTBAC, EnTK, RP when executing weak scaling of TIES. 
   We keep the number of instances and the total number of cores fixed. }
 \label{fig:weak_scaling}
@@ -101,6 +101,13 @@ amount of time.
 %The next weak scalability experiment replicates the design of the first experiment using a combination of TIES and ESMACS instances. The comparison of experiment 1 and 2 shows the ability to execute procotols with different resource requirements using one pilot.
 
 Strong scalability design: Next we repeat the same design of the weak scalability experiments but examine performance of strong scaling when fixing the number of pipelines and varying the resources. The comparison between weak and strong scalability demonstrates the overhead introduced by load balancing and scheduling tasks in multiple generations.
+
+\begin{figure}
+  \centering
+   \includegraphics[width=\columnwidth]{figures/weak_scaling_TIES_instances_64cores-2M.pdf}
+  \caption{Figure justifying data for validation run (will not be added to final paper)}
+\label{fig:validation}
+\end{figure}
 
 %Strong scaling argument: If you go big enough you start to encounter high rates of failures on the machines. Part of the reason to do both is to find the sweet spot between weak/strong scaling.
 
