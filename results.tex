@@ -1,0 +1,31 @@
+%------------------------------------------------------------------------------
+
+\begin{figure}
+\begin{tikzpicture}
+\begin{axis}[
+  xlabel=$\lambda$,
+  ylabel=$\frac{dU}{d\lambda}$,
+  xmin=0,
+  xmax=1,
+  legend pos=outer north east,
+  grid=both,
+  ]
+  \addplot+[mark size=1pt, mark=*] table [x=lambda, y=p1v]{figures/alch_1.csv};
+  \addlegendentry{Inital lambda spacing};
+
+  \addplot+[mark size=1pt, mark=*] table [x=lambda, y=p1v]{figures/alch_2.csv};
+  \addlegendentry{Increasing number of lambda values};
+
+  \addplot+[mark size=1pt, mark=*] table [x=lambda, y=p1v]{figures/alch_3.csv};
+  \addlegendentry{Optimial number of lambda values found};
+
+  \addplot+[mark size=1pt, mark=*] table [x=lambda, y=p1v]{figures/alch_4.csv};
+  \addlegendentry{Refining function values at optimial mesh};
+
+\end{axis}
+\end{tikzpicture}
+\caption{Example figure of adaptive ties illustration. Caption.}
+\label{fig:adapt}
+\end{figure}
+
+%------------------------------------------------------------------------------
