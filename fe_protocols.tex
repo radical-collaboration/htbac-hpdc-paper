@@ -35,13 +35,20 @@ initial drug to a target compound via a series of hybrid states.
 Sampling along $\lambda$ is then required in order to compute the difference in binding free energy.
 Consequently, whereas in ESMACS all replicas sample using the same system description,
 in TIES sub-ensembles are executed at diffent points along $\lambda$.
-The change in free energy associated with the transformation is calculated by integrating the
+The change in free energy associated with the transformation is calculated by numerically integrating (via adaptive quadrature) the
 values of the $dU/d\lambda$ across the full set of $\lambda$ windows simulated.
+The TIES protocol, for example, relies on the numerical
+integration of $dU/d\lambda$. 
+%Obtaining values for the function means running
+%multiple replicas of full simulation workflows with a given $\lambda$,
+%therefore we would like to minimize the number of $\lambda$ values that need to 
+%be evaluted for our given accuracy threshold. 
+
 Obtaining accurate and precise results from TIES requires that the $\lambda$ windows correctly
 capture the changes of $dU/d\lambda$ over the transformation.
 This behaviour may vary considerably between systems.
 Typically, windows are evenly spaced between 0 and 1 with the spacing between them set before
-execution at a distance determined by the simulator to be sufficient for a wide raneg of systems.
+execution at a distance determined by the simulator to be sufficient for a wide range of systems.
 Typically, a TIES ensemble 65 replicas evenly distributed between 13 $\lambda$ windows
 In order to obtain a meaningful TIES result it is necessary to not only simulate the drug pair
 in the protein but also in an aqueous environemnt, adding a further 65 replicas albeit it using a
@@ -58,26 +65,47 @@ In addition, the ESMACS protocol can also be extended to account for adaptation 
 in altering the conformation of the protein or ligand during binding through the use of separate
 component simulations.
 
-These protocols have been sucessfully used to predict binding affinities
-quickly and accurately. Nonetheless they are very expensive computationally and
-optimizing the execution time while still retaining (or even improving) the
-accuracy is desirable. The TIES protocol, for example, relies on the numerical
-integration of $dU/d\lambda$. Obtaining values for the function means running
-multiple replicas of full 4 ns simulation workflows with a given $\lambda$,
-therefore we would like to minimize the number of $\lambda$ values that need to 
-be evaluted for our given accuracy threshold. The number (or the exact
-location) of these points in not know a priori and can change from one system
-to the next.
+%Adaptive quadrature is a numerical integration algorithm that is designed to
+%minimize the number of function evaluations while still achieving a given error
+%tolerance when estimating the integral. 
+%We use this algorithm to minimize the
+%number of full simulations that are required to be run, while still keeping the
+%high accuracy of the protocol.
 
-Adaptive quadrature is a numerical integration algorithm that is designed to
-minimize the number of function evaluations while still achieving a given error
-tolerance when estimating the integral. We use this algorithm to minimize the
-number of full simulations that are required to be run, while still keeping the
-high accuracy of the protocol.
+\subsection{The Value of Adaptivity}
 
+Both ESMACS and TIES have been sucessfully used to predict binding affinities
+quickly and accurately. 
+Nonetheless, they are very expensive computationally and
+optimizing the execution time while still retaining (or even improving) the accuracy is desirable. 
+Drug discovery programmes usually have limited resources, and 
+require a resource budget carefully looking to gain maximum insight 
+into potential candidate compounds.
+This provides one clear motivation for the use of adaptive methods 
+which minimize the compute time used whilst producing binding free energy estimates 
+meeting pre-defined quality criteria (such as convergence or 
+statistical uncertainty below a given theshold).
 
+A second driver for adaptivity is that such programmes will typically involve compounds with 
+a wide range of chemical properties which can impact not only 
+the time to convergence but the type of sampling required to gain
+accurate results.
+In general, there is no way to know before running calculations 
+exactly which setup of calculation is required for a particular 
+system.
+For example in TIES, the number (or the exact location) of the $\lambda$ windows 
+that will most impact the calculation are not know \textit{a priori} 
+and change between systems.
+As multiple simulations must be run for each window sampling with a very high frequency is expensive and impractical.
+Furthermore, adaptive placement of $\lambda$ windows is likely to better capture the shape of the $dU/d\lambda$ curve, leading to more accurate and precise results for a given cost.
+On occasion alchemical methods may be very slow to converge, 
+in such circumstances use of another method, such as ESMACS, 
+may be the best option.
+This means that the most effective way to gain accurate and 
+precise free energy results on industrially or clinically 
+relavant timescales is to be able to adapt both sampling 
+and even the protocol used at run time.
+With potentially thousands of simulations, often employing 
+multiple analysis methodologies, this is indeed the only way to 
+effectively use these techniques at scale.
 
-
-%High level description of MD step here%
-
-%Describe generic TIES & ESMACS workflows%
