@@ -58,9 +58,22 @@ In addition, the ESMACS protocol can also be extended to account for adaptation 
 in altering the conformation of the protein or ligand during binding through the use of separate
 component simulations.
 
-These protocols have been sucessfully used to predict binding affinities quickly and accurately. Nonetheless they are very expensive computationally and optimizing the execution time while still retaining (or even improving) the accuracy is desirable. The TIES protocol, for example, relies on the numerical integration of $dU/d\lambda$. Obtaining values for the function means running multiple replicas of full 4 ns simulation workflows with a given $\lambda$, therefore we would like to minimize the number of $\lambda$ values that need to be evaluted for our given accuracy threshold. The number (or the exact location) of these points in not know a priori and can change from one system to the next.
+These protocols have been sucessfully used to predict binding affinities
+quickly and accurately. Nonetheless they are very expensive computationally and
+optimizing the execution time while still retaining (or even improving) the
+accuracy is desirable. The TIES protocol, for example, relies on the numerical
+integration of $dU/d\lambda$. Obtaining values for the function means running
+multiple replicas of full 4 ns simulation workflows with a given $\lambda$,
+therefore we would like to minimize the number of $\lambda$ values that need to 
+be evaluted for our given accuracy threshold. The number (or the exact
+location) of these points in not know a priori and can change from one system
+to the next.
 
-Adaptive quadrature is a numerical integration algorithm that is designed to minimize the number of function evaluations while still achieving a given error tolerance when estimating the integral. We use this algorithm to minimize the number of full simulations that are required to be run, while still keeping the high accuracy of the protocol.
+Adaptive quadrature is a numerical integration algorithm that is designed to
+minimize the number of function evaluations while still achieving a given error
+tolerance when estimating the integral. We use this algorithm to minimize the
+number of full simulations that are required to be run, while still keeping the
+high accuracy of the protocol.
 
 
 
