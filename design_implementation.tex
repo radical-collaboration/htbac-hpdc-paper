@@ -1,11 +1,6 @@
 % ---------------------------------------------------------------------------
 \subsection{Computational Challenges}
 
-
-\jhanote{we need to elevate the challenge above (i) ensembles, (ii) and
-separate adaptive from non-adaptive challenges}
-
-
 Most advances in high-performance computing have focused on the scale,
 performance and optimization of single long simulations. However, due to the
 end of Dennard scaling and methodological advances, many applications are now
@@ -29,15 +24,19 @@ these barriers...
 % tasks, and analyzing the performance and functionality of added adaptivity to
 % evaluate its benefits and further design.
 
-In principle, many workflow management systems can be used to express
-ensemble-based workflows, however the
-
-several limitations. Among these, two of the most relevant are long time to
-adoption and lack of dynamic capabilities.
+% several limitations. Among these, two of the most relevant are long time to
+% adoption and lack of dynamic capabilities.
 
 % monolithic designs provide end-to-end capabilities to execute workflows on
 % heterogeneous and distributed cyberinfrastructure. Other workflow systems
 % entail
+
+In principle, many workflow management systems (WMS) can be used to express
+ensemble-based workflows, however general-purpose WMS are limited by a lack of
+specificity. Workflow system with featureful but complex interface models
+impose substantial overhead when integrating application workflows in the
+runtime system, preventing users from quick and flexible applications
+prototyping. 
 
 Furthermore, statistically meaningful results derived from simulations are of
 critical interest, as they can leverage additional sampling of simulations
@@ -45,50 +44,20 @@ which could lead to an improvement in precision of free energy calculations.
 Such decisions typically, cannot be made {\it a priori} and require postmortem
 user intervention in order to analyze and spawn additional simulations.
 
+Moreover, specific features such as steering and adaptivity during runtime
+such as spawning additional simulations often require a redistribution of
+resources. Current WMS do not provide adequate support for dynamic resource
+utilization and require special extensions for adaptive formulations thus
+limiting the possibility of adaptive workflows. 
 
-Workflow system with featureful but complex interface models impose
-substantial overhead when integrating application workflows in the runtime
-system, preventing users from quick and flexible applications prototyping.
-Moreover, any intervention during runtime such as spawning additional
-simulations could require a redistribution of resources. Current workflow
-management systems do not provide adequate support for dynamic resource
-utilization, limiting the possibility to modify workflow models at runtime.
+
+% across diverse computing platforms with the rapid ability to design a
+% multitude of workflows.
 
 
 
 % ---------------------------------------------------------------------------
 \subsection{HTBAC}
-
-In response to aforementioned challenges and requirements, and the absence of
-middleware systems that provide scalable and extensible solutions for the
-computation of binding free energy system we designed HTBAC
-
-In this work we validate the generality of HTBAC by implementing the TIES
-protocol and investigating its performance with multiple TIES protocol. We
-comapare the overheads of HTBAC and demonstrate that its overheads and
-performance are invariant of the specific protocol.
-
-HTBAC derives many of the advantages of a lightweight, flexible domain
-specific workflow layer from its use of RADICAL-Cybertools (RCT) which are
-functionally well-defined and delineated building blocks.
-RCT~\cite{review_bb_2016} are engineered to scale across diverse computing
-platforms with the rapid ability to design a multitude of workflows. Although
-enscapulated from end-users of HTBAC, the two primary RCT components that
-HTBAC depends upon are the Ensemble Toolkit (EnTK) and RADICAL-Pilot (RP).
-
-HTBAC promotes binding affinity protocols as the user-facing constructs, and
-provides programming abstractions -- Pipeline, Stage and Tasks programming
-model (that are consistent with the EnTK) to enable the user to express a
-variety of protocols.
-
-HTBAC not only simplifies the expression of complex binding affinity protocols, 
-but also provides hitherto unavailable capabilities, viz., the adaptive
-forumation/expression and execution of these protocols, without any additional 
-programming burden.
-
-In summary, HTBAC allows the simple expression and concurrent execution of
-multiple distinct protocols, thereby enabling concurrent screening of drug
-candidates.
 
 This suggests three requirements for HTBAC\@: (1) enabling the scalable
 execution of concurrent multiple protocols, (2) abstract the complexity of
@@ -96,6 +65,29 @@ building protocols, execution and resource management from the user; and (3)
 providing adaptive features (i.e., modifiying the task-graph during runtime,
 based on previous tasks), to enable more effective protocols, without explicit
 resource management requirements.
+
+We designed HTBAC in response to aforementioned challenges and requirements,
+and the absence of middleware systems that provide scalable and extensible
+solutions for the computation of binding free energy system.
+
+HTBAC derives many of the advantages of a lightweight, flexible domain
+specific workflow layer from its use of RADICAL-Cybertools (RCT) which are
+functionally well-defined and delineated middleware building blocks.
+RCT~\cite{review_bb_2016} are engineered to support extensible and scalable
+workflows across diverse computing platforms. Although enscapulated from end-
+users of HTBAC, the two primary RCT components that HTBAC depends upon are the
+Ensemble Toolkit (EnTK) and RADICAL-Pilot (RP).
+
+HTBAC promotes binding affinity protocols as the user-facing constructs, and
+provides programming abstractions -- Pipeline, Stage and Tasks programming
+model (that are consistent with the EnTK) to enable the user to express a
+variety of protocols. HTBAC allows the simple expression and concurrent
+execution of multiple distinct protocols, thereby enabling concurrent
+screening of drug candidates. HTBAC not only simplifies the expression of
+complex binding affinity protocols, but also provides hitherto unavailable
+capabilities, viz., the adaptive forumation/expression and execution of these
+protocols, without any additional programming burden.
+
 
 % Efficient execution of binding affinity calculation protocols on different
 % platforms poses several technical challenges. 
@@ -105,6 +97,10 @@ PST model to implement the ESMACS protocol into an EnTK application. Here we
 expand upon this work to further abstract the protocol implementation details
 and resource information from the user. 
 
+In this work we validate the generality of HTBAC by implementing the TIES
+protocol and investigating its performance with multiple TIES protocol. We
+comapare the overheads of HTBAC and demonstrate that its overheads and
+performance are invariant of the specific protocol.
 
 % ---------------------------------------------------------------------------
 \subsection{Implementation}
@@ -137,9 +133,9 @@ to encode \textbf{Protocols},
 Consistent with EnTK's programming model, HTBAC also uses the PST model to to
 express  protocols.
 
-A workflow is comprised of N$$_P$$ instances of the $$P^th$$ protocol; our
-work so far entails a maximum value of P = 2, but in future work P will be
-greater > 2.
+A workflow is comprised of $N_P$ instances of the $P^{th}$ protocol; our work
+so far entails a maximum value of $P = 2$, but in future work P will be
+greater $>$ 2.
 
 Once the workflow is described, it is submitted to the \b{Application
 Manager} which sets up multiple processes, threads and a RabbitMQ message
