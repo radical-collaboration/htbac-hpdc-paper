@@ -1,5 +1,5 @@
 % ---------------------------------------------------------------------------
-\subsection{Computational Challenges}
+% \subsection{Computational Challenges}
 
 Most advances in high-performance computing have focused on the scale,
 performance and optimization of single long simulations. However, due to the
@@ -57,7 +57,7 @@ limiting the possibility of adaptive workflows.
 
 
 % ---------------------------------------------------------------------------
-\subsection{HTBAC}
+% \subsection{HTBAC}
 
 This suggests three requirements for HTBAC\@: (1) enabling the scalable
 execution of concurrent multiple protocols, (2) abstract the complexity of
@@ -66,9 +66,9 @@ providing adaptive features (i.e., modifiying the task-graph during runtime,
 based on previous tasks), to enable more effective protocols, without explicit
 resource management requirements.
 
-We designed HTBAC in response to aforementioned challenges and requirements,
-and the absence of middleware systems that provide scalable and extensible
-solutions for the computation of binding free energy system.
+% We designed HTBAC in response to aforementioned challenges and requirements,
+% and the absence of middleware systems that provide scalable and extensible
+% solutions for the computation of binding free energy system.
 
 HTBAC derives many of the advantages of a lightweight, flexible domain
 specific workflow layer from its use of RADICAL-Cybertools (RCT) which are
@@ -92,23 +92,9 @@ protocols, without any additional programming burden.
 % Efficient execution of binding affinity calculation protocols on different
 % platforms poses several technical challenges. 
 
-	In our earlier work~\cite{dakka2017} we demonstrated how we applied the
-PST model to implement the ESMACS protocol into an EnTK application. Here we
-expand upon this work to further abstract the protocol implementation details
-and resource information from the user. 
-
-In this work we validate the generality of HTBAC by implementing the TIES
-protocol and investigating its performance with multiple TIES protocol. We
-comapare the overheads of HTBAC and demonstrate that its overheads and
-performance are invariant of the specific protocol.
 
 % ---------------------------------------------------------------------------
-\subsection{Implementation}
-
-In section \ref{sec:science-drivers}, we described two examples of ensemble-
-based protocols for computing binding affinities. Each protocol contains
-multiple stages with simulations and analysis tasks interspersed, in the most
-general case.
+% \subsection{Implementation}
 
 % Steps vary in data input dependencies, computational resource requirements and
 % MD execution engines. 
@@ -118,9 +104,7 @@ general case.
 % executed concurrently. Each protocols' ensemble requires an identical workflow
 % with input parameter modifications.
 
-We define each stage as a computational \textbf{task} and the ordered
-aggregation of these stages alongside their dependencies as a
-\textbf{pipeline}.
+
 
 HTBAC is implemented in Python, and uses RCT to provide ensemble-execution
 capabilities and a runtime system to execute tasks. Ensemble Toolkit (EnTK),
@@ -128,21 +112,28 @@ the topmost layer of RCT simplifies the process of creating ensemble-based
 applications with complex coordination and communication requirements. The
 EnTK API exposes the PST model which consists of three components:
 \textbf{Pipeline}, \textbf{Stage}, and \textbf{Task}. HTBAC uses the PST model
-to encode \textbf{Protocols},
+to encode \textbf{Protocols}, Consistent with EnTK's programming model, HTBAC
+also uses the PST model to to express  protocols.
 
-Consistent with EnTK's programming model, HTBAC also uses the PST model to to
-express  protocols.
 
-A workflow is comprised of $N_P$ instances of the $P^{th}$ protocol; our work
-so far entails a maximum value of $P = 2$, but in future work P will be
-greater $>$ 2.
+In section \ref{sec:science-drivers}, we described two examples of ensemble-
+based protocols for computing binding affinities. Each protocol contains
+multiple stages with simulations and analysis tasks interspersed, in the most
+general case. We define each stage as a computational \textbf{task} and the
+ordered aggregation of these stages alongside their dependencies as a
+\textbf{pipeline}.
 
-Once the workflow is described, it is submitted to the \b{Application
-Manager} which sets up multiple processes, threads and a RabbitMQ message
-queue for communication. EnTK identifies tasks which have dependencies
-satisfied and can be executed concurrently. EnTK's \textbf{Execution Manager}
-uses the underlying runtime system, RADICAL-Pilot to execute the tasks on
-specific target resources.
+% (so far, a
+% workflow entails a maximum value of $P = 2$ and $N_P$=16, but in future work P
+% will be greater $>$ 2). 
+
+A workflow is comprised of $N_P$ instances of the P$^{th}$ protocol. Once the
+workflow is described, it is submitted to the
+\b{Application Manager} which sets up multiple processes, threads and a
+RabbitMQ message queue for communication. EnTK identifies tasks which have
+dependencies satisfied and can be executed concurrently. EnTK's
+\textbf{Execution Manager} uses the underlying runtime system, RADICAL-Pilot
+to execute the tasks on specific target resources.
 
 \begin{figure}
   \centering
@@ -183,6 +174,15 @@ specifying the number of concurrent instances of the \textbf{Protocol} object.
 Moreover, the ability to generate multiple protocol instances enables the user
 to investigate a range of physical systems (i.e., drug candidates)
 concurrently.
+
+
+	In our earlier work~\cite{dakka2017} we demonstrated how we applied the
+PST model to implement the ESMACS protocol into an EnTK application. In this
+work we validate the generality of HTBAC by implementing the TIES protocol and
+investigating its performance with multiple TIES protocol. We comapare the
+overheads of HTBAC and demonstrate that its overheads and performance are
+invariant of the specific protocol..... \jhanote{connective tissue for
+Experiments Section...}
 
 %\jhanote{Is this specific to the TIES protocol or to the protocol class. Needs
 %clarification.} 
