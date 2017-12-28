@@ -2,7 +2,7 @@ The strength of ligand binding is determined by a thermodynamic property known
 as the binding free energy (or binding affinity). 
 One promising technology for
 estimating binding free energies and the influence of protein and ligand
-composition upon them is molecular dynamics (MD) ~\cite{Karplus2005}. 
+composition upon them is molecular dynamics (MD)~\cite{Karplus2005}. 
 A diversity of methodologies have been developed to calculate binding affinities
 MD sampling~\cite{Mobley2012} and blind tests show that many have considerable
 predictive potential~\cite{Mey2017, Yin2017}.
@@ -12,10 +12,20 @@ pharmaceutical industry~\cite{Ganesan2017}.
 The same technologies have also shown promise in analysing the influence of 
 protein mutations on drug binding~\cite{Mondal2016, Bunney2015}.
 These developments have also spurred renewed interest in the factors affecting 
-the performance of different free energy methods~\cite{Aldeghi2017, Cappel2016}.
-%Machine learning \cite{Ash2017}
+the performance of different free energy 
+methods~\cite{Aldeghi2017, Cappel2016, Ruiter2016}.
+As these developments combine with increased computational power it is becoming 
+possible to integrate the information gained from large numbers of simulations 
+to provide more predictive models using machine learning approaches~\cite{Ash2017}.
+It is this approach of combining predictive modelling with integrative technologies 
+which provides one of the most promising avenues for developing decision support 
+tools for drug discovery and clinical support.
 
-We have designed two protocols
+As binding free energy approaches based on MD become more widely used, particularly by 
+non-specialists, automated tools for system and simulation preparation 
+have been developed~\cite{Gapsys2015, Doerr2016, Rizzi}, including our own tool 
+the binding affinity calculator (BAC)~\cite{Sadiq2008}.
+Using BAC, we have designed two protocols
 with the demands of clinical decision support and drug design applications in
 mind: ESMACS (enhanced sampling of molecular dynamics with approximation of
 continuum solvent)~\cite{Wan2017brd4} and TIES (thermodynamic integration with
@@ -41,26 +51,32 @@ collaboration~\cite{Bunney2015}. We term this approach ensemble molecular
 dynamics, ``ensemble'' here referring to the set of individual (replica)
 simulations conducted for the same physical system. 
 
-Both TIES and ESMACS protocols are ensemble based. In addition to accuracy and
+Both TIES and ESMACS protocols are ensemble based. 
+Basing these computations on the direct calculation of ensemble averages facilitates
+the determination of statistically meaningful results along with complete
+control of errors. 
+In addition to accuracy and
 precision, in order for MD simulations to attain widespread use in industrial
 (and potentially clincal) settings, it is necessary that results can be
 obtained soon enough in order that the results can feed into decision making
-processes. The necessity for rapid turn around times places additional demands
-on simulation protocols which need to be optimized to gain results with a
-short turn around time. Further to the scientific and practical considerations
-outlined above, it is vital that reliable uncertainty estimates are provided
-alongside all quantitative results for simulations to provide actionable
-predictions.
-
-We have developed a number of free energy calculation protocols based on the
-use of ensemble molecular dynamics simulations with the aim of meeting these
-requirements~\cite{Sadiq2008, Sadiq2010, Wan2017brd4, Wan2017trk}. Basing
-these computations on the direct calculation of ensemble averages facilitates
-the determination of statistically meaningful results along with complete
-control of errors. As we scale up to larger datasets the use of the ensemble
-approaches will increasingly necessitate the use of middleware to  provide
+processes. 
+These motivations provided the impetuse behind our automated model building and 
+simulation input creation package, the binding affinity calculator (BAC)~\cite{Sadiq2008}.
+As we scale up to larger datasets the use of the ensemble
+approaches will increasingly necessitate the use of middleware to provide
 reliable coordination and distribution mechanisms with low performance
 overheads.
+This has provided the motivation behind the development of HTBAC.
+%The necessity for rapid turn around times places additional demands
+%on simulation protocols which need to be optimized to gain results with a
+%short turn around time. Further to the scientific and practical considerations
+%outlined above, it is vital that reliable uncertainty estimates are provided
+%alongside all quantitative results for simulations to provide actionable
+%predictions.
+
+%We have developed a number of free energy calculation protocols based on the
+%use of ensemble molecular dynamics simulations with the aim of meeting these
+%requirements~\cite{Sadiq2008, Sadiq2010, Wan2017brd4, Wan2017trk}. 
 
 
 
