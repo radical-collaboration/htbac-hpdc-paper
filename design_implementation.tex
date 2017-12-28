@@ -114,23 +114,23 @@ EnTK API exposes the PST model which consists of three components:
 Consistent with EnTK's programming model, HTBAC also uses the PST model to to
 express {\bf Protocols}. HTBAC promotes binding affinity protocols as the
 user-facing constructs, and provides programming model defined by the
-Pipeline, Stage and Tasks model to express a variety of protocols. 
+Pipeline, Stage and Tasks model to express a variety of protocols. Each
+protocol contains multiple stages with simulations and analysis tasks
+interspersed, in the most general case. We define each stage as a
+computational \textbf{task} and the ordered aggregation of these stages
+alongside their dependencies as a \textbf{pipeline}. HTBAC allows the simple
+expression and concurrent execution of multiple distinct protocols, thereby
+enabling concurrent screening of drug candidates. HTBAC not only simplifies
+the expression of complex binding affinity protocols, but also provides
+hitherto unavailable capabilities, viz., the adaptive forumation/expression
+and execution of these protocols, without any additional programming burden.
 
-HTBAC allows the simple expression and concurrent execution of multiple
-distinct protocols, thereby enabling concurrent screening of drug candidates.
-HTBAC not only simplifies the expression of complex binding affinity
-protocols, but also provides hitherto unavailable capabilities, viz., the
-adaptive forumation/expression and execution of these protocols, without any
-additional programming burden.
 
 % programming model (that are consistent with the EnTK) to enable the user 
 
-In section \ref{sec:science-drivers}, we described two examples of ensemble-
-based protocols for computing binding affinities. Each protocol contains
-multiple stages with simulations and analysis tasks interspersed, in the most
-general case. We define each stage as a computational \textbf{task} and the
-ordered aggregation of these stages alongside their dependencies as a
-\textbf{pipeline}.
+% In section \ref{sec:science-drivers}, we described two examples of ensemble-
+% based protocols for computing binding affinities. 
+
 
 % (so far, a
 % workflow entails a maximum value of $P = 2$ and $N_P$=16, but in future work P
