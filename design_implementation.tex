@@ -100,8 +100,6 @@ Ensemble Toolkit (EnTK) and RADICAL-Pilot (RP).
 % executed concurrently. Each protocols' ensemble requires an identical workflow
 % with input parameter modifications.
 
-
-
 HTBAC is implemented in Python, and uses RCT to provide ensemble-execution
 capabilities and a runtime system to execute tasks. Ensemble Toolkit (EnTK),
 the topmost layer of RCT simplifies the process of creating ensemble-based
@@ -118,12 +116,22 @@ Pipeline, Stage and Tasks model to express a variety of protocols. Each
 protocol contains multiple stages with simulations and analysis tasks
 interspersed, in the most general case. We define each stage as a
 computational \textbf{task} and the ordered aggregation of these stages
-alongside their dependencies as a \textbf{pipeline}. HTBAC allows the simple
+alongside their dependencies as a \textbf{pipeline}. Figure \ref{figure:pst} provides the visual implementation of the TIES protocols into the PST model. HTBAC allows the simple
 expression and concurrent execution of multiple distinct protocols, thereby
 enabling concurrent screening of drug candidates. HTBAC not only simplifies
 the expression of complex binding affinity protocols, but also provides
-hitherto unavailable capabilities, viz., the adaptive forumation/expression
+hitherto unavailable capabilities, viz., the adaptive formation/expression
 and execution of these protocols, without any additional programming burden.
+
+\begin{figure}
+  \centering
+   \includegraphics[width=\columnwidth]{figures/_TIES_EnTK_implementation.pdf}
+  \caption{TIES protocol expressed using the EnTK PST model. Each protocol instance
+  maps to a single Pipeline, comprised of Stage(s) which maintain temporal order. 
+  Each Stage executes $n$ tasks, where $n$ represents the number of lambda-replica
+  combinations.}
+\label{fig:pst}
+\end{figure}
 
 
 % programming model (that are consistent with the EnTK) to enable the user 
@@ -142,24 +150,19 @@ workflow is described, it is submitted to the
 RabbitMQ message queue for communication. EnTK identifies tasks which have
 dependencies satisfied and can be executed concurrently. EnTK's
 \textbf{Execution Manager} uses the underlying runtime system, RADICAL-Pilot
-to execute the tasks on specific target resources.
+to execute the tasks on specific target resources. 
 
 \begin{figure}
   \centering
-   \includegraphics[width=\columnwidth]{figures/isc_htbac_integration_with_entk_RP.pdf}
+   \includegraphics[width=\columnwidth]{figures/isc_htbac_integration_with_entk_RP-4.pdf}
   \caption{Mapping of flow between HTBAC, EnTK, and RP. The HTBAC API exposes the Protocol
-  and Runner components. EnTK serves as the workflow execution system and
+  component. EnTK serves as the workflow execution system and
   by managing the workflow and workload. RADICAl-Pilot serves as the runtime system}
 \label{fig:integration}
 \end{figure}
 
 
-HTBAC exposes two components \textbf{Runner Handle} and \textbf{Protocol}.
-The \textbf{Runner} component is a container \jhanote{I don't know what a
-container is in this context?} that implements the ESMACS and TIES into the
-EnTK PST model abstraction. 
-
-The \textbf{Protocol} class can be intantiated as one of two protocols.
+HTBAC exposes a \textbf{Protocol} component as the main user facing component. The \textbf{Protocol} class can be instantiated as one of two protocols.
 Currently the HTBAC provides the two protocol objects: ESMACS and TIES. For
 TIES, each protocol typically corresponds to a single physical system, and
 multiple instances can be supported. The TIES protocol object enables the user
@@ -174,7 +177,7 @@ protocol enables the user to select ...
 % the \textbf{Runner Handle} which translates the request to EnTK.
 
 	In Section \ref{sec:related-work} we highlighted how an ensemble
-simulation approach can both aid sampling and provide improve uncertainty
+simulation approach can both aid sampling and improve uncertainty
 quantification for free energy calculations. Despite these crucial advantages,
 it remains non-trivial for field researchers to write biosimulation
 applications that involve individual protocols supporting multiple replicas,
@@ -188,7 +191,12 @@ concurrently.
 	In our earlier work~\cite{dakka2017} we demonstrated how we applied the
 PST model to implement the ESMACS protocol into an EnTK application. In this
 work we validate the generality of HTBAC by implementing the TIES protocol and
-investigating its performance with multiple TIES protocol. We comapare the
+investigating its performance with multiple TIES protocol. 
+
+
+A protocol instance
+
+We compare
 overheads of HTBAC and demonstrate that its overheads and performance are
 invariant of the specific protocol..... \jhanote{connective tissue for
 Experiments Section...}

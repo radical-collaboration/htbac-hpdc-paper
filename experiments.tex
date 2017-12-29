@@ -13,18 +13,15 @@
 % clarified. not sure why they are in the experiments section.} Pipelines are
 % executed concurrently. 
 
-For the TIES protocol, each pipeline consists of six stages. EnTK manages the
-queueing of the tasks in accordance with the order and concurrency mandated by
-stages and pipelines. \jhanote{.. need clean separation of implementation
-details from design of experiments} Each of the simulation stages contains a
-task for every unique $\lambda$-replica combination.
+For the TIES protocol, each pipeline consists of six stages. Each of the simulation 
+stages contains a task for every unique $\lambda$-replica combination.
 
-\begin{figure}
-  \centering
-   \includegraphics[width=\columnwidth]{figures/Adaptive_TIES.png}
-  \caption{\jhanote{Please provide caption. Please reference and use in text.}}
-\label{fig:weak_scaling}
-\end{figure}
+
+%EnTK manages the
+%queueing of the tasks in accordance with the order and concurrency mandated by
+%stages and pipelines. \jhanote{.. need clean separation of implementation
+%details from design of experiments} 
+
 
 In the non-adaptive workflow scenario, the first 11 $\lambda$ windows consist
 of the following values: $L$ is a vector with
@@ -36,16 +33,15 @@ L &= \{ x_i: x_i\in[0,1]\; and\; x_{i+1} = x_i + \delta \}, where\ \delta\ is\ 0
   We append two additional values on both ends of $L$, completing 13 $\lambda$
 windows. Each $\lambda$ window consists of five replicas. Therefore there are
 a total of 65 tasks for every simulation stage. The production simulations
-stage, $s4$ \jhanote{not defined. where is the figure and accompanying
-description?} executes a four ns simulation duration. The analysis stages of
+stage, $s4$ as described in \ref{fig:pst} executes a four ns simulation duration. The analysis stages of
 the protocol reduce the number of tasks. The first analysis task consists of
 five tasks where each task performs an aggregate analysis over all $\lambda$
 windows for each replica. The second analysis stage consists of one task that
 aggregates the previous results and computes a single average across all
 replicas.
 
-In the adaptive workflow, over the course of a run \jhanote{protocol
-instance?} we alter the number of $\lambda$ windows being simulated. The
+In the adaptive workflow, over the course of a protocol instance we alter 
+the number of $\lambda$ windows being simulated. The
 number of $\lambda$ windows and their respective values depend on the
 difference between the $dU/d\lambda$ measured between adjacent windows.
 Increasing the number of $\lambda$ windows in regions of rapid change will
@@ -54,21 +50,20 @@ arbitrarily placed window. In order to access the $dU/d\lambda$ values during
 runtime, we break down the single production simulation stage (S4) from the
 nonadaptive workflow into multiple stages for the adaptive workflow. Each
 stage in the adaptive workflow produces only 1 ns of simulation. Once each
-stage is complete a decision is made as to whether more $\lambda$ windows are
+stage is complete a decision is made about whether more $\lambda$ windows are
 required, and if so where they should be placed. We start the workflow with
 only five $\lambda$ parameters that consist of the following values:
 
 \begin{flalign}
-L &= \{ x_i: x_i\in[0,1]\; and\; x_{i+1} = x_i + \delta \}, where\ \delta\ is\ 0.25.
+L &= \{ x_i: x_i\in[0,1]\; and\; x_{i+1} = x_i + \delta \}, where\ \delta\ is\ 0.33.
 %&$$L=\{ x_i: x_i\in[0,1]\; and\; x_{i+1} = x_i + \delta \}$$%, where $\delta$ is $0.1$.
 \end{flalign}
 
-For every $\lambda$ window we allocate five replicas therefore yielding a
-total of 25 tasks. We run 25 tasks for stages $S1$ through $S4.1$. Between
-stages \texttt{s4.1} and \texttt{s4.3} the number of $\lambda$ windows doubles
+For every $\lambda$ window we initialize with three replicas therefore yielding a
+total of 15 tasks. We run 15 tasks for stages $S1$ through $S4.1$. Between
+stages $S4.1$ and $S4.3$ the number of $\lambda$ windows doubles
 for every stage, which doubles the total number of tasks. The last production
-simulation stage, \texttt{s4.4}, runs for the remaining 2 ns durations.
-\jhanote{consistency in the description of stages: either boldface ot tttext}
+simulation stage, $S4.4$, runs for the remaining 2 ns durations.
 
 HTBAC provides the functional capability to adaptively deterine the time at
 which the $\lambda$ window are determined. However in this paper, we eschew a
@@ -79,14 +74,21 @@ experiments, our experiments implement "adaptive change" not "when" i.e., we
 introduce only a single degree of freedom relative to baseline "non-adaptive"
 experiments.
 
+\begin{figure}
+  \centering
+   \includegraphics[width=\columnwidth]{figures/Adaptive_TIES.png}
+  \caption{\jhanote{Please provide caption. Please reference and use in text.}}
+\label{fig:adaptive_TIES}
+\end{figure}
+
 \subsubsection{Weak Scaling Experiments}
 
-We previously demonstrated weak scaling of the ESMACS protocol in [ref SC] where 
-we showed that a single ESMACS instance could run up to 128 concurrent pipelines. 
+%We previously demonstrated weak scaling of the ESMACS protocol in [ref SC] where we showed that a single ESMACS instance could run up to 128 concurrent pipelines. 
 \jhanote{1 sentence about how pipelines in ESMACS were simpler than TIES? else the
 reader will say: you did 128 pipelines already... why should I be impressed by a
 small number of pipelines. Important to highlight that the scalability is over
-PROTOCOL INSTANCES and not pipeline instances.}
+PROTOCOL INSTANCES and not pipeline instances.} \jdnote{added blurb in
+design \& implementation, removed it from here}
 
 Here we show weak scalability for the TIES protocol by growing the number of
 protocol instances while adhering to the required number of pipelines. By
@@ -99,7 +101,7 @@ The first weak scalability experiment demonstrates the behavior of HTBAC, EnTK
 and RP using the multiple instances of the TIES protocol. By design of weak
 scaling, the ratio between the number of pipelines and cores are kept
 constant. \jhanote{This is some what inconsistent with Fig. 2, which  shows
-constant ratio between protocol instances and resources used} As the number of
+constant ratio between protocol instances and resources used} \jdnote{will modify once we get new data in the early a.m.} As the number of
 cores (measure of resource) changes by a factor of 2, we introduce twice as
 many protocol instances. As designed, the weak scaling property provides
 insight into the size of the workload that can be investigated in a given
@@ -110,40 +112,67 @@ amount of time.
 % increasing the number of instances, thereby the execution workload.
 
 
+
+%The next weak scalability experiment replicates the design of the first experiment using a combination of TIES and ESMACS instances. The comparison of experiment 1 and 2 shows the ability to execute procotols with different resource requirements using one pilot.
+
+\subsubsection {Strong Scaling Experiments} 
+
+Next we repeat the same design of the weak scalability 
+experiments but examine performance of strong scaling when fixing the number of 
+pipelines and varying the resources. The comparison between weak and strong 
+scalability demonstrates the overhead introduced by load balancing and 
+scheduling tasks in multiple generations.
+
+\subsection{Experiment Setup}\label{ssec:exp_design}
+
+We perform weak (and strong) scalability experiments on NCSA Blue Waters--a 13.3. petaFLOPS Cray, with 32 Interlago cores/50 GB RAM per node, Cray Gemini, Lustre shared file system. We perform our 
+experiments from a virtual machine hosted in Europe, as Blue 
+Waters does not allow for executing applications directly on
+the login node. 
+
+All experiments use HTBAC version 0.1, EnTK version 0.6 and RP 
+version 0.47. The MD engine used is NAMD-MPI for tasks pertaining to $S1$ - $S4$, while the analysis stage, $S5$ use AmberTools. For both adaptive and nonadaptive experiments, the minimization 
+tasks of $S1$ are assigned 100(0) steps, while the equilibration
+tasks in $S2$ and $S3$ are assigned 5000 steps. In the nonadaptive experiments, the production 
+simulation tasks in $S4$ are assigned 50000 steps. For the
+adaptive experiments, each substage of $S4$ i.e. $S4.1$ - $S4.4$ is assigned X steps. 
+
+HTBAC submits a resource request to EnTK, to which EnTK uses 
+RP to acquire resources via a single pilot. The performance of 
+the pilot is contingent upon characterization of 
+performance, in this case, weak and strong scalability. Accordingly, we request the maximum number of cores required
+by the workload as the number of cores in a pilot. We use between
+4160 and 33280 cores as indicated in figure~\ref{fig:weak_scaling}
+because the NAMD executable used in all tasks from $S1$-$S4$ require at 
+least 32 cores per task. From our own scalability performance measurements of 
+NAMD on Blue Waters, we observe the ideal cores per task to be 16,
+however Blue Waters does not permit running multiple MPI applications on the same node, hence each NAMD task requires a full node for execution.
+
 \begin{figure}
   \centering
    \includegraphics[width=\columnwidth]{figures/weak_scaling_TIES_instances_5,000_timesteps}
   \caption{Weak scaling properties of HTBAC (right side). We investigate the
   weak scaling of HTBAC as the ratio of the number of protocol instances to
   resources is kept constant. (Left) Overheads of HTBAC, EnTK and RP for
-  experimental configurations investigating the weak scaling of TIES.
+  experimental configurations investigating the weak scaling of TIES. We ran two trials for each protocol instance 
+  configuration. 
   \jhanote{(i) I would replace "Pilot Size" with "Number of Cores". (ii) How
   is HTBAC Overhead measured? Maybe extend Y-left range to 75 or so? (iii) Why
   do we not have "closer" to linear scaling for 5,000 timesteps?? (iv) Minor
-  nitpick: Is it possible to plot the bars equal widths?}}
+  nitpick: Is it possible to plot the bars equal widths?}\jdnote{will do}}
 \label{fig:weak_scaling}
 \end{figure}
 
 
-%The next weak scalability experiment replicates the design of the first experiment using a combination of TIES and ESMACS instances. The comparison of experiment 1 and 2 shows the ability to execute procotols with different resource requirements using one pilot.
+\subsection{Overheads of HTBAC}
 
-Strong scalability design: Next we repeat the same design of the weak scalability experiments but examine performance of strong scaling when fixing the number of pipelines and varying the resources. The comparison between weak and strong scalability demonstrates the overhead introduced by load balancing and scheduling tasks in multiple generations.
-
-% \begin{figure}
-%   \centering
-%    \includegraphics[width=\columnwidth]{figures/weak_scaling_TIES_instances_64cores-2M.pdf}
-%   \caption{Figure justifying data for validation run (will not be added to final paper)}
-% \label{fig:validation}
-% \end{figure}
-
-%Strong scaling argument: If you go big enough you start to encounter high rates of failures on the machines. Part of the reason to do both is to find the sweet spot between weak/strong scaling.
-
-Experimental Setup
-
-We perform weak (and strong) scalability experiments on NCSA Blue Waters--a 13.3. petaFLOPS Cray, with 32 Interlago cores/50 GB RAM per node, Cray Gemini, Lustre shared file system.
-
-Overhead of HTBAC, EnTK and RP
-
-EnTK consists of multiple active components interacting with each other in order to support the execution of ensemble based applications. This process includes various events such as validation of the workflow, validation of the resource description, submission of resource request, creation of tasks, translation of tasks to and from the runtime system amongst several others. In order to understand the contribution of the various events in Ensemble Toolkit, termed as EnTK overhead, to the total time to run, we construct the following experiments.
-
-Time to run = T(overhead\textsubscript{entk}) + T(overhead\textsubscript{rp}) + T(execution)
+HTBAC enables concurrent execution of multiple protocol instances. With each new protocol instance generated for an 
+application, the HTBAC overhead grows to match the additional
+requirement of generating and coordinating protocols. In order
+to understand the contribution of the various events in HTBAC, 
+termed as HTBAC overhead, to the total time to run. 
+We construct the following metrics :
+\(Time-to-run = T(overhead\textsubscript{HTBAC} + 
+T(overhead\textsubscript{entk}) + 
+T(overhead\textsubscript{rp}) + T(execution)\). We define \(T(execution)\) as \(TTX = TTC - T_q\) where \(TTC\) is
+time-to-completion and \(T_q\) is time spent queuing on the HPC machine. 
