@@ -36,16 +36,16 @@ Sampling along $\lambda$ is then required in order to compute the difference in 
 Consequently, whereas in ESMACS all replicas sample using the same system description,
 in TIES sub-ensembles are executed at diffent points along $\lambda$.
 The change in free energy associated with the transformation is calculated by numerically integrating (via adaptive quadrature) the
-values of the $dU/d\lambda$ across the full set of $\lambda$ windows simulated.
+values of the $\partial U/\partial\lambda$ across the full set of $\lambda$ windows simulated.
 The TIES protocol, for example, relies on the numerical
-integration of $dU/d\lambda$. 
+integration of $\partial U/\partial\lambda$. 
 %Obtaining values for the function means running
 %multiple replicas of full simulation workflows with a given $\lambda$,
 %therefore we would like to minimize the number of $\lambda$ values that need to 
 %be evaluted for our given accuracy threshold. 
 
 Obtaining accurate and precise results from TIES requires that the $\lambda$ windows correctly
-capture the changes of $dU/d\lambda$ over the transformation.
+capture the changes of $\partial U/\partial\lambda$ over the transformation.
 This behaviour may vary considerably between systems.
 Typically, windows are evenly spaced between 0 and 1 with the spacing between them set before
 execution at a distance determined by the simulator to be sufficient for a wide range of systems.
@@ -98,15 +98,14 @@ $\lambda$ windows that will most impact the calculation are not known
 \textit{a priori}, and change between physical systems (drugs). As multiple
 simulations must be run for each window, sampling with a very high frequency
 is expensive and impractical. Furthermore, adaptive placement of $\lambda$
-windows is likely to better capture the shape of the $dU/d\lambda$ curve,
+windows is likely to better capture the shape of the $\partial U/\partial\lambda$ curve,
 leading to more accurate and precise results for a given computational cost.
 
-On occasion, alchemical methods may be very slow to converge, in such
+On occasion, alchemical methods may be very slow to converge; in such
 circumstances use of another method, such as ESMACS, may be the best option.
 This means that the most effective way to gain accurate and precise free
 energy results on industrially or clinically relavant timescales is to be able
-to adapt both sampling (intra-protocol) and even adapt protocol (inter-
-protocol) used at run time. With potentially thousands of simulations, often
-employing multiple analysis methodologies, this is indeed the only way to
-effectively utilize these techniques and resources at scale.
+to adapt both sampling (intra-protocol) and even the type of calculation (inter-protocol) used at run time. 
+With potentially thousands of simulations, often
+employing multiple analysis methodologies, this provides the most effective way to utilize these techniques and resources at scale.
 

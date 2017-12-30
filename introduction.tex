@@ -1,42 +1,48 @@
 Recent developments in both algorithms and architectures (in particular
 GPGPUs) have led to increasing interest in the use of molecular simulation to
 estimate the strength of macromolecular binding free energies
-\cite{DeVivo2016}. However, for molecular simulations to truly influence
+~\cite{DeVivo2016}. However, for molecular simulations to truly influence
 decison making in industrial and clinical settings, the dual challenges of
 scale (thousands of concurrent multi-stage pipelines) and sophistication
 (adaptive sampling or selection of binding affinity protocols based upon
 system behaviour and statistical uncertainty) will need to be
-tackled~\cite{XX}.
+tackled.
 
 % which provides a domain specific interface to leverage recent advances in
 % abstracting the relatonships between building blocks in workflow systems to
 
 Tools that facilitate the scalable, automated and sophisticated computation of
-varied binding free energy calculations on high- performance computing
-resources are necessary. Towards that goal, we recently introduced the High-
+varied binding free energy calculations on high-performance computing
+resources are necessary.
+We have previously developed a tool for automating system building and 
+simulation input generation, the Binding Affinity Calculator 
+(BAC)~\cite{Sadiq2008}.
+More recently we have introduced the High-
 Throughput Binding Affinity Calculator (HTBAC)~\cite{dakka2017}, which brings
 advances in the design of domain-specific workflow systems using building
-blocks to facilitate the building and automation of rapid and accurate
-calculation of binding affinities. In Ref.~\cite{dakka2017} we demonstrated
-how HTBAC scales almost perfectly to hundreds of concurrent binding affinity
-calculations on a leadership class machine. This permits the rapid 
-time-to-solution that is essentially invariant of the size of candidate ligands as
-well as the type and number of protocols concurrently employed.
+blocks to facilitate the automation of deployment and execution of rapid and accurate calculation of binding affinities on leadership class machines. 
+In Dakka \textit{et al.}~\cite{dakka2017} we demonstrated how HTBAC scales 
+almost perfectly to hundreds of concurrent binding affinity calculations. 
+This permits the rapid time-to-solution that is essentially invariant of the 
+size of candidate ligands as well as the type and number of protocols 
+concurrently employed.
 
 In this case we look to reproduce a collaboration run between UCL and
 GlaxoSmithKline to study a congeneric series of drug candidates binding to the
 BRD4 protein (inhibitors of which have shown promising preclinical efficacy in
 pathologies ranging from cancer to inflammation)~\cite{Wan2017brd4}. This
-study compared two different protocols, known as TIES and ESMACS, both based
-on an ensemble simulation philosophy. In this approach multiple simulations
+study compared two different protocols, known as TIES and ESMACS~\cite{Wan2017brd4,    Bhati2017}, both based on an ensemble simulation philosophy. 
+In this approach multiple simulations
 are executed based on the same input system description, providing enhanced
-sampling and reduced time to completion. TIES is based on rigourous, but
+sampling and reduced time to completion. TIES is based on rigorous, but
 computationally expensive, calculations of relative free energies (i.e.
-results provide a comparison between two drugs). ESMACS, in contrast, provides
+results provide a comparison between two drugs). 
+ESMACS, in contrast, provides
 absolute binding free energies at low computational cost, but to achieve this
-coarse grains many of the details of the system being studied. The results of
-the simplifications employed by ESMACS is that its performance is heavily
-system dependent. In the real world application of these technologies, drug
+coarse grains many of the details of the system being studied. 
+The simplifications employed by ESMACS can reduce its effectiveness in some
+systems. 
+In the real world application of these technologies, drug
 design projects have limited resources and must make trade-offs between the
 needs for rigour and coverage of a wide range of chemical space. Initially
 large numbers of compounds must be screened to eliminate poor binders (using
@@ -58,8 +64,10 @@ foundations upon which we develop adaptable simulation schemes
 that automatically handle different system characteristics.
 
 In this work we demonstrate the use of HTBAC to adaptively run both protocols,
-including mixed protocol runs. Both protocols can involve the running sets of
-simulations which require very different levels of computational power.
+including mixed protocol runs. 
+Executing either protocols often involves running simulations of both free and  bound  ligand, with the later involving a much larger system than the former.
+This means that even single calculations must coordinate simulations with 
+heterogeneous computational requirements.
 Further to the use of a common framework to improve the ease of deployment and
 efficiency of execution of existing protocols we show how HTBAC can aid the
 development of enhanced approaches. 
