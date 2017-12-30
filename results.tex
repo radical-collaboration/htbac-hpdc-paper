@@ -1,8 +1,41 @@
 \subsection{Scaling and Performance Characterization}
 
-...
+
+
+We first characterize the overheads of HTBAC and
+the runtime system. HTBAC enables concurrent execution of multiple protocol instances.
+With each new protocol instance generated for an
+application, the HTBAC overhead grows to match the additional
+requirement of generating and coordinating protocols. In order
+to understand the contribution of the various events in HTBAC,
+termed as HTBAC overhead, to the total time to run, we construct the following metrics:
+\(Time-to-run = T(overhead\textsubscript{HTBAC} +
+T(overhead\textsubscript{entk}) +
+T(overhead\textsubscript{rp}) + T(execution)\). We define \(T(execution)\) as \(TTX = TTC - T_q\) where \(TTC\) is
+time-to-completion and \(T_q\) is time spent queuing on the HPC machine.
 
 \subsubsection{Weak Scaling Experiments}
+
+The HTBAC overhead accounts for approximately 0.1\% of \(TTX\). The remaining
+overheads, mainly EnTK and RP, depend on the number of tasks that need to be
+translated in-memory from a Python object to a compute unit (CU) description.
+As such, it is expected to grow proportionally to the number of tasks. EnTK
+submits CU descriptions to a MongoDB used by RP, and the RP pilot pulls these
+descriptions from the same database. This pull operation occurs over a wide
+area networks, which introduces varying amounts of latency. In addition, each
+Stage constructed by EnTK maintains sequential barriers. As such, RP remains
+dormant until completion of the current Stage before staging the next State.
+The impact of the barrier increases with number of CUs as seen in the 16
+protocol instances data point in \ref{fig:weak_scaling}.  Together, these two
+factors introduce delays in the scheduling of the CUs and results in higher
+overheads.
+
+ \(TTX\) measures the execution duration across all task, including file staging, MD kernel execution, 
+ and post-executables. As a result, we expect an increase in \(TTX\). As such, each additional 
+ protocol instance contributes to roughly 55 additional seconds in \(TTX\). 
+
+
+
 
 %We previously demonstrated weak scaling of the ESMACS protocol in [ref SC] where we showed that a single ESMACS instance could run up to 128 concurrent pipelines.
 %\jhanote{1 sentence about how pipelines in ESMACS were simpler than TIES? else the
@@ -10,6 +43,18 @@
 %small number of pipelines. Important to highlight that the scalability is over
 %PROTOCOL INSTANCES and not pipeline instances.} \jdnote{added blurb in
 %design \& implementation, removed it from here}
+
+\subsection{Weak/Strong Scaling Performance Results}
+
+\begin{figure}
+  \centering
+   \includegraphics[width=\columnwidth]{./figures/weak_scaling_TIES_instances_50,000_timesteps.pdf}
+  \caption{Weak scaling properties of HTBAC (right side). We investigate the
+  weak scaling of HTBAC as the ratio of the number of protocol instances to
+  resources is kept constant. (Left) Overheads of HTBAC, and runtime overhead (EnTK/RP) for
+  experimental configurations investigating the weak scaling of TIES. We ran two trials for each protocol instance configuration.}
+\label{fig:weak_scaling}
+\end{figure}
 
 Here we show weak scalability for the TIES protocol by growing the number of
 protocol instances while adhering to the required number of pipelines. By
@@ -36,49 +81,40 @@ investigated in a given amount of time.
 
 \subsubsection {Strong Scaling Experiments}
 
-Next we repeat the same design of the weak scalability
-experiments but examine performance of strong scaling when fixing the number of
-pipelines and varying the resources. The comparison between weak and strong
-scalability demonstrates the overhead introduced by load balancing and
-scheduling tasks in multiple generations.
+Next we repeat the same design of the weak scalability experiments but examine
+performance of strong scaling when fixing the number of pipelines and varying
+the resources. The comparison between weak and strong scalability demonstrates
+the overhead introduced by load balancing and scheduling tasks in multiple
+generations.
 
+(Add in additional points on strong scaling if they come in)
 
-\subsection{Weak/Strong Scaling Performance Results}
+% HTBAC enables concurrent execution of multiple protocol instances.
+% With each new protocol instance generated for an
+% application, the HTBAC overhead grows to match the additional
+% requirement of generating and coordinating protocols. In order
+% to understand the contribution of the various events in HTBAC,
+% termed as HTBAC overhead, to the total time to run, we construct the following metrics:
 
-For the weak/strong scaling results, we first characterize the overheads of HTBAC and
-the runtime system. HTBAC enables concurrent execution of multiple protocol instances.
-With each new protocol instance generated for an
-application, the HTBAC overhead grows to match the additional
-requirement of generating and coordinating protocols. In order
-to understand the contribution of the various events in HTBAC,
-termed as HTBAC overhead, to the total time to run, we construct the following metrics:
-\(Time-to-run = T(overhead\textsubscript{HTBAC} +
-T(overhead\textsubscript{entk}) +
-T(overhead\textsubscript{rp}) + T(execution)\). We define \(T(execution)\) as \(TTX = TTC - T_q\) where \(TTC\) is
-time-to-completion and \(T_q\) is time spent queuing on the HPC machine.
+% \(Time-to-run = T(overhead\textsubscript{HTBAC} +
+% T(overhead\textsubscript{entk}) +
+% T(overhead\textsubscript{rp}) + T(execution)\). We define \(T(execution)\) as \(TTX = TTC - T_q\) where \(TTC\) is
+% time-to-completion and \(T_q\) is time spent queuing on the HPC machine.
 
-The HTBAC overhead accounts for approximately 0.1\% of \(TTX\).
-The remaining overheads, mainly EnTK and RP, depend on the number of tasks that need to be
-translated in-memory from a Python object to a compute unit (CU) description. As such, it is
-expected to grow proportionally to the number of tasks. EnTK submits CU descriptions to a
-MongoDB used by RP, and the RP pilot pulls these descriptions from the same database.
-This pull operation occurs over a wide area networks, which introduces varying amounts of latency.
-In addition, each Stage constructed by EnTK maintains sequential barriers. As such, RP remains
-dormant until completion of the current Stage before staging the next State. The impact of the 
-barrier increases with number of CUs as seen in the 16 protocol instances datapoint 
-in \ref{fig:weak_scaling}. 
-Together, these two factors introduce delays in the scheduling of the CUs and results in 
-higher overheads. 
+% \jhanote{We should discuss the above. It is difficult to follow..}
 
- \(TTX\) measures the execution duration across all task, including file staging, MD kernel execution, 
- and post-executables. As a result, we expect an increase in \(TTX\). As such, each additional 
- protocol instance contributes to roughly 55 additional seconds in \(TTX\). 
+The remaining overheads, mainly EnTK and RP, depend on the number of tasks
+that need to be translated in-memory from a Python object to a compute unit
+(CU) description. As such, it is expected to grow proportionally to the number
+of tasks. EnTK submits CU descriptions to a MongoDB used by RP, and the RP
+pilot pulls these descriptions from the same database. This pull operation
+occurs over a wide area networks, which introduces varying amounts of latency.
 
- (Add in additional points on strong scaling if they come in)
+\(TTX\) measures the execution duration across all task, which includes pre-
+executables, the main MD kernel execution, and post-executables.
 
 
 \subsection{Validation Experiment Results}
-
 
 HTBAC fully automates the process of calculating the binding affinity of
 protein-ligand complexes from reading the input all the way to analyising the

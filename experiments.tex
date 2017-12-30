@@ -110,7 +110,7 @@ experiments.
 \end{figure}
 
 
-\subsection{Experiment Setup}\label{ssec:exp_design}
+\subsubsection{Experiment Setup}\label{ssec:exp_design}
 
 We perform weak (and strong) scalability experiments on NCSA Blue Waters--a
 13.3. petaFLOPS Cray, with 32 Interlago cores/50 GB RAM per node, Cray Gemini,
@@ -137,37 +137,3 @@ on Blue Waters, we observe the ideal cores per task to be 16, however Blue
 Waters does not permit running multiple MPI applications on the same node,
 hence each NAMD task requires a full node to maintain concurrency.
 
-\begin{figure}
-  \centering
-   \includegraphics[width=\columnwidth]{./figures/weak_scaling_TIES_instances_50,000_timesteps.pdf}
-  \caption{Weak scaling properties of HTBAC (right side). We investigate the
-  weak scaling of HTBAC as the ratio of the number of protocol instances to
-  resources is kept constant. (Left) Overheads of HTBAC, and runtime overhead (EnTK/RP) for
-  experimental configurations investigating the weak scaling of TIES. We ran two trials for each protocol instance configuration.}
-\label{fig:weak_scaling}
-\end{figure}
-
-
-HTBAC enables concurrent execution of multiple protocol instances.
-With each new protocol instance generated for an
-application, the HTBAC overhead grows to match the additional
-requirement of generating and coordinating protocols. In order
-to understand the contribution of the various events in HTBAC,
-termed as HTBAC overhead, to the total time to run, we construct the following metrics:
-
-\(Time-to-run = T(overhead\textsubscript{HTBAC} +
-T(overhead\textsubscript{entk}) +
-T(overhead\textsubscript{rp}) + T(execution)\). We define \(T(execution)\) as \(TTX = TTC - T_q\) where \(TTC\) is
-time-to-completion and \(T_q\) is time spent queuing on the HPC machine.
-
-\jhanote{We should discuss the above. It is difficult to follow..}
-
-The remaining overheads, mainly EnTK and RP, depend on the number of tasks
-that need to be translated in-memory from a Python object to a compute unit
-(CU) description. As such, it is expected to grow proportionally to the number
-of tasks. EnTK submits CU descriptions to a MongoDB used by RP, and the RP
-pilot pulls these descriptions from the same database. This pull operation
-occurs over a wide area networks, which introduces varying amounts of latency.
-
-\(TTX\) measures the execution duration across all task, which includes pre-
-executables, the main MD kernel execution, and post-executables.
