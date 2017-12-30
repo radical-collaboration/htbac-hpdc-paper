@@ -29,8 +29,10 @@ of the size of candidate ligands.
 
 In this paper we aim to reproduce a collaboration project between UCL and
 GlaxoSmithKline to study a congeneric series of drug candidates binding to the
-BRD4 protein (inhibitors of which have shown promising preclinical efficacy in
-pathologies ranging from cancer to inflammation)~\cite{Wan2017brd4}. This
+BRD4 protein 
+%(inhibitors of which have shown promising preclinical efficacy in
+%pathologies ranging from cancer to inflammation)
+~\cite{Wan2017brd4}. This
 study compared two different protocols, known as TIES and
 ESMACS~\cite{Wan2017brd4, Bhati2017}, both based on an ensemble simulation
 philosophy. In this approach multiple simulations are executed based on the
@@ -40,8 +42,10 @@ calculations of relative free energies (i.e. results provide a comparison
 between two drugs). ESMACS, in contrast, provides absolute binding free
 energies at low computational cost, but to achieve this coarse grains many of
 the details of the system being studied. The simplifications employed by
-ESMACS can reduce its effectiveness in some systems. In the real world
-application of these technologies, drug design projects have limited resources
+ESMACS can reduce its effectiveness in some systems. 
+%In the real world
+%application of these technologies, d
+Drug design projects have limited resources
 and must make trade-offs between the needs for rigour and coverage of a wide
 range of chemical space. Initially large numbers of compounds must be screened
 to eliminate poor binders (using ESMACS), later more accurate methods (such as
@@ -56,30 +60,41 @@ between simulations run using different protocols or systems, for example,
 when one calculation has converged whilst another has not. This adaptability
 makes it easier to manage complex programmes where efficient use of resources
 is required in order to achieve a time to completion of studies comparable to
-those of high throughput chemistry. This functionality provides the
+those of high throughput chemistry. 
+\dwwnote{Could the next sentence go?}
+This functionality provides the
 foundations upon which we develop adaptable simulation schemes that
 automatically handle different system characteristics.
 
 In this work we demonstrate the use of HTBAC to adaptively run both protocols,
-including mixed protocol runs. Executing either protocols often involves
-running simulations of both free and  bound  ligand, with the later involving
-a much larger system than the former. This means that even single calculations
-must coordinate simulations with heterogeneous computational requirements.
+including mixed protocol runs. 
+Calculations using either protocol require simulations of free and 
+protein bound ligand necessitating the coordination of runs with 
+heterogeneous computational requirements.
+%Executing either protocol often involves
+%running simulations of both free and  bound  ligand, with the later involving
+%a much larger system than the former. This means that even single calculations
+%must coordinate simulations with heterogeneous computational requirements.
 Further to the use of a common framework to improve the ease of deployment and
 efficiency of execution of existing protocols we show how HTBAC can aid the
-development of enhanced approaches. The TIES protocol is highly sensitive to
-the chemical details of the compounds being studied, which means that
-different runs may require different sampling strategies to achieve optimal
-time to convergence. We have developed an adaptive variant of TIES which
-automatically increases the sampling in areas where it is needed for each
-system, allowing more rapid convergence of calculations. Furthermore, this
-approach facilitates a data driven approach to future protocol refinement.
+development of enhanced approaches. 
+We demonstrate this capacity through the development of a variant of TIES 
+employing adaptive sampling which improves time to convergence.
 
-This approach not only allows us to tailor the protocol to the particular
-system but to provide meaningful statistical uncertainties for all of our
-models. These developments fit into a wider vision in which the use of
+%The TIES protocol is highly sensitive to
+%the chemical details of the compounds being studied, which means that
+%different runs may require different sampling strategies to achieve optimal
+%time to convergence. We have developed an adaptive variant of TIES which
+%automatically increases the sampling in areas where it is needed for each
+%system, allowing more rapid convergence of calculations. Furthermore, this
+%approach facilitates a data driven approach to future protocol refinement.
+
+%This approach not only allows us to tailor the protocol to the particular
+%system but to provide meaningful statistical uncertainties for all of our
+%models. 
+These developments fit into a wider vision in which the use of
 flexible and responsive computational protocols allow us to produce accurate,
-precise and reproducible estimates of the free energy of binding. Not only
+precise and reproducible estimates of the free energy of binding with meaningful error bars. Not only
 would this allow for wider uptake of computational techniques in industrial
 settings but opens up possibilities of using these technologies in clinical
 decison support scenarios. By creating a `digital twin', where the target
@@ -98,11 +113,10 @@ of individual protocols; and, (iv) Sets the stage for design of experiments
 that will allow for optimization of the collective and overall  
 time-to-insight as opposed to any single simple calculation.
 
-
 In the next section, we review previous work using ensemble molecular dynamics
 and outline the challenges faced in bringing this approach up to extreme
 scale. Section 3 provides details of the TIES and ESMACS protocols and the
-BRD4 system we will applly them to. In Section 4, we discuss how HTBAC has
+BRD4 system we will apply them to. In Section 4, we discuss how HTBAC has
 been designed and implemented in order to meet the computational challenges
 associated with the scalable execution of multiple, and possibly concurrently
 executing protocols. In Sections 5 and 6 we describe the design and then
