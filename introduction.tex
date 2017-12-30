@@ -36,12 +36,21 @@ protocol.
 %study compared two different protocols, known as TIES and
 %ESMACS~\cite{Wan2017brd4, Bhati2017}, both based on an ensemble simulation
 %philosophy. 
-In this paper we reproduce results from a study of  congoneric series of componds which employed 
-two different protocols, known as TIES and
-ESMACS~\cite{Wan2017brd4, Bhati2017}, both based on 
-%an ensemble simulation
-%philosophy.
-multiple simulations of the same system.
+
+
+In this paper we reproduce results from a collaboration project between UCL
+and GlaxoSmithKline to study a congeneric series of drug candidates binding to
+the BRD4 protein (inhibitors of which have shown promising preclinical
+efficacy in pathologies ranging from cancer to
+inflammation)~\cite{Wan2017brd4}. These studies employed two different
+protocols, known as TIES and ESMACS~\cite{Bhati2017}, both based on multiple
+simulations of the same system.
+
+% In this paper we reproduce results from a study of  congoneric series of
+% componds which employed two different protocols, known as TIES and
+% ESMACS~\cite{Wan2017brd4, Bhati2017}, both based on multiple simulations of
+% the same system.
+
 %In this approach multiple simulations are executed based on the
 %same input system description, providing enhanced sampling and reduced time to
 %completion. 
@@ -77,10 +86,11 @@ when one calculation has converged whilst another has not. This adaptability
 makes it easier to manage complex programmes where efficient use of resources
 is required in order to achieve a time to completion of studies comparable to
 those of high throughput chemistry. 
-\dwwnote{Could the next sentence go?}
-This functionality provides the
-foundations upon which we develop adaptable simulation schemes that
-automatically handle different system characteristics.
+
+% \dwwnote{Could the next sentence go?}
+% This functionality provides the
+% foundations upon which we develop adaptable simulation schemes that
+% automatically handle different system characteristics.
 
 In this work we demonstrate the use of HTBAC to adaptively run both protocols,
 including mixed protocol runs. 
@@ -116,10 +126,11 @@ settings but opens up possibilities of using these technologies in clinical
 decison support scenarios. By creating a `digital twin', where the target
 protein is based on the real patients genetic sequence, a specific individuals
 response to different treatements could be predicted. 
-\dwwnote{Could remove the next sentence}
-This approach would be
-applicable even in the case of rare variants where insufficient data is
-available for statistical methods to be informative.
+
+% \dwwnote{Could remove the next sentence}
+% This approach would be
+% applicable even in the case of rare variants where insufficient data is
+% available for statistical methods to be informative.
 
 The novel contributions of HTBAC are: (i) Unprecedented throughput: it allows
 the concurrent screening for drug binding affinities of multiple compounds at
@@ -131,21 +142,22 @@ of individual protocols; and, (iv) Sets the stage for design of experiments
 that will allow for optimization of the collective and overall  
 time-to-insight as opposed to any single simple calculation.
 
-\dwwnote{Do we need the next paragraph? A slightly shortened version is: 
-In this paper we descibe the background to our binding free energy protocols and how we designed HTBAC to 
-meet the challenges faced in bringing this approach up to extreme scale. We then describe a set of experiments 
-characterizing the performance and
-scalability of HTBAC and the development of an adaptive version of TIES.
-}
+%\dwwnote{Do we need the next paragraph? A slightly shortened version is: }
 
-In the next section, we review previous work using ensemble molecular dynamics
-and outline the challenges faced in bringing this approach up to extreme
-scale. Section 3 provides details of the TIES and ESMACS protocols and the
-BRD4 system we will apply them to. In Section 4, we discuss how HTBAC has
-been designed and implemented in order to meet the computational challenges
-associated with the scalable execution of multiple, and possibly concurrently
-executing protocols. In Sections 5 and 6 we describe the design and then
-results of a series of experiments characterizing the performance and
-scalability of HTBAC on the Blue Waters and Titan supercomputers. We conclude
-with a discussion of the impact of HTBAC, implications for binding affinity
-calculations and near-term future work.
+In this paper we descibe the background to our binding free energy protocols
+and how we designed HTBAC to meet the challenges faced in bringing this
+approach up to extreme scale. We then describe a set of experiments
+characterizing the performance and scalability of HTBAC and the development of
+an adaptive version of TIES. 
+
+% In the next section, we review previous work using ensemble molecular dynamics
+% and outline the challenges faced in bringing this approach up to extreme
+% scale. Section 3 provides details of the TIES and ESMACS protocols and the
+% BRD4 system we will apply them to. In Section 4, we discuss how HTBAC has
+% been designed and implemented in order to meet the computational challenges
+% associated with the scalable execution of multiple, and possibly concurrently
+% executing protocols. In Sections 5 and 6 we describe the design and then
+% results of a series of experiments characterizing the performance and
+% scalability of HTBAC on the Blue Waters and Titan supercomputers. We conclude
+% with a discussion of the impact of HTBAC, implications for binding affinity
+% calculations and near-term future work.
