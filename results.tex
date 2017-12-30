@@ -1,4 +1,5 @@
 %------------------------------------------------------------------------------
+<<<<<<< HEAD
 
 \subsection{Performance Characterization}
 
@@ -47,6 +48,43 @@ scheduling tasks in multiple generations.
 
 
 \subsection{Validation experiments}
+=======
+\subsection{Weak/Strong Scaling Performance Results}
+
+For the weak/strong scaling results, we first characterize the overheads of HTBAC and
+the runtime system. HTBAC enables concurrent execution of multiple protocol instances.
+With each new protocol instance generated for an
+application, the HTBAC overhead grows to match the additional
+requirement of generating and coordinating protocols. In order
+to understand the contribution of the various events in HTBAC,
+termed as HTBAC overhead, to the total time to run, we construct the following metrics:
+\(Time-to-run = T(overhead\textsubscript{HTBAC} +
+T(overhead\textsubscript{entk}) +
+T(overhead\textsubscript{rp}) + T(execution)\). We define \(T(execution)\) as \(TTX = TTC - T_q\) where \(TTC\) is
+time-to-completion and \(T_q\) is time spent queuing on the HPC machine.
+
+The HTBAC overhead accounts for approximately 0.1\% of \(TTX\).
+The remaining overheads, mainly EnTK and RP, depend on the number of tasks that need to be
+translated in-memory from a Python object to a compute unit (CU) description. As such, it is
+expected to grow proportionally to the number of tasks. EnTK submits CU descriptions to a
+MongoDB used by RP, and the RP pilot pulls these descriptions from the same database.
+This pull operation occurs over a wide area networks, which introduces varying amounts of latency.
+In addition, each Stage constructed by EnTK maintains sequential barriers. As such, RP remains
+dormant until completion of the current Stage before staging the next State. The impact of the 
+barrier increases with number of CUs as seen in the 16 protocol instances datapoint 
+in \ref{fig:weak_scaling}. 
+Together, these two factors introduce delays in the scheduling of the CUs and results in 
+higher overheads. 
+
+ \(TTX\) measures the execution duration across all task, including file staging, MD kernel execution, 
+ and post-executables. As a result, we expect an increase in \(TTX\). As such, each additional 
+ protocol instance contributes to roughly 55 additional seconds in \(TTX\). 
+
+ (Add in additional points on strong scaling if they come in)
+
+
+\subsection{Validation Experiment Results}
+>>>>>>> e0352a35ec687a5fcb233c81c82ab6029aa7fbe4
 
 HTBAC fully automates the process of calculating the binding affinity of
 protein-ligand complexes from reading the input all the way to analyising the
@@ -70,9 +108,9 @@ implemented the complex workflow of TIES.
     \toprule
     System & HTBAC & Wan et. al & Experiment \\
     \midrule
-    BRD4 \textbf{3 to 1} & \num{0.39 +- 0.10} &   \num{0.4 +- 0.20} &  \num{0.3 +- 0.09} \\
-    BRD4 \textbf{3 to 4} & \num{0.02 +- 0.12} &   \num{0.0 +- 0.20} &  \num{0.0 +- 0.13} \\
-    BRD4 \textbf{3 to 7} & \num{-1.6 +- 0.17} &  \num{-1.5 +- 0.20} & \num{-1.3 +- 0.11} \\
+    BRD4 \textbf{3 to 1} & \num{0.39 +- 0.10} &   \num{0.41 +- 0.04} &  \num{0.3 +- 0.09} \\
+    BRD4 \textbf{3 to 4} & \num{0.02 +- 0.12} &   \num{0.01 +- 0.06} &  \num{0.0 +- 0.13} \\
+    BRD4 \textbf{3 to 7} & \num{-0.88 +- 0.17} &  \num{-0.90 +- 0.08} & \num{-1.3 +- 0.11} \\
     \bottomrule
   \end{tabular}
 
@@ -89,7 +127,7 @@ implemented the complex workflow of TIES.
 
 %------------------------------------------------------------------------------
 
-\section{Adaptive quadrature in action}
+\section{Adaptive Quadrature Experiments Results}
 
 
 
