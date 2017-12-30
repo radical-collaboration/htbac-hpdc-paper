@@ -15,45 +15,57 @@ Tools that facilitate the automated scalable and sophisticated computation of
 varied binding free energy calculations on high-performance computing
 resources are necessary. We have previously developed a tool for automating
 system building and simulation input generation, the Binding Affinity
-Calculator (BAC)~\cite{Sadiq2008}. More recently we have introduced the High-
-Throughput Binding Affinity Calculator (HTBAC)~\cite{dakka2017}, which brings
+Calculator (BAC)~\cite{Sadiq2008}. More recently we have introduced the High-Throughput Binding Affinity Calculator (HTBAC)~\cite{dakka2017}, which brings
 advances in the design of domain-specific workflow systems using building
 blocks to facilitate the automation of deployment and execution of rapid and
 accurate calculation of binding affinities on leadership class machines. In
 Dakka \textit{et al.}~\cite{dakka2017} we demonstrated how HTBAC scales almost
 perfectly to hundreds of concurrent multi-stage pipelines for a single
-protocol, which permits rapid time-to-solution that is essentially invariant
-of the size of candidate ligands.
+protocol.
+%, which permits rapid time-to-solution that is essentially invariant
+%of the size of candidate ligands.
 
 % as well as the type and number of protocols concurrently employed.
 
-In this paper we aim to reproduce a collaboration project between UCL and
-GlaxoSmithKline to study a congeneric series of drug candidates binding to the
-BRD4 protein 
+%In this paper we aim to reproduce a collaboration project between UCL and
+%GlaxoSmithKline to study a congeneric series of drug candidates binding to the
+%BRD4 protein 
 %(inhibitors of which have shown promising preclinical efficacy in
 %pathologies ranging from cancer to inflammation)
-~\cite{Wan2017brd4}. This
-study compared two different protocols, known as TIES and
-ESMACS~\cite{Wan2017brd4, Bhati2017}, both based on an ensemble simulation
-philosophy. In this approach multiple simulations are executed based on the
-same input system description, providing enhanced sampling and reduced time to
-completion. TIES is based on rigorous, but computationally expensive,
-calculations of relative free energies (i.e. results provide a comparison
-between two drugs). ESMACS, in contrast, provides absolute binding free
-energies at low computational cost, but to achieve this coarse grains many of
-the details of the system being studied. The simplifications employed by
-ESMACS can reduce its effectiveness in some systems. 
+%~\cite{Wan2017brd4}. This
+%study compared two different protocols, known as TIES and
+%ESMACS~\cite{Wan2017brd4, Bhati2017}, both based on an ensemble simulation
+%philosophy. 
+In this paper we reproduce results from a study of  congoneric series of componds which employed 
+two different protocols, known as TIES and
+ESMACS~\cite{Wan2017brd4, Bhati2017}, both based on 
+%an ensemble simulation
+%philosophy.
+multiple simulations of the same system.
+%In this approach multiple simulations are executed based on the
+%same input system description, providing enhanced sampling and reduced time to
+%completion. 
+TIES is rigorous but computationally expensive and has a limited range of 
+applicability.
+ESMACS is approximate but can be employed across any set of ligands at lower computational cost.
+%TIES is based on rigorous, but computationally expensive,
+%calculations of relative free energies (i.e. results provide a comparison
+%between two drugs). ESMACS, in contrast, provides absolute binding free
+%energies at low computational cost, but to achieve this coarse grains many of
+%the details of the system being studied. The simplifications employed by
+%ESMACS can reduce its effectiveness in some systems. 
 %In the real world
 %application of these technologies, d
 Drug design projects have limited resources
 and must make trade-offs between the needs for rigour and coverage of a wide
 range of chemical space. Initially large numbers of compounds must be screened
 to eliminate poor binders (using ESMACS), later more accurate methods (such as
-TIES) are needed as good binders are refined and improved. This means that
-many projects will combine the use of both protocols.
+TIES) are needed as good binders are refined and improved. %This means that
+%many projects will combine the use of both protocols.
 
-We explore the use of HTBAC for aforementioned sophisticated exploration of
-novel compounds binding to a target protein. In order to support such
+%We explore the use of HTBAC for aforementioned sophisticated exploration of
+%novel compounds binding to a target protein. 
+In order to support such
 investigations, in addition to being scalable, HTBAC must be enhanced to
 support flexible resource reallocations schemes where resources can be moved
 between simulations run using different protocols or systems, for example,
@@ -93,13 +105,15 @@ employing adaptive sampling which improves time to convergence.
 %system but to provide meaningful statistical uncertainties for all of our
 %models. 
 These developments fit into a wider vision in which the use of
-flexible and responsive computational protocols allow us to produce accurate,
+flexible and responsive computational protocols produce accurate,
 precise and reproducible estimates of the free energy of binding with meaningful error bars. Not only
 would this allow for wider uptake of computational techniques in industrial
 settings but opens up possibilities of using these technologies in clinical
 decison support scenarios. By creating a `digital twin', where the target
 protein is based on the real patients genetic sequence, a specific individuals
-response to different treatements could be predicted. This approach would be
+response to different treatements could be predicted. 
+\dwwnote{Could remove the next sentence}
+This approach would be
 applicable even in the case of rare variants where insufficient data is
 available for statistical methods to be informative.
 
@@ -107,11 +121,18 @@ The novel contributions of HTBAC are: (i) Unprecedented throughput: it allows
 the concurrent screening for drug binding affinities of multiple compounds at
 unprecedented scales both in the number of candidates and resources utilized;
 (ii) Agile selection of different binding affinity protocols: Inter-protocol
-adaptivity: selection of "optimal" protocol (as determined by accuracy and
+adaptivity: selection of ``optimal" protocol (as determined by accuracy and
 computaional intensity); (iii) Intra-protocol Adaptivity: efficient execution
 of individual protocols; and, (iv) Sets the stage for design of experiments
 that will allow for optimization of the collective and overall  
 time-to-insight as opposed to any single simple calculation.
+
+\dwwnote{Do we need the next paragraph? A slightly shortened version is: 
+In this paper we descibe the background to our binding free energy protocols and how we designed HTBAC to 
+meet the challenges faced in bringing this approach up to extreme scale. We then describe a set of experiments 
+characterizing the performance and
+scalability of HTBAC and the development of an adaptive version of TIES.
+}
 
 In the next section, we review previous work using ensemble molecular dynamics
 and outline the challenges faced in bringing this approach up to extreme
