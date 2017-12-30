@@ -189,22 +189,4 @@ hence each NAMD task requires a full node to maintain concurrency.
 \end{figure}
 
 
-HTBAC enables concurrent execution of multiple protocol instances.
-With each new protocol instance generated for an
-application, the HTBAC overhead grows to match the additional
-requirement of generating and coordinating protocols. In order
-to understand the contribution of the various events in HTBAC,
-termed as HTBAC overhead, to the total time to run, we construct the following metrics:
-\(Time-to-run = T(overhead\textsubscript{HTBAC} +
-T(overhead\textsubscript{entk}) +
-T(overhead\textsubscript{rp}) + T(execution)\). We define \(T(execution)\) as \(TTX = TTC - T_q\) where \(TTC\) is
-time-to-completion and \(T_q\) is time spent queuing on the HPC machine.
 
-The remaining overheads, mainly EnTK and RP, depend on the number of tasks that need to be
-translated in-memory from a Python object to a compute unit (CU) description. As such, it is
-expected to grow proportionally to the number of tasks. EnTK submits CU descriptions to a
-MongoDB used by RP, and the RP pilot pulls these descriptions from the same database.
-This pull operation occurs over a wide area networks, which introduces varying amounts of latency.
-
-\(TTX\) measures the execution duration across all task, which includes pre-executables, the
-main MD kernel execution, and post-executables.
