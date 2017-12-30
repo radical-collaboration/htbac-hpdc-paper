@@ -2,42 +2,50 @@
 
 \subsection{Validation experiments}
 
-\begin{table}
-  \caption{Comparison between the calculated binding free energies of a subset of the original study. All values are in kcal per mol.}
-  \label{}
+HTBAC fully automates the process of calculating the binding affinity of
+protein-ligand complexes from reading the input all the way to analyising the
+final results. In order to validate the correctness of the results, we have
+devised a set of experiments. These experiments are vital to gain confidence
+in the algorithm and to prove that it is indeed calculating the correct values.
 
-  \begin{tabular}{lrrr}
+The validation experiments were based on the original study of Wan et. al.
+\cite{Wan2017brd4}. We selected a subset of the protein ligand systems that
+were the subject of that study: they are the ligand transformations 3 to 1, 4,
+and 7. We then performed a full simulation on all 3 systems and calculated the
+binding affinity (see Table~\ref{tab:exp2}) using HTBAC.
+
+The results show that all three $\Delta \Delta G$ values are within error bars
+of the original study, reinforcing the fact that HTBAC has indeed correctly
+implemented the complex workflow of TIES.
+
+\begin{table}
+  \centering
+  \begin{tabular}{l@{\hskip 1in}r@{\hskip 0.2in}r@{\hskip 0.2in}r}
     \toprule
     System & HTBAC & Wan et. al & Experiment \\
     \midrule
-    BRD4 3 to 1 & 0.2 (0.10) &  0.4 (0.20) &  0.3 (0.09) \\
-    BRD4 3 to 4 & 0.1 (0.12) &  0.0 (0.20) &  0.0 (0.13) \\
-    BRD4 3 to 7 & -1.6 (0.17) & -1.5 (0.20) & -1.3 (0.11) \\
+    BRD4 \textbf{3 to 1} & \num{0.39 +- 0.10} &   \num{0.4 +- 0.20} &  \num{0.3 +- 0.09} \\
+    BRD4 \textbf{3 to 4} & \num{0.02 +- 0.12} &   \num{0.0 +- 0.20} &  \num{0.0 +- 0.13} \\
+    BRD4 \textbf{3 to 7} & \num{-1.6 +- 0.17} &  \num{-1.5 +- 0.20} & \num{-1.3 +- 0.11} \\
     \bottomrule
   \end{tabular}
 
+  \caption{Comparison of the calculated binding free energies using HTBAC, from
+  the original study by Wan et. al and experimental data. The two theoretical
+  studies used the same protcol in principle. This experiment proved that HTBAC
+  has indeed implemented TIES correctly, as the calculated values are either
+  the same or within error bar of the original study. All values are in
+  \textbf{kcal mol\textsuperscript{-1}}.}
+  \label{tab:exp2}
+
+
 \end{table}
 
-\begin{figure}
-\begin{tikzpicture}
-\begin{axis}[
-  xlabel=$\Delta\Delta G_{\text{Wan et. al.}}$,
-  ylabel=$\Delta\Delta G_{\text{HTBAC}}$,
-  ymin=-2,
-  xmin=-2,
-  ymax=2,
-  xmax=2,
-  ]
-  \addplot+[only marks, mark=o, black] table [x=wan, y=htbac]{figures/comparisons.csv};
-  \addplot[mark=none, black] {x};
-
-\end{axis}
-\end{tikzpicture}
-\caption{Comparison between the previous study and current results.}
-\label{fig:comparison}
-\end{figure}
-
 %------------------------------------------------------------------------------
+
+\section{Adaptive experiments}
+
+
 
 \begin{figure}
 \begin{tikzpicture}
