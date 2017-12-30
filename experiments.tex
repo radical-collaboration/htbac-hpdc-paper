@@ -84,11 +84,11 @@ experiments.
 \subsubsection{Weak Scaling Experiments}
 
 %We previously demonstrated weak scaling of the ESMACS protocol in [ref SC] where we showed that a single ESMACS instance could run up to 128 concurrent pipelines. 
-\jhanote{1 sentence about how pipelines in ESMACS were simpler than TIES? else the
-reader will say: you did 128 pipelines already... why should I be impressed by a
-small number of pipelines. Important to highlight that the scalability is over
-PROTOCOL INSTANCES and not pipeline instances.} \jdnote{added blurb in
-design \& implementation, removed it from here}
+%\jhanote{1 sentence about how pipelines in ESMACS were simpler than TIES? else the
+%reader will say: you did 128 pipelines already... why should I be impressed by a
+%small number of pipelines. Important to highlight that the scalability is over
+%PROTOCOL INSTANCES and not pipeline instances.} \jdnote{added blurb in
+%design \& implementation, removed it from here}
 
 Here we show weak scalability for the TIES protocol by growing the number of
 protocol instances while adhering to the required number of pipelines. By
@@ -100,8 +100,7 @@ ESMACS as a growth in the number of pipelines.
 The first weak scalability experiment demonstrates the behavior of HTBAC, EnTK
 and RP using the multiple instances of the TIES protocol. By design of weak
 scaling, the ratio between the number of pipelines and cores are kept
-constant. \jhanote{This is some what inconsistent with Fig. 2, which  shows
-constant ratio between protocol instances and resources used} \jdnote{will modify once we get new data in the early a.m.} As the number of
+constant. As the number of
 cores (measure of resource) changes by a factor of 2, we introduce twice as
 many protocol instances. As designed, the weak scaling property provides
 insight into the size of the workload that can be investigated in a given
@@ -146,33 +145,39 @@ by the workload as the number of cores in a pilot. We use between
 because the NAMD executable used in all tasks from $S1$-$S4$ require at 
 least 32 cores per task. From our own scalability performance measurements of 
 NAMD on Blue Waters, we observe the ideal cores per task to be 16,
-however Blue Waters does not permit running multiple MPI applications on the same node, hence each NAMD task requires a full node for execution.
+however Blue Waters does not permit running multiple MPI applications on the same node, 
+hence each NAMD task requires a full node to maintain concurrency.
 
 \begin{figure}
   \centering
-   \includegraphics[width=\columnwidth]{figures/weak_scaling_TIES_instances_5,000_timesteps}
+   \includegraphics[width=\columnwidth]{figures/weak_scaling_TIES_instances_50,000_timesteps}
   \caption{Weak scaling properties of HTBAC (right side). We investigate the
   weak scaling of HTBAC as the ratio of the number of protocol instances to
-  resources is kept constant. (Left) Overheads of HTBAC, EnTK and RP for
+  resources is kept constant. (Left) Overheads of HTBAC, and runtime overhead (EnTK/RP) for
   experimental configurations investigating the weak scaling of TIES. We ran two trials for each protocol instance 
   configuration. 
-  \jhanote{(i) I would replace "Pilot Size" with "Number of Cores". (ii) How
-  is HTBAC Overhead measured? Maybe extend Y-left range to 75 or so? (iii) Why
-  do we not have "closer" to linear scaling for 5,000 timesteps?? (iv) Minor
-  nitpick: Is it possible to plot the bars equal widths?}\jdnote{will do}}
 \label{fig:weak_scaling}
 \end{figure}
 
 
-\subsection{Overheads of HTBAC}
-
-HTBAC enables concurrent execution of multiple protocol instances. With each new protocol instance generated for an 
+HTBAC enables concurrent execution of multiple protocol instances. 
+With each new protocol instance generated for an 
 application, the HTBAC overhead grows to match the additional
 requirement of generating and coordinating protocols. In order
 to understand the contribution of the various events in HTBAC, 
-termed as HTBAC overhead, to the total time to run. 
-We construct the following metrics :
+termed as HTBAC overhead, to the total time to run, we construct the following metrics:
 \(Time-to-run = T(overhead\textsubscript{HTBAC} + 
 T(overhead\textsubscript{entk}) + 
 T(overhead\textsubscript{rp}) + T(execution)\). We define \(T(execution)\) as \(TTX = TTC - T_q\) where \(TTC\) is
 time-to-completion and \(T_q\) is time spent queuing on the HPC machine. 
+
+The remaining overheads, mainly EnTK and RP, depend on the number of tasks that need to be
+translated in-memory from a Python object to a compute unit (CU) description. As such, it is
+expected to grow proportionally to the number of tasks. EnTK submits CU descriptions to a 
+MongoDB used by RP, and the RP pilot pulls these descriptions from the same database. 
+This pull operation occurs over a wide area networks, which introduces varying amounts of latency. 
+
+\(TTX\) measures the execution duration across all task, which includes pre-executables, the 
+main MD kernel execution, and post-executables.
+
+

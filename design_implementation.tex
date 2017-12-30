@@ -2,126 +2,80 @@
 % \subsection{Computational Challenges}
 
 Most advances in high-performance computing have focused on the scale,
-performance and optimization of single long simulations. However, due to the
-end of Dennard scaling and methodological advances, many applications are now
+performance and optimization of single long simulations. Due to the end of
+Dennard scaling and methodological advances, many applications are now
 formulated using multiple, shorter ensemble-based simulations. There are
-limited software solutions that can support the scalable execution of
-heterogeneous computational tasks. HTBAC builds upon established middleware
-solutions~\cite{,}, validated runtime abstractions~\cite{} for scalable
+however, limited software solutions that can support the scalable execution of
+heterogeneous tasks.
+
+
+HTBAC has three primary design requirements\@: (1) enable the scalable
+execution of concurrent multi-stage pipelines, flexibily partitioned across
+different prototocols, (2) abstract the complexity of building protocols,
+execution and resource management; and, (3) provide adaptive features (i.e.,
+modifiying the task-graph during runtime, based on previous tasks), to enable
+efficient protocols and effective resource sharing across protocols, without
+explicit resource management requirements.
+
+% In principle, many workflow management systems (WMS) can be used to express
+% ensemble-based workflows to compute binding free energies. General-purpose WMS
+% are however,  limited by a lack of specificity: workflow system with feature
+% rich, but complex interface models impose substantial overhead when
+% integrating application workflows in the runtime system, preventing users from
+% quick and flexible applications prototyping.
+
+% Furthermore, statistically meaningful results derived from simulations are of
+% critical interest, as they can leverage additional sampling of simulations
+% which could lead to an improvement in precision of free energy calculations.
+% Such decisions typically, cannot be made {\it a priori} and require postmortem
+% user intervention in order to analyze and spawn additional simulations.
+% Specific features such as steering and adaptivity (e.g., spawning additional
+% simulations) during runtime often require a redistribution of resources.
+% Current WMS do not provide adequate support for dynamic resource utilization
+% and require special extensions for adaptive formulations thus limiting the
+% possibility of adaptive workflows.
+
+
+HTBAC builds upon established middleware solutions~\cite{review_bb_2016},
+validated runtime abstractions~\cite{turilli2017comprehensive} for scalable
 execution of heterogeneous computational tasks, and customizes them for the
-computation of binding free energies.
+computation of binding free energies. HTBAC derives many of the advantages of
+a lightweight, flexible domain specific workflow layer from its use of
+RADICAL-Cybertools (RCT) which are functionally well-defined and delineated
+middleware building blocks. RCT~\cite{review_bb_2016} are engineered to
+support extensible and scalable workflows across diverse computing platforms.
+The two primary RCT components that HTBAC depends upon are the Ensemble
+Toolkit (EnTK) and RADICAL-Pilot (RP).
 
 
-% We designed HTBAC in response to aforementioned challenges and requirements,
-% and the 
+% HTBAC is implemented in Python, and uses RCT to provide ensemble-execution
+% capabilities and a runtime system to execute tasks. 
 
-% that overcome absence of middleware systems that provide scalable and
-% extensible and
+EnTK simplifies the process of creating ensemble-based applications with
+complex coordination and communication requirements. The EnTK API exposes the
+PST model which consists of three components: \textbf{Pipeline},
+\textbf{Stage}, and \textbf{Task}. HTBAC promotes binding affinity  {\bf
+Protocols} as the user-facing construct, and provides programming model
+defined by the Pipeline, Stage and Tasks model to express a variety of
+protocols. We define each stage as a computational \textbf{task} and the
+ordered aggregation of these stages alongside their dependencies as a
+\textbf{pipeline}. A workflow is comprised of $N_P$ instances of the P$^{th}$
+protocol.
 
+The \textbf{Protocol} class can be instantiated as one of two protocols.
+Currently the HTBAC provides the two protocol objects: ESMACS and TIES. For
+TIES, each protocol typically corresponds to a single physical system, and
+multiple instances can be supported. The TIES protocol object enables the user
+to select a physical system, number of replicas, core allocation per replica,
+and lambda windows (for alchemical pertubations). Figure \ref{figure:pst}
+provides the visual implementation of the TIES protocols into the PST model.
 
+% Consistent with EnTK's programming model, HTBAC also uses the PST model to
+% express {\bf Protocols}.
 
-% To encode an algorithm into a set of tasks requires a workflow system that
-% exposes an interface to describe tasks, dependencies, and an execution
-% pattern. Once the algorithm is encoded into a set of tasks, the workflow
-% system is required to translate tasks into executables, coordinate task
-% dependencies, and acquire and manage resources.
+% Each protocol contains multiple stages with simulations and analysis tasks
+% interspersed, in the most general case.
 
-%\jhanote{I'm changing the order of paragraphs: promoting adaptivity, as we
-%seem to be building the case for decision making.}
-
-% We define \textbf{adaptivity} as the ability to revisit a prior execution
-% decision based on a runtime evaluation. Adapting workflows at runtime requires
-% incorporating additional parallelism, redistributing of resources across
-% tasks, and analyzing the performance and functionality of added adaptivity to
-% evaluate its benefits and further design.
-
-% several limitations. Among these, two of the most relevant are long time to
-% adoption and lack of dynamic capabilities.
-
-% monolithic designs provide end-to-end capabilities to execute workflows on
-% heterogeneous and distributed cyberinfrastructure. Other workflow systems
-% entail
-
-In principle, many workflow management systems (WMS) can be used to express
-ensemble-based workflows to compute binding free energies. General-purpose WMS
-however, are limited by a lack of specificity: workflow system with feature
-rich, but complex interface models impose substantial overhead when
-integrating application workflows in the runtime system, preventing users from
-quick and flexible applications prototyping.
-
-Furthermore, statistically meaningful results derived from simulations are of
-critical interest, as they can leverage additional sampling of simulations
-which could lead to an improvement in precision of free energy calculations.
-Such decisions typically, cannot be made {\it a priori} and require postmortem
-user intervention in order to analyze and spawn additional simulations.
-Specific features such as steering and adaptivity (e.g., spawning additional
-simulations) during runtime often require a redistribution of resources.
-Current WMS do not provide adequate support for dynamic resource utilization
-and require special extensions for adaptive formulations thus limiting the
-possibility of adaptive workflows.
-
-
-% across diverse computing platforms with the rapid ability to design a
-% multitude of workflows.
-
-
-
-% ---------------------------------------------------------------------------
-% \subsection{HTBAC}
-
-This suggests three design requirements for HTBAC\@: (1) enable the scalable
-execution of concurrent multiple protocols, (2) abstract the complexity of
-building protocols, execution and resource management from the user; and (3)
-provide adaptive features (i.e., modifiying the task-graph during runtime,
-based on previous tasks), to enable more effective protocols, without explicit
-resource management requirements.
-
-HTBAC derives many of the advantages of a lightweight, flexible domain
-specific workflow layer from its use of RADICAL-Cybertools (RCT) which are
-functionally well-defined and delineated middleware building blocks.
-RCT~\cite{review_bb_2016} are engineered to support extensible and scalable
-workflows across diverse computing platforms. Although enscapulated from end-
-users of HTBAC, the two primary RCT components that HTBAC depends upon are the
-Ensemble Toolkit (EnTK) and RADICAL-Pilot (RP).
-
-
-% Efficient execution of binding affinity calculation protocols on different
-% platforms poses several technical challenges. 
-
-
-% ---------------------------------------------------------------------------
-% \subsection{Implementation}
-
-% Steps vary in data input dependencies, computational resource requirements and
-% MD execution engines. 
-
-% Subsets of these tasks are defined as \textbf{workloads}, i.e., tasks whose
-% dependencies have been satisfied at a particular point in time and may be
-% executed concurrently. Each protocols' ensemble requires an identical workflow
-% with input parameter modifications.
-
-HTBAC is implemented in Python, and uses RCT to provide ensemble-execution
-capabilities and a runtime system to execute tasks. Ensemble Toolkit (EnTK),
-the topmost layer of RCT simplifies the process of creating ensemble-based
-applications with complex coordination and communication requirements. The
-EnTK API exposes the PST model which consists of three components:
-\textbf{Pipeline}, \textbf{Stage}, and \textbf{Task}. 
-
-% HTBAC uses the PST model to encode \textbf{Protocols}.
-
-Consistent with EnTK's programming model, HTBAC also uses the PST model to to
-express {\bf Protocols}. HTBAC promotes binding affinity protocols as the
-user-facing constructs, and provides programming model defined by the
-Pipeline, Stage and Tasks model to express a variety of protocols. Each
-protocol contains multiple stages with simulations and analysis tasks
-interspersed, in the most general case. We define each stage as a
-computational \textbf{task} and the ordered aggregation of these stages
-alongside their dependencies as a \textbf{pipeline}. Figure \ref{figure:pst} provides the visual implementation of the TIES protocols into the PST model. HTBAC allows the simple
-expression and concurrent execution of multiple distinct protocols, thereby
-enabling concurrent screening of drug candidates. HTBAC not only simplifies
-the expression of complex binding affinity protocols, but also provides
-hitherto unavailable capabilities, viz., the adaptive formation/expression
-and execution of these protocols, without any additional programming burden.
 
 \begin{figure}
   \centering
@@ -134,6 +88,7 @@ and execution of these protocols, without any additional programming burden.
 \end{figure}
 
 
+
 % programming model (that are consistent with the EnTK) to enable the user 
 
 % In section \ref{sec:science-drivers}, we described two examples of ensemble-
@@ -144,13 +99,12 @@ and execution of these protocols, without any additional programming burden.
 % workflow entails a maximum value of $P = 2$ and $N_P$=16, but in future work P
 % will be greater $>$ 2). 
 
-A workflow is comprised of $N_P$ instances of the P$^{th}$ protocol. Once the
-workflow is described, it is submitted to the
+Once the workflow is described, it is submitted to EnTK's
 \b{Application Manager} which sets up multiple processes, threads and a
-RabbitMQ message queue for communication. EnTK identifies tasks which have
-dependencies satisfied and can be executed concurrently. EnTK's
-\textbf{Execution Manager} uses the underlying runtime system, RADICAL-Pilot
-to execute the tasks on specific target resources. 
+RabbitMQ message queue for communication.
+EnTK identifies tasks which have dependencies satisfied and can be executed
+concurrently. EnTK's \textbf{Execution Manager} uses the underlying runtime
+system, RADICAL-Pilot to execute the tasks on specific target resources.
 
 \begin{figure}
   \centering
@@ -162,13 +116,6 @@ to execute the tasks on specific target resources.
 \end{figure}
 
 
-HTBAC exposes a \textbf{Protocol} component as the main user facing component. The \textbf{Protocol} class can be instantiated as one of two protocols.
-Currently the HTBAC provides the two protocol objects: ESMACS and TIES. For
-TIES, each protocol typically corresponds to a single physical system, and
-multiple instances can be supported. The TIES protocol object enables the user
-to select a physical system, number of replicas, core allocation per replica,
-and lambda windows (for alchemical pertubations). Similarly, the ESMAC
-protocol enables the user to select ...
 
 % protocol, a user can scale protocol instances to study as many physical systems as
 % desired. 
@@ -187,19 +134,23 @@ Moreover, the ability to generate multiple protocol instances enables the user
 to investigate a range of physical systems (i.e., drug candidates)
 concurrently.
 
+HTBAC allows the simple expression and concurrent execution of multiple
+distinct protocols, thereby enabling concurrent screening of drug candidates.
+HTBAC not only simplifies the expression of complex binding affinity
+protocols, but also provides hitherto unavailable capabilities, viz., the
+adaptive formation/expression and execution of these protocols, without any
+additional programming burden.
 
-	In our earlier work~\cite{dakka2017} we demonstrated how we applied the
+In our earlier work~\cite{dakka2017} we demonstrated how we applied the
 PST model to implement the ESMACS protocol into an EnTK application. In this
 work we validate the generality of HTBAC by implementing the TIES protocol and
 investigating its performance with multiple TIES protocol. 
 
+% A protocol instance
 
-A protocol instance
-
-We compare
-overheads of HTBAC and demonstrate that its overheads and performance are
-invariant of the specific protocol..... \jhanote{connective tissue for
-Experiments Section...}
+We compare overheads of HTBAC and demonstrate that its overheads and
+performance are invariant of the specific protocol..... \jhanote{connective
+tissue for Experiments Section...}
 
 %\jhanote{Is this specific to the TIES protocol or to the protocol class. Needs
 %clarification.} 
