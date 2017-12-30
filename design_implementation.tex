@@ -81,7 +81,7 @@ provides the visual implementation of the TIES protocols into the PST model.
   \centering
    \includegraphics[width=\columnwidth]{figures/_TIES_EnTK_implementation.pdf}
   \caption{TIES protocol expressed using the EnTK PST model. Each protocol instance
-  maps to a single Pipeline, comprised of Stage(s) which maintain temporal order. 
+  maps to a single Pipeline, comprised of Stage(s) which maintain temporal order.
   Each Stage executes $n$ tasks, where $n$ represents the number of lambda-replica
   combinations.}
 \label{fig:pst}
@@ -92,12 +92,12 @@ provides the visual implementation of the TIES protocols into the PST model.
 % programming model (that are consistent with the EnTK) to enable the user 
 
 % In section \ref{sec:science-drivers}, we described two examples of ensemble-
-% based protocols for computing binding affinities. 
+% based protocols for computing binding affinities.
 
 
 % (so far, a
 % workflow entails a maximum value of $P = 2$ and $N_P$=16, but in future work P
-% will be greater $>$ 2). 
+% will be greater $>$ 2).
 
 Once the workflow is described, it is submitted to EnTK's
 \b{Application Manager} which sets up multiple processes, threads and a
@@ -118,7 +118,7 @@ system, RADICAL-Pilot to execute the tasks on specific target resources.
 
 
 % protocol, a user can scale protocol instances to study as many physical systems as
-% desired. 
+% desired.
 
 % The specification of protocols and their parameters are passed by the user to
 % the \textbf{Runner Handle} which translates the request to EnTK.
@@ -144,7 +144,7 @@ additional programming burden.
 In our earlier work~\cite{dakka2017} we demonstrated how we applied the
 PST model to implement the ESMACS protocol into an EnTK application. In this
 work we validate the generality of HTBAC by implementing the TIES protocol and
-investigating its performance with multiple TIES protocol. 
+investigating its performance with multiple TIES protocol.
 
 % A protocol instance
 
@@ -153,11 +153,11 @@ performance are invariant of the specific protocol..... \jhanote{connective
 tissue for Experiments Section...}
 
 %\jhanote{Is this specific to the TIES protocol or to the protocol class. Needs
-%clarification.} 
-%The same approach has been expanded to facilitate the creation of 
+%clarification.}
+%The same approach has been expanded to facilitate the creation of
 %sub-ensembles where the simulation configuration is altered programatically.
 %An example of this is the implementation ofthe TIES protocol,
-%where the user controls the $\lambda$ parameter values used in simulatios to 
+%where the user controls the $\lambda$ parameter values used in simulatios to
 %control which hybrid system states are sampled.
 
 %A parameter, $\lambda \in [0, 1]$ is set for values between extremes and a
@@ -205,7 +205,7 @@ tissue for Experiments Section...}
 
 
 % ---------------------------------------------------------------------------
-%\jhanote{I don't these "description" should be subsections. Consider 
+%\jhanote{I don't these "description" should be subsections. Consider
 %"\paragraph{}"}
 
 %\subsection{Step}
@@ -226,7 +226,7 @@ tissue for Experiments Section...}
 %object.
 
 % ---------------------------------------------------------------------------
-%\subsection{Ensembles} 
+%\subsection{Ensembles}
 
 %\jhanote{I'm not sure what we are trying to do here. We've just described
 %the abstract/constructs in HTBAC to be protocols. Why are we regressing to
