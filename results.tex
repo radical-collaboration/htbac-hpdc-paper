@@ -1,4 +1,54 @@
 %------------------------------------------------------------------------------
+<<<<<<< HEAD
+
+\subsection{Performance Characterization}
+
+...
+
+
+\subsubsection{Weak Scaling Experiments}
+
+%We previously demonstrated weak scaling of the ESMACS protocol in [ref SC] where we showed that a single ESMACS instance could run up to 128 concurrent pipelines.
+%\jhanote{1 sentence about how pipelines in ESMACS were simpler than TIES? else the
+%reader will say: you did 128 pipelines already... why should I be impressed by a
+%small number of pipelines. Important to highlight that the scalability is over
+%PROTOCOL INSTANCES and not pipeline instances.} \jdnote{added blurb in
+%design \& implementation, removed it from here}
+
+Here we show weak scalability for the TIES protocol by growing the number of
+protocol instances while adhering to the required number of pipelines. By
+design of each protocol, an increase in the number of instances simply means
+an increase in the number of pipelines. Therefore our previous ESMACS
+experiments~\cite{} \jhanote{fix please} demonstrates the scalability of
+ESMACS as a growth in the number of pipelines.
+
+The first weak scalability experiment demonstrates the behavior of HTBAC, EnTK
+and RP using the multiple instances of the TIES protocol. By design of weak
+scaling, the ratio between the number of pipelines and cores are kept
+constant. As the number of cores (measure of resource) changes by a factor of
+2, we introduce twice as many protocol instances. As designed, the weak
+scaling property provides insight into the size of the workload that can be
+investigated in a given amount of time.
+
+
+% The goal is to isolate and understand the impact of
+% increasing the number of instances, thereby the execution workload.
+
+
+
+%The next weak scalability experiment replicates the design of the first experiment using a combination of TIES and ESMACS instances. The comparison of experiment 1 and 2 shows the ability to execute procotols with different resource requirements using one pilot.
+
+\subsubsection {Strong Scaling Experiments}
+
+Next we repeat the same design of the weak scalability
+experiments but examine performance of strong scaling when fixing the number of
+pipelines and varying the resources. The comparison between weak and strong
+scalability demonstrates the overhead introduced by load balancing and
+scheduling tasks in multiple generations.
+
+
+\subsection{Validation experiments}
+=======
 \subsection{Weak/Strong Scaling Performance Results}
 
 For the weak/strong scaling results, we first characterize the overheads of HTBAC and
@@ -34,6 +84,7 @@ higher overheads.
 
 
 \subsection{Validation Experiment Results}
+>>>>>>> e0352a35ec687a5fcb233c81c82ab6029aa7fbe4
 
 HTBAC fully automates the process of calculating the binding affinity of
 protein-ligand complexes from reading the input all the way to analyising the
