@@ -21,6 +21,13 @@ During these steps positional constraints are gradually released from the struct
 system is heated to a physiologically realistic temperature.
 Whilst both protocols share a common workflow for individual replicas, the make up of the ensemble is different.
 
+TIES is based on rigorous, but computationally expensive,
+calculations of relative free energies (i.e. results provide a comparison
+between two drugs). ESMACS, in contrast, provides absolute binding free
+energies at low computational cost, but to achieve this coarse grains many of
+the details of the system being studied. The simplifications employed by
+ESMACS can reduce its effectiveness in some systems. 
+
 In the case of ESMACS, an ensemble consists of a set of identical simulations differing only in
 the initial velocities assigned to each atom.
 Upon completion of the MD simulation, free energy computation (via MMPBSA and potentially normal
