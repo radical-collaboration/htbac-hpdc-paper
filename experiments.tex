@@ -1,7 +1,7 @@
-\subsection{Experiments Design}
-
-%------------------------------------------------------------------------------
-
+% Weak Scalability Design : Keep Pipeline of Ensembles to show barrier needed in S5 and S6
+% Performance, generality with weak scaling (agnostic to kernel)
+% Added functionality (do not speak about binding adaptivity to performance or generality)
+% In use case: add in why TIES is challenging, and why adaptivity is challenging
 
 \subsection{Experiment Setup}\label{ssec:exp_design}
 
@@ -137,15 +137,15 @@ overheads. Each additional protocol instance contributes to roughly 55
 additional seconds in \(TTX\).
 
 
-\subsubsection {Strong Scaling Experiments}
+% \subsubsection {Strong Scaling Experiments}
 
-Next we repeat the same design of the weak scalability experiments but examine
-performance of strong scaling when fixing the number of pipelines and varying
-the resources. The comparison between weak and strong scalability demonstrates
-the overhead introduced by load balancing and scheduling tasks in multiple
-generations.
+% Next we repeat the same design of the weak scalability experiments but examine
+% performance of strong scaling when fixing the number of pipelines and varying
+% the resources. The comparison between weak and strong scalability demonstrates
+% the overhead introduced by load balancing and scheduling tasks in multiple
+% generations.
 
-(Add in additional points on strong scaling if they come in)
+% (Add in additional points on strong scaling if they come in)
 
 %------------------------------------------------------------------------------
 
@@ -207,31 +207,38 @@ adjacent windows. Increasing the number of $\lambda$ windows in regions of
 rapid change will increase the accuracy of the overall integral to a greater
 degree than an
 arbitrarily placed window. In order to adaptively add lambda windows, we need
-access to the $dU/d\lambda$ values during runtime. Therefore, we break down the
+access to the $\partial U/\partial\lambda$ values during runtime. Therefore, we break down the
 single production simulation stage (S4) from the nonadaptive workflow into
 multiple smaller stages, each running for 1 ns. Once each simulation is
 complete within a stage a decision is made about whether more $\lambda$ windows
 are required, and if so where they should be placed.
 
 We start out the simulation with 5 replicas of \emph{3} equally spaced
-$\lambda$ windows, and equilibrate them. Then repeatedly, we execute the
-shorter production simultion followed by an analysis to determine where to
-place new lambda windows. This is done until convergence, at which point all
-concurrect simulation are terminated. Convergence is defined as the point in
-the production-analysis loop when the desired error threshold has been
-reached.  One of the key points in this algorithm is the decision to place more
-lambda windows in certain domains. In adaptive quadrature, this is decided by
-calculating an error estimate on the integral and deciding whether it is below
-a certain threshold. Due to the stochastic nature of the biosimulations, it is
-non-trivial to determine this error, and as a proof of concept we simplified
-this decision to {\it a priori} calculated results. In future studies we plan
-to replace this decision process with a more rigurous approach.
+$\lambda$ windows, and equilibrate them. 
+Then we repeatedly execute 
+shorter production simulations followed by an analysis phase which determines where to
+place new lambda windows. 
+This procedure is repeated until convergence, at which point all
+concurrect simulation are terminated. 
+We define convergence as the point in
+the production-analysis loop at which a desired error threshold is
+reached. 
 
-There is a constraint on the number of new lambda windows that can be added at
-each iterations. To reduce overhead of inter-node communication, the
-simulations have to run on an integer number of nodes. This means that the
-number of new lambda windows (i.e. the number of simulations) \emph{has} to be
-either doubled or left unchanged. In case of doubling the nodes per simulation can be automatically redistributed by halfing them. To achieve this the algorithm loops through the current lambda window pairs until this criterion is reached, forcefully adding more if needed.
+The success of this algorithm is determined by the decision determing 
+where additional $\lambda$ windows should be introduced.
+In adaptive quadrature, this decision is made by
+calculating an error estimate on the integral and comparing this to a threshold value. 
+Due to the stochastic nature of biosimulations, it is
+non-trivial to determine this error, and as a proof of concept we simplified
+this decision to replicate pre-calculated results. In future studies we plan
+to replace this with a dynamic decision process.
+
+Inter-node communication introduces a constraint on the number of new lambda windows that can be added at each iteration. 
+To reduce the overhead of inter-node communication, simulations must run on an integer number of nodes. This means that the
+number of new $\lambda$ windows (i.e. the number of simulations) \emph{has} to be
+either doubled or left unchanged. 
+If the numer of window is doubled the nodes per simulation can  be halved automatically. 
+Our prototype algorithm loops through the current $\lambda$ window pairs until this criterion is reached, forcefully adding more if needed.
 
 
 % I don't think we need this equation here, it's too trivial.
@@ -246,14 +253,17 @@ either doubled or left unchanged. In case of doubling the nodes per simulation c
 % for every stage, which doubles the total number of tasks. The last production
 % simulation stage, $S4.4$, runs for the remaining 2 ns durations.
 
-HTBAC provides the functional capability to adaptively deterine the time at
-which the $\lambda$ window are determined. However in this paper, we eschew a
-discussion of this type of adaptivity, as the objective is to determine the
-feasibility of adaptive execution and demonstrate the scientific merit of
-implementing adaptive decision making. In order to provide "control" baseline
-experiments, our experiments implement "adaptive change" not "when" i.e., we
-introduce only a single degree of freedom relative to baseline "non-adaptive"
-experiments.
+\dwwnote{I haven't edited the next sentene as I don't know what it means.}
+\jhanote{Any better?}
+We introduce only a single degree of freedom relative to baseline ``non-
+adaptive" experiments, thus our experiments implement adaptive change in the
+lambda window value and not temporal ("when"). HTBAC provides the functional
+capability to adaptively deterine the time at which the $\lambda$ window are
+determined. However in this paper, we do not investigate the impact of such
+adaptivity, as the objective is to determine the feasibility of adaptive
+execution and resulting scientific merit of adaptive decision making.
+
+
 
 \begin{figure}
   \centering
@@ -325,8 +335,6 @@ and we are paving the way for more advanced biosimulation algorithms.
 \caption{The adaptive algorithm reevaluates the efficiency of the lambda window mesh after every \SI{1}{\nano\second} and makes a decision whether to place more lambda windows inside certain ranges.}
 \label{fig:adapt}
 \end{figure}
-
-
 
 
 
