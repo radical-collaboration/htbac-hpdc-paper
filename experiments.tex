@@ -12,7 +12,9 @@ monitored using a persistent virtual machine, as Blue Waters does not allow
 for executing applications directly on the login node.
 
 
-All experiments use HTBAC version 0.1, EnTK version 0.6 and RP version 0.47.
+All experiments use \href{https://github.com/jdakka/radical.htbac/tree/master}{HTBAC version 0.1}, 
+EnTK version 0.6 and RP version 0.47.
+For reference to \href{https://github.com/radical-experiments/isc-htbac-experiments}{experimental data}. 
 The MD engine used is NAMD-MPI for tasks pertaining to $S1$ - $S4$, while the
 analysis stage, $S5$ use AmberTools. For both adaptive and nonadaptive
 experiments, the minimization tasks of $S1$ are assigned 100(0) steps, while
@@ -104,7 +106,7 @@ given amount of time.
    \includegraphics[width=\columnwidth]{./figures/weak_scaling_TIES_instances_50,000_timesteps_with_16_instances.pdf}
   \caption{Weak scaling properties of HTBAC (right side). We investigate the
   weak scaling of HTBAC as the ratio of the number of protocol instances to
-  resources is kept constant. (Left) Overheads of HTBAC, and runtime overhead (EnTK/RP) for
+  resources is kept constant. Overheads of HTBAC (right), and runtime overhead (left) and \(TTX\) (left) for
   experimental configurations investigating the weak scaling of TIES. We ran two trials for each protocol instance configuration. Error bars in \(TTX\) in 2 and 8-protocol runs are insignficant.}
 \label{fig:weak_scaling}
 \end{figure}
@@ -132,7 +134,7 @@ processes when scaling from 8 to 16 protocols, which translates to 520 and
 overhead failures introduce delays in the scheduling of the CUs and results in
 higher overheads. Lastly, we notice that each additional protocol instance
 contributes to roughly 55 additional seconds in \(TTX\).  \jhanote{Is this
-true for all values, or just between 8 and 16?}
+true for all values, or just between 8 and 16?} \jdnote{yes for all data points}
 
 
 
