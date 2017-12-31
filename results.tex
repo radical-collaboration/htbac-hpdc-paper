@@ -138,19 +138,14 @@ generations.
 
 \subsection{Validation Experiment Results}
 
-HTBAC fully automates the process of calculating the binding affinity of
-protein-ligand complexes from reading the input all the way to analyising the
-final results. In order to validate the correctness of the results, we have
-devised a set of experiments. These experiments are vital to gain confidence
-in the algorithm and to prove that it is indeed calculating the correct values.
-
-The validation experiments were based on the original study of Wan et. al.
+To validate the fact that the HTBAC implementation of TIES we 
+repeated calculations previously run by Wan \textit{et al.}
 \cite{Wan2017brd4}. We selected a subset of the protein ligand systems that
-were the subject of that study: they are the ligand transformations 3 to 1, 4,
+were the subject of that study: they are the transforms between ligand 3 and ligands 1, 4,
 and 7. We then performed a full simulation on all 3 systems and calculated the
-binding affinity (see Table~\ref{tab:exp2}) using HTBAC.
+relative binding affinities (see Table~\ref{tab:exp2}) using HTBAC.
 
-The results show that all three $\Delta \Delta$G values are within error bars
+The results show that all three $\Delta \Delta$G values are within error 
 of the original study, reinforcing the fact that HTBAC has indeed correctly
 implemented the complex workflow of TIES.
 
@@ -167,7 +162,7 @@ implemented the complex workflow of TIES.
   \end{tabular}
 
   \caption{Comparison of the calculated binding free energies using HTBAC, from
-  the original study by Wan et. al and experimental data. The two theoretical
+  the original study by Wan \textit{et. al} and experimental data. The two theoretical
   studies used the same protcol in principle. This experiment proved that HTBAC
   has indeed implemented TIES correctly, as the calculated values are either
   the same or within error bar of the original study. All values are in
@@ -181,13 +176,16 @@ implemented the complex workflow of TIES.
 
 \subsection{Adaptive Quadrature Experiments Results}
 
-One way to visualize the adaptivity in this experiments is to plot the function
-and integral approximations at every iteration. Figure~\ref{fig:adapt} shows
+The impact of adaptivity is clearly seen when $\partial U/\partial\lambda$ is plotted through each iteration. 
+Figure~\ref{fig:adapt} shows
 how the value of $\Delta$G for one of the test systems improves as the
-algorithm places more lambda windowds. It is imporant to note, that the new
-points are decided {\it a priori} for reasons disucessed above but this is
-opaque to the algorithm. This is a proof that we have the adaptive capabilities
-and we are paving the way for more advanced biosimulation algorithms.
+algorithm places more lambda windows. 
+\dwwnote{This is a $\partial U/\partial\lambda$ plot - no $\Delta$G conclusions can be made from this.}
+%It is imporant to note, that the new
+%points are decided {\it a priori} for reasons discussed above but this is
+%opaque to the algorithm. 
+This is a proof that we have the adaptive capabilities
+and which pave the way for more advanced biosimulation algorithms.
 
 \begin{figure}
 \begin{tikzpicture}
