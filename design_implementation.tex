@@ -43,8 +43,8 @@ RADICAL-Cybertools (RCT) which are functionally well-defined and delineated
 middleware building blocks. RCT~\cite{review_bb_2016} are engineered to
 support extensible and scalable workflows across diverse computing platforms.
 The two primary RCT components that HTBAC depends upon are the Ensemble
-Toolkit (EnTK) and RADICAL-Pilot (RP). 
-
+Toolkit (EnTK) and RADICAL-Pilot (RP).  Figure~\ref{fig:integration} shows the
+layered architecture of HTBAC, EnTK, and RP.
 
 % HTBAC is implemented in Python, and uses RCT to provide ensemble-execution
 % capabilities and a runtime system to execute tasks. 
@@ -53,9 +53,9 @@ EnTK simplifies the process of creating ensemble-based applications with
 complex coordination and communication requirements. The EnTK API exposes the
 PST model which consists of three components: \textbf{Pipeline},
 \textbf{Stage}, and \textbf{Task}. HTBAC promotes binding affinity  {\bf
-Protocols} as the user-facing construct, and provides programming model
+Protocols} as the user-facing construct, and also uses the programming model
 defined by the Pipeline, Stage and Tasks model to express a variety of
-protocols. We define each stage as a computational \textbf{task} and the
+protocols: each stage is a computational \textbf{task}, and the
 ordered aggregation of these stages alongside their dependencies as a
 \textbf{pipeline}. A workflow is comprised of $N_P$ instances of the P$^{th}$
 protocol.
@@ -94,9 +94,9 @@ system, RADICAL-Pilot to execute the tasks on specific target resources.
 \begin{figure}
   \centering
    \includegraphics[width=\columnwidth]{figures/isc_htbac_integration_with_entk_RP-4.pdf}
-  \caption{Mapping of flow between HTBAC, EnTK, and RP. The HTBAC API exposes the Protocol
+  \caption{Layered architecture of HTBAC, EnTK, and RP. The HTBAC API exposes the Protocol
   component. Current protocols supporting the use cases include ESMACS/TIES.  
-  EnTK serves as the workflow execution system and by managing the workflow and workload. 
+  EnTK serves as the workflow execution system, and by managing the workflow and workload. 
   RADICAL-Pilot serves as the runtime system.}
 \label{fig:integration}
 \end{figure}
