@@ -7,7 +7,7 @@ match the additional requirement of generating and coordinating protocols.
 
 In order to understand the contribution of the various events in HTBAC, termed
 as HTBAC overhead, to the total time to completion (TTC) we construct the
-following: $TTC = TTX + T_{O}$ where 
+following: $TTC = TTX + T_{O}$ where
  \(TTX\) measures the execution duration across all task, including file
  staging, MD kernel execution, and post-executables, and $T_{O}$ the total
 overhead is given by the sum of the constituent overheads: $$T_{O} =
@@ -15,10 +15,10 @@ T_{O}\textsuperscript{HTBAC} + T_{O}\textsuperscript{EnTK} +
 T_{O}\textsuperscript{RP}$$
 
 
-% \(Time-to-run = 
+% \(Time-to-run =
 % T(overhead\textsubscript{HTBAC} +
 % T(overhead\textsubscript{entk}) +
-% T(overhead\textsubscript{rp}) + T(execution)\). 
+% T(overhead\textsubscript{rp}) + T(execution)\).
 
 % We define \(T(execution)\) as \(TTX = TTC - T_q\) where \(TTC\) is
 % time-to-completion and \(T_q\) is time spent queuing on the HPC machine.
@@ -27,7 +27,7 @@ T_{O}\textsuperscript{RP}$$
 
 % T(overhead\textsubscript{HTBAC} +
 % T(overhead\textsubscript{entk}) +
-% T(overhead\textsubscript{rp}) + T(execution)\). 
+% T(overhead\textsubscript{rp}) + T(execution)\).
 
 % We define \(T(execution)\) as \(TTX = TTC - T_q\) where \(TTC\) is
 % time-to-completion and \(T_q\) is time spent queuing on the HPC machine.
@@ -73,8 +73,8 @@ overheads. Each additional protocol instance contributes to roughly 55
 additional seconds in \(TTX\).
 
 
-% \(TTX\) measures the execution duration across all task, including file staging, MD kernel execution, 
-%  and post-executables. 
+% \(TTX\) measures the execution duration across all task, including file staging, MD kernel execution,
+%  and post-executables.
 
 
 
@@ -150,7 +150,7 @@ were the subject of that study: they are the ligand transformations 3 to 1, 4,
 and 7. We then performed a full simulation on all 3 systems and calculated the
 binding affinity (see Table~\ref{tab:exp2}) using HTBAC.
 
-The results show that all three $\Delta \Delta G$ values are within error bars
+The results show that all three $\Delta \Delta$G values are within error bars
 of the original study, reinforcing the fact that HTBAC has indeed correctly
 implemented the complex workflow of TIES.
 
@@ -179,9 +179,15 @@ implemented the complex workflow of TIES.
 
 %------------------------------------------------------------------------------
 
-\section{Adaptive Quadrature Experiments Results}
+\subsection{Adaptive Quadrature Experiments Results}
 
-
+One way to visualize the adaptivity in this experiments is to plot the function
+and integral approximations at every iteration. Figure~\ref{fig:adapt} shows
+how the value of $\Delta$G for one of the test systems improves as the
+algorithm places more lambda windowds. It is imporant to note, that the new
+points are decided {\it a priori} for reasons disucessed above but this is
+opaque to the algorithm. This is a proof that we have the adaptive capabilities
+and we are paving the way for more advanced biosimulation algorithms.
 
 \begin{figure}
 \begin{tikzpicture}
@@ -194,16 +200,16 @@ implemented the complex workflow of TIES.
   grid=both,
   ]
   \addplot+[name path=alch_1, mark size=1pt, mark=*, color=blue] table [x=lambda, y=p1v]{figures/alch_1.csv};
-  \addlegendentry{Iteration 0: inital lambda spacing};
+  \addlegendentry{Iteration 1: inital lambda spacing};
 
   \addplot+[name path=alch_2, mark size=1pt, mark=*, color=red] table [x=lambda, y=p1v]{figures/alch_2.csv};
-  \addlegendentry{Iteration 1: Increasing number of lambda values};
+  \addlegendentry{Iteration 2: Increasing number of lambda values};
 
   \addplot+[name path=alch_3, mark size=1pt, mark=*, color=brown] table [x=lambda, y=p1v]{figures/alch_3.csv};
-  \addlegendentry{Iteration 2: Optimial number of lambda values found};
+  \addlegendentry{Iteration 3: Optimial number of lambda values found};
 
   \addplot+[name path=alch_4, mark size=1pt, mark=*, color=black] table [x=lambda, y=p1v]{figures/alch_4.csv};
-  \addlegendentry{Iteration 3: Refining function values at optimial mesh};
+  \addlegendentry{Iteration 4: Refining function values at optimial mesh};
 
   \addplot[name path=line, draw=none] {0};
 
@@ -233,6 +239,6 @@ implemented the complex workflow of TIES.
 
 \end{axis}
 \end{tikzpicture}
-\caption{The adaptive algorithm reevaluates the efficiency of the lambda window mesh after every \SI{1}{\nano\second} and makes a decision whether to place more lambda windows inside certain ranges. The decision of placing more lambda windows in a range $[\lambda_{i}; \lambda_{j}]$ is based on the following criterion: $|f(\lambda_{i})-f(\lambda_{j})| \leq h$ where $h$ is some threshold set by the user. Once the optimal mesh is reached, and no more lambda windows are needed, the algorithm runs the simulation for a further \SI{2}{\nano\second} to converge the results.}
+\caption{The adaptive algorithm reevaluates the efficiency of the lambda window mesh after every \SI{1}{\nano\second} and makes a decision whether to place more lambda windows inside certain ranges.}
 \label{fig:adapt}
 \end{figure}
