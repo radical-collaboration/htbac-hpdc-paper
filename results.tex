@@ -1,18 +1,34 @@
 \subsection{Scaling and Performance Characterization}
 
+We first characterize the overheads of HTBAC and the runtime system. HTBAC
+enables concurrent execution of multiple protocol instances. With each new
+protocol instance generated for an application, the HTBAC overhead grows to
+match the additional requirement of generating and coordinating protocols.
+
+In order to understand the contribution of the various events in HTBAC, termed
+as HTBAC overhead, to the total time to completion (TTC) we construct the
+following: $TTC = T_{X} + T_{O}$ where $T_{X}$ is the execution time and
+$T_{O}$ the total overhead is given by the sum of the constituent overheads:
+$$T_{O} = T_{O}\textsuperscript{HTBAC} + T_{O}\textsuperscript{EnTK} + T_{O}\textsuperscript{RP}$$
 
 
-We first characterize the overheads of HTBAC and
-the runtime system. HTBAC enables concurrent execution of multiple protocol instances.
-With each new protocol instance generated for an
-application, the HTBAC overhead grows to match the additional
-requirement of generating and coordinating protocols. In order
-to understand the contribution of the various events in HTBAC,
-termed as HTBAC overhead, to the total time to run, we construct the following metrics:
-\(Time-to-run = T(overhead\textsubscript{HTBAC} +
-T(overhead\textsubscript{entk}) +
-T(overhead\textsubscript{rp}) + T(execution)\). We define \(T(execution)\) as \(TTX = TTC - T_q\) where \(TTC\) is
-time-to-completion and \(T_q\) is time spent queuing on the HPC machine.
+% \(Time-to-run = 
+% T(overhead\textsubscript{HTBAC} +
+% T(overhead\textsubscript{entk}) +
+% T(overhead\textsubscript{rp}) + T(execution)\). 
+
+% We define \(T(execution)\) as \(TTX = TTC - T_q\) where \(TTC\) is
+% time-to-completion and \(T_q\) is time spent queuing on the HPC machine.
+
+
+
+% T(overhead\textsubscript{HTBAC} +
+% T(overhead\textsubscript{entk}) +
+% T(overhead\textsubscript{rp}) + T(execution)\). 
+
+% We define \(T(execution)\) as \(TTX = TTC - T_q\) where \(TTC\) is
+% time-to-completion and \(T_q\) is time spent queuing on the HPC machine.
+
 
 \subsubsection{Weak Scaling Experiments}
 
