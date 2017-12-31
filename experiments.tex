@@ -7,9 +7,10 @@
 
 We perform weak (and strong) scalability experiments on NCSA Blue Waters--a
 13.3. petaFLOPS Cray, with 32 Interlago cores/50 GB RAM per node, Cray Gemini,
-Lustre shared file system. We perform our experiments from a virtual machine
-hosted in Europe, as Blue Waters does not allow for executing applications
-directly on the login node.
+Lustre shared file system. Our experiments are launched on Blue Waters and
+monitored using a persistent virtual machine, as Blue Waters does not allow
+for executing applications directly on the login node.
+
 
 All experiments use HTBAC version 0.1, EnTK version 0.6 and RP version 0.47.
 The MD engine used is NAMD-MPI for tasks pertaining to $S1$ - $S4$, while the
@@ -20,15 +21,17 @@ nonadaptive experiments, the production simulation tasks in $S4$ are assigned
 50000 steps. For the adaptive experiments, each substage of $S4$ i.e. $S4.1$ -
 $S4.4$ is assigned 500,000 steps.
 
-HTBAC submits a resource request to EnTK, to which EnTK uses RP to acquire
-resources via a single pilot. Accordingly, we request the maximum number of
-cores required by the workload as the number of cores in a pilot. We use
-between 4160 and 33280 cores as indicated in figure~\ref{fig:weak_scaling}
-because the NAMD executable used in all tasks from $S1$-$S4$ require at least
-32 cores per task. From our own scalability performance measurements of NAMD
-on Blue Waters, we observe the ideal cores per task to be 16, however Blue
-Waters does not permit running multiple MPI applications on the same node,
-hence each NAMD task requires a full node to maintain concurrency.
+% HTBAC submits a resource request to EnTK, to which EnTK uses RP to acquire
+% resources via a single pilot. Accordingly, we request the maximum number of
+% cores required by the workload as the number of cores in a pilot. 
+
+We use between 4160 and 33280 cores as indicated in
+Figure~\ref{fig:weak_scaling} because the NAMD executable used in all tasks
+from $S1$-$S4$ require at least 32 cores per task. From our own scalability
+performance measurements of NAMD on Blue Waters, we observe the ideal cores
+per task to be 16, however Blue Waters does not permit running multiple MPI
+applications on the same node, hence each NAMD task requires a full node to
+maintain concurrency.
 
 For the TIES protocol, each pipeline consists of six stages. Each of the simulation
 stages contains a task for every unique ($\lambda$, replica) combination.
