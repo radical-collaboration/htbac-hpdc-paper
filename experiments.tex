@@ -18,7 +18,7 @@ experiments, the minimization tasks of $S1$ are assigned 100(0) steps, while
 the equilibration tasks in $S2$ and $S3$ are assigned 5000 steps. In the
 nonadaptive experiments, the production simulation tasks in $S4$ are assigned
 50000 steps. For the adaptive experiments, each substage of $S4$ i.e. $S4.1$ -
-$S4.4$ is assigned X steps.
+$S4.4$ is assigned 500,000 steps.
 
 HTBAC submits a resource request to EnTK, to which EnTK uses RP to acquire
 resources via a single pilot. Accordingly, we request the maximum number of
@@ -29,7 +29,6 @@ because the NAMD executable used in all tasks from $S1$-$S4$ require at least
 on Blue Waters, we observe the ideal cores per task to be 16, however Blue
 Waters does not permit running multiple MPI applications on the same node,
 hence each NAMD task requires a full node to maintain concurrency.
-
 
 For the TIES protocol, each pipeline consists of six stages. Each of the simulation
 stages contains a task for every unique ($\lambda$, replica) combination.
@@ -51,10 +50,11 @@ L &= \{ x_i: x_i\in[0,1]\; and\; x_{i+1} = x_i + \delta \}, where\ \delta\ is\ 0
   We append two additional values on both ends of $L$, completing 13 $\lambda$
 windows. Each $\lambda$ window consists of five replicas. Therefore there are
 a total of 65 tasks for every simulation stage. The production simulations
-stage, $s4$ as described in figure~\ref{fig:pst} executes a 4 ns simulation duration. The analysis stages of
-the protocol reduce the number of tasks. The first analysis task consists of
-five tasks where each task performs an aggregate analysis over all $\lambda$
-windows for each replica. The second analysis stage consists of one task that
+stage, $s4$ as described in figure~\ref{fig:pst} executes a 4 ns simulation duration. 
+The analysis stages of the protocol reduce the number of tasks. 
+The first analysis task consists of five tasks where each task performs an 
+aggregate analysis over all $\lambda$ windows for each replica. 
+The second analysis stage consists of one task that
 aggregates the previous results and computes a single average across all
 replicas.
 
@@ -78,23 +78,6 @@ T_{O}\textsuperscript{HTBAC} + T_{O}\textsuperscript{EnTK} +
 T_{O}\textsuperscript{RP}$$
 
 
-% \(Time-to-run =
-% T(overhead\textsubscript{HTBAC} +
-% T(overhead\textsubscript{entk}) +
-% T(overhead\textsubscript{rp}) + T(execution)\).
-
-% We define \(T(execution)\) as \(TTX = TTC - T_q\) where \(TTC\) is
-% time-to-completion and \(T_q\) is time spent queuing on the HPC machine.
-
-
-
-% T(overhead\textsubscript{HTBAC} +
-% T(overhead\textsubscript{entk}) +
-% T(overhead\textsubscript{rp}) + T(execution)\).
-
-% We define \(T(execution)\) as \(TTX = TTC - T_q\) where \(TTC\) is
-% time-to-completion and \(T_q\) is time spent queuing on the HPC machine.
-
 %------------------------------------------------------------------------------
 
 \subsubsection{Weak Scaling Experiments}
@@ -112,29 +95,37 @@ size of the workload that can be investigated in a given amount of time.
 
 \begin{figure}
   \centering
-   \includegraphics[width=\columnwidth]{./figures/weak_scaling_TIES_instances_50,000_timesteps.pdf}
+   \includegraphics[width=\columnwidth]{./figures/weak_scaling_TIES_instances_50,000_timesteps_with_16_instances.pdf}
   \caption{Weak scaling properties of HTBAC (right side). We investigate the
   weak scaling of HTBAC as the ratio of the number of protocol instances to
   resources is kept constant. (Left) Overheads of HTBAC, and runtime overhead (EnTK/RP) for
-  experimental configurations investigating the weak scaling of TIES. We ran two trials for each protocol instance configuration.}
+  experimental configurations investigating the weak scaling of TIES. We ran two trials for each protocol instance configuration. Error bars in \(TTX\) in 2 and 8-protocol runs are insignficant.}
 \label{fig:weak_scaling}
 \end{figure}
 
-
-The HTBAC overhead accounts for approximately 0.1\% of \(TTX\). The remaining
-overheads, mainly EnTK and RP, depend on the number of tasks that need to be
-translated in-memory from a Python object to a compute unit (CU) description.
+The HTBAC overhead shows a superlinear increase as we grow the number of protocol 
+instances, mainly due to the coordination and generation of additional protocols.
+However, the HTBAC overhead is a minimal contributor to \(TTX\). 
+The runtime overheads, mainly EnTK and RP, depend on the number of tasks that need to 
+be translated in-memory from a Python object to a compute unit (CU) description.
 As such, it is expected to grow proportionally to the number of tasks. EnTK
 submits CU descriptions to a MongoDB used by RP, and the RP pilot pulls these
 descriptions from the same database. This pull operation occurs over a wide
 area networks, which introduces varying amounts of latency. In addition, each
-Stage constructed by EnTK maintains sequential barriers. As such, RP remains
-dormant until completion of the current Stage before staging the next State.
-The impact of the barrier increases with number of CUs as seen in the 16
-protocol instances data point in \ref{fig:weak_scaling}.  Together, these two
-factors introduce delays in the scheduling of the CUs and results in higher
-overheads. Each additional protocol instance contributes to roughly 55
-additional seconds in \(TTX\).
+stage constructed by EnTK maintains sequential barriers. As such, RP remains
+dormant until completion of the current tasks before staging the next tasks.
+The impact of the synchronization barriers increases with the number of CUs 
+as seen in the 16 protocol instances data point in \ref{fig:weak_scaling}. 
+
+Furthermore, an additional overhead, driven by the aprun launch method, 
+increases as we approach a system limit on the number of permissible aprun processes 
+when scaling from 8 to 16 protocols, which translates to 520 and 1040 concurrent 
+tasks, respectively. We account for the aprun failures in the \(TTX\). Together, 
+the EnTK-enabled synchronization barriers and aprun overhead failures introduce 
+delays in the scheduling of the CUs and results in higher overheads. Lastly, we notice 
+that each additional protocol instance contributes to roughly 55 additional 
+seconds in \(TTX\). 
+
 
 
 % \subsubsection {Strong Scaling Experiments}
@@ -237,7 +228,7 @@ Inter-node communication introduces a constraint on the number of new lambda win
 To reduce the overhead of inter-node communication, simulations must run on an integer number of nodes. This means that the
 number of new $\lambda$ windows (i.e. the number of simulations) \emph{has} to be
 either doubled or left unchanged. 
-If the numer of window is doubled the nodes per simulation can  be halved automatically. 
+If the numer of window is doubled the nodes per simulation can be halved automatically. 
 Our prototype algorithm loops through the current $\lambda$ window pairs until this criterion is reached, forcefully adding more if needed.
 
 
@@ -278,7 +269,7 @@ One way to visualize the adaptivity in this experiments is to plot the function
 and integral approximations at every iteration. Figure~\ref{fig:adapt} shows
 how the value of $\Delta$G for one of the test systems improves as the
 algorithm places more lambda windowds. It is imporant to note, that the new
-points are decided {\it a priori} for reasons disucessed above but this is
+points are decided {\it a priori} for reasons discussed above but this is
 opaque to the algorithm. This is a proof that we have the adaptive capabilities
 and we are paving the way for more advanced biosimulation algorithms.
 
