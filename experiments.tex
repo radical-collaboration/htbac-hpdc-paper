@@ -70,9 +70,7 @@ We first characterize the overheads of HTBAC and the runtime system. HTBAC
 enables concurrent execution of multiple protocol instances. With each new
 protocol instance generated for an application, the HTBAC overhead grows to
 match the additional requirement of generating and coordinating protocols.
-
-In order to understand the contribution of the various events in HTBAC, termed
-as HTBAC overhead, to the total time to completion (TTC) we construct the
+The total time to completion (TTC) can be expressed as 
 following: $TTC = TTX + T_{O}$ where
  \(TTX\) measures the execution duration across all task, including file
  staging, MD kernel execution, and post-executables, and $T_{O}$ the total
@@ -81,20 +79,25 @@ T_{O}\textsuperscript{HTBAC} + T_{O}\textsuperscript{EnTK} +
 T_{O}\textsuperscript{RP}$$
 
 
+
+% In order to understand the contribution of the various events in HTBAC, termed
+% as HTBAC overhead, to 
+
 %------------------------------------------------------------------------------
 
-\subsubsection{Weak Scaling Experiments}
+% \subsubsection{Weak Scaling Experiments}
 
-Here we show weak scalability for the TIES protocol by growing the number of
-protocol instances while adhering to the required number of pipelines. By
-design of each protocol, an increase in the number of instances simply means
-an increase in the number of pipelines. The first weak scalability experiment
-demonstrates the behavior of HTBAC, EnTK and RP using the multiple instances
-of the TIES protocol. By design of weak scaling, the ratio between the number
-of pipelines and cores are kept constant. As the number of cores (measure of
-resource) changes by a factor of 2, we introduce twice as many protocol
-instances. As designed, the weak scaling property provides insight into the
-size of the workload that can be investigated in a given amount of time.
+We investigated the weak scalability properties for the TIES protocol by
+growing the number of protocol instances while adhering to the required number
+of pipelines. By design of each protocol, an increase in the number of
+instances simply means an increase in the number of pipelines. The first weak
+scalability experiment demonstrates the behavior of HTBAC, EnTK and RP using
+the multiple instances of the TIES protocol. By design of weak scaling, the
+ratio between the number of pipelines and cores are kept constant. As the
+number of cores (measure of resource) changes by a factor of 2, we introduce
+twice as many protocol instances. As designed, the weak scaling property
+provides insight into the size of the workload that can be investigated in a
+given amount of time.
 
 \begin{figure}
   \centering
@@ -113,21 +116,23 @@ The runtime overheads, mainly EnTK and RP, depend on the number of tasks that ne
 be translated in-memory from a Python object to a compute unit (CU) description.
 As such, it is expected to grow proportionally to the number of tasks. EnTK
 submits CU descriptions to a MongoDB used by RP, and the RP pilot pulls these
-descriptions from the same database. This pull operation occurs over a wide
-area networks, which introduces varying amounts of latency. In addition, each
-stage constructed by EnTK maintains sequential barriers. As such, RP remains
-dormant until completion of the current tasks before staging the next tasks.
-The impact of the synchronization barriers increases with the number of CUs 
-as seen in the 16 protocol instances data point in \ref{fig:weak_scaling}. 
+% descriptions from the same database. This pull operation occurs over a wide
+% area networks, which introduces varying amounts of latency. 
+In addition, each stage constructed by EnTK maintains sequential barriers. As
+such, RP remains dormant until completion of the current tasks before staging
+the next tasks. The impact of the synchronization barriers increases with the
+number of CUs as seen in the 16 protocol instances data point in
+\ref{fig:weak_scaling}.
 
-Furthermore, an additional overhead, driven by the aprun launch method, 
-increases as we approach a system limit on the number of permissible aprun processes 
-when scaling from 8 to 16 protocols, which translates to 520 and 1040 concurrent 
-tasks, respectively. We account for the aprun failures in the \(TTX\). Together, 
-the EnTK-enabled synchronization barriers and aprun overhead failures introduce 
-delays in the scheduling of the CUs and results in higher overheads. Lastly, we notice 
-that each additional protocol instance contributes to roughly 55 additional 
-seconds in \(TTX\). 
+Furthermore, an additional overhead, driven by the aprun launch method,
+increases as we approach a system limit on the number of permissible aprun
+processes when scaling from 8 to 16 protocols, which translates to 520 and
+1040 concurrent tasks, respectively. We account for the aprun failures in the
+\(TTX\). Together, the EnTK-enabled synchronization barriers and aprun
+overhead failures introduce delays in the scheduling of the CUs and results in
+higher overheads. Lastly, we notice that each additional protocol instance
+contributes to roughly 55 additional seconds in \(TTX\).  \jhanote{Is this
+true for all values, or just between 8 and 16?}
 
 
 
