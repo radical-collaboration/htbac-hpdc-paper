@@ -33,15 +33,17 @@ common scaffold. Preparation and setup of the simulations were implemented
 using our automated tool, BAC~\cite{Sadiq2008}. This process including
 parametrization of the compounds, solvation of the complexes, electrostatic
 neutralization of the systems by adding counterions and generation of
-configurations files for the simulations. The AMBER ff99SB-ILDN~\cite
-{Lindorff-Larsen2010} force field was used for the protein, and TIP3P was used
+configurations files for the simulations. The AMBER ff99SB-ILDN
+% ~\cite{Lindorff-Larsen2010} 
+force field was used for the protein, and TIP3P was used
 for water molecules. Compound parameters were produced using the general AMBER
 force field (GAFF)~\cite{Wang2004} with Gaussian 03
 %~\cite{Frisch} 
 to optimize compound geometries and to determine electrostatic potentials at
 the Hartree–Fock level with 6-31G** basis functions. The restrained
-electrostatic potential (RESP) module in the AMBER package~\cite{Case2005} was
-used to calculate the partial atomic charges for the compounds. All systems
+electrostatic potential (RESP) module in the AMBER package
+%~\cite{Case2005} 
+was used to calculate the partial atomic charges for the compounds. All systems
 were solvated in orthorhombic water boxes with a minimum extension from the
 protein of 14 \AA\ (the resulting systems contain approximately 40 thousand
 atoms).
