@@ -1,0 +1,43 @@
+\jhanote{ready for dave/kristof's review..}
+
+Simulation protocols based on ensembles of multiple runs of the same system
+provide an efficient method for producing robust free energy estimate, and
+equally important statistical uncertainties. Variations in the chemical and
+biophysical properties of different systems impact the optimal protocol choice
+for different proteins and classes of drugs targetting them. However, these
+are difficult to determine {\it a priori}, thus requiring runtime adaptation
+to workflow executions. We introduce the High-throughput Binding Affinity
+Calculator (HTBAC) to enable the scalable, adaptive and automated calculation
+of the binding free energy on high-performance computing resources.
+
+In this paper we demonstrate: (i) How HTBAC allows the concurrent screening
+for drug binding affinities of multiple compounds at unprecedented scales,
+both in the number of candidates and resources utilized. Specifically, we
+investigated weak scaling behaviour for screening sixteen drug candidates
+concurrently using thousands of multi-stage pipelines on more than 32,000
+cores. This permits a rapid time-to-solution that is essentially invariant
+with respect to the calculation protocol, size of candidate ligands and number
+of ensemble simulations. (ii) The validation of binding free energies computed
+using HTBAC with both experimental and previously published computational
+results; (iii) How HTBAC supports the adaptive execution of the TIES protocol
+provides greater convergence (i.e., lower errors) for a given amount of
+computational resources. To the best of our knowledge, adaptive TI protocols
+have not been benchmarked against non-adaptive implementations.
+
+%nor have they been implemented at such scales before.
+
+
+
+%HTBAC can also support a wide range of adaptivite scenarios.
+
+As such, HTBAC advances the state of the scale and sophistication of binding
+affinity calculation. In addition to report increasingly sophisticated
+adaptive scenarios, in future, we will extend HTBAC to support the "design of
+experiments" that will allow for optimization of the collective and overall
+computational campaign and time-to-insight for a large database of drug
+candidate, as opposed to any single simple calculation.
+
+
+% HTBAC uses readily available
+% building blocks to attain both workflow flexibility and performance; our
+% scaling experiments are performed on the Blue Waters machine at NCSA.
