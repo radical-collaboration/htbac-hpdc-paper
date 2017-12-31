@@ -6,7 +6,7 @@ performance and optimization of single long simulations. Due to the end of
 Dennard scaling and methodological advances, many applications are now
 formulated using multiple, shorter ensemble-based simulations. There are
 however, limited software solutions that can support the scalable execution of
-heterogeneous tasks.
+multiple tasks concurrently.
 
 HTBAC has three primary design requirements\@: (1) enable the scalable
 execution of concurrent multi-stage pipelines, flexibily partitioned across
@@ -65,7 +65,7 @@ Currently HTBAC provides the two protocol objects: ESMACS and TIES. For
 TIES, each protocol typically corresponds to a single physical system, and
 multiple instances can be supported. The TIES protocol object enables the user
 to select a physical system, number of replicas, core allocation per replica,
-and lambda windows (for alchemical pertubations). Figure \ref{figure:pst}
+and lambda windows (for alchemical pertubations). Figure~\ref{fig:pst}
 provides the visual implementation of the TIES protocols into the PST model.
 
 % Consistent with EnTK's programming model, HTBAC also uses the PST model to
@@ -74,15 +74,6 @@ provides the visual implementation of the TIES protocols into the PST model.
 % Each protocol contains multiple stages with simulations and analysis tasks
 % interspersed, in the most general case. 
 
-\begin{figure}
-  \centering
-   \includegraphics[width=\columnwidth]{figures/_TIES_EnTK_implementation.pdf}
-  \caption{TIES protocol expressed using the EnTK PST model. Each protocol 
-  instance maps to a single Pipeline, comprised of Stage(s) which maintain 
-  temporal order. Each Stage executes $n$ tasks, where $n$ represents the 
-  number of unique lambda-replica combinations.}
-\label{fig:pst}
-\end{figure}
 
 % programming model (that are consistent with the EnTK) to enable the user 
 
@@ -141,6 +132,16 @@ We define this type of adaptivity as an adaptive workflow, i.e. changes to the
 workflow that are made during runtime. In turn, our 
 adaptive execution implementation at the WMS focuses on supporting generality of 
 adaptive workflows at the inter and intra-protocol level. 
+
+\begin{figure}
+  \centering
+   \includegraphics[width=\columnwidth]{figures/_TIES_EnTK_implementation.pdf}
+  \caption{TIES protocol expressed using the EnTK PST model. Each protocol 
+  instance maps to a single Pipeline, comprised of Stage(s) which maintain 
+  temporal order. Each Stage executes $n$ tasks, where $n$ represents the 
+  number of unique lambda-replica combinations.}
+\label{fig:pst}
+\end{figure}
 
 The TIES adaptive workflow generates post-mortem decision about the placement
 of new lambda windows for the next simulation. In turn this requires task-count 
