@@ -253,15 +253,17 @@ Our prototype algorithm loops through the current $\lambda$ window pairs until t
 % for every stage, which doubles the total number of tasks. The last production
 % simulation stage, $S4.4$, runs for the remaining 2 ns durations.
 
-HTBAC provides the functional capability to adaptively deterine the time at
-which the $\lambda$ window are determined. 
-\dwwnote{I haven't edited the next sentene as I don't know what it means.}However in this paper, we eschew a
-discussion of this type of adaptivity, as the objective is to determine the
-feasibility of adaptive execution and demonstrate the scientific merit of
-implementing adaptive decision making. In order to provide ``control" baseline
-experiments, our experiments implement ``adaptive change" not ``when" i.e., we
-introduce only a single degree of freedom relative to baseline ``non-adaptive"
-experiments.
+\dwwnote{I haven't edited the next sentene as I don't know what it means.}
+\jhanote{Any better?}
+We introduce only a single degree of freedom relative to baseline ``non-
+adaptive" experiments, thus our experiments implement adaptive change in the
+lambda window value and not temporal ("when"). HTBAC provides the functional
+capability to adaptively deterine the time at which the $\lambda$ window are
+determined. However in this paper, we do not investigate the impact of such
+adaptivity, as the objective is to determine the feasibility of adaptive
+execution and resulting scientific merit of adaptive decision making.
+
+
 
 \begin{figure}
   \centering
