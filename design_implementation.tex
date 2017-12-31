@@ -8,7 +8,6 @@ formulated using multiple, shorter ensemble-based simulations. There are
 however, limited software solutions that can support the scalable execution of
 heterogeneous tasks.
 
-
 HTBAC has three primary design requirements\@: (1) enable the scalable
 execution of concurrent multi-stage pipelines, flexibily partitioned across
 different prototocols, (2) abstract the complexity of building protocols,
@@ -35,7 +34,6 @@ explicit resource management requirements.
 % and require special extensions for adaptive formulations thus limiting the
 % possibility of adaptive workflows.
 
-
 HTBAC builds upon established middleware solutions~\cite{review_bb_2016},
 validated runtime abstractions~\cite{turilli2017comprehensive} for scalable
 execution of heterogeneous computational tasks, and customizes them for the
@@ -45,7 +43,7 @@ RADICAL-Cybertools (RCT) which are functionally well-defined and delineated
 middleware building blocks. RCT~\cite{review_bb_2016} are engineered to
 support extensible and scalable workflows across diverse computing platforms.
 The two primary RCT components that HTBAC depends upon are the Ensemble
-Toolkit (EnTK) and RADICAL-Pilot (RP).
+Toolkit (EnTK) and RADICAL-Pilot (RP). 
 
 
 % HTBAC is implemented in Python, and uses RCT to provide ensemble-execution
@@ -63,7 +61,7 @@ ordered aggregation of these stages alongside their dependencies as a
 protocol.
 
 The \textbf{Protocol} class can be instantiated as one of two protocols.
-Currently the HTBAC provides the two protocol objects: ESMACS and TIES. For
+Currently HTBAC provides the two protocol objects: ESMACS and TIES. For
 TIES, each protocol typically corresponds to a single physical system, and
 multiple instances can be supported. The TIES protocol object enables the user
 to select a physical system, number of replicas, core allocation per replica,
@@ -74,33 +72,29 @@ provides the visual implementation of the TIES protocols into the PST model.
 % express {\bf Protocols}.
 
 % Each protocol contains multiple stages with simulations and analysis tasks
-% interspersed, in the most general case.
-
+% interspersed, in the most general case. 
 
 \begin{figure}
   \centering
    \includegraphics[width=\columnwidth]{figures/_TIES_EnTK_implementation.pdf}
-  \caption{TIES protocol expressed using the EnTK PST model. Each protocol instance
-  maps to a single Pipeline, comprised of Stage(s) which maintain temporal order.
-  Each Stage executes $n$ tasks, where $n$ represents the number of lambda-replica
-  combinations.}
+  \caption{TIES protocol expressed using the EnTK PST model. Each protocol 
+  instance maps to a single Pipeline, comprised of Stage(s) which maintain 
+  temporal order. Each Stage executes $n$ tasks, where $n$ represents the 
+  number of unique lambda-replica combinations.}
 \label{fig:pst}
 \end{figure}
-
-
 
 % programming model (that are consistent with the EnTK) to enable the user 
 
 % In section \ref{sec:science-drivers}, we described two examples of ensemble-
 % based protocols for computing binding affinities.
 
-
 % (so far, a
 % workflow entails a maximum value of $P = 2$ and $N_P$=16, but in future work P
 % will be greater $>$ 2).
 
-Once the workflow is described, it is submitted to EnTK's
-\b{Application Manager} which sets up multiple processes, threads and a
+  Once the workflow is described, it is submitted to EnTK's
+\textbf{Application Manager} which sets up multiple processes, threads and a
 RabbitMQ message queue for communication.
 EnTK identifies tasks which have dependencies satisfied and can be executed
 concurrently. EnTK's \textbf{Execution Manager} uses the underlying runtime
@@ -110,12 +104,11 @@ system, RADICAL-Pilot to execute the tasks on specific target resources.
   \centering
    \includegraphics[width=\columnwidth]{figures/isc_htbac_integration_with_entk_RP-4.pdf}
   \caption{Mapping of flow between HTBAC, EnTK, and RP. The HTBAC API exposes the Protocol
-  component. EnTK serves as the workflow execution system and
-  by managing the workflow and workload. RADICAl-Pilot serves as the runtime system}
+  component. Current protocols supporting the use cases include ESMACS/TIES.  
+  EnTK serves as the workflow execution system and by managing the workflow and workload. 
+  RADICAL-Pilot serves as the runtime system.}
 \label{fig:integration}
 \end{figure}
-
-
 
 % protocol, a user can scale protocol instances to study as many physical systems as
 % desired.
@@ -123,7 +116,7 @@ system, RADICAL-Pilot to execute the tasks on specific target resources.
 % The specification of protocols and their parameters are passed by the user to
 % the \textbf{Runner Handle} which translates the request to EnTK.
 
-	In Section \ref{sec:related-work} we highlighted how an ensemble
+In Section \ref{sec:related-work} we highlighted how an ensemble
 simulation approach can both aid sampling and improve uncertainty
 quantification for free energy calculations. Despite these crucial advantages,
 it remains non-trivial for field researchers to write biosimulation
@@ -139,18 +132,34 @@ distinct protocols, thereby enabling concurrent screening of drug candidates.
 HTBAC not only simplifies the expression of complex binding affinity
 protocols, but also provides hitherto unavailable capabilities, viz., the
 adaptive formation/expression and execution of these protocols, without any
-additional programming burden.
-
-In our earlier work~\cite{dakka2017} we demonstrated how we applied the
-PST model to implement the ESMACS protocol into an EnTK application. In this
-work we validate the generality of HTBAC by implementing the TIES protocol and
-investigating its performance with multiple TIES protocol.
-
-% A protocol instance
+additional programming burden. 
 
 We compare overheads of HTBAC and demonstrate that its overheads and
-performance are invariant of the specific protocol..... \jhanote{connective
-tissue for Experiments Section...}
+performance are invariant of the specific protocol. Furthermore, adaptive 
+steering of simulations require additional WMS capabilities. In section 
+\ref{sec:science-drivers}, we illustrated a particular type of adaptivity 
+within TIES that would enable the simulation to reach earlier convergence.
+We define this type of adaptivity as an adaptive workflow, i.e. changes to the 
+workflow that are made during runtime. In turn, our 
+adaptive execution implementation at the WMS focuses on supporting generality of 
+adaptive workflows at the inter and intra-protocol level. 
+
+The TIES adaptive workflow generates post-mortem decision about the placement
+of new lambda windows for the next simulation. In turn this requires task-count 
+adaptivity which we define as runtime changes to the
+number of tasks in the task-graph. HTBAC monitors the output results from the 
+completed tasks based on results, redefines the existing workflow by adding
+more lambda windows. In turn EnTK processes these changes and creates the necessary
+set of tasks for the duration of the adaptive workflow. The \textbf{Application
+Manager} in EnTK aborts termination of the pilot to keep the session alive, as long
+as additional tasks are resubmitted. As the number of tasks grow during runtime, the 
+ratio of core-to-task will fluctuate. HTBAC exposes the core allocation per task, 
+and allows the user to pre-specify resource requirements of additional tasks. 
+(Any redistribution of resource is handled by the runtime system.)
+
+
+% ---------------------------------------------------------------------------
+
 
 %\jhanote{Is this specific to the TIES protocol or to the protocol class. Needs
 %clarification.}
@@ -165,7 +174,6 @@ tissue for Experiments Section...}
 %of energy and are integrated to obtain the desired results, the
 %\emph{relative} binding free energy.
 
-
 %\subsubsection{System}
 
 %Systems This allows for multiple systems to be tested in the same
@@ -175,8 +183,6 @@ tissue for Experiments Section...}
 %system structure, topology etc. This class also provides the core/node
 %requirments per single run, and reads some of the system descriptions from
 %files to fill in the configuration settings.
-
-
 
 %The Pipeline-Stage-Task (PST) framework developed by the Radical team
 %(cite), and the Ensemble Toolkit (EnTK) built on top of it, offers a
@@ -203,7 +209,6 @@ tissue for Experiments Section...}
 %the needs of the simulations and profiling mechanims to measure execution
 %time.
 
-
 % ---------------------------------------------------------------------------
 %\jhanote{I don't these "description" should be subsections. Consider
 %"\paragraph{}"}
@@ -224,70 +229,6 @@ tissue for Experiments Section...}
 %dependent on the previous one. This is ensured by the \texttt{Stage} objects
 %of EnTK\@. Each step has list of \texttt{Ensemble}s and a \texttt{Simulation}
 %object.
-
-% ---------------------------------------------------------------------------
-%\subsection{Ensembles}
-
-%\jhanote{I'm not sure what we are trying to do here. We've just described
-%the abstract/constructs in HTBAC to be protocols. Why are we regressing to
-%presenting Ensembles as a construct in HTBAC, when they are a construct of
-%EnTK?}
-
-%Ensembles in HTBAC are a powerful construct that allows for extreme
-%generalizations. At their core they are a nondestructively multi (forward)
-%traversable \emph{iteratable}s. The underlying iterator yields a function that
-%modifies a \texttt{Simulation} object to reflect the current state of the
-%ensemble. This is similar to the iteratee construct, the only difference being
-%that the function is applied to the \emph{same} data consecutively (as opossed
-%to chunks of a stream of data).
-
-%The Simulations are then generated for every Step based on what ensembles are
-%attached to it. This is done by taking the \texttt{product} of all the
-%ensembles, meaning that we go over every possible combination of ensemble
-%states, and create a simulation from it. This is equivalent to an $n$ level
-%deep for-loop, where $n$ is not known beforehand.
-
-% ---------------------------------------------------------------------------
-%\subsection{Simulation}
-
-%Simulation is the lowest level building block. \jhanote{The use of building
-%block for simulation will confuse the reader as it is overloading the term.
-%Find alternative description.} It maps to the \texttt{Task} object in the PST
-%model, and deals with executing the simulation engine, collecting input for
-%it, and modifing the configuration of the simulation to reflect the ensembles
-%that it is in.
-
-%The main driver of a simulation is the configuration file. This file
-%containts the specific settings of the Molecular Dynamics simulation,
-%including the thermostat, barostat, constraints, long range force calculation
-%methods and more. Some of the settings are general and apply to every
-%simulation of a given step, but some are specific to the Ensemble that the
-%simulation is in. After the ensemble modifies properties of the Simulation,
-%these get propagated and written to the configuration file to be read by the
-%executable.
-
-% ---------------------------------------------------------------------------
-%\subsection{Sandboxing}
-
-%Sandboxing mechanims are built into the Radical stack for every layer. Each
-%separate run has it's own sanbox, and inside each run, all the Tasks have
-%their own sandbox too. This means that there is no unintented interference
-%between Tasks, and data can be confidently analyised inside each sandbox.
-%This mechanism also simplyfies the input data referencing, as the input in
-%\emph{guaranteed} to be in the sandbox, and can be referenced relative to it.
-%We recommend this sandboxing system for all simulations.
-
-% ---------------------------------------------------------------------------
-%\subsubsection{Data flow}
-
-%while sandboxing offers a powerful way to separate the simulations, by the
-%inherent nature of workflows, output data from one simulation is required as
-%input for the next one. Simulation objects can find their previous
-%couterparts by way of the ensemble that they are in. Then data is transfered
-%via \textbf{copy-on-demand}, i.e. data is copied \emph{only} if it is known
-%to be edited during execution, otherwise only a symbolic link is created to
-%point to the original location of the file. This drasticly reduces the copy
-%overhead, while still keeping the sandboxes separate.
 
 % ---------------------------------------------------------------------------
 
