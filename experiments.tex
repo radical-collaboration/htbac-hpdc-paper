@@ -1,6 +1,3 @@
-\usepackage{hyperref}
-
-
 % Weak Scalability Design : Keep Pipeline of Ensembles to show barrier needed in S5 and S6
 % Performance, generality with weak scaling (agnostic to kernel)
 % Added functionality (do not speak about binding adaptivity to performance or generality)
@@ -15,9 +12,9 @@ monitored using a persistent virtual machine, as Blue Waters does not allow
 for executing applications directly on the login node.
 
 
-All experiments use \href{https://github.com/jdakka/radical.htbac/tree/master}{HTBAC version 0.1}, 
+All experiments use \href{https://github.com/jdakka/radical.htbac/tree/master}{HTBAC version 0.1},
 EnTK version 0.6 and RP version 0.47.
-For reference to \href{https://github.com/radical-experiments/isc-htbac-experiments}{experimental data}. 
+For reference to \href{https://github.com/radical-experiments/isc-htbac-experiments}{experimental data}.
 The MD engine used is NAMD-MPI for tasks pertaining to $S1$ - $S4$, while the
 analysis stage, $S5$ use AmberTools. For both adaptive and nonadaptive
 experiments, the minimization tasks of $S1$ are assigned 100(0) steps, while
@@ -28,7 +25,7 @@ $S4.4$ is assigned 500,000 steps.
 
 % HTBAC submits a resource request to EnTK, to which EnTK uses RP to acquire
 % resources via a single pilot. Accordingly, we request the maximum number of
-% cores required by the workload as the number of cores in a pilot. 
+% cores required by the workload as the number of cores in a pilot.
 
 We use between 4160 and 33280 cores as indicated in
 Figure~\ref{fig:weak_scaling} because the NAMD executable used in all tasks
@@ -58,10 +55,10 @@ L &= \{ x_i: x_i\in[0,1]\; and\; x_{i+1} = x_i + \delta \}, where\ \delta\ is\ 0
   We append two additional values on both ends of $L$, completing 13 $\lambda$
 windows. Each $\lambda$ window consists of five replicas. Therefore there are
 a total of 65 tasks for every simulation stage. The production simulations
-stage, $s4$ as described in figure~\ref{fig:pst} executes a 4 ns simulation duration. 
-The analysis stages of the protocol reduce the number of tasks. 
-The first analysis task consists of five tasks where each task performs an 
-aggregate analysis over all $\lambda$ windows for each replica. 
+stage, $s4$ as described in figure~\ref{fig:pst} executes a 4 ns simulation duration.
+The analysis stages of the protocol reduce the number of tasks.
+The first analysis task consists of five tasks where each task performs an
+aggregate analysis over all $\lambda$ windows for each replica.
 The second analysis stage consists of one task that
 aggregates the previous results and computes a single average across all
 replicas.
@@ -75,7 +72,7 @@ We first characterize the overheads of HTBAC and the runtime system. HTBAC
 enables concurrent execution of multiple protocol instances. With each new
 protocol instance generated for an application, the HTBAC overhead grows to
 match the additional requirement of generating and coordinating protocols.
-The total time to completion (TTC) can be expressed as 
+The total time to completion (TTC) can be expressed as
 following: $TTC = TTX + T_{O}$ where
  \(TTX\) measures the execution duration across all task, including file
  staging, MD kernel execution, and post-executables, and $T_{O}$ the total
@@ -86,7 +83,7 @@ T_{O}\textsuperscript{RP}$$
 
 
 % In order to understand the contribution of the various events in HTBAC, termed
-% as HTBAC overhead, to 
+% as HTBAC overhead, to
 
 %------------------------------------------------------------------------------
 
@@ -114,15 +111,15 @@ given amount of time.
 \label{fig:weak_scaling}
 \end{figure}
 
-The HTBAC overhead shows a superlinear increase as we grow the number of protocol 
+The HTBAC overhead shows a superlinear increase as we grow the number of protocol
 instances, mainly due to the coordination and generation of additional protocols.
-However, the HTBAC overhead is a minimal contributor to \(TTX\). 
-The runtime overheads, mainly EnTK and RP, depend on the number of tasks that need to 
+However, the HTBAC overhead is a minimal contributor to \(TTX\).
+The runtime overheads, mainly EnTK and RP, depend on the number of tasks that need to
 be translated in-memory from a Python object to a compute unit (CU) description.
 As such, it is expected to grow proportionally to the number of tasks. EnTK
 submits CU descriptions to a MongoDB used by RP, and the RP pilot pulls these
 % descriptions from the same database. This pull operation occurs over a wide
-% area networks, which introduces varying amounts of latency. 
+% area networks, which introduces varying amounts of latency.
 In addition, each stage constructed by EnTK maintains sequential barriers. As
 such, RP remains dormant until completion of the current tasks before staging
 the next tasks. The impact of the synchronization barriers increases with the
@@ -218,30 +215,30 @@ complete within a stage a decision is made about whether more $\lambda$ windows
 are required, and if so where they should be placed.
 
 We start out the simulation with 5 replicas of \emph{3} equally spaced
-$\lambda$ windows, and equilibrate them. 
-Then we repeatedly execute 
+$\lambda$ windows, and equilibrate them.
+Then we repeatedly execute
 shorter production simulations followed by an analysis phase which determines where to
-place new lambda windows. 
+place new lambda windows.
 This procedure is repeated until convergence, at which point all
-concurrect simulation are terminated. 
+concurrect simulation are terminated.
 We define convergence as the point in
 the production-analysis loop at which a desired error threshold is
-reached. 
+reached.
 
-The success of this algorithm is determined by the decision determing 
+The success of this algorithm is determined by the decision determing
 where additional $\lambda$ windows should be introduced.
 In adaptive quadrature, this decision is made by
-calculating an error estimate on the integral and comparing this to a threshold value. 
+calculating an error estimate on the integral and comparing this to a threshold value.
 Due to the stochastic nature of biosimulations, it is
 non-trivial to determine this error, and as a proof of concept we simplified
 this decision to replicate pre-calculated results. In future studies we plan
 to replace this with a dynamic decision process.
 
-Inter-node communication introduces a constraint on the number of new lambda windows that can be added at each iteration. 
+Inter-node communication introduces a constraint on the number of new lambda windows that can be added at each iteration.
 To reduce the overhead of inter-node communication, simulations must run on an integer number of nodes. This means that the
 number of new $\lambda$ windows (i.e. the number of simulations) \emph{has} to be
-either doubled or left unchanged. 
-If the numer of window is doubled the nodes per simulation can be halved automatically. 
+either doubled or left unchanged.
+If the numer of window is doubled the nodes per simulation can be halved automatically.
 Our prototype algorithm loops through the current $\lambda$ window pairs until this criterion is reached, forcefully adding more if needed.
 
 
@@ -339,6 +336,3 @@ and which pave the way for more advanced biosimulation algorithms.
 \caption{The adaptive algorithm reevaluates the efficiency of the lambda window mesh after every \SI{1}{\nano\second} and makes a decision whether to place more lambda windows inside certain ranges.}
 \label{fig:adapt}
 \end{figure}
-
-
-

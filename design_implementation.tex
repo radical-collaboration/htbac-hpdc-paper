@@ -47,7 +47,7 @@ Toolkit (EnTK) and RADICAL-Pilot (RP).  Figure~\ref{fig:integration} shows the
 layered architecture of HTBAC, EnTK, and RP.
 
 % HTBAC is implemented in Python, and uses RCT to provide ensemble-execution
-% capabilities and a runtime system to execute tasks. 
+% capabilities and a runtime system to execute tasks.
 
 EnTK simplifies the process of creating ensemble-based applications with
 complex coordination and communication requirements. The EnTK API exposes the
@@ -72,10 +72,10 @@ provides the visual implementation of the TIES protocols into the PST model.
 % express {\bf Protocols}.
 
 % Each protocol contains multiple stages with simulations and analysis tasks
-% interspersed, in the most general case. 
+% interspersed, in the most general case.
 
 
-% programming model (that are consistent with the EnTK) to enable the user 
+% programming model (that are consistent with the EnTK) to enable the user
 
 % In section \ref{sec:science-drivers}, we described two examples of ensemble-
 % based protocols for computing binding affinities.
@@ -93,10 +93,10 @@ system, RADICAL-Pilot to execute the tasks on specific target resources.
 
 \begin{figure}
   \centering
-   \includegraphics[width=\columnwidth]{figures/isc_htbac_integration_with_entk_RP-4.pdf}
+   \includegraphics[width=\columnwidth]{figures/isc_htbac_integration_with_entk_RP.pdf}
   \caption{Layered architecture of HTBAC, EnTK, and RP. The HTBAC API exposes the Protocol
-  component. Current protocols supporting the use cases include ESMACS/TIES.  
-  EnTK serves as the workflow execution system, and by managing the workflow and workload. 
+  component. Current protocols supporting the use cases include ESMACS/TIES.
+  EnTK serves as the workflow execution system, and by managing the workflow and workload.
   RADICAL-Pilot serves as the runtime system.}
 \label{fig:integration}
 \end{figure}
@@ -123,7 +123,7 @@ distinct protocols, thereby enabling concurrent screening of drug candidates.
 HTBAC not only simplifies the expression of complex binding affinity
 protocols, but also provides hitherto unavailable capabilities, viz., the
 adaptive execution of these protocols, without any additional programming
-burden. 
+burden.
 
 
 % In turn, our adaptive execution implementation at the WMS focuses on
@@ -133,9 +133,9 @@ burden.
 \begin{figure}
   \centering
    \includegraphics[width=\columnwidth]{figures/_TIES_EnTK_implementation.pdf}
-  \caption{TIES protocol expressed using the EnTK PST model. Each protocol 
-  instance maps to a single Pipeline, comprised of Stage(s) which maintain 
-  temporal order. Each Stage executes $n$ tasks, where $n$ represents the 
+  \caption{TIES protocol expressed using the EnTK PST model. Each protocol
+  instance maps to a single Pipeline, comprised of Stage(s) which maintain
+  temporal order. Each Stage executes $n$ tasks, where $n$ represents the
   number of unique lambda-replica combinations.}
 \label{fig:pst}
 \end{figure}
