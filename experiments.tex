@@ -247,13 +247,11 @@ Our prototype algorithm loops through the current $\lambda$ window pairs until t
 % for every stage, which doubles the total number of tasks. The last production
 % simulation stage, $S4.4$, runs for the remaining 2 ns durations.
 
-\dwwnote{I haven't edited the next sentene as I don't know what it means.}
-\jhanote{Any better?}
 We introduce only a single degree of freedom relative to baseline ``non-
 adaptive" experiments, thus our experiments implement adaptive change in the
-lambda window value and not temporal ("when"). HTBAC provides the functional
-capability to adaptively deterine the time at which the $\lambda$ window are
-determined. However in this paper, we do not investigate the impact of such
+$\lambda$ windows sampled and not the timing of execution. HTBAC provides the functional
+capability to adaptively determine the time at which the $\lambda$ windows are
+chosen. However in this paper, we do not investigate the impact of such
 adaptivity, as the objective is to determine the feasibility of adaptive
 execution and resulting scientific merit of adaptive decision making.
 
@@ -268,14 +266,16 @@ execution and resulting scientific merit of adaptive decision making.
 
 \subsubsection{Adaptive Quadrature Experiments Results}
 
+\dwwnote{This needs to be clarified - Figure 5 does not mention $\Delta$G and it is not clear what is improving here.}
 One way to visualize the adaptivity in this experiments is to plot the function
 and integral approximations at every iteration. Figure~\ref{fig:adapt} shows
 how the value of $\Delta$G for one of the test systems improves as the
 algorithm places more lambda windowds. It is imporant to note, that the new
 points are decided {\it a priori} for reasons discussed above but this is
 opaque to the algorithm. This is a proof that we have the adaptive capabilities
-and we are paving the way for more advanced biosimulation algorithms.
+and which pave the way for more advanced biosimulation algorithms.
 
+\dwwnote{Make the line labels shorter - i.e. Iteration 1: Initial, Iteration 2: Increase, 3: Optimized, 4: Sampling - explain more in the caption. Move the key into the top left of the main figure}
 \begin{figure}
 \begin{tikzpicture}
 \begin{axis}[
