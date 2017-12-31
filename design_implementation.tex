@@ -122,16 +122,13 @@ HTBAC allows the simple expression and concurrent execution of multiple
 distinct protocols, thereby enabling concurrent screening of drug candidates.
 HTBAC not only simplifies the expression of complex binding affinity
 protocols, but also provides hitherto unavailable capabilities, viz., the
-adaptive formation/expression and execution of these protocols, without any
-additional programming burden. 
+adaptive execution of these protocols, without any additional programming
+burden. 
 
-Furthermore, adaptive steering of simulations require additional WMS capabilities. 
-In section \ref{sec:science-drivers}, we illustrated a particular type of adaptivity 
-within TIES that would enable the simulation to reach earlier convergence.
-We define this type of adaptivity as an adaptive workflow, i.e. changes to the 
-workflow that are made during runtime. In turn, our 
-adaptive execution implementation at the WMS focuses on supporting generality of 
-adaptive workflows at the inter and intra-protocol level. 
+
+% In turn, our adaptive execution implementation at the WMS focuses on
+% supporting generality of adaptive workflows at the inter and intra-protocol
+% level.
 
 \begin{figure}
   \centering
@@ -143,18 +140,24 @@ adaptive workflows at the inter and intra-protocol level.
 \label{fig:pst}
 \end{figure}
 
+In section \ref{sec:science-drivers}, we illustrated a particular type of
+adaptivity within TIES that would enable the simulation to reach earlier
+convergence. Adaptive execution require changes to the taskgraph that are made
+during runtime. Adaptive execution requires runtime support and capabilities,
+which are implemented by the RCT runtime layers~\cite{power-of-many17}.
+
 The TIES adaptive workflow generates post-mortem decision about the placement
-of new lambda windows for the next simulation. In turn this requires task-count 
-adaptivity which we define as runtime changes to the
-number of tasks in the task-graph. HTBAC monitors the output results from the 
-completed tasks during runtime, and redefines the existing workflow by adding
-more lambda windows. In turn EnTK processes these changes and creates the necessary
-set of tasks for the duration of the adaptive workflow. The \textbf{Application
-Manager} in EnTK signals RP to bypass termination of the pilot and instead keep the
-session alive, as long as additional tasks are resubmitted. 
-As the number of tasks grow during runtime, the ratio of core-to-task will fluctuate. 
-HTBAC exposes the core allocation per task, 
-and allows the user control to pre-specify resource requirements of additional tasks.
+of new lambda windows for the next simulation. In turn this requires task-
+count adaptivity which we define as runtime changes to the number of tasks in
+the task-graph. HTBAC monitors the output results from the completed tasks
+during runtime, and redefines the existing workflow by adding more lambda
+windows. In turn EnTK processes these changes and creates the necessary set of
+tasks for the duration of the adaptive workflow. The \textbf{Application
+Manager} in EnTK signals RP to bypass termination of the pilot and instead
+keep the session alive, as long as additional tasks are resubmitted. As the
+number of tasks grow during runtime, the ratio of core-to-task will fluctuate.
+HTBAC exposes the core allocation per task, and allows the user control to
+pre-specify resource requirements of additional tasks.
 
 % ---------------------------------------------------------------------------
 
