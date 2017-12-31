@@ -47,7 +47,7 @@ Toolkit (EnTK) and RADICAL-Pilot (RP).  Figure~\ref{fig:integration} shows the
 layered architecture of HTBAC, EnTK, and RP.
 
 % HTBAC is implemented in Python, and uses RCT to provide ensemble-execution
-% capabilities and a runtime system to execute tasks.
+% capabilities and a runtime system to execute tasks. 
 
 EnTK simplifies the process of creating ensemble-based applications with
 complex coordination and communication requirements. The EnTK API exposes the
@@ -60,22 +60,21 @@ ordered aggregation of these stages alongside their dependencies as a
 \textbf{pipeline}. A workflow is comprised of $N_P$ instances of the P$^{th}$
 protocol.
 
-The \textbf{Protocol} class can be instantiated as one of two protocols.
-Currently HTBAC provides the two protocol objects: ESMACS and TIES. For
+The \textbf{Protocol} class can be instantiated as one of two protocols: ESMACS or TIES. For
 TIES, each protocol typically corresponds to a single physical system, and
 multiple instances can be supported. The TIES protocol object enables the user
 to select a physical system, number of replicas, core allocation per replica,
-and lambda windows (for alchemical pertubations). Figure~\ref{fig:pst}
+and $\lambda$ windows to sample. Figure~\ref{fig:pst}
 provides the visual implementation of the TIES protocols into the PST model.
 
 % Consistent with EnTK's programming model, HTBAC also uses the PST model to
 % express {\bf Protocols}.
 
 % Each protocol contains multiple stages with simulations and analysis tasks
-% interspersed, in the most general case.
+% interspersed, in the most general case. 
 
 
-% programming model (that are consistent with the EnTK) to enable the user
+% programming model (that are consistent with the EnTK) to enable the user 
 
 % In section \ref{sec:science-drivers}, we described two examples of ensemble-
 % based protocols for computing binding affinities.
@@ -84,10 +83,10 @@ provides the visual implementation of the TIES protocols into the PST model.
 % workflow entails a maximum value of $P = 2$ and $N_P$=16, but in future work P
 % will be greater $>$ 2).
 
-  Once the workflow is described, it is submitted to EnTK's
+Once the workflow is described, it is submitted to EnTK's
 \textbf{Application Manager} which sets up multiple processes, threads and a
 RabbitMQ message queue for communication.
-EnTK identifies tasks which have dependencies satisfied and can be executed
+EnTK identifies tasks which have satisfied dependencies and can be executed
 concurrently. EnTK's \textbf{Execution Manager} uses the underlying runtime
 system, RADICAL-Pilot to execute the tasks on specific target resources.
 
@@ -95,8 +94,8 @@ system, RADICAL-Pilot to execute the tasks on specific target resources.
   \centering
    \includegraphics[width=\columnwidth]{figures/isc_htbac_integration_with_entk_RP.pdf}
   \caption{Layered architecture of HTBAC, EnTK, and RP. The HTBAC API exposes the Protocol
-  component. Current protocols supporting the use cases include ESMACS/TIES.
-  EnTK serves as the workflow execution system, and by managing the workflow and workload.
+  component. Current protocols supporting the use cases include ESMACS/TIES.  
+  EnTK serves as the workflow execution system, and by managing the workflow and workload. 
   RADICAL-Pilot serves as the runtime system.}
 \label{fig:integration}
 \end{figure}
@@ -123,7 +122,7 @@ distinct protocols, thereby enabling concurrent screening of drug candidates.
 HTBAC not only simplifies the expression of complex binding affinity
 protocols, but also provides hitherto unavailable capabilities, viz., the
 adaptive execution of these protocols, without any additional programming
-burden.
+burden. 
 
 
 % In turn, our adaptive execution implementation at the WMS focuses on
@@ -133,24 +132,24 @@ burden.
 \begin{figure}
   \centering
    \includegraphics[width=\columnwidth]{figures/_TIES_EnTK_implementation.pdf}
-  \caption{TIES protocol expressed using the EnTK PST model. Each protocol
-  instance maps to a single Pipeline, comprised of Stage(s) which maintain
-  temporal order. Each Stage executes $n$ tasks, where $n$ represents the
+  \caption{TIES protocol expressed using the EnTK PST model. Each protocol 
+  instance maps to a single Pipeline, comprised of Stage(s) which maintain 
+  temporal order. Each Stage executes $n$ tasks, where $n$ represents the 
   number of unique lambda-replica combinations.}
 \label{fig:pst}
 \end{figure}
 
-In section \ref{sec:science-drivers}, we illustrated a particular type of
+In section \ref{sec:science-drivers}, we described a particular type of
 adaptivity within TIES that would enable the simulation to reach earlier
-convergence. Adaptive execution require changes to the taskgraph that are made
+convergence. Adaptive execution requires changes to the taskgraph to be made
 during runtime. Adaptive execution requires runtime support and capabilities,
 which are implemented by the RCT runtime layers~\cite{power-of-many17}.
 
 The TIES adaptive workflow generates post-mortem decision about the placement
 of new lambda windows for the next simulation. In turn this requires task-
 count adaptivity which we define as runtime changes to the number of tasks in
-the task-graph. HTBAC monitors the output results from the completed tasks
-during runtime, and redefines the existing workflow by adding more lambda
+the taskgraph. HTBAC monitors the output results from the completed tasks
+during runtime, and redefines the existing workflow by adding more $\lambda$
 windows. In turn EnTK processes these changes and creates the necessary set of
 tasks for the duration of the adaptive workflow. The \textbf{Application
 Manager} in EnTK signals RP to bypass termination of the pilot and instead
