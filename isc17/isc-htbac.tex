@@ -1,0 +1,174 @@
+\RequirePackage{amsmath}
+\documentclass{llncs}
+
+\input{head}
+\input{include}
+
+
+
+\title{Rapid, concurrent and adaptive extreme scale binding free energy calculation}
+
+\author{Jumana Dakka$^{*,1}$ \and Kristof Farkas-Pall$^{*,2}$ \and Vivek Balasubramanian$^{1}$ \and \\ 
+Matteo Turilli$^{1}$ \and Shunzhou Wan$^{2}$ \and David W Wright$^{2}$ \and Stefan Zasada$^{2}$ \and \\ Peter V Coveney$^{2}$ \and Shantenu Jha$^{1,3}$}
+
+\institute{$^{1}$RADICAL Laboratory, Electric and Computer Engineering, \\
+  Rutgers University, New Brunswick, NJ, USA \\ 
+  $^{2}$ Centre for Computational Science, UCL, London, UK \\
+  $^{3}$ Brookhaven National Laboratory, Upton, New York, USA \\
+  $^{*}$ Contributed Equally}
+
+%\author{Kristof Farkas-Pall, David W Wright, Shunzhou Wan, Peter V Coveney}
+%\orcid{}
+%\affiliation{%
+%  \institution{UCL}
+%  \streetaddress{20 Gordon Street}
+%  \city{London}
+  %\state{}
+%  \country{UK}
+
+
+%\title{Concurrent Drug Binding Affinity Computations using Adaptive Simulations}
+
+% \author{
+%   \IEEEauthorblockN{Jumana Dakka, Vivek Balasubramanian, Matteo Turilli, Shantenu Jha}
+%   \IEEEauthorblockA{RADICAL Laboratory, Electric and Computer Engineering,
+%    Rutgers University, New Brunswick, NJ, USA}
+% }
+
+\begin{document}
+\maketitle
+
+
+%\author{Kristof Farkas-Pall, David W Wright, Shunzhou Wan, Peter V Coveney}
+%\orcid{}
+%\affiliation{%
+%  \institution{UCL}
+%  \streetaddress{20 Gordon Street}
+%  \city{London}
+  %\state{}
+%  \country{UK}
+
+
+%\renewcommand\shortauthors{Dakka, J. et al}
+
+\begin{abstract}
+
+The recently demonstrated ability to perform accurate, precise and rapid
+computation of ligand binding strengths has driven interest in the use of
+molecular simulations for applications in both computer-aided drug design and
+patient specific medicine. Simulation protocols based on ensembles of multiple
+runs of the same system provide an efficient method for producing robust free
+energy estimate, and equally important statistical uncertainties. Variations
+in the chemical and biophysical properties of different systems impact the
+optimal protocol choice for different proteins and classes of drugs targetting
+them. However, these are difficult to determine {\it a priori}, thus requiring
+adaptive execution of simulation workflows. We introduce the High-throughput
+Binding Affinity Calculator (HTBAC) to enable the scalable, adaptive and
+automated calculation of the binding free energy on high-performance computing
+resources. We investigate weak scaling behaviour for screening sixteen drug
+candidates concurrenlty using thousands of multi-stage pipelines on more than
+32,000 cores. This permits a rapid time-to-solution that is essentially
+invariant with respect to the calculation protocol, size of candidate ligands
+and number of ensemble simulations. As such, HTBAC advances the state of the
+scale and sophistication of binding affinity calculation. HTBAC uses readily
+available building blocks to attain both workflow flexibility and performance;
+our scaling experiments are performed on the Blue Waters machine at NCSA.
+
+\end{abstract}
+
+
+% To simply model building and simulation setup we developed an automation tool,
+% the Binding Affinity Calculator (BAC). Building on this tool, to support the
+% scalable, adaptive and automated calculation of the binding free energy on
+% high-performance computing resources,
+
+
+% \begin{abstract}
+% Recent improvements in computational power and algorithm design mean that
+% reliably quantifying ligand binding strength differences from molecular
+% simulation is becoming a genuine possibility. These developments have led to
+% increased interest in the use of molecular simulations for applications in both
+% computer-aided drug design and patient specific medicine. We have previously
+% demonstrated that simulation protocols based on ensembles of multiple runs of
+% the same system provide an efficient method for producing robust free energy
+% estimate, and equally important statistical uncertainties. Variations in the
+% chemical and biophysical properties of different systems impact the optimal
+% protocol choice for different proteins and classes of drugs targetting them.
+% This leads to the necessity of automation and middleware solutions that allow
+% adaptive execution of a wide range of simulation workflows. To support the
+% scalable, adaptive and automated calculation of the binding free energy on
+% high-performance computing resources, we introduce the High- throughput Binding
+% Affinity Calculator (HTBAC). HTBAC uses a building block approach in order to
+% attain both workflow flexibility and performance. We demonstrate close to
+% perfect weak scaling to hundreds of concurrent multi-stage binding affinity
+% calculation pipelines. This permits a rapid time-to-solution that is
+% essentially invariant of the calculation protocol, size of candidate ligands
+% and number of ensemble simulations. As such, HTBAC advances the state of the
+% art of binding affinity calculations and protocols.
+% \end{abstract}
+
+% \keywords{binding free energy, binding affinity, drug binding, middleware}
+
+%\maketitle
+
+\section{Introduction}
+\input{introduction}
+
+%\section{Related Work}
+%\input{related_work}
+
+\section{Related Work}
+\label{sec:related-work}
+\input{related_work2}
+
+
+\section{Science Drivers}
+\label{sec:science-drivers}
+\input{fe_protocols}
+\input{brd4}
+
+\section{HTBAC: Design and Implementation}
+\input{design_implementation}
+
+\vspace{-0.2in}
+
+\section{Experiments}
+\input{experiments}
+
+%\section{Results}
+%\input{results}
+
+\vspace{-0.2in}
+
+\section{Discussion and Conclusion}
+\input{conclusions}
+
+\vspace{-0.2in}
+
+\subsubsection{Software and Data: }
+{\footnotesize All experimental data and analysis is available: 
+\url{https://github.com/radical-experiments/isc-htbac-experiments}. 
+HTBAC (MIT license) can be found at:
+\url{https://github.com/radical-cybertools/htbac}}
+
+\vspace{-0.2in}
+
+\subsubsection{Acknowledgements}
+%\input{acknowledgements}
+
+{\footnotesize JD acknowledges Dept. of Education Award P200A150217 for her fellowship. PVC
+would like to acknowledge the support of the EU H2020 CompBioMed (675451),
+EUDAT2020 (654065) and ComPat (671564) projects. We thank Andre Merzky and
+other members of the RADICAL team for support. Access to Blue Waters was made
+possible by NSF 1713749. The software capabilities were supported by
+RADICAL-Cybertools (NSF 1440677).}
+
+\newpage
+
+% ---------------------------------------------------------------------------
+% BIBLIOGRAPHY
+% -------------------,--------------------------------------------------------
+\bibliographystyle{IEEEtran}
+\bibliography{rutgers,ucl}
+
+\end{document}

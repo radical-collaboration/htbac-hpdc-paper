@@ -1,0 +1,122 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyperFirstAtBeginDocument{\AtBeginDocument}
+\HyperFirstAtBeginDocument{\ifx\hyper@anchor\@undefined
+\global\let\oldcontentsline\contentsline
+\gdef\contentsline#1#2#3#4{\oldcontentsline{#1}{#2}{#3}}
+\global\let\oldnewlabel\newlabel
+\gdef\newlabel#1#2{\newlabelxx{#1}#2}
+\gdef\newlabelxx#1#2#3#4#5#6{\oldnewlabel{#1}{{#2}{#3}}}
+\AtEndDocument{\ifx\hyper@anchor\@undefined
+\let\contentsline\oldcontentsline
+\let\newlabel\oldnewlabel
+\fi}
+\fi}
+\global\let\hyper@last\relax 
+\gdef\HyperFirstAtBeginDocument#1{#1}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\citation{DeVivo2016}
+\citation{Sadiq2008}
+\citation{dakka2017}
+\citation{dakka2017}
+\@writefile{toc}{\contentsline {title}{Rapid, concurrent and adaptive extreme scale binding free energy calculation}{1}{chapter.1}}
+\@writefile{toc}{\authcount {9}}
+\@writefile{toc}{\contentsline {author}{Jumana Dakka$^{*,1}$ \and Kristof Farkas-Pall$^{*,2}$ \and Vivek Balasubramanian$^{1}$ \and \unskip \ \ignorespaces  Matteo Turilli$^{1}$ \and Shunzhou Wan$^{2}$ \and David W Wright$^{2}$ \and Stefan Zasada$^{2}$ \and \unskip \ \ignorespaces  Peter V Coveney$^{2}$ \and Shantenu Jha$^{1,3}$}{1}{chapter.1}}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1.1}}
+\citation{Wan2017brd4}
+\citation{Bhati2017}
+\citation{Karplus2005}
+\citation{Mobley2012}
+\citation{Mey2017,Yin2017}
+\citation{Ganesan2017}
+\citation{Mondal2016,Bunney2015}
+\citation{Aldeghi2017,Cappel2016,Ruiter2016}
+\citation{Ash2017}
+\citation{Gapsys2015,Doerr2016,Rizzi}
+\citation{Sadiq2008}
+\citation{Wan2017brd4}
+\citation{Bhati2017}
+\citation{Massova1999}
+\citation{Straatsma1988}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Related Work}{3}{section.1.2}}
+\newlabel{sec:related-work}{{2}{3}{Related Work}{section.1.2}{}}
+\citation{Sadiq2010,Wright2014}
+\citation{Sadiq2010,Wan2011,Wright2014,Bhati2017,Wan2017brd4,Wan2017trk}
+\citation{Bunney2015}
+\citation{Sadiq2008}
+\citation{Wan2017brd4,Bhati2017}
+\citation{Phillips2005}
+\@writefile{toc}{\contentsline {section}{\numberline {3}Science Drivers}{4}{section.1.3}}
+\newlabel{sec:science-drivers}{{3}{4}{Science Drivers}{section.1.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}ESMACS and TIES}{4}{subsection.1.3.1}}
+\citation{Theodoulou2016}
+\citation{Bamborough2012}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}The Value of Adaptivity}{6}{subsection.1.3.2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Target protein: BRD4}{6}{subsection.1.3.3}}
+\citation{Wan2017brd4}
+\citation{Sadiq2008}
+\citation{Wang2004}
+\@writefile{toc}{\contentsline {section}{\numberline {4}HTBAC: Design and Implementation}{7}{section.1.4}}
+\citation{review_bb_2016}
+\citation{turilli2017comprehensive}
+\citation{review_bb_2016}
+\citation{power-of-many17}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Layered architecture of HTBAC, EnTK, and RP. The HTBAC API exposes the Protocol component. Current protocols supporting the use cases include ESMACS/TIES. EnTK serves as the workflow execution system, and by managing the workflow and workload. RADICAL-Pilot serves as the runtime system.}}{9}{figure.1.1}}
+\newlabel{fig:integration}{{1}{9}{Layered architecture of HTBAC, EnTK, and RP. The HTBAC API exposes the Protocol component. Current protocols supporting the use cases include ESMACS/TIES. EnTK serves as the workflow execution system, and by managing the workflow and workload. RADICAL-Pilot serves as the runtime system}{figure.1.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Experiments}{9}{section.1.5}}
+\newlabel{ssec:exp_design}{{5}{9}{Experiment Setup}{section*.2}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Experiment Setup}{9}{section*.2}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces TIES protocol expressed using the EnTK PST model. Each protocol instance maps to a single Pipeline, comprised of Stage(s) which maintain temporal order. Each Stage executes $n$ tasks, where $n$ represents the number of unique lambda-replica combinations.}}{10}{figure.1.2}}
+\newlabel{fig:pst}{{2}{10}{TIES protocol expressed using the EnTK PST model. Each protocol instance maps to a single Pipeline, comprised of Stage(s) which maintain temporal order. Each Stage executes $n$ tasks, where $n$ represents the number of unique lambda-replica combinations}{figure.1.2}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Scaling and Performance Characterization}{11}{section*.3}}
+\citation{Wan2017brd4}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Weak scaling properties of HTBAC. We investigate the weak scaling of HTBAC as the ratio of the number of protocol instances to resources is kept constant. Overheads of HTBAC (right), and runtime overhead (left) and \(TTX\) (left) for experimental configurations investigating the weak scaling of TIES. We ran two trials for each protocol instance configuration. Error bars in \(TTX\) in 2 and 8-protocol runs are insignficant.}}{12}{figure.1.3}}
+\newlabel{fig:weak_scaling}{{3}{12}{Weak scaling properties of HTBAC. We investigate the weak scaling of HTBAC as the ratio of the number of protocol instances to resources is kept constant. Overheads of HTBAC (right), and runtime overhead (left) and \(TTX\) (left) for experimental configurations investigating the weak scaling of TIES. We ran two trials for each protocol instance configuration. Error bars in \(TTX\) in 2 and 8-protocol runs are insignficant}{figure.1.3}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Validation Experiment}{12}{section*.4}}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Comparison of the calculated binding free energies using HTBAC, from the original study by Wan et. al and experimental data. The two theoretical studies used the same protcol in principle. This experiment proved that HTBAC has indeed implemented TIES correctly, as the calculated values are either the same or within error bar of the original study. All values are in \textbf  {kcal mol\textsuperscript  {-1}}.}}{13}{table.1.1}}
+\newlabel{tab:exp2}{{1}{13}{Comparison of the calculated binding free energies using HTBAC, from the original study by Wan et. al and experimental data. The two theoretical studies used the same protcol in principle. This experiment proved that HTBAC has indeed implemented TIES correctly, as the calculated values are either the same or within error bar of the original study. All values are in \textbf {kcal mol\textsuperscript {-1}}}{table.1.1}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Adaptive Experiments}{13}{section*.5}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Illustrating the adaptive workflow. After the 3 inital lambda windows are equilibrated, the first production stage starts. This is followed by analysis at every lambda interval, to decide whether to add a new window in the middle. The production-analysis is repeated for 4 production steps in our implementeation, not shown here.}}{14}{figure.1.4}}
+\newlabel{fig:adaptive_TIES}{{4}{14}{Illustrating the adaptive workflow. After the 3 inital lambda windows are equilibrated, the first production stage starts. This is followed by analysis at every lambda interval, to decide whether to add a new window in the middle. The production-analysis is repeated for 4 production steps in our implementeation, not shown here}{figure.1.4}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Adaptive Quadrature Experiments Results}{14}{section*.6}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Approximating the intergral under the curve, hence calculating $\Delta $G. The adaptive algorithm reevaluates the efficiency of the lambda window mesh after every \SI {1}{\nano \second } and makes a decision whether to place more lambda windows inside certain ranges. As we iterate every 1 ns, the integral approximation becomes more accurate.}}{15}{figure.1.5}}
+\newlabel{fig:adapt}{{5}{15}{Approximating the intergral under the curve, hence calculating $\Delta $G. The adaptive algorithm reevaluates the efficiency of the lambda window mesh after every \SI {1}{\nano \second } and makes a decision whether to place more lambda windows inside certain ranges. As we iterate every 1 ns, the integral approximation becomes more accurate}{figure.1.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Discussion and Conclusion}{15}{section.1.6}}
+\@writefile{toc}{\contentsline {subsubsection}{Software and Data: }{16}{section*.7}}
+\@writefile{toc}{\contentsline {subsubsection}{Acknowledgements}{16}{section*.8}}
+\bibstyle{IEEEtran}
+\bibdata{rutgers,ucl}
+\bibcite{DeVivo2016}{{1}{}{{}}{{}}}
+\bibcite{Sadiq2008}{{2}{}{{}}{{}}}
+\bibcite{dakka2017}{{3}{}{{}}{{}}}
+\bibcite{Wan2017brd4}{{4}{}{{}}{{}}}
+\bibcite{Bhati2017}{{5}{}{{}}{{}}}
+\bibcite{Karplus2005}{{6}{}{{}}{{}}}
+\bibcite{Mobley2012}{{7}{}{{}}{{}}}
+\bibcite{Mey2017}{{8}{}{{}}{{}}}
+\bibcite{Yin2017}{{9}{}{{}}{{}}}
+\bibcite{Ganesan2017}{{10}{}{{}}{{}}}
+\bibcite{Mondal2016}{{11}{}{{}}{{}}}
+\bibcite{Bunney2015}{{12}{}{{}}{{}}}
+\bibcite{Aldeghi2017}{{13}{}{{}}{{}}}
+\bibcite{Cappel2016}{{14}{}{{}}{{}}}
+\bibcite{Ruiter2016}{{15}{}{{}}{{}}}
+\bibcite{Ash2017}{{16}{}{{}}{{}}}
+\bibcite{Gapsys2015}{{17}{}{{}}{{}}}
+\bibcite{Doerr2016}{{18}{}{{}}{{}}}
+\bibcite{Rizzi}{{19}{}{{}}{{}}}
+\bibcite{Massova1999}{{20}{}{{}}{{}}}
+\bibcite{Straatsma1988}{{21}{}{{}}{{}}}
+\bibcite{Sadiq2010}{{22}{}{{}}{{}}}
+\bibcite{Wright2014}{{23}{}{{}}{{}}}
+\bibcite{Wan2011}{{24}{}{{}}{{}}}
+\bibcite{Wan2017trk}{{25}{}{{}}{{}}}
+\bibcite{Phillips2005}{{26}{}{{}}{{}}}
+\bibcite{Theodoulou2016}{{27}{}{{}}{{}}}
+\bibcite{Bamborough2012}{{28}{}{{}}{{}}}
+\bibcite{Wang2004}{{29}{}{{}}{{}}}
+\bibcite{review_bb_2016}{{30}{}{{}}{{}}}
+\bibcite{turilli2017comprehensive}{{31}{}{{}}{{}}}
+\bibcite{power-of-many17}{{32}{}{{}}{{}}}
+\providecommand\NAT@force@numbers{}\NAT@force@numbers
