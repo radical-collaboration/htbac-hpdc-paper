@@ -141,13 +141,15 @@ executions, we half the resources allocated by the pilot.
 Furthermore, as we scale the number of generations, the runtime overhead of RP
 scales linearly. RP requires a proportional amount of time to schedule tasks to
 the scale of execution. The main contributor to the increase in overhead is 
-derived by the time of resources inactivity while RP schedules new tasks. 
+derived by the time of resources inactivity while RP schedules new tasks.
+As such, the overhead is expected to grow proportionally to the number of 
+concurrent tasks.  
 
 
 \begin{figure}
   \centering
    \includegraphics[width=\columnwidth]
-   {figures/strong_scaling_TIES_instances_50,000_timesteps_new.pdf}
+   {figures/strong_scaling_TIES_instances_50,000_timesteps.pdf}
   \caption{Strong scaling properties of HTBAC. We investigate the
   strong scaling of HTBAC with a fixed number of protocol instances while
   varying the amount resources. Overheads of HTBAC and runtime overhead 
