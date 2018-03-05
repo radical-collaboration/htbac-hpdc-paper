@@ -5,7 +5,7 @@
 
 \subsubsection{Experiment Setup}\label{ssec:exp_design}
 
-We perform weak scalability experiments on NCSA Blue Waters--a
+We perform weak and strong scalability experiments on NCSA Blue Waters--a
 13.3. petaFLOPS Cray, with 32 Interlago cores/50 GB RAM per node, Cray Gemini,
 Lustre shared file system. Our experiments are launched on Blue Waters and
 monitored using a persistent virtual machine, as Blue Waters does not allow
@@ -32,6 +32,10 @@ per task to be 16, however Blue Waters does not permit running multiple MPI
 applications on the same node, hence each NAMD task requires a full node to
 maintain concurrency.
 
+For strong scaling performance, we fix the number of protocol instances to 
+8 instances while varying the amount of resources as demonstrated in 
+Figure~\ref{fig:strong_scaling}. 
+
 For the TIES protocol, each pipeline consists of six stages. Each of the
 simulation stages contains a task for every unique ($\lambda$, replica)
 combination. In the non-adaptive workflow scenario, the first 11 $\lambda$
@@ -41,7 +45,7 @@ L &= \{ x_i: x_i\in[0,1]\; and\; x_{i+1} = x_i + \delta \}, where\ \delta\ is\ 0
 %&$$L=\{ x_i: x_i\in[0,1]\; and\; x_{i+1} = x_i + \delta \}$$%, where $\delta$ is $0.1$.
 \end{flalign}
 
-  We append two additional values on both ends of $L$, completing 13 $\lambda$
+We append two additional values on both ends of $L$, completing 13 $\lambda$
 windows. Each $\lambda$ window consists of five replicas. Therefore there are
 a total of 65 tasks for every simulation stage. The production simulations
 stage, $S4$ as described in figure~\ref{fig:pst} executes a 4 ns simulation 
