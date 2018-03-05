@@ -129,15 +129,32 @@ higher overheads. Lastly, we notice that each additional protocol instance
 contributes to roughly 55 additional seconds in \(TTX\). 
 
 
-% \subsubsection {Strong Scaling Experiments}
+\subsubsection {Strong Scaling Experiments}
 
-% Next we repeat the same design of the weak scalability experiments but examine
-% performance of strong scaling when fixing the number of pipelines and varying
-% the resources. The comparison between weak and strong scalability demonstrates
-% the overhead introduced by load balancing and scheduling tasks in multiple
-% generations.
+Next we repeat the same design of the weak scalability experiments but examine
+performance of strong scaling when fixing the number of pipelines and varying
+the resources. The comparison between weak and strong scalability demonstrates
+the overhead introduced by load balancing and scheduling tasks in multiple
+generations. As we scale the number of generation of concurrent tasks 
+executions, we half the resources allocated by the pilot. 
 
-% (Add in additional points on strong scaling if they come in)
+Furthermore, as we scale the number of generations, the runtime overhead of RP
+scales linearly. RP requires a proportional amount of time to schedule tasks to
+the scale of execution. The main contributor to the increase in overhead is 
+derived by the time of resources inactivity while RP schedules new tasks. 
+
+
+\begin{figure}
+  \centering
+   \includegraphics[width=\columnwidth]
+   {figures/strong_scaling_TIES_instances_50,000_timesteps_new.pdf}
+  \caption{Strong scaling properties of HTBAC. We investigate the
+  strong scaling of HTBAC with a fixed number of protocol instances while
+  varying the amount resources. Overheads of HTBAC and runtime overhead 
+  (left) and \(TTX\) (right) for experimental configurations investigating the 
+  strong scaling of TIES.}
+\label{fig:strong_scaling}
+\end{figure}
 
 %------------------------------------------------------------------------------
 
@@ -230,7 +247,7 @@ windows that can be added at each iteration. To reduce the overhead of
 inter-node communication, simulations must run on an integer number of nodes. 
 This means that the number of new $\lambda$ windows (i.e. the number of 
 simulations) \emph{has} to be either doubled or left unchanged.
-If the numer of window is doubled the nodes per simulation can be halved 
+If the number of window is doubled the nodes per simulation can be halved 
 automatically. Our prototype algorithm loops through the current $\lambda$ 
 window pairs until this criterion is reached, forcefully adding more if needed.
 
