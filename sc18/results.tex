@@ -48,7 +48,7 @@ size of the workload that can be investigated in a given amount of time.
 
 \begin{figure}
   \centering
-   \includegraphics[width=\columnwidth]{./figures/weak_scaling_TIES_instances_50,000_timesteps.pdf}
+   \includegraphics[width=\columnwidth]{weak_scaling_TIES_instances_50,000_timesteps.pdf}
   \caption{Weak scaling properties of HTBAC (right side). We investigate the
   weak scaling of HTBAC as the ratio of the number of protocol instances to
   resources is kept constant. (Left) Overheads of HTBAC, and runtime overhead (EnTK/RP) for
@@ -109,7 +109,7 @@ the resources. The comparison between weak and strong scalability demonstrates
 the overhead introduced by load balancing and scheduling tasks in multiple
 generations.
 
-(Add in additional points on strong scaling if they come in)
+
 
 % HTBAC enables concurrent execution of multiple protocol instances.
 % With each new protocol instance generated for an
@@ -180,7 +180,7 @@ The impact of adaptivity is clearly seen when $\partial U/\partial\lambda$ is pl
 Figure~\ref{fig:adapt} shows
 how the value of $\Delta$G for one of the test systems improves as the
 algorithm places more lambda windows. 
-\dwwnote{This is a $\partial U/\partial\lambda$ plot - no $\Delta$G conclusions can be made from this.}
+
 %It is imporant to note, that the new
 %points are decided {\it a priori} for reasons discussed above but this is
 %opaque to the algorithm. 
@@ -197,16 +197,16 @@ and which pave the way for more advanced biosimulation algorithms.
   legend pos=outer north east,
   grid=both,
   ]
-  \addplot+[name path=alch_1, mark size=1pt, mark=*, color=blue] table [x=lambda, y=p1v]{figures/alch_1.csv};
+  \addplot+[name path=alch_1, mark size=1pt, mark=*, color=blue] table [x=lambda, y=p1v]{alch_1.csv};
   \addlegendentry{Iteration 1: inital lambda spacing};
 
-  \addplot+[name path=alch_2, mark size=1pt, mark=*, color=red] table [x=lambda, y=p1v]{figures/alch_2.csv};
+  \addplot+[name path=alch_2, mark size=1pt, mark=*, color=red] table [x=lambda, y=p1v]{alch_2.csv};
   \addlegendentry{Iteration 2: Increasing number of lambda values};
 
-  \addplot+[name path=alch_3, mark size=1pt, mark=*, color=brown] table [x=lambda, y=p1v]{figures/alch_3.csv};
+  \addplot+[name path=alch_3, mark size=1pt, mark=*, color=brown] table [x=lambda, y=p1v]{alch_3.csv};
   \addlegendentry{Iteration 3: Optimial number of lambda values found};
 
-  \addplot+[name path=alch_4, mark size=1pt, mark=*, color=black] table [x=lambda, y=p1v]{figures/alch_4.csv};
+  \addplot+[name path=alch_4, mark size=1pt, mark=*, color=black] table [x=lambda, y=p1v]{alch_4.csv};
   \addlegendentry{Iteration 4: Refining function values at optimial mesh};
 
   \addplot[name path=line, draw=none] {0};
