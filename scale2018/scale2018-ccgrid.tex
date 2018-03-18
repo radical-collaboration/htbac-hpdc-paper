@@ -44,7 +44,7 @@ There are two major strategies for countering this threat to treatment efficacy:
 
 Molecular simulation based binding affinity calculations represent a practical, quantitative, generalizable approach to predicting the impact of clinically observed mutations on kinase inhibitor affinity. It has been shown that computational methods comparing the binding of different drugs based on molecular dynamics (MD) can now achieve useful predictive accuracy (1 kcal/mol) for well-behaved proteins [8, 12, 14]. This accuracy is sufficient to greatly accelerate lead optimization [15]. Furthermore, recent work also indicates that the same approaches achieve the level of accuracy required to predict the impact of kinase resistance mutations, though published work has only examined single mutations in Abl and FGFR [16, 17].
 
-\section{Binding Affinity Calculation Protocols}\label{sec:bac}
+\subsection{Binding Affinity Calculation Protocols}\label{sec:bac}
 
 Computing accurate protein-drug binding affinities (also known as binding free energies) requires a simulation technique which captures the chemical detail of the system. MD simulations are the time dependent numerical integration of the classical equations of motion for molecular systems. Application of MD to atomistic models of proteins and their ligands can be used to answer questions about the properties of a specific system often more readily than experiments on the actual system. Free-energy calculations in the framework of MD simulations not only yield quantitative estimates of binding strength but also provide insights into the most important interactions driving the process.
 
@@ -73,11 +73,85 @@ We have developed an ensemble-based endpoint protocol called ESMACS (enhanced sa
 
 \section{Computational Challenges}\label{sec:cc}
 
-% The RADICAL­Cybertools (RCT), developed by The RADICAL Lab, enables the efficient and dynamic execution of ensembles on heterogeneous computing resources. Different from other runtime systems, RCT decouples the workload execution and resource management details from the expression of the application, which significantly reduces the burden on the end user. RCT has been used extensively to support biomolecular sciences algorithms/methods, e.g., replica­exchange, adaptive sampling and high­throughput binding affinity calculations [7]. Specifically, the RCT workflow management system, Ensemble Toolkit (EnTK), provides the ability to create and execute ensemble­based workflows/applications with complex coordination and communication but without the need for explicit resource management [8, 9].
+High-performance computing (HPC) environments were designed to primarily
+support the execution of single simulations. Current HPC platforms enable the
+strong and weak scaling of single tasks (hitherto mostly simulations), with
+limited software and systems support for the concurrent execution of multiple
+heterogeneous tasks as part of a single application (or workflow). As the
+nature of scientific inquiry and the applications to support that inquiry
+evolve, there is a critical need to support the scalable and concurrent
+execution of a large number of heterogeneous tasks.
 
 \section{Solution}\label{sec:solution}
 
+The RADICAL Cybertools (RCT), developed by The RADICAL Lab, enables the 
+efficient and dynamic execution of ensembles on heterogeneous computing 
+resources. Different from other runtime systems, RCT decouples the workload 
+execution and resource management details from the expression of the 
+application, which significantly reduces the burden on the end user. 
+RCT has been used extensively to support 
+biomolecular sciences methods and algorithms, e.g., replica exchange, adaptive
+sampling and high throughput binding affinity calculations [7]. 
+
+Here we describe High Throughput Binding Affinity Calculator (HTBAC), 
+which builds upon the RADICAl Cybertools, as the framework solution to support 
+the coordination of the required scale of computations, thereby 
+allowing us to employ hundreds of thousands of cores at a time.
+
+Most benchmark evaluations of free energy protocols in the literature look 
+at only a small number of systems, drawing inferences from tens or hundreds 
+of runs. HTBAC facilitates studies on unprecedented scales, with the number 
+of systems investigated an order of magnitude larger than published studies, 
+which provides the opportunity to gain invaluable knowledge on the domain of 
+applicability of current MD technologies. In particular, we demonstrate the 
+use of HTBAC to compute the binding affinities of anti-cancer drugs to their 
+target proteins (the EGFR kinase) using two simulation protocols with differing 
+levels of rigour and computational cost, ESMACS and TIES.
+
+HTBAC is not limited to these protocols as additional protocols can be 
+expressed and implemented easily with the HTBAC user-facing API, however for 
+demonstration we focus on these ensemble protocols HTBAC has demonstrated 
+sizable execution and performance of the ESMACS and TIES protocols on NCSA 
+Blue Waters using NAMD with MPI. 
+
+(Results from CACFW/ISC papers)
+
+(Adaptivity)
+
+HTBAC delivers the capacity to reach multi-petaflops necessary to explore 
+numerous mutations thereby providing a comparison of results and the importance 
+of choices made in the simulation and analysis for the overall accuracy and 
+precision of free energy calculations. As we continue to improve the 
+usability of the framework we aim to expand the opportunity to generate and 
+implement new protocols. 
+
+
+This paragraph below can serve as Performance Metric 
+
+Each of these protocols run a large range of mutations where each 
+mutation is captured as independent pipelines composed of multiple replicas 
+where each replica consists of multi-stage short bursts 
+of simulations, followed by a single replica for analysis. The process is 
+repeated over a number of iterations depending on the convergence criteria 
+in the analysis stage. Each replica requires 16 cores, where each pipeline 
+runs approximately 10 hours, over a range of 100 mutations where each mutations 
+spawns either 25 or 65 replicas, depending on the protocol.                        
+While RCT supports concurrent task execution up to 64,000 tasks on Blue Waters, 
+the user is required to translate and codify each of these protocols with the 
+corresponding mutation using the EnTK API, and scale these protocols 
+based on the desired number of mutations and replicas [9]. We leverage 
+the advanced resource management capabilities of RADICAL Cybertools and 
+automate this process by providing a native selection of protocols where 
+the user only provides the configuration files for each mutation, the number 
+of replicas per mutation and the number of cores needed to support each 
+protocol. To this effect, the framework uses EnTK to provide a higher level of 
+abstraction that allows the user to interface closer to the science problem.
+                
+       
 \section{Impact of Solution}\label{sec:impact}
+
+Scientific Impact: 
+
 
 \section{Analysis of Solution}\label{sec:analysis}
 
