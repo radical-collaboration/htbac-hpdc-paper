@@ -1,0 +1,96 @@
+\documentclass[conference]{IEEEtran}
+\input{head}
+\input{include}
+
+\begin{document}
+
+
+\title{Alchemical and Endpoint Free Energy Calculations at Scale}
+
+
+\author{Shantenu Jha$^{1}$$^{,2}$, David W. Wright$^{3}$, Jumana Dakka$^{1}$,  Kristof Farkas-Pall$^{3}$\\
+   \small{\emph{$^{1}$ Rutgers, the State University of New Jersey, Piscataway, NJ 08854, USA}}\\
+   \small{\emph{$^{2}$ Brookhaven National Laboratory, Upton, New York, 11973}}\\
+   \small{\emph{$^{3}$ University College London, London, UK, WC1H 0AJ}}
+}
+
+
+\date{}
+\maketitle
+
+\begin{abstract} 
+
+\end{abstract}
+
+
+% ---------------------------------------------------------------------------
+% Introduction
+% ---------------------------------------------------------------------------
+\section{Introduction}\label{sec:intro}
+
+The efficacy of drug treatments depends on how tightly small molecules bind to their target proteins. Quantifying the strength of these interactions (the so called ‘binding affinity’) is a grand challenge of computational chemistry, the surmounting of which could revolutionize drug design and provide the platform for patient specific medicine. Recently, improvements in computational power and algorithm design mean that reliably quantifying binding affinities from molecular simulation is now becoming a genuine possibility. Exploiting these advances and further refining the technologies involved requires the marshaling of huge simulation campaigns, and impacting clinical or industrial decision making means that computations must be turned around in timescales of hours or days. 
+
+
+% ---------------------------------------------------------------------------
+% Scientific Motivation
+% ---------------------------------------------------------------------------
+
+\subsection{Scientific Motivation}\label{sec:motivation}
+
+Cancer is the second leading cause of death in the United States, accounting for nearly 25 of all deaths; in 2015, over 1.7 million new cases were diagnosed, with over 580,000 deaths [1]. The development of targeted kinase inhibitors—which selectively inhibit kinases involved in signaling pathways that often control growth and proliferation that become dysregulated in many cancers—has changed the way many of these cancers are treated. There are currently 35 FDA-approved small molecule targeted kinase inhibitors in clinical use, and for the past decade, they have represented a significant fraction of the \$37 billion U.S. market for oncology drugs [2, 3]. Imatinib, the first of these of drugs, is partially credited for doubling survivorship rates in certain cancers [3,4]. Unfortunately, the development of resistance to these drugs limits the amount of time that patients can derive benefits from their treatment. Resistance to therapeutics is responsible for more than 90 of deaths in patients with metastatic cancer [5]. While drug resistance can emerge via multiple mechanisms, mutations in the therapeutic target drive drug resistance in many patients; in some commonly targeted kinases such as EGFR, missense mutations are the mechanism of resistance in as many as 90 of cases           
+At the same time, the rapid drop in cost of next-generation sequencing technologies has led many cancer centers to begin deep sequencing patient tumors to identify the genetic alterations driving individual cancers, with the ultimate goal of making individualized therapeutic decisions based upon this data—an approach termed precision cancer therapy. While several common (recurrent) mutations have been catalogued due to their ability to induce resistance or susceptibility to particular kinase inhibitors, the vast majority of clinically observed mutations are rare, essentially ensuring that it will be impossible that catalog-building alone will be sufficient for making therapeutic decisions about the majority of individual patient tumors.
+
+There are two major strategies for countering this threat to treatment efficacy: tailoring the drug regimen received by a patient according to the mutations present in their particular cancer (precision therapy), and development of more advanced second- or third-line therapies that retain potency for known resistance mutations. In both cases, future developments require insight into the molecular changes produced by mutations, as well as ways to predict their impact on drug binding on a timescale much shorter than is typically experimentally feasible. 
+
+Molecular simulation based binding affinity calculations represent a practical, quantitative, generalizable approach to predicting the impact of clinically observed mutations on kinase inhibitor affinity. It has been shown that computational methods comparing the binding of different drugs based on molecular dynamics (MD) can now achieve useful predictive accuracy (∼1 kcal/mol) for well-behaved proteins [8, 12, 14]. This accuracy is sufficient to greatly accelerate lead optimization [15]. Furthermore, recent work also indicates that the same approaches achieve the level of accuracy required to predict the impact of kinase resistance mutations, though published work has only examined single mutations in Abl and FGFR [16, 17].
+
+\section{Binding Affinity Calculation Protocols}\label{sec:bac}
+
+Computing accurate protein-drug binding affinities (also known as binding free energies) requires a simulation technique which captures the chemical detail of the system. MD simulations are the time dependent numerical integration of the classical equations of motion for molecular systems. Application of MD to atomistic models of proteins and their ligands can be used to answer questions about the properties of a specific system often more readily than experiments on the actual system. Free-energy calculations in the framework of MD simulations not only yield quantitative estimates of binding strength but also provide insights into the most important interactions driving the process.
+
+Most methods for calculating binding affinities fit into one of two broad classes; so called alchemical and endpoint methodologies. Alchemical free energy calculations employ unphysical (“alchemical”) intermediates to calculate changes in free energies between two systems. It is common in these methods to refer to a variable, λ, which describes the path taken to transform one protein sequence (or ligand) into another. Endpoint methods, as the name suggests, consider the difference in energy between bound and unbound structures. [44,45] To obtain information on the differences in binding affinity of different sequences for a panel of kinase inhibitors requires a deployment of various strategies, incorporating both alchemical and endpoint approaches. In this work we deploy approaches from both of these classes.
+
+
+\subsection{Ensemble Molecular Dynamics}\label{sec:emd}
+
+Statistical mechanics provides the prescription for calculating such macroscopic quantities as ensemble averages of microscopic states. Traditionally, these macroscopic properties have usually been calculated from the time average of a single “long” duration trajectory. An intuitive and potentially more time efficient method to capture the mixing dynamics required to describe an equilibrium thermodynamic state is the use of an ensemble of separate trajectories. [53]
+
+The major sources of error in free energy calculations are the representation of the system chemistry encoded in the forcefield used, finite sampling and the free energy estimator. Protocols developed in the Coveney labs have obtained accurate and precise results which successfully reproduce experimental binding free energies from a wide range of systems. [13, 20, 46–49] Comparisons of results obtained for a large set of sequences will provide valuable insights on the importance of choices made in simulation and analysis for the overall accuracy and predictive power of free energy calculations, and facilitate the refinement of our protocols. 
+
+
+\subsection{Alchemical Protocol (TIES)}\label{sec:ties}
+
+Alchemical methods employ MD simulations of unphysical, alchemical intermediate states that attenuate the interactions of the small molecule with its environment. These alchemical intermediate states include both the fully-interacting complex as well as replicas in which the ligand does not interact with its environment, and allow the total free energy of binding—including entropic and enthalpic contributions—to be efficiently computed [10–12]. Typically, the alchemical path between the states of interest is described by a parameter, λ, which varies between 0 for the initial and 1 for the final state of the transformation of interest. Sampling is then performed at a series of points along this path and the gradient of the energy integrated to calculate the binding affinity.
+
+The TIES (thermodynamic integration with enhanced sampling) protocol, developed within the Coveney lab, employs ensemble sampling at each λ window to yield reproducible, accurate, and precise relative binding affinities. [13, 47] Based on the direct calculation of ensemble averages, it allows us to determine statistically meaningful results along with complete control of errors. As currently designed, TIES computes the change in binding affinity between two related system (termed ‘relative binding affinities’).
+
+
+\subsection{Endpoint Protocol (ESMACS)}\label{sec:esmacs}
+
+Computationally cheaper, but less rigorous methods, endpoint methods have been used to directly compute the binding strength of a drug to the target protein sequence from MD simulations (as opposed to differences in affinity). Combining these methods with an ensemble simulation approach has demonstrated the potential to robustly evaluate the impact of mutations on drug binding in both HIV protease [18, 19] and the EGFR kinase. [20]     
+
+We have developed an ensemble-based endpoint protocol called ESMACS (enhanced sampling of molecular dynamics with approximation of continuum solvent). The protocol is built on the popular molecular mechanics Poisson–Boltzmann surface area (MMPBSA) [44] method which makes a continuum approximation for the aqueous solvent in order to obtain results on practical timescales. Commonly, MMPBSA analyses are performed on a single MD trajectory, or even a single structure. We have demonstrated the lack of reproducibility of such an approach in both HIV-1 protease and MHC systems, with calculations for the same protein-ligand combination, with identical initial structure and force field, shown to produce binding affinities varying by up to 12 kcal/mol for small ligands (flexible ligands can vary even more). [46,56] ESMACS employs MMPBSA to produce ensemble- based, converged and reproducible, determinations of binding free energies (separate ligand and receptor trajectories can also be used to account for adaptation energies). [47,56] This provides a rapid quantitative approach sensitive enough to determine changes in binding free energies which differentiate susceptible and resistant sequences (typically of the order of 2 kcal/mol).
+
+\section{Computational Challenges}\label{sec:cc}
+
+The RADICAL­Cybertools (RCT), developed by The RADICAL Lab, enables the efficient and dynamic execution of ensembles on heterogeneous computing resources. Different from other runtime systems, RCT decouples the workload execution and resource management details from the expression of the application, which significantly reduces the burden on the end user. RCT has been used extensively to support biomolecular sciences algorithms/methods, e.g., replica­exchange, adaptive sampling and high­throughput binding affinity calculations [7]. Specifically, the RCT workflow management system, Ensemble Toolkit (EnTK), provides the ability to create and execute ensemble­based workflows/applications with complex coordination and communication but without the need for explicit resource management [8, 9].
+
+\section{Solution}\label{sec:solution}
+
+\section{Impact of Solution}\label{sec:impact}
+
+\section{Analysis of Solution}\label{sec:analysis}
+
+% ---------------------------------------------------------------------------
+% Demonstration
+% ---------------------------------------------------------------------------
+\section{Demonstration}\label{sec:demo}
+
+
+% ---------------------------------------------------------------------------
+% BIBLIOGRAPHY
+% ---------------------------------------------------------------------------
+\bibliographystyle{abbrv}
+\bibliography{}
+
+\end{document}
