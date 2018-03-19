@@ -9,7 +9,8 @@
 
 %\title{Rapid, Concurrent and Adaptive Extreme-scale Free energy calculation}
 
-\title{The Challenge of Being Accurate When Fast: Using SuperComputers to Reduce Time to Clinical Insight from Data}
+\title{Trading-off Accuracy with Computational Cost: Adaptive Algorithms to Reduce Time to Clinical Insight}
+
 
 
 % \author{Jumana Dakka$^{1}$,  Kristof Farkas-Pall$^{3}$, David W. Wright$^{3}$, .... Shantenu Jha$^{1}$$^{,2}$, \\
@@ -100,6 +101,11 @@ spawns either 25 or 65 replicas, depending on the protocol.
 
 \section{Computational Challenges}\label{sec:cc}
 
+\jhanote{There is no mention of adaptivity as a challenge. Vivek should add
+from his paper.}
+
+\jhanote{Need better organization. Separate out challenge of (i) simple and usable software systems, (ii) scale and interoperability, and (iii) adaptivity challenges. }
+
 High-performance computing (HPC) environments were designed to primarily
 support the execution of single simulations. Current HPC platforms enable the
 strong and weak scaling of single tasks (hitherto mostly simulations), with
@@ -164,6 +170,8 @@ domain specific workflows rapidly and at scale.
 
 \section{Solution}\label{sec:solution}
 
+\jhanote{The Solution is not just HTBAC per se, but the application of HTBAC to the specific problem. The specific problem has not been identified so far. I would propose divided this section into two parts. The first about  HTBAC and its scalability; and the second part about its application to the specific problem.}
+
 The RADICAL Cybertools (RCT), developed by The RADICAL Lab, enables the 
 efficient and dynamic execution of ensembles on heterogeneous computing 
 resources. Different from other runtime systems, RCT decouples the workload 
@@ -219,6 +227,9 @@ adaptive methods which minimize the compute time used whilst producing binding
 free energy estimates meeting pre-defined quality criteria (such as
 convergence or statistical uncertainty below a given threshold).
 
+\jhanote{Adaptivity has to be motivated better. Currently it is almost a
+posteriori..}
+
 This additional driver for \textit{adaptivity} suggest that algorithmic methods will
 typically involve compounds with a wide range of chemical properties which can
 impact not only the time to convergence, but the type of sampling required to
@@ -241,6 +252,9 @@ when one calculation has converged whilst another has not. This adaptability
 makes it easier to manage complex programs where efficient use of resources
 is required in order to achieve a time to completion of studies comparable to
 those of high throughput chemistry. 
+
+
+\jhanote{Would the last paragraph be placed in Section V or VI?}
 
 The novel contributions of HTBAC are: (i) Unprecedented throughput: it allows
 the concurrent screening for drug binding affinities of multiple compounds at
@@ -311,6 +325,9 @@ treatments could be predicted.
 
 
 \section{Analysis of Solution}\label{sec:analysis}
+
+\jhanote{Dave/Kristof: We are missing a "comparison to related approaches"}
+
 
 Our previous work deploying both ESMACS and TIES has typically involved comparing 10 to 20 computed
 binding affinities.
