@@ -58,7 +58,7 @@ Molecular simulation based binding affinity calculations represent a practical, 
 
 Computing accurate protein-drug binding affinities (also known as binding free energies) requires a simulation technique which captures the chemical detail of the system. MD simulations are the time dependent numerical integration of the classical equations of motion for molecular systems. Application of MD to atomistic models of proteins and their ligands can be used to answer questions about the properties of a specific system often more readily than experiments on the actual system. Free-energy calculations in the framework of MD simulations not only yield quantitative estimates of binding strength but also provide insights into the most important interactions driving the process.
 
-Most methods for calculating binding affinities fit into one of two broad classes; so called alchemical and endpoint methodologies. Alchemical free energy calculations employ unphysical (“alchemical”) intermediates to calculate changes in free energies between two systems. It is common in these methods to refer to a variable, $lambda$, which describes the path taken to transform one protein sequence (or ligand) into another. Endpoint methods, as the name suggests, consider the difference in energy between bound and unbound structures. To obtain information on the differences in binding affinity of different sequences for a panel of kinase inhibitors requires a deployment of various strategies, incorporating both alchemical and endpoint approaches. In this work we deploy approaches from both of these classes.
+Most methods for calculating binding affinities fit into one of two broad classes; so called alchemical and endpoint methodologies. Alchemical free energy calculations employ unphysical (“alchemical”) intermediates to calculate changes in free energies between two systems. It is common in these methods to refer to a variable, $\lambda$, which describes the path taken to transform one protein sequence (or ligand) into another. Endpoint methods, as the name suggests, consider the difference in energy between bound and unbound structures. To obtain information on the differences in binding affinity of different sequences for a panel of kinase inhibitors requires a deployment of various strategies, incorporating both alchemical and endpoint approaches. In this work we deploy approaches from both of these classes.
 
 
 \subsection{Ensemble Molecular Dynamics}\label{sec:emd}
@@ -70,9 +70,9 @@ The major sources of error in free energy calculations are the representation of
 
 \subsection{Alchemical Protocol (TIES)}\label{sec:ties}
 
-Alchemical methods employ MD simulations of unphysical, alchemical intermediate states that attenuate the interactions of the small molecule with its environment. These alchemical intermediate states include both the fully-interacting complex as well as replicas in which the ligand does not interact with its environment, and allow the total free energy of binding—including entropic and enthalpic contributions—to be efficiently computed. Typically, the alchemical path between the states of interest is described by a parameter, $lambda$, which varies between 0 for the initial and 1 for the final state of the transformation of interest. Sampling is then performed at a series of points along this path and the gradient of the energy integrated to calculate the binding affinity.
+Alchemical methods employ MD simulations of unphysical, alchemical intermediate states that attenuate the interactions of the small molecule with its environment. These alchemical intermediate states include both the fully-interacting complex as well as replicas in which the ligand does not interact with its environment, and allow the total free energy of binding—including entropic and enthalpic contributions—to be efficiently computed. Typically, the alchemical path between the states of interest is described by a parameter, $\lambda$, which varies between 0 for the initial and 1 for the final state of the transformation of interest. Sampling is then performed at a series of points along this path and the gradient of the energy integrated to calculate the binding affinity.
 
-The TIES (thermodynamic integration with enhanced sampling) protocol, developed within the Coveney lab, employs ensemble sampling at each $lambda$ window to yield reproducible, accurate, and precise relative binding affinities. \cite{Bhati2017, Wan2017brd4} Based on the direct calculation of ensemble averages, it allows us to determine statistically meaningful results along with complete control of errors. As currently designed, TIES computes the change in binding affinity between two related system (termed ‘relative binding affinities’).
+The TIES (thermodynamic integration with enhanced sampling) protocol, developed within the Coveney lab, employs ensemble sampling at each $\lambda$ window to yield reproducible, accurate, and precise relative binding affinities. \cite{Bhati2017, Wan2017brd4} Based on the direct calculation of ensemble averages, it allows us to determine statistically meaningful results along with complete control of errors. As currently designed, TIES computes the change in binding affinity between two related system (termed ‘relative binding affinities’).
 
 
 \subsection{Endpoint Protocol (ESMACS)}\label{sec:esmacs}
@@ -191,10 +191,23 @@ levels of rigour and computational cost, ESMACS and TIES.
 HTBAC is not limited to these protocols as additional protocols can be 
 expressed and implemented easily with the HTBAC user-facing API, however for 
 demonstration we focus on these ensemble protocols HTBAC has demonstrated 
-sizable execution and performance of the ESMACS and TIES protocols on leadership
-class machines including NCSA Blue Waters. Recently, we demonstrated how HTBAC 
-scales almost perfectly to hundreds of concurrent multi-stage pipelines for each
-protocol~\cite{dakka2017} and~\cite{dakka_farkaspall}. 
+sizable execution and performance of the ESMACS~\cite{dakka2017} and TIES~\cite{dakka_farkaspall} protocols on leadership
+class machines including NCSA Blue Waters. For example, we demonstrated how HTBAC 
+scales almost perfectly to hundreds of concurrent multi-stage pipelines in \ref{fig:weak_scaling} where we show the weak scaling properties of TIES. 
+
+\begin{figure}
+  \centering
+   \includegraphics[width=\columnwidth]
+   {weak_scaling_TIES_instances_50,000_timesteps_with_16_instances.pdf}
+  \caption{Weak scaling properties of HTBAC. We investigate the
+  weak scaling of HTBAC as the ratio of the number of protocol instances to
+  resources is kept constant. Overheads of HTBAC (right), and runtime overhead 
+  (left) and \(TTX\) (left) for experimental configurations investigating the 
+  weak scaling of TIES protocols. We ran two trials for each protocol instance 
+  configuration. Error bars in \(TTX\) in 2 and 8-protocol runs are 
+  insignificant.}
+\label{fig:weak_scaling}
+\end{figure}
 
 Both ESMACS and TIES have been successfully used to predict binding affinities
 quickly and accurately. Nonetheless, they are very expensive computationally,
