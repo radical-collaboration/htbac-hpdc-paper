@@ -199,10 +199,24 @@ levels of rigor and computational cost, ESMACS and TIES.
 HTBAC is not limited to these protocols as additional protocols can be
 expressed and implemented easily with the HTBAC user-facing API, however for
 demonstration we focus on these ensemble protocols HTBAC has demonstrated
-sizable execution and performance of the ESMACS and TIES protocols on leadership
-class machines including NCSA Blue Waters. Recently, we demonstrated how HTBAC
-scales almost perfectly to hundreds of concurrent multi-stage pipelines for each
-protocol~\cite{dakka2017} and~\cite{dakka_farkaspall}.
+sizable execution and performance of the ESMACS~\cite{dakka2017} and TIES~\cite{dakka_farkaspall} protocols on leadership
+class machines including NCSA Blue Waters. For example, we demonstrated how HTBAC
+scales almost perfectly to hundreds of concurrent multi-stage pipelines for the TIES 
+protocol in ~\ref{fig:weak_scaling}.
+
+\begin{figure}
+  \centering
+   \includegraphics[width=\columnwidth]
+   {weak_scaling_TIES_instances_50,000_timesteps_with_16_instances.pdf}
+  \caption{Weak scaling properties of HTBAC. We investigate the
+  weak scaling of HTBAC as the ratio of the number of protocol instances to
+  resources is kept constant. Overheads of HTBAC (right), and runtime overhead 
+  (left) and \(TTX\) (left) for experimental configurations investigating the 
+  weak scaling of TIES. We ran two trials for each protocol instance 
+  configuration. Error bars in \(TTX\) in 2 and 8-protocol runs are 
+  insignificant.}
+\label{fig:weak_scaling}
+\end{figure}
 
 Both ESMACS and TIES have been successfully used to predict binding affinities
 quickly and accurately. Nonetheless, they are very expensive computationally,
