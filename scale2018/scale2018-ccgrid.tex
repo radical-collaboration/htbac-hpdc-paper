@@ -15,7 +15,7 @@
 
 % \author{Jumana Dakka$^{1}$,  Kristof Farkas-Pall$^{3}$, David W. Wright$^{3}$, .... Shantenu Jha$^{1}$$^{,2}$, \\
 
-\author{Jumana Dakka$^{*,1}$, Kristof Farkas-Pall$^{*,2}$, Vivek Balasubramanian$^{1}$ , Matteo Turilli$^{1}$, \\ 
+\author{Jumana Dakka$^{*,1}$, Kristof Farkas-Pall$^{*,2}$, Vivek Balasubramanian$^{1}$ , Matteo Turilli$^{1}$, \\
  Shunzhou Wan$^{2}$, David W Wright$^{2}$, Stefan Zasada$^{2}$, \\\
  Peter V Coveney$^{2}$, Shantenu Jha$^{1,3}$ \\
 
@@ -29,7 +29,7 @@
 \date{}
 \maketitle
 
-\begin{abstract} 
+\begin{abstract}
 
 \end{abstract}
 
@@ -39,7 +39,7 @@
 % ---------------------------------------------------------------------------
 \section{Introduction}\label{sec:intro}
 
-The efficacy of drug treatments depends on how tightly small molecules bind to their target proteins. Quantifying the strength of these interactions (the so called ‘binding affinity’) is a grand challenge of computational chemistry, the surmounting of which could revolutionize drug design and provide the platform for patient specific medicine. Recently, improvements in computational power and algorithm design mean that reliably quantifying binding affinities from molecular simulation is now becoming a genuine possibility. Exploiting these advances and further refining the technologies involved requires the marshaling of huge simulation campaigns, and impacting clinical or industrial decision making means that computations must be turned around in timescales of hours or days. 
+The efficacy of drug treatments depends on how tightly small molecules bind to their target proteins. Quantifying the strength of these interactions (the so called ‘binding affinity’) is a grand challenge of computational chemistry, the surmounting of which could revolutionize drug design and provide the platform for patient specific medicine. Recently, improvements in computational power and algorithm design mean that reliably quantifying binding affinities from molecular simulation is now becoming a genuine possibility. Exploiting these advances and further refining the technologies involved requires the marshaling of huge simulation campaigns, and impacting clinical or industrial decision making means that computations must be turned around in timescales of hours or days.
 
 
 % ---------------------------------------------------------------------------
@@ -48,12 +48,12 @@ The efficacy of drug treatments depends on how tightly small molecules bind to t
 
 \subsection{Scientific Motivation}\label{sec:motivation}
 
-Cancer is the second leading cause of death in the United States, accounting for nearly 25 of all deaths; in 2015, over 1.7 million new cases were diagnosed, with over 580,000 deaths \cite{acs-cancer-facts-2015}. The development of targeted kinase inhibitors—which selectively inhibit kinases involved in signaling pathways that often control growth and proliferation that become dysregulated in many cancers—has changed the way many of these cancers are treated. There are currently 35 FDA-approved small molecule targeted kinase inhibitors in clinical use, and for the past decade, they have represented a significant fraction of the \$37 billion U.S. market for oncology drugs \cite{FDA, tkilist}. Imatinib, the first of these of drugs, is partially credited for doubling survivorship rates in certain cancers \cite{tkilist, ACSreport}. Unfortunately, the development of resistance to these drugs limits the amount of time that patients can derive benefits from their treatment. Resistance to therapeutics is responsible for more than 90 of deaths in patients with metastatic cancer \cite{90death}. While drug resistance can emerge via multiple mechanisms, mutations in the therapeutic target drive drug resistance in many patients; in some commonly targeted kinases such as EGFR, missense mutations are the mechanism of resistance in as many as 90 of cases           
+Cancer is the second leading cause of death in the United States, accounting for nearly 25 of all deaths; in 2015, over 1.7 million new cases were diagnosed, with over 580,000 deaths \cite{acs-cancer-facts-2015}. The development of targeted kinase inhibitors—which selectively inhibit kinases involved in signaling pathways that often control growth and proliferation that become dysregulated in many cancers—has changed the way many of these cancers are treated. There are currently 35 FDA-approved small molecule targeted kinase inhibitors in clinical use, and for the past decade, they have represented a significant fraction of the \$37 billion U.S. market for oncology drugs \cite{FDA}. Imatinib, the first of these of drugs, is partially credited for doubling survivorship rates in certain cancers \cite{ACSreport}. Unfortunately, the development of resistance to these drugs limits the amount of time that patients can derive benefits from their treatment. Resistance to therapeutics is responsible for more than 90 of deaths in patients with metastatic cancer \cite{90death}. While drug resistance can emerge via multiple mechanisms, mutations in the therapeutic target drive drug resistance in many patients; in some commonly targeted kinases such as EGFR, missense mutations are the mechanism of resistance in as many as 90 of cases
 At the same time, the rapid drop in cost of next-generation sequencing technologies has led many cancer centers to begin deep sequencing patient tumors to identify the genetic alterations driving individual cancers, with the ultimate goal of making individualized therapeutic decisions based upon this data—an approach termed precision cancer therapy. While several common (recurrent) mutations have been cataloged due to their ability to induce resistance or susceptibility to particular kinase inhibitors, the vast majority of clinically observed mutations are rare, essentially ensuring that it will be impossible that catalog-building alone will be sufficient for making therapeutic decisions about the majority of individual patient tumors.
 
-There are two major strategies for countering this threat to treatment efficacy: tailoring the drug regimen received by a patient according to the mutations present in their particular cancer (precision therapy), and development of more advanced second- or third-line therapies that retain potency for known resistance mutations. In both cases, future developments require insight into the molecular changes produced by mutations, as well as ways to predict their impact on drug binding on a timescale much shorter than is typically experimentally feasible. 
+There are two major strategies for countering this threat to treatment efficacy: tailoring the drug regimen received by a patient according to the mutations present in their particular cancer (precision therapy), and development of more advanced second- or third-line therapies that retain potency for known resistance mutations. In both cases, future developments require insight into the molecular changes produced by mutations, as well as ways to predict their impact on drug binding on a timescale much shorter than is typically experimentally feasible.
 
-Molecular simulation based binding affinity calculations represent a practical, quantitative, generalizable approach to predicting the impact of clinically observed mutations on kinase inhibitor affinity. It has been shown that computational methods comparing the binding of different drugs based on molecular dynamics (MD) can now achieve useful predictive accuracy (1 kcal/mol) for well-behaved proteins \cite{shirts-mobley-chodera:2007:annu-rep-comput-chem:prime-time,chodera:curr-opin-struct-biol:2011:drug-discovery,abel:jacs:2015:fep-plus}. This accuracy is sufficient to greatly accelerate lead optimization \cite{shirts-mobley-brown:2009:sbdd}. Furthermore, recent work also indicates that the same approaches achieve the level of accuracy required to predict the impact of kinase resistance mutations, though published work has only examined single mutations in Abl and FGFR \cite{mondal:jacs:2016:imatinib-gatekeeper, Bunney2015}.
+Molecular simulation based binding affinity calculations represent a practical, quantitative, generalizable approach to predicting the impact of clinically observed mutations on kinase inhibitor affinity. It has been shown that computational methods comparing the binding of different drugs based on molecular dynamics (MD) can now achieve useful predictive accuracy (1 kcal/mol) for well-behaved proteins \cite{shirts-mobley-chodera:2007:annu-rep-comput-chem:prime-time, chodera:curr-opin-struct-biol:2011:drug-discovery, abel:jacs:2015:fep-plus}. This accuracy is sufficient to greatly accelerate lead optimization \cite{shirts-mobley-brown:2009:sbdd}. Furthermore, recent work also indicates that the same approaches achieve the level of accuracy required to predict the impact of kinase resistance mutations, though published work has only examined single mutations in Abl and FGFR \cite{mondal:jacs:2016:imatinib-gatekeeper, Bunney2015}.
 
 \subsection{Binding Affinity Calculation Protocols}\label{sec:bac}
 
@@ -66,7 +66,7 @@ Most methods for calculating binding affinities fit into one of two broad classe
 
 Statistical mechanics provides the prescription for calculating such macroscopic quantities as ensemble averages of microscopic states. Traditionally, these macroscopic properties have usually been calculated from the time average of a single “long” duration trajectory. An intuitive and potentially more time efficient method to capture the mixing dynamics required to describe an equilibrium thermodynamic state is the use of an ensemble of separate trajectories. \cite{Coveney2016}
 
-The major sources of error in free energy calculations are the representation of the system chemistry encoded in the forcefield used, finite sampling and the free energy estimator. Protocols developed in the Coveney labs have obtained accurate and precise results which successfully reproduce experimental binding free energies from a wide range of systems. \cite{Bhati2017, Wright2014, Wan2017brd4, Wan2011, chodera-shirts:jcp:2011:gibbs, Chodera2016} Comparisons of results obtained for a large set of sequences will provide valuable insights on the importance of choices made in simulation and analysis for the overall accuracy and predictive power of free energy calculations, and facilitate the refinement of our protocols. 
+The major sources of error in free energy calculations are the representation of the system chemistry encoded in the forcefield used, finite sampling and the free energy estimator. Protocols developed in the Coveney labs have obtained accurate and precise results which successfully reproduce experimental binding free energies from a wide range of systems. \cite{Bhati2017, Wright2014, Wan2017brd4, Wan2011, chodera-shirts:jcp:2011:gibbs, Chodera2016} Comparisons of results obtained for a large set of sequences will provide valuable insights on the importance of choices made in simulation and analysis for the overall accuracy and predictive power of free energy calculations, and facilitate the refinement of our protocols.
 
 
 \subsection{Alchemical Protocol (TIES)}\label{sec:ties}
@@ -78,25 +78,25 @@ The TIES (thermodynamic integration with enhanced sampling) protocol, developed 
 
 \subsection{Endpoint Protocol (ESMACS)}\label{sec:esmacs}
 
-Computationally cheaper, but less rigorous methods, endpoint methods have been used to directly compute the binding strength of a drug to the target protein sequence from MD simulations (as opposed to differences in affinity). Combining these methods with an ensemble simulation approach has demonstrated the potential to robustly evaluate the impact of mutations on drug binding in both HIV protease \cite{Sadiq2010, Wright2014} and the EGFR kinase. \cite{Wan2011}     
+Computationally cheaper, but less rigorous methods, endpoint methods have been used to directly compute the binding strength of a drug to the target protein sequence from MD simulations (as opposed to differences in affinity). Combining these methods with an ensemble simulation approach has demonstrated the potential to robustly evaluate the impact of mutations on drug binding in both HIV protease \cite{Wright2014} and the EGFR kinase. \cite{Wan2011}
 
-We have developed an ensemble-based endpoint protocol called ESMACS (enhanced sampling of molecular dynamics with approximation of continuum solvent). The protocol is built on the popular molecular mechanics Poisson–Boltzmann surface area (MMPBSA) \cite{MAssova1999} method which makes a continuum approximation for the aqueous solvent in order to obtain results on practical timescales. Commonly, MMPBSA analyses are performed on a single MD trajectory, or even a single structure. We have demonstrated the lack of reproducibility of such an approach in both HIV-1 protease and MHC systems, with calculations for the same protein-ligand combination, with identical initial structure and force field, shown to produce binding affinities varying by up to 12 kcal/mol for small ligands (flexible ligands can vary even more). \cite{Sadiq2010, Wan2015} ESMACS employs MMPBSA to produce ensemble- based, converged and reproducible, determinations of binding free energies (separate ligand and receptor trajectories can also be used to account for adaptation energies). This provides a rapid quantitative approach sensitive enough to determine changes in binding free energies which differentiate susceptible and resistant sequences (typically of the order of 2 kcal/mol).
+We have developed an ensemble-based endpoint protocol called ESMACS (enhanced sampling of molecular dynamics with approximation of continuum solvent). The protocol is built on the popular molecular mechanics Poisson–Boltzmann surface area (MMPBSA) \cite{MAssova1999} method which makes a continuum approximation for the aqueous solvent in order to obtain results on practical timescales. Commonly, MMPBSA analyses are performed on a single MD trajectory, or even a single structure. We have demonstrated the lack of reproducibility of such an approach in both HIV-1 protease and MHC systems, with calculations for the same protein-ligand combination, with identical initial structure and force field, shown to produce binding affinities varying by up to 12 kcal/mol for small ligands (flexible ligands can vary even more). \cite{Wan2015} ESMACS employs MMPBSA to produce ensemble- based, converged and reproducible, determinations of binding free energies (separate ligand and receptor trajectories can also be used to account for adaptation energies). This provides a rapid quantitative approach sensitive enough to determine changes in binding free energies which differentiate susceptible and resistant sequences (typically of the order of 2 kcal/mol).
 
 
 \section{Performance Metrics}\label{sec:performance}
 
-TIES is rigorous but computationally expensive and has a limited range of 
-applicability. ESMACS is approximate but can be employed across any set of 
+TIES is rigorous but computationally expensive and has a limited range of
+applicability. ESMACS is approximate but can be employed across any set of
 ligands at lower computational cost.
 
-Each of these protocols run a large range of mutations where each 
-mutation is captured as independent pipelines composed of multiple replicas 
-where each replica consists of multi-stage short bursts 
-of simulations, followed by a single replica for analysis. The process is 
-repeated over a number of iterations depending on the convergence criteria 
-in the analysis stage. Each replica requires 16 cores, where each pipeline 
-runs approximately 10 hours, over a range of 100 mutations where each mutations 
-spawns either 25 or 65 replicas, depending on the protocol.   
+Each of these protocols run a large range of mutations where each
+mutation is captured as independent pipelines composed of multiple replicas
+where each replica consists of multi-stage short bursts
+of simulations, followed by a single replica for analysis. The process is
+repeated over a number of iterations depending on the convergence criteria
+in the analysis stage. Each replica requires 16 cores, where each pipeline
+runs approximately 10 hours, over a range of 100 mutations where each mutations
+spawns either 25 or 65 replicas, depending on the protocol.
 
 
 \section{Computational Challenges}\label{sec:cc}
@@ -172,29 +172,29 @@ domain specific workflows rapidly and at scale.
 
 \jhanote{The Solution is not just HTBAC per se, but the application of HTBAC to the specific problem. The specific problem has not been identified so far. I would propose divided this section into two parts. The first about  HTBAC and its scalability; and the second part about its application to the specific problem.}
 
-The RADICAL Cybertools (RCT), developed by The RADICAL Lab, enables the 
-efficient and dynamic execution of ensembles on heterogeneous computing 
-resources. Different from other runtime systems, RCT decouples the workload 
-execution and resource management details from the expression of the 
-application, which significantly reduces the burden on the end user. 
-RCT has been used extensively to support 
+The RADICAL Cybertools (RCT), developed by The RADICAL Lab, enables the
+efficient and dynamic execution of ensembles on heterogeneous computing
+resources. Different from other runtime systems, RCT decouples the workload
+execution and resource management details from the expression of the
+application, which significantly reduces the burden on the end user.
+RCT has been used extensively to support
 biomolecular sciences methods and algorithms, e.g., replica exchange, adaptive
-sampling and high throughput binding affinity calculations. 
+sampling and high throughput binding affinity calculations.
 
-Here we describe High Throughput Binding Affinity Calculator (HTBAC), 
-which builds upon the RADICAl Cybertools, as the framework solution to support 
-the coordination of the required scale of computations, thereby 
+Here we describe High Throughput Binding Affinity Calculator (HTBAC),
+which builds upon the RADICAl Cybertools, as the framework solution to support
+the coordination of the required scale of computations, thereby
 allowing us to employ thousands of cores at a time.
 
-Most benchmark evaluations of free energy protocols in the literature look 
-at only a small number of systems, drawing inferences from tens or hundreds 
-of runs. HTBAC facilitates studies on unprecedented scales, with the number 
-of systems investigated an order of magnitude larger than published studies, 
-which provides the opportunity to gain invaluable knowledge on the domain of 
-applicability of current MD technologies. In particular, we demonstrate the 
-use of HTBAC to compute the binding affinities of anti-cancer drugs to their 
-target proteins (the EGFR kinase) using two simulation protocols with differing 
-levels of rigour and computational cost, ESMACS and TIES.
+Most benchmark evaluations of free energy protocols in the literature look
+at only a small number of systems, drawing inferences from tens or hundreds
+of runs. HTBAC facilitates studies on unprecedented scales, with the number
+of systems investigated an order of magnitude larger than published studies,
+which provides the opportunity to gain invaluable knowledge on the domain of
+applicability of current MD technologies. In particular, we demonstrate the
+use of HTBAC to compute the binding affinities of anti-cancer drugs to their
+target proteins (the EGFR kinase) using two simulation protocols with differing
+levels of rigor and computational cost, ESMACS and TIES.
 
 HTBAC is not limited to these protocols as additional protocols can be 
 expressed and implemented easily with the HTBAC user-facing API, however for 
@@ -240,8 +240,8 @@ $\lambda$ windows that will most impact the calculation are not known
 \textit{a priori}, and change between physical systems (drugs). As multiple
 simulations must be run for each window, sampling with a very high frequency
 is expensive and impractical. Furthermore, adaptive placement of $\lambda$
-windows is likely to better capture the shape of the 
-$\partial U/\partial\lambda$ curve, leading to more accurate and precise 
+windows is likely to better capture the shape of the
+$\partial U/\partial\lambda$ curve, leading to more accurate and precise
 results for a given computational cost.
 
 In order to support such
@@ -251,7 +251,7 @@ between simulations run using different protocols or systems, for example,
 when one calculation has converged whilst another has not. This adaptability
 makes it easier to manage complex programs where efficient use of resources
 is required in order to achieve a time to completion of studies comparable to
-those of high throughput chemistry. 
+those of high throughput chemistry.
 
 
 \jhanote{Would the last paragraph be placed in Section V or VI?}
@@ -263,42 +263,42 @@ unprecedented scales, both in the number of candidates and resources utilized;
 inter-protocol adaptivity, leading to resources being assigned at runtime to
 the ``optimal" protocol (as determined by accuracy for given computational
 cost); (iii) Support for intra-protocol adaptivity, which provides the
-efficient execution of individual protocols. 
+efficient execution of individual protocols.
 
 
 
-% While RCT supports concurrent task execution up to 000 tasks on Blue Waters, 
-% the user is required to translate and codify each of these protocols with the 
-% corresponding mutation using the EnTK API, and scale these protocols 
-% based on the desired number of mutations and replicas [9]. We leverage 
-% the advanced resource management capabilities of RADICAL Cybertools and 
-% automate this process by providing a native selection of protocols where 
-% the user only provides the configuration files for each mutation, the number 
-% of replicas per mutation and the number of cores needed to support each 
-% protocol. To this effect, the framework uses EnTK to provide a higher level of 
+% While RCT supports concurrent task execution up to 000 tasks on Blue Waters,
+% the user is required to translate and codify each of these protocols with the
+% corresponding mutation using the EnTK API, and scale these protocols
+% based on the desired number of mutations and replicas [9]. We leverage
+% the advanced resource management capabilities of RADICAL Cybertools and
+% automate this process by providing a native selection of protocols where
+% the user only provides the configuration files for each mutation, the number
+% of replicas per mutation and the number of cores needed to support each
+% protocol. To this effect, the framework uses EnTK to provide a higher level of
 % abstraction that allows the user to interface closer to the science problem.
 
-       
+
 \section{Impact of Solution}\label{sec:impact}
 
 
-The flexibility provided by HTBAC to run adaptive workflows offers huga advantages scientifically. 
-Firstly the intra-protocol adaptivity allows the automated optimization of calculations to ensure that 
-results are obtained with known precision across systems which may exibit very different behaviour (for example levels of `roughness' in the $\partial U/\partial\lambda$ curve in TIES).
-This has a significant impact of the reliability of comparisons between runs. 
+The flexibility provided by HTBAC to run adaptive workflows offers huge advantages scientifically.
+Firstly the intra-protocol adaptivity allows the automated optimization of calculations to ensure that
+results are obtained with known precision across systems which may exhibit very different behavior (for example levels of `roughness' in the $\partial U/\partial\lambda$ curve in TIES).
+This has a significant impact of the reliability of comparisons between runs.
 The ability to switch between protocols on the other hand offers a mechanism through which `cheaper' approximate methods (such as ESMACS) can be used to scan large regions of chemical space, whilst more accurate and `expensive' ones are employed to investigate areas of specific interest (TIES).
-This maps directly onto processes such as hit to lead optimization in drug discovery and cold be of particular use in investigating activity cliffs. 
+This maps directly onto processes such as hit to lead optimization in drug discovery and cold be of particular use in investigating activity cliffs.
 This is a phenomena where small chemical changes provide large differences in drug efficacy.
-If changes are detected using an approximate method it is important to verfiy that they come from 
+If changes are detected using an approximate method it is important to verify that they come from
 real chemical effects and not simply inaccuracies in the computational algorithm employed.
 
-The scale enabled by HTBAC also has an impact on the potential for scientific discovery using free energy calculations. 
+The scale enabled by HTBAC also has an impact on the potential for scientific discovery using free energy calculations.
 Most studies in the literature are limited to the investigation of tens of protein-ligand complexes.
-In order to establish the validity of particular combinations of forcefield and simulation protocol and 
+In order to establish the validity of particular combinations of forcefield and simulation protocol and
 quantify uncertainties much larger campaigns are needed.
-Our ensemble has already provided evidence that the variability in single runs is sufficient to 
+Our ensemble has already provided evidence that the variability in single runs is sufficient to
 swamp true differences between systems of interest.
-The combined need for both large numbers of systems and multiple repeats of each one produces a requirement 
+The combined need for both large numbers of systems and multiple repeats of each one produces a requirement
 for middleware to manage huge numbers of simulations.
 
 HTBAC allows the concurrent screening
@@ -306,22 +306,22 @@ for drug binding affinities of multiple compounds at unprecedented scales,
 both in the number of candidates and resources utilized. Specifically, we
 investigated weak scaling behavior for screening sixteen drug candidates
 concurrently using thousands of multi-stage pipelines on more than 32,000
-cores on NCSA Blue Waters. This permits a rapid time-to-solution that is 
-essentially invariant with respect to the calculation protocol, 
+cores on NCSA Blue Waters. This permits a rapid time-to-solution that is
+essentially invariant with respect to the calculation protocol,
 size of target system and number of ensemble simulations. In addition,
 HTBAC enabled the adaptive execution of the TIES protocol
 providing greater convergence (i.e., lower errors) for a given amount of
-computational resources. 
+computational resources.
 
 These developments fit into a wider vision in which the use of
 flexible and responsive computational protocols produce accurate,
-precise and reproducible estimates of the free energy of binding with 
-meaningful error bars. Not only would this allow for wider uptake of 
-computational techniques in industrial settings but opens up possibilities 
-of using these technologies in clinical decision support scenarios. By creating 
-a `digital twin', where the target protein is based on the real patients 
-genetic sequence, a specific individuals response to different 
-treatments could be predicted. 
+precise and reproducible estimates of the free energy of binding with
+meaningful error bars. Not only would this allow for wider uptake of
+computational techniques in industrial settings but opens up possibilities
+of using these technologies in clinical decision support scenarios. By creating
+a `digital twin', where the target protein is based on the real patients
+genetic sequence, a specific individuals response to different
+treatments could be predicted.
 
 
 \section{Analysis of Solution}\label{sec:analysis}
@@ -331,11 +331,11 @@ treatments could be predicted.
 
 Our previous work deploying both ESMACS and TIES has typically involved comparing 10 to 20 computed
 binding affinities.
-An example would be the recent study of BRD4 inhibitirs conducted in collaboration by UCL and GSK \cite{Wan2017brd4}, which involved 15 drugs (usually we prepare a similar number of systems using each protocol, here 12 TIES transformations were studied).
-Using our non-adaptive protocols each system typically requires \textasciitilde 10 k and \textasciitilde 25 k core hours for ESMACS and TIES respectively.
+An example would be the recent study of BRD4 inhibitors conducted in collaboration by UCL and GSK \cite{Wan2017brd4}, which involved 15 drugs (usually we prepare a similar number of systems using each protocol, here 12 TIES transformations were studied).
+Using our non-adaptive protocols each system typically requires approximately 10K and 25K core hours for ESMACS and TIES respectively.
 So a 20 compound study (with 20 transforms) would  use ~700 k core hours.
-As previously described this type of study does not meet the size necessary to really impact industrial processes which focus from libraries of potentially millions of compounds doen to hundreds of hits which need to be optimised.
-HTBAC is designed to enable this types of workflow to be sustained, a development which means that we can now look to conduct the scale of studies necessary to refine protocols and forcefileds for production work in drug discovery and refinement.
+As previously described this type of study does not meet the size necessary to really impact industrial processes which focus from libraries of potentially millions of compounds doen to hundreds of hits which need to be optimized.
+HTBAC is designed to enable this types of workflow to be sustained, a development which means that we can now look to conduct the scale of studies necessary to refine protocols and forcefields for production work in drug discovery and refinement.
 
 
 
@@ -348,7 +348,7 @@ HTBAC is designed to enable this types of workflow to be sustained, a developmen
 % ---------------------------------------------------------------------------
 % BIBLIOGRAPHY
 % ---------------------------------------------------------------------------
-\bibliographystyle{plain}
+\bibliographystyle{unsrt}
 \bibliography{rutgers,ucl,mskcc}
 
 \end{document}
