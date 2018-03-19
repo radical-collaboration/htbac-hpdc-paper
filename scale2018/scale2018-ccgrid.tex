@@ -39,7 +39,24 @@
 % ---------------------------------------------------------------------------
 \section{Introduction}\label{sec:intro}
 
-The efficacy of drug treatments depends on how tightly small molecules bind to their target proteins. Quantifying the strength of these interactions (the so called ‘binding affinity’) is a grand challenge of computational chemistry, the surmounting of which could revolutionize drug design and provide the platform for patient specific medicine. Recently, improvements in computational power and algorithm design mean that reliably quantifying binding affinities from molecular simulation is now becoming a genuine possibility. Exploiting these advances and further refining the technologies involved requires the marshaling of huge simulation campaigns, and impacting clinical or industrial decision making means that computations must be turned around in timescales of hours or days.
+The efficacy of drug treatments depends on how tightly small molecules bind 
+to their target proteins. 
+Quantifying the strength of these interactions (the so called ‘binding 
+affinity’) is a grand challenge of computational chemistry, the surmounting 
+of which could revolutionize drug design and provide the platform for patient 
+specific medicine.
+Recently, evidence from blind challenge predictions and retrospective 
+validation studies has suggested that molecular dynamics (MD) can now achieve useful 
+predictive accuracy (1 kcal/mol)\cite{shirts-mobley-chodera:2007:annu-rep-comput-chem:prime-time, abel:jacs:2015:fep-plus}. 
+This accuracy is sufficient to greatly accelerate lead optimization \cite{shirts-mobley-brown:2009:sbdd}.
+Exploiting these advances and further refining the technologies involved 
+requires the marshaling of huge simulation campaigns, and impacting clinical or 
+industrial decision making means that computations must be turned around in 
+timescales of hours or days.
+In this paper, we demonstrate the use of a new framework, HTBAC, which 
+facilitates the execution of the numbers of simlations this requires.
+Furthermore, HTBAC supports adaptive runs which can optimize the use of 
+computational resources whilst producing results with a target uncertainty.
 
 
 % ---------------------------------------------------------------------------
@@ -48,40 +65,120 @@ The efficacy of drug treatments depends on how tightly small molecules bind to t
 
 \subsection{Scientific Motivation}\label{sec:motivation}
 
-Cancer is the second leading cause of death in the United States, accounting for nearly 25 of all deaths; in 2015, over 1.7 million new cases were diagnosed, with over 580,000 deaths \cite{acs-cancer-facts-2015}. The development of targeted kinase inhibitors—which selectively inhibit kinases involved in signaling pathways that often control growth and proliferation that become dysregulated in many cancers—has changed the way many of these cancers are treated. There are currently 35 FDA-approved small molecule targeted kinase inhibitors in clinical use, and for the past decade, they have represented a significant fraction of the \$37 billion U.S. market for oncology drugs \cite{FDA}. Imatinib, the first of these of drugs, is partially credited for doubling survivorship rates in certain cancers \cite{ACSreport}. Unfortunately, the development of resistance to these drugs limits the amount of time that patients can derive benefits from their treatment. Resistance to therapeutics is responsible for more than 90 of deaths in patients with metastatic cancer \cite{90death}. While drug resistance can emerge via multiple mechanisms, mutations in the therapeutic target drive drug resistance in many patients; in some commonly targeted kinases such as EGFR, missense mutations are the mechanism of resistance in as many as 90 of cases
-At the same time, the rapid drop in cost of next-generation sequencing technologies has led many cancer centers to begin deep sequencing patient tumors to identify the genetic alterations driving individual cancers, with the ultimate goal of making individualized therapeutic decisions based upon this data—an approach termed precision cancer therapy. While several common (recurrent) mutations have been cataloged due to their ability to induce resistance or susceptibility to particular kinase inhibitors, the vast majority of clinically observed mutations are rare, essentially ensuring that it will be impossible that catalog-building alone will be sufficient for making therapeutic decisions about the majority of individual patient tumors.
+In this paper we will demostrate the scalability and flexibility of HTBAC by 
+reproducing results from a collaboration project between UCL
+and GlaxoSmithKline to study a congeneric series of drug candidates binding 
+to the BRD4 protein (inhibitors of which have shown promising preclinical
+efficacy in pathologies ranging from cancer to inflammation)
+~\cite{Wan2017brd4}. 
+These studies employed two different protocols, known as TIES and ESMACS
+~\cite{Bhati2017}, both based on multiple simulations of the same system.
+Drug design projects have limited resources, so initially large numbers of 
+compounds must be cheaply screened to eliminate poor binders (using ESMACS), 
+before more accurate methods (such as TIES) are needed as good binders are 
+refined and improved.
 
-There are two major strategies for countering this threat to treatment efficacy: tailoring the drug regimen received by a patient according to the mutations present in their particular cancer (precision therapy), and development of more advanced second- or third-line therapies that retain potency for known resistance mutations. In both cases, future developments require insight into the molecular changes produced by mutations, as well as ways to predict their impact on drug binding on a timescale much shorter than is typically experimentally feasible.
+In order to support such investigations, in addition to being scalable, HTBAC 
+must be enhanced to support flexible resource reallocations schemes where 
+resources can be moved between simulations run using different protocols or 
+systems, for example, when one calculation has converged whilst another has not. 
+This adaptability makes it easier to manage complex programmes where efficient 
+use of resources is required in order to achieve a time to completion of studies 
+comparable to those of high throughput chemistry. 
 
-Molecular simulation based binding affinity calculations represent a practical, quantitative, generalizable approach to predicting the impact of clinically observed mutations on kinase inhibitor affinity. It has been shown that computational methods comparing the binding of different drugs based on molecular dynamics (MD) can now achieve useful predictive accuracy (1 kcal/mol) for well-behaved proteins \cite{shirts-mobley-chodera:2007:annu-rep-comput-chem:prime-time, abel:jacs:2015:fep-plus}. This accuracy is sufficient to greatly accelerate lead optimization \cite{shirts-mobley-brown:2009:sbdd}. Furthermore, recent work also indicates that the same approaches achieve the level of accuracy required to predict the impact of kinase resistance mutations, though published work has only examined single mutations in Abl and FGFR \cite{mondal:jacs:2016:imatinib-gatekeeper,  Bunney2015}.
+Bromodomain-containing proteins, and in particular the four members of the BET
+(bromodomain and extra terminal domain) family, are currently a major focus of
+research in the pharmaceutical industry. 
+Small molecule inhibitors of these
+proteins have shown promising preclinical efficacy in pathologies ranging from
+cancer to inflammation. 
+Indeed, several compounds are progressing through
+early stage clinical trials and are showing exciting early
+results~\cite{Theodoulou2016}. 
+One of the most extensively studied targets in
+this family is the first bromodomain of bromodomain-containing protein 4
+(BRD4-BD1) for which extensive crystallographic and ligand binding data are
+available~\cite{Bamborough2012}.
+
+We have previously investigated a congeneric series of ligands binding to
+BRD4-BD1 (we shall from now on refer to this are simply BRD4) using both
+ESMACS and TIES. 
+This was performed in the context of a blind test of the
+protocols in collaboration with GlaxoSmithKline~\cite{Wan2017brd4}. 
+The goal was to benchmark the ESMACS and TIES protocols in a realistic drug 
+discovery scenario. 
+In the original study, we investigated chemical structures of 16 ligands based 
+on a single tetrahydroquinoline (THQ) scaffold. % ~\cite{Gosmini2014}. 
+Here we focus on the first seven of these ligands to test
+and refine the protocols used and the way in which they were executed. The
+results of our previous work provide a benchmark of both accuracy and
+statistical uncertainty to which we can compare our new results.
 
 \subsection{Binding Affinity Calculation Protocols}\label{sec:bac}
 
-Computing accurate protein-drug binding affinities (also known as binding free energies) requires a simulation technique which captures the chemical detail of the system. MD simulations are the time dependent numerical integration of the classical equations of motion for molecular systems. Application of MD to atomistic models of proteins and their ligands can be used to answer questions about the properties of a specific system often more readily than experiments on the actual system. Free-energy calculations in the framework of MD simulations not only yield quantitative estimates of binding strength but also provide insights into the most important interactions driving the process.
+Computing accurate protein-drug binding affinities (also known as binding free energies) requires a simulation technique which captures the chemical detail of the system. 
+MD simulations are the time dependent numerical integration of the classical equations of motion for molecular systems. 
+Application of MD to atomistic models of proteins and their ligands can be used to answer questions about the properties of a specific system often more readily than experiments on the actual system. 
+Free-energy calculations in the framework of MD simulations not only yield quantitative estimates of binding strength but also provide insights into the most important interactions driving the process.
 
-Most methods for calculating binding affinities fit into one of two broad classes; so called alchemical and endpoint methodologies. Alchemical free energy calculations employ unphysical (“alchemical”) intermediates to calculate changes in free energies between two systems. It is common in these methods to refer to a variable, $\lambda$, which describes the path taken to transform one protein sequence (or ligand) into another. Endpoint methods, as the name suggests, consider the difference in energy between bound and unbound structures. To obtain information on the differences in binding affinity of different sequences for a panel of kinase inhibitors requires a deployment of various strategies, incorporating both alchemical and endpoint approaches. In this work we deploy approaches from both of these classes.
-
+Most methods for calculating binding affinities fit into one of two broad classes; so called alchemical and endpoint methodologies. 
+Alchemical free energy calculations employ unphysical (“alchemical”) intermediates to calculate changes in free energies between two systems. 
+It is common in these methods to refer to a variable, $\lambda$, which describes the path taken to transform one protein sequence (or ligand) into another. 
+Endpoint methods, as the name suggests, consider the difference in energy between bound and unbound structures. 
+To obtain information on the differences in binding affinity of different sequences for a panel of kinase inhibitors requires a deployment of various strategies, incorporating both alchemical and endpoint approaches. 
+In this work we deploy approaches from both of these classes.
 
 \subsection{Ensemble Molecular Dynamics}\label{sec:emd}
 
 Statistical mechanics provides the prescription for calculating such macroscopic quantities as ensemble averages of microscopic states. Traditionally, these macroscopic properties have usually been calculated from the time average of a single “long” duration trajectory. An intuitive and potentially more time efficient method to capture the mixing dynamics required to describe an equilibrium thermodynamic state is the use of an ensemble of separate trajectories. \cite{Coveney2016}
 
-The major sources of error in free energy calculations are the representation of the system chemistry encoded in the forcefield used, finite sampling and the free energy estimator. Protocols developed in the Coveney labs have obtained accurate and precise results which successfully reproduce experimental binding free energies from a wide range of systems. \cite{Wright2014, Wan2017brd4, Wan2011, chodera-shirts:jcp:2011:gibbs, Chodera2016} Comparisons of results obtained for a large set of sequences will provide valuable insights on the importance of choices made in simulation and analysis for the overall accuracy and predictive power of free energy calculations, and facilitate the refinement of our protocols.
+The major sources of error in free energy calculations are the representation of the system chemistry encoded in the forcefield used, finite sampling and the free energy estimator. Protocols developed in the Coveney labs have obtained accurate and precise results which successfully reproduce experimental binding free energies from a wide range of systems. \cite{Wright2014, Wan2017brd4, Wan2015, Wan2011} 
+Comparisons of results obtained for a large set of sequences will provide valuable insights on the importance of choices made in simulation and analysis for the overall accuracy and predictive power of free energy calculations, and facilitate the refinement of our protocols.
 
 
 \subsection{Alchemical Protocol (TIES)}\label{sec:ties}
 
-Alchemical methods employ MD simulations of unphysical, alchemical intermediate states that attenuate the interactions of the small molecule with its environment. These alchemical intermediate states include both the fully-interacting complex as well as replicas in which the ligand does not interact with its environment, and allow the total free energy of binding—including entropic and enthalpic contributions—to be efficiently computed. Typically, the alchemical path between the states of interest is described by a parameter, $\lambda$, which varies between 0 for the initial and 1 for the final state of the transformation of interest. Sampling is then performed at a series of points along this path and the gradient of the energy integrated to calculate the binding affinity.
+Alchemical methods employ MD simulations of unphysical, alchemical intermediate states that attenuate the interactions of the small molecule with its environment. 
+These alchemical intermediate states include both the fully-interacting complex as well as replicas in which the ligand does not interact with its environment, and allow the total free energy of binding—including entropic and enthalpic contributions—to be efficiently computed. Typically, the alchemical path between the states of interest is described by a parameter, $\lambda$, which varies between 0 for the initial and 1 for the final state of the transformation of interest. 
+Sampling is then performed at a series of points along this path and the gradient of the energy integrated to calculate the binding affinity.
+Simulations conducted at a given $\lambda$ value are said to be sampling a $\lambda$ window at that point.
 
-The TIES (thermodynamic integration with enhanced sampling) protocol, developed within the Coveney lab, employs ensemble sampling at each $\lambda$ window to yield reproducible, accurate, and precise relative binding affinities. \cite{ Wan2017brd4} Based on the direct calculation of ensemble averages, it allows us to determine statistically meaningful results along with complete control of errors. As currently designed, TIES computes the change in binding affinity between two related system (termed ‘relative binding affinities’).
+The TIES (thermodynamic integration with enhanced sampling) protocol, developed within the Coveney lab, employs ensemble sampling at each $\lambda$ window to yield reproducible, accurate, and precise relative binding affinities. 
+\cite{ Wan2017brd4} Based on the direct calculation of ensemble averages, it allows us to determine statistically meaningful results along with complete control of errors. 
+As currently designed, TIES computes the change in binding affinity between two related system (termed ‘relative binding affinities’).
 
 
 \subsection{Endpoint Protocol (ESMACS)}\label{sec:esmacs}
 
-Computationally cheaper, but less rigorous methods, endpoint methods have been used to directly compute the binding strength of a drug to the target protein sequence from MD simulations (as opposed to differences in affinity). Combining these methods with an ensemble simulation approach has demonstrated the potential to robustly evaluate the impact of mutations on drug binding in both HIV protease \cite{Wright2014} and the EGFR kinase. \cite{Wan2011}
+Computationally cheaper, but less rigorous methods, endpoint methods have been used to directly compute the binding strength of a drug to the target protein from MD simulations (as opposed to differences in affinity). 
 
-We have developed an ensemble-based endpoint protocol called ESMACS (enhanced sampling of molecular dynamics with approximation of continuum solvent). The protocol is built on the popular molecular mechanics Poisson–Boltzmann surface area (MMPBSA) \cite{MAssova1999} method which makes a continuum approximation for the aqueous solvent in order to obtain results on practical timescales. Commonly, MMPBSA analyses are performed on a single MD trajectory, or even a single structure. We have demonstrated the lack of reproducibility of such an approach in both HIV-1 protease and MHC systems, with calculations for the same protein-ligand combination, with identical initial structure and force field, shown to produce binding affinities varying by up to 12 kcal/mol for small ligands (flexible ligands can vary even more). \cite{Wan2015} ESMACS employs MMPBSA to produce ensemble- based, converged and reproducible, determinations of binding free energies (separate ligand and receptor trajectories can also be used to account for adaptation energies). This provides a rapid quantitative approach sensitive enough to determine changes in binding free energies which differentiate susceptible and resistant sequences (typically of the order of 2 kcal/mol).
+We have developed an ensemble-based endpoint protocol called ESMACS (enhanced sampling of molecular dynamics with approximation of continuum solvent). The protocol is built on the popular molecular mechanics Poisson–Boltzmann surface area (MMPBSA) \cite{Massova1999} method which makes a continuum approximation for the aqueous solvent in order to obtain results on practical timescales. Commonly, MMPBSA analyses are performed on a single MD trajectory, or even a single structure. We have demonstrated the lack of reproducibility of such an approach in both HIV-1 protease and MHC systems, with calculations for the same protein-ligand combination, with identical initial structure and force field, shown to produce binding affinities varying by up to 12 kcal/mol for small ligands (flexible ligands can vary even more). \cite{Wan2015} ESMACS employs MMPBSA to produce ensemble- based, converged and reproducible, determinations of binding free energies (separate ligand and receptor trajectories can also be used to account for adaptation energies). This provides a rapid quantitative approach sensitive enough to determine changes in binding free energies which differentiate susceptible and resistant sequences (typically of the order of 2 kcal/mol).
 
+\section{BRD4 System}\label{sec:system_description}
+
+Initial coordinates for the protein-ligand system were taken from the X-ray
+crystal structure PDB ID: 4BJX.
+% ~\cite{Wyce2013}. 
+This structure contains a
+ligand based on the THQ template and other ligands were alligned with this
+common scaffold. Preparation and setup of the simulations were implemented
+using our automated tool, BAC~\cite{Sadiq2008}. This process including
+parametrization of the compounds, solvation of the complexes, electrostatic
+neutralization of the systems by adding counterions and generation of
+configurations files for the simulations. The AMBER ff99SB-ILDN
+% ~\cite{Lindorff-Larsen2010} 
+force field was used for the protein, and TIP3P was used
+for water molecules. Compound parameters were produced using the general AMBER
+force field (GAFF)~\cite{Wang2004} with Gaussian 03
+%~\cite{Frisch} 
+to optimize compound geometries and to determine electrostatic potentials at
+the Hartree–Fock level with 6-31G** basis functions. The restrained
+electrostatic potential (RESP) module in the AMBER package
+%~\cite{Case2005} 
+was used to calculate the partial atomic charges for the compounds. All systems
+were solvated in orthorhombic water boxes with a minimum extension from the
+protein of 14 \AA\ (the resulting systems contain approximately 40 thousand
+atoms).
 
 \section{Performance Metrics}\label{sec:performance}
 
