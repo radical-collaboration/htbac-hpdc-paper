@@ -53,7 +53,7 @@ At the same time, the rapid drop in cost of next-generation sequencing technolog
 
 There are two major strategies for countering this threat to treatment efficacy: tailoring the drug regimen received by a patient according to the mutations present in their particular cancer (precision therapy), and development of more advanced second- or third-line therapies that retain potency for known resistance mutations. In both cases, future developments require insight into the molecular changes produced by mutations, as well as ways to predict their impact on drug binding on a timescale much shorter than is typically experimentally feasible.
 
-Molecular simulation based binding affinity calculations represent a practical, quantitative, generalizable approach to predicting the impact of clinically observed mutations on kinase inhibitor affinity. It has been shown that computational methods comparing the binding of different drugs based on molecular dynamics (MD) can now achieve useful predictive accuracy (1 kcal/mol) for well-behaved proteins \cite{shirts-mobley-chodera:2007:annu-rep-comput-chem:prime-time, chodera:curr-opin-struct-biol:2011:drug-discovery, abel:jacs:2015:fep-plus}. This accuracy is sufficient to greatly accelerate lead optimization \cite{shirts-mobley-brown:2009:sbdd}. Furthermore, recent work also indicates that the same approaches achieve the level of accuracy required to predict the impact of kinase resistance mutations, though published work has only examined single mutations in Abl and FGFR \cite{mondal:jacs:2016:imatinib-gatekeeper, Bunney2015}.
+Molecular simulation based binding affinity calculations represent a practical, quantitative, generalizable approach to predicting the impact of clinically observed mutations on kinase inhibitor affinity. It has been shown that computational methods comparing the binding of different drugs based on molecular dynamics (MD) can now achieve useful predictive accuracy (1 kcal/mol) for well-behaved proteins \cite{shirts-mobley-chodera:2007:annu-rep-comput-chem:prime-time, abel:jacs:2015:fep-plus}. This accuracy is sufficient to greatly accelerate lead optimization \cite{shirts-mobley-brown:2009:sbdd}. Furthermore, recent work also indicates that the same approaches achieve the level of accuracy required to predict the impact of kinase resistance mutations, though published work has only examined single mutations in Abl and FGFR \cite{mondal:jacs:2016:imatinib-gatekeeper,  Bunney2015}.
 
 \subsection{Binding Affinity Calculation Protocols}\label{sec:bac}
 
@@ -66,14 +66,14 @@ Most methods for calculating binding affinities fit into one of two broad classe
 
 Statistical mechanics provides the prescription for calculating such macroscopic quantities as ensemble averages of microscopic states. Traditionally, these macroscopic properties have usually been calculated from the time average of a single “long” duration trajectory. An intuitive and potentially more time efficient method to capture the mixing dynamics required to describe an equilibrium thermodynamic state is the use of an ensemble of separate trajectories. \cite{Coveney2016}
 
-The major sources of error in free energy calculations are the representation of the system chemistry encoded in the forcefield used, finite sampling and the free energy estimator. Protocols developed in the Coveney labs have obtained accurate and precise results which successfully reproduce experimental binding free energies from a wide range of systems. \cite{Bhati2017, Wright2014, Wan2017brd4, Wan2011, chodera-shirts:jcp:2011:gibbs, Chodera2016} Comparisons of results obtained for a large set of sequences will provide valuable insights on the importance of choices made in simulation and analysis for the overall accuracy and predictive power of free energy calculations, and facilitate the refinement of our protocols.
+The major sources of error in free energy calculations are the representation of the system chemistry encoded in the forcefield used, finite sampling and the free energy estimator. Protocols developed in the Coveney labs have obtained accurate and precise results which successfully reproduce experimental binding free energies from a wide range of systems. \cite{Wright2014, Wan2017brd4, Wan2011, chodera-shirts:jcp:2011:gibbs, Chodera2016} Comparisons of results obtained for a large set of sequences will provide valuable insights on the importance of choices made in simulation and analysis for the overall accuracy and predictive power of free energy calculations, and facilitate the refinement of our protocols.
 
 
 \subsection{Alchemical Protocol (TIES)}\label{sec:ties}
 
 Alchemical methods employ MD simulations of unphysical, alchemical intermediate states that attenuate the interactions of the small molecule with its environment. These alchemical intermediate states include both the fully-interacting complex as well as replicas in which the ligand does not interact with its environment, and allow the total free energy of binding—including entropic and enthalpic contributions—to be efficiently computed. Typically, the alchemical path between the states of interest is described by a parameter, $\lambda$, which varies between 0 for the initial and 1 for the final state of the transformation of interest. Sampling is then performed at a series of points along this path and the gradient of the energy integrated to calculate the binding affinity.
 
-The TIES (thermodynamic integration with enhanced sampling) protocol, developed within the Coveney lab, employs ensemble sampling at each $\lambda$ window to yield reproducible, accurate, and precise relative binding affinities. \cite{Bhati2017, Wan2017brd4} Based on the direct calculation of ensemble averages, it allows us to determine statistically meaningful results along with complete control of errors. As currently designed, TIES computes the change in binding affinity between two related system (termed ‘relative binding affinities’).
+The TIES (thermodynamic integration with enhanced sampling) protocol, developed within the Coveney lab, employs ensemble sampling at each $\lambda$ window to yield reproducible, accurate, and precise relative binding affinities. \cite{ Wan2017brd4} Based on the direct calculation of ensemble averages, it allows us to determine statistically meaningful results along with complete control of errors. As currently designed, TIES computes the change in binding affinity between two related system (termed ‘relative binding affinities’).
 
 
 \subsection{Endpoint Protocol (ESMACS)}\label{sec:esmacs}
@@ -196,26 +196,13 @@ use of HTBAC to compute the binding affinities of anti-cancer drugs to their
 target proteins (the EGFR kinase) using two simulation protocols with differing
 levels of rigor and computational cost, ESMACS and TIES.
 
-HTBAC is not limited to these protocols as additional protocols can be 
-expressed and implemented easily with the HTBAC user-facing API, however for 
-demonstration we focus on these ensemble protocols HTBAC has demonstrated 
-sizable execution and performance of the ESMACS~\cite{dakka2017} and TIES~\cite{dakka_farkaspall} protocols on leadership
-class machines including NCSA Blue Waters. For example, we demonstrated how HTBAC 
-scales almost perfectly to hundreds of concurrent multi-stage pipelines in \ref{fig:weak_scaling} where we show the weak scaling properties of TIES. 
-
-\begin{figure}
-  \centering
-   \includegraphics[width=\columnwidth]
-   {weak_scaling_TIES_instances_50,000_timesteps_with_16_instances.pdf}
-  \caption{Weak scaling properties of HTBAC. We investigate the
-  weak scaling of HTBAC as the ratio of the number of protocol instances to
-  resources is kept constant. Overheads of HTBAC (right), and runtime overhead 
-  (left) and \(TTX\) (left) for experimental configurations investigating the 
-  weak scaling of TIES protocols. We ran two trials for each protocol instance 
-  configuration. Error bars in \(TTX\) in 2 and 8-protocol runs are 
-  insignificant.}
-\label{fig:weak_scaling}
-\end{figure}
+HTBAC is not limited to these protocols as additional protocols can be
+expressed and implemented easily with the HTBAC user-facing API, however for
+demonstration we focus on these ensemble protocols HTBAC has demonstrated
+sizable execution and performance of the ESMACS and TIES protocols on leadership
+class machines including NCSA Blue Waters. Recently, we demonstrated how HTBAC
+scales almost perfectly to hundreds of concurrent multi-stage pipelines for each
+protocol~\cite{dakka2017} and~\cite{dakka_farkaspall}.
 
 Both ESMACS and TIES have been successfully used to predict binding affinities
 quickly and accurately. Nonetheless, they are very expensive computationally,
@@ -226,9 +213,6 @@ resources efficiently. This provides one clear motivation for the use of
 adaptive methods which minimize the compute time used whilst producing binding
 free energy estimates meeting pre-defined quality criteria (such as
 convergence or statistical uncertainty below a given threshold).
-
-\jhanote{Adaptivity has to be motivated better. Currently it is almost a
-posteriori..}
 
 This additional driver for \textit{adaptivity} suggest that algorithmic methods will
 typically involve compounds with a wide range of chemical properties which can
@@ -252,9 +236,6 @@ when one calculation has converged whilst another has not. This adaptability
 makes it easier to manage complex programs where efficient use of resources
 is required in order to achieve a time to completion of studies comparable to
 those of high throughput chemistry.
-
-
-\jhanote{Would the last paragraph be placed in Section V or VI?}
 
 The novel contributions of HTBAC are: (i) Unprecedented throughput: it allows
 the concurrent screening for drug binding affinities of multiple compounds at
@@ -326,15 +307,12 @@ treatments could be predicted.
 
 \section{Analysis of Solution}\label{sec:analysis}
 
-\jhanote{Dave/Kristof: We are missing a "comparison to related approaches"}
-
-
 Our previous work deploying both ESMACS and TIES has typically involved comparing 10 to 20 computed
 binding affinities.
 An example would be the recent study of BRD4 inhibitors conducted in collaboration by UCL and GSK \cite{Wan2017brd4}, which involved 15 drugs (usually we prepare a similar number of systems using each protocol, here 12 TIES transformations were studied).
-Using our non-adaptive protocols each system typically requires approximately 10K and 25K core hours for ESMACS and TIES respectively.
-So a 20 compound study (with 20 transforms) would  use ~700 k core hours.
-As previously described this type of study does not meet the size necessary to really impact industrial processes which focus from libraries of potentially millions of compounds doen to hundreds of hits which need to be optimized.
+Using our non-adaptive protocols each system typically requires approximately 10k and 25k core hours for ESMACS and TIES respectively.
+So a 20 compound study (with 20 transforms) would use $\sim$700k core hours.
+As previously described this type of study does not meet the size necessary to really impact industrial processes which focus from libraries of potentially millions of compounds down to hundreds of hits which need to be optimized.
 HTBAC is designed to enable this types of workflow to be sustained, a development which means that we can now look to conduct the scale of studies necessary to refine protocols and forcefields for production work in drug discovery and refinement.
 
 
