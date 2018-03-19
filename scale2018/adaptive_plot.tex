@@ -1,10 +1,19 @@
-\begin{figure}[h!]
+\newcommand\plotscale{0.33}
+
+\begin{figure}
   \centering
   \begin{tikzpicture}
-  \begin{axis} [scale=0.3, xmin=0, xmax=1, yticklabels={,,}, xtick={0, 1}]
+  \begin{axis}[
+    ylabel=$\partial U(\lambda)/\partial \lambda$,
+    scale=\plotscale, 
+    xmin=0, 
+    xmax=1, 
+    yticklabels={,,}, 
+    xtick={0, 1}
+    ]
   \addplot+[name path=true, mark=none, smooth, color=black] table {dg-tot-scaled.dat};
 
-  \addplot[name path=approx_1, mark=o] coordinates {(0.00, 0.37126) (0.50, -51.44248) (1.00, -51.30041)};
+  \addplot[name path=approx_1, mark=o, mark size=1] coordinates {(0.00, 0.37126) (0.50, -51.44248) (1.00, -51.30041)};
 
   \addplot fill between[
     of = true and approx_1,
@@ -17,10 +26,17 @@
   \end{axis}
   \end{tikzpicture}%
   \begin{tikzpicture}
-  \begin{axis} [scale=0.3, xmin=0, xmax=1, yticklabels={,,}, xtick={0, 1}]
+  \begin{axis}[
+    xlabel=$\lambda$,
+    x label style={at={(axis description cs:0.5,0.01)}},
+    scale=\plotscale, 
+    xmin=0, 
+    xmax=1, 
+    yticklabels={,,}, 
+    xtick={0, 1}]
   \addplot+[name path=true, mark=none, smooth, color=black] table {dg-tot-scaled.dat};
 
-  \addplot[name path=approx_1, mark=o] coordinates {
+  \addplot[name path=approx_1, mark=o, mark size=1] coordinates {
   (0.00, 0.37126)
   (0.20, -1.01429)
   (0.50, -51.44248)
@@ -38,10 +54,10 @@
   \end{axis}
   \end{tikzpicture}%
   \begin{tikzpicture}
-  \begin{axis} [scale=0.3, xmin=0, xmax=1, yticklabels={,,}, xtick={0, 1}]
+  \begin{axis} [scale=\plotscale, xmin=0, xmax=1, yticklabels={,,}, xtick={0, 1}]
   \addplot+[name path=true, mark=none, smooth, color=black] table {dg-tot-scaled.dat};
 
-  \addplot[name path=approx_1, mark=o] coordinates {
+  \addplot[name path=approx_1, mark=o, mark size=1] coordinates {
   (0.00, 0.37126)
   (0.20, -1.01429)
   (0.30, 1.977340)
@@ -62,6 +78,6 @@
   \end{axis}
   \end{tikzpicture}
 
-  \caption{Adaptive quadrature of the function $f(\lambda) = \partial U(\lambda)/\partial \lambda$ in the interval $[0, 1]$ using the trapezoidal rule. The figures from left to right show successive levels of recursion or bisection of the interval. The interpolation error is the difference (shaded area) between the interpolant and the actual function. If the error in an interval is too large, the interval is bisected.}
+  \caption{Adaptive quadrature of the function $f(\lambda) = \partial U(\lambda)/\partial \lambda$ in the interval $[0, 1]$ using the trapezoidal rule. The figures from left to right show consecutive levels of recursion and bisection of intervals. The true integration error is the difference between the interpolated function and the actual function (shaded area). If the error on an interval is larger than a threshold, the interval is bisected.}
   \label{fig:adaptive}
 \end{figure}
