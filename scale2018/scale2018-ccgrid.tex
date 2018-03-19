@@ -254,9 +254,25 @@ efficient execution of individual protocols.
        
 \section{Impact of Solution}\label{sec:impact}
 
-Scientific Impact: 
 
-\jhanote{Be sure to separate: (i) impact of adaptivity, and (ii) computational /scale impact}
+The flexibility provided by HTBAC to run adaptive workflows offers huga advantages scientifically. 
+Firstly the intra-protocol adaptivity allows the automated optimization of calculations to ensure that 
+results are obtained with known precision across systems which may exibit very different behaviour (for example levels of `roughness' in the $\partial U/\partial\lambda$ curve in TIES).
+This has a significant impact of the reliability of comparisons between runs. 
+The ability to switch between protocols on the other hand offers a mechanism through which `cheaper' approximate methods (such as ESMACS) can be used to scan large regions of chemical space, whilst more accurate and `expensive' ones are employed to investigate areas of specific interest (TIES).
+This maps directly onto processes such as hit to lead optimization in drug discovery and cold be of particular use in investigating activity cliffs. 
+This is a phenomena where small chemical changes provide large differences in drug efficacy.
+If changes are detected using an approximate method it is important to verfiy that they come from 
+real chemical effects and not simply inaccuracies in the computational algorithm employed.
+
+The scale enabled by HTBAC could also have a positive impact on scientific discovery. 
+Most studies in the literature are limited to the investigation of tens of protein-ligand complexes.
+In order to establish the validity of particular combinations of forcefield and simulation protocol and 
+quantify uncertainties much larger campaigns are needed.
+Our ensemble has already provided evidence that the variability in single runs is sufficient to 
+swamp true differences between systems of interest.
+The combined need for both large numbers of systems and multiple repeats of each one produces a requirement 
+for middleware to manage huge numbers of simulations.
 
 HTBAC allows the concurrent screening
 for drug binding affinities of multiple compounds at unprecedented scales,
