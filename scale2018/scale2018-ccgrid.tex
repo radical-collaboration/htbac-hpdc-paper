@@ -265,6 +265,36 @@ the design and implementation of the RADICAL-Cybertools, a set of software
 building blocks that can be easily composed to design, implement and execute
 domain specific workflows rapidly and at scale.
 
+
+Adaptive applications focus on leveraging intermediate data to 
+adapt the application to study larger problems, longer time scales and to 
+engineer better fidelity in the modeling of complex phenomena. Enabling these
+capabilities on HPC systems can be beneficial to domain science applications 
+but comes with its own set of challenges in expressibility, instantiation and 
+implementation.
+
+The first challenges lies in the expressibility of adaptive applications. 
+Composition of adaptive applications requires APIs that enable the expression of
+the application without adaptivity and specification of methods that capture how
+the application adapts to intermediate data. The former translates to a 
+description of the application task graph, which consists of all tasks of the 
+application and their interdependencies such that there exists a specific
+order of execution of the tasks, while the latter specifies adaptive 
+methods that adapt this task graph.
+
+The second challenge lies in determining when the adaptation is instantiated. 
+The adaptation is described at the end of the execution of a task wherein a new
+task graph is generated. Different strategies can be employed in the 
+instantiation of the adaptation such as abort and rollback, proceed, forward
+recovery~\cite{van2000dealing}.
+
+The third challenge lies in implementation of the adaptation of the application
+during runtime. We divide this challenge into three parts: (i) propagation of
+adapted task graph to all components, (ii) consistency of the state of task
+graph between different components and (iii) Minimal overhead: The overhead of 
+performing adaptive operations should be minimal compared to the execution 
+duration of the tasks.
+
 \section{Solution}\label{sec:solution}
 
 %\jhanote{The Solution is not just HTBAC per se, but the application of HTBAC to the specific problem. The specific problem has not been identified so far. I would propose divided this section into two parts. The first about  HTBAC and its scalability; and the second part about its application to the specific problem.}
