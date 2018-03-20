@@ -49,14 +49,19 @@ intelligent and efficient utilization of supercomputing resources.
 Specifically, it requires refining algorithms and developing technologies to
 marshal huge simulation campaigns.
 
-In this SCALE challenge, we demonstrate the use of a framework -- HTBAC,
-designed to support the aforementioned requirements of accurate and rapid drug
-binding affinity calculations. HTBAC facilitates the execution of the numbers
-of simulations while supporting the adaptive execution of algorithms.
-Furthermore, HTBAC  enables the selection of experimental parameters during
-runtime, which can in principle optimize the use of computational resources
-whilst producing results with a target uncertainty.
-
+This work is motivated by the real world problem of providing clinical insight
+from drug candidate data on a time scale that is as short as possible.
+Specifically, we reproduce results from a collaboration project between UCL
+and GlaxoSmithKline to study a congeneric series of drug candidates binding to
+the BRD4 protein -- inhibitors of which have shown promising preclinical
+efficacy in pathologies ranging from cancer to inflammation. In this SCALE
+challenge, we demonstrate the use of a framework -- HTBAC, designed to support
+the aforementioned requirements of accurate and rapid drug binding affinity
+calculations. HTBAC facilitates the execution of the numbers of simulations
+while supporting the adaptive execution of algorithms. Furthermore, HTBAC
+enables the selection of experimental parameters during runtime, which can in
+principle optimize the use of computational resources whilst producing results
+with a target uncertainty.
 
 \end{abstract}
 
@@ -79,13 +84,14 @@ whilst producing results with a target uncertainty.
 
 \section{Scientific Motivation}\label{sec:motivation}
 
-This work is motivated by the real world problem of providing clinical insight
-from drug candidate data on a time scale that is as short as possible,
-Specifically, we reproduce results from a collaboration project between UCL
-and GlaxoSmithKline to study a congeneric series of drug candidates binding to
-the BRD4 protein (inhibitors of which have shown promising preclinical
-efficacy in pathologies ranging from cancer to
-inflammation)~\cite{Wan2017brd4}.
+% This work is motivated by the real world problem of providing clinical insight
+% from drug candidate data on a time scale that is as short as possible.
+% Specifically, we reproduce results from a collaboration project between UCL
+% and GlaxoSmithKline to study a congeneric series of drug candidates binding to
+% the BRD4 protein (inhibitors of which have shown promising preclinical
+% efficacy in pathologies ranging from cancer to
+% inflammation)~\cite{Wan2017brd4}.
+
 
 Bromodomain-containing proteins, and in particular the four members of the BET
 (bromodomain and extra terminal domain) family, are currently a major focus of
@@ -109,30 +115,39 @@ available~\cite{Bamborough2012}.
 \end{figure}
 
 
-We have previously investigated a congeneric series of ligands binding to
-BRD4-BD1 (we shall from now on refer to this are simply BRD4) using both
-ESMACS and TIES. This was performed in the context of a blind test of the
-protocols in collaboration with GlaxoSmithKline~\cite{Wan2017brd4}. The goal
-was to benchmark the ESMACS and TIES protocols in a realistic drug discovery
-scenario. In the original study, we investigated chemical structures of 16
-ligands based on a single tetrahydroquinoline (THQ) scaffold. % ~\cite{Gosmini2014}. 
-
-
-These studies employed two different protocols, known as TIES and
-ESMACS~\cite{Bhati2017}, both based on multiple simulations of the same
-system. Drug design projects have limited resources, so initially large
-numbers of compounds must be cheaply screened to eliminate poor binders (using
-ESMACS), before more accurate methods (such as TIES) are needed as good
-binders are refined and improved.
+We have investigated a congeneric series of ligands binding to BRD4-BD1 (we shall
+from now on refer to this are simply BRD4). This was performed in the context
+of a blind test of the protocols in collaboration with
+GlaxoSmithKline~\cite{Wan2017brd4}. The goal was to benchmark the ESMACS and
+TIES protocols in a realistic drug discovery scenario. In the original study,
+we investigated chemical structures of 16 ligands based on a single
+tetrahydroquinoline (THQ) scaffold. These studies employed two different
+algorithms (simulation protocols), known as TIES and ESMACS~\cite{Bhati2017},
+both based on multiple simulations of the same system. Drug design projects
+have limited resources, so initially large numbers of compounds must be
+cheaply screened to eliminate poor binders (using ESMACS), before more
+accurate methods (such as TIES) are needed as good binders are refined and
+improved.
 
 In order to support such investigations, in addition to scale, the protocols
-must be executed to utilize  flexible resource management schemes where
-resources can be (re-)allocated between instances of different protocols or
-systems, for example, when one calculation has converged whilst another has
-not. Such adaptability makes it easier to manage complex programs where
-efficient use of resources is required in order to achieve a time to
-completion of studies comparable to those of high throughput chemistry.
+must be executed to utilize  flexible resource management schemes where based
+upon intermediate results at runtime, resources can be (re-)allocated between
+instances of different protocols or systems, for example, when one calculation
+has converged whilst another has not. Such adaptability makes it easier to
+manage complex programs where efficient use of resources is required in order
+to achieve a time to completion of studies comparable to those of high
+throughput chemistry.
 
+This work is motivated by the real world problem of providing clinical insight
+from drug candidate data (study a congeneric series of drug candidates binding
+to the BRD4 protein) on a time scale that is as short as possible. In this
+SCALE challenge, we demonstrate the use of a framework -- HTBAC, designed to
+support the aforementioned requirements of accurate and rapid drug binding
+affinity calculations. HTBAC facilitates the execution of the numbers of
+simulations while supporting the adaptive execution of algorithms.
+Furthermore, HTBAC enables the selection of experimental parameters during
+runtime, which can in principle optimize the use of computational resources
+whilst producing results with a target uncertainty.
 
 % We demonstrate the scalability and flexibility of HTBAC.
 
@@ -152,6 +167,12 @@ completion of studies comparable to those of high throughput chemistry.
 % previous work provide a benchmark of both accuracy and statistical uncertainty
 % to which we can compare our new results.
  
+\section{Methods and Models}
+
+In this section we outline the computational methods employed and the physical
+system (drug candidates) studied. We discuss how computational methods have
+been co-designed with the software systems to support scalable approaches on
+the largest supercomputers.
 
 \subsection{Binding Affinity Calculation Protocols}\label{sec:bac}
 
@@ -264,26 +285,22 @@ atoms).
 
 TIES is rigorous but computationally expensive and has a limited range of
 applicability; ESMACS is approximate but can be employed across any set of
-ligands at lower computational cost. 
-
-
-Both protocols are designed to simulate a large range of mutations. A single 
-protocol instance represents a unique physical system. Each protocol instance
-contains a pipeline which maps to a sequence of simulations steps which include
-minimization, equilibration and production MD simulation. 
-These simulation pipelines are replicated, where replicas differ 
-only by their parameter configurations,
-namely initial velocities, which are randomly generated and assigned by the MD
-engine at the start of execution. ESMACS consists of 25 replicas i.e. 
-25 pipelines, while TIES 
-consists of 13 $\lambda$ windows, which are additional sampling parameters,
-and 5 replicas for a total of 65 pipelines. The additional pipelines in TIES 
-contribute to the greater computational cost. Both protocols run for a total of 
-6 ns simulation durations. ESMACS produces 3.5 GB/system (24 MB/ns) while 
-TIES produces 10 GB/system (24 MB/ns). Each simulation step in TIES and ESMACS 
-requires 32 cores. Protocols run approximately 10-12 hours, 
-depending on the physical system and the number of timesteps provided by the 
-user. 
+ligands at lower computational cost. Both protocols are designed to simulate a
+large range of mutations. A single protocol instance represents a unique
+physical system. Each protocol instance contains a pipeline which maps to a
+sequence of simulations steps which include minimization, equilibration and
+production MD simulation. These simulation pipelines are replicated, where
+replicas differ only by their parameter configurations, namely initial
+velocities, which are randomly generated and assigned by the MD engine at the
+start of execution. ESMACS consists of 25 replicas i.e. 25 pipelines, while
+TIES consists of 13 $\lambda$ windows, which are additional sampling
+parameters, and 5 replicas for a total of 65 pipelines. The additional
+pipelines in TIES contribute to the greater computational cost. Both protocols
+run for a total of 6 ns simulation durations. ESMACS produces 3.5 GB/system
+(24 MB/ns) while TIES produces 10 GB/system (24 MB/ns). Each simulation step
+in TIES and ESMACS requires 32 cores. Protocols run approximately 10-12 hours,
+depending on the physical system and the number of timesteps provided by the
+user.
 
 \mtnote{We need a better description of TIES and ESMACS.}
 
@@ -508,6 +525,38 @@ efficient execution of individual protocols.
 % protocol. To this effect, the framework uses EnTK to provide a higher level of
 % abstraction that allows the user to interface closer to the science problem.
 
+\subsection{Performance Metrics}\label{sec:performance}
+
+% \subsection{Ensemble Molecular Dynamics}\label{sec:emd}
+
+TIES is rigorous but computationally expensive and has a limited range of
+applicability; ESMACS is approximate but can be employed across any set of
+ligands at lower computational cost. Both protocols are designed to simulate a
+large range of mutations. A single protocol instance represents a unique
+physical system. Each protocol instance contains a pipeline which maps to a
+sequence of simulations steps which include minimization, equilibration and
+production MD simulation. These simulation pipelines are replicated, where
+replicas differ only by their parameter configurations, namely initial
+velocities, which are randomly generated and assigned by the MD engine at the
+start of execution. ESMACS consists of 25 replicas i.e. 25 pipelines, while
+TIES consists of 13 $\lambda$ windows, which are additional sampling
+parameters, and 5 replicas for a total of 65 pipelines. The additional
+pipelines in TIES contribute to the greater computational cost. Both protocols
+run for a total of 6 ns simulation durations. ESMACS produces 3.5 GB/system
+(24 MB/ns) while TIES produces 10 GB/system (24 MB/ns). Each simulation step
+in TIES and ESMACS requires 32 cores. Protocols run approximately 10-12 hours,
+depending on the physical system and the number of timesteps provided by the
+user.
+
+There are several measures of performance that are relevant. The most
+pertinent is the weak scaling property which demonstrates the ability of HTBAC
+to solve large number of drug candidates in essentially the same amount of
+time (as the resources increase). To this effect, we investigated weak scaling
+behavior for screening sixteen drug candidates concurrently using thousands of
+multi-stage pipelines on more than 32,000 cores on NCSA Blue Waters (as shown
+in Figure 2). Similar scaling has been demonstrated on other platforms such as
+Titan for different protocols.
+
 
 % ---------------------------------------------------------------------------
 % Section VI
@@ -587,6 +636,8 @@ If invited to the final round of SCALE 2018, we will demonstrate the following:
 configurations so that best estimates for binding affinities for a give amount
 of resources. Traces of execution that will display adaptivity and resource
 allocation across protocols
+
+\item Additional measures of performance and scale
 
 \item How scalable, accurate and rapid binding affinity calculation using
 HTBAC can enable effective clinical decision making
