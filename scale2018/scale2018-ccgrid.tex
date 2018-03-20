@@ -31,13 +31,6 @@
 
 \begin{abstract}
 
-\end{abstract}
-
-
-% ---------------------------------------------------------------------------
-% Introduction
-% ---------------------------------------------------------------------------
-\section{Introduction}\label{sec:intro}
 
 The efficacy of drug treatments depends on how tightly small molecules bind to
 their target proteins. Quantifying the strength of these interactions (the so
@@ -45,10 +38,8 @@ called ‘binding affinity’) is a grand challenge of computational chemistry,
 surmounting which could revolutionize drug design and provide the platform for
 patient specific medicine. Recently, evidence from blind challenge predictions
 and retrospective validation studies has suggested that molecular dynamics
-(MD) can now achieve useful predictive accuracy (1 kcal/mol) \cite{shirts-
-mobley-chodera:2007:annu-rep-comput-chem:prime-time, abel:jacs:2015:fep-plus}.
+(MD) can now achieve useful predictive accuracy (1 kcal/mol) 
 This accuracy is sufficient to greatly accelerate lead optimization 
-\cite{shirts-mobley-brown:2009:sbdd}.
 
 To translate these advances in predictive accuracy so as to impact clinical
 and/or industrial decision making requires that binding free energy results
@@ -59,41 +50,42 @@ Specifically, it requires refining algorithms and developing technologies to
 marshal huge simulation campaigns.
 
 In this SCALE challenge, we demonstrate the use of a framework -- HTBAC,
-   designed to support the aforementioned requirements of accurate and rapid
-   drug binding affinity calculations. HTBAC facilitates the execution of the
-   numbers of simulations while supporting the adaptive execution of
-   algorithms. Furthermore, HTBAC  enables the selection of experimental
-   parameters during runtime, which can in principle optimize the use of
-   computational resources whilst producing results with a target uncertainty.
+designed to support the aforementioned requirements of accurate and rapid drug
+binding affinity calculations. HTBAC facilitates the execution of the numbers
+of simulations while supporting the adaptive execution of algorithms.
+Furthermore, HTBAC  enables the selection of experimental parameters during
+runtime, which can in principle optimize the use of computational resources
+whilst producing results with a target uncertainty.
+
+
+\end{abstract}
+
+% \cite{shirts-mobley-chodera:2007:annu-rep-comput-chem:prime-time, 
+% abel:jacs:2015:fep-plus}.
+% \cite{shirts-mobley-brown:2009:sbdd}.
+
+
+% ---------------------------------------------------------------------------
+% Introduction
+% ---------------------------------------------------------------------------
+%\section{Introduction}\label{sec:intro}
+
+
 
 
 % ---------------------------------------------------------------------------
 % Scientific Motivation
 % ---------------------------------------------------------------------------
 
-\subsection{Scientific Motivation}\label{sec:motivation}
+\section{Scientific Motivation}\label{sec:motivation}
 
 This work is motivated by the real world problem of providing clinical insight
 from drug candidate data on a time scale that is as short as possible,
-Specifically, we will demonstrate the scalability and flexibility of HTBAC by
-reproducing results from a collaboration project between UCL and
-GlaxoSmithKline to study a congeneric series of drug candidates binding to the
-BRD4 protein (inhibitors of which have shown promising preclinical efficacy in
-pathologies ranging from cancer to inflammation) ~\cite{Wan2017brd4}. These
-studies employed two different protocols, known as TIES and ESMACS
-~\cite{Bhati2017}, both based on multiple simulations of the same system. Drug
-design projects have limited resources, so initially large numbers of
-compounds must be cheaply screened to eliminate poor binders (using ESMACS),
-before more accurate methods (such as TIES) are needed as good binders are
-refined and improved.
-
-In order to support such investigations, in addition to being scalable, HTBAC
-must be enhanced to support flexible resource reallocations schemes where
-resources can be moved between simulations run using different protocols or
-systems, for example, when one calculation has converged whilst another has
-not. This adaptability makes it easier to manage complex programmes where
-efficient use of resources is required in order to achieve a time to
-completion of studies comparable to those of high throughput chemistry.
+Specifically, we reproduce results from a collaboration project between UCL
+and GlaxoSmithKline to study a congeneric series of drug candidates binding to
+the BRD4 protein (inhibitors of which have shown promising preclinical
+efficacy in pathologies ranging from cancer to
+inflammation)~\cite{Wan2017brd4}.
 
 Bromodomain-containing proteins, and in particular the four members of the BET
 (bromodomain and extra terminal domain) family, are currently a major focus of
@@ -124,17 +116,79 @@ protocols in collaboration with GlaxoSmithKline~\cite{Wan2017brd4}. The goal
 was to benchmark the ESMACS and TIES protocols in a realistic drug discovery
 scenario. In the original study, we investigated chemical structures of 16
 ligands based on a single tetrahydroquinoline (THQ) scaffold. % ~\cite{Gosmini2014}. 
-Here we focus on the first seven of these ligands to test
-and refine the protocols used and the way in which they were executed. The
-results of our previous work provide a benchmark of both accuracy and
-statistical uncertainty to which we can compare our new results.
+
+
+These studies employed two different protocols, known as TIES and
+ESMACS~\cite{Bhati2017}, both based on multiple simulations of the same
+system. Drug design projects have limited resources, so initially large
+numbers of compounds must be cheaply screened to eliminate poor binders (using
+ESMACS), before more accurate methods (such as TIES) are needed as good
+binders are refined and improved.
+
+In order to support such investigations, in addition to scale, the protocols
+must be executed to utilize  flexible resource management schemes where
+resources can be (re-)allocated between instances of different protocols or
+systems, for example, when one calculation has converged whilst another has
+not. Such adaptability makes it easier to manage complex programs where
+efficient use of resources is required in order to achieve a time to
+completion of studies comparable to those of high throughput chemistry.
+
+
+% We demonstrate the scalability and flexibility of HTBAC.
+
+% In order to support such investigations, in addition to being scalable, HTBAC
+% must be enhanced to support flexible resource reallocations schemes where
+% resources can be moved between simulations run using different protocols or
+% systems, for example, when one calculation has converged whilst another has
+% not. This adaptability makes it easier to manage complex programmes where
+% efficient use of resources is required in order to achieve a time to
+% completion of studies comparable to those of high throughput chemistry.
+
+
+
+
+% Here we focus on the first seven of these ligands to test and refine the
+% protocols used and the way in which they were executed. The results of our
+% previous work provide a benchmark of both accuracy and statistical uncertainty
+% to which we can compare our new results.
+ 
 
 \subsection{Binding Affinity Calculation Protocols}\label{sec:bac}
 
-Computing accurate protein-drug binding affinities (also known as binding free energies) requires a simulation technique which captures the chemical detail of the system. 
-MD simulations are the time dependent numerical integration of the classical equations of motion for molecular systems. 
-Application of MD to atomistic models of proteins and their ligands can be used to answer questions about the properties of a specific system often more readily than experiments on the actual system. 
-Free-energy calculations in the framework of MD simulations not only yield quantitative estimates of binding strength but also provide insights into the most important interactions driving the process.
+Computing accurate protein-drug binding affinities (also known as binding free
+energies) requires a simulation technique which captures the chemical detail
+of the system. MD simulations are the time dependent numerical integration of
+the classical equations of motion for molecular systems. Application of MD to
+atomistic models of proteins and their ligands can be used to answer questions
+about the properties of a specific system often more readily than experiments
+on the actual system. Free-energy calculations in the framework of MD
+simulations not only yield quantitative estimates of binding strength but also
+provide insights into the most important interactions driving the process.
+Evidence from blind challenge predictions and retrospective validation studies
+has suggested that molecular dynamics (MD) can now achieve useful predictive
+accuracy (1 kcal/mol) 
+\cite{shirts-mobley-chodera:2007:annu-rep-comput-chem:prime-time, abel:jacs:2015:fep-plus}. This accuracy is sufficient to greatly
+accelerate lead optimization \cite{shirts-mobley-brown:2009:sbdd}.
+
+Statistical mechanics provides the prescription for calculating such
+macroscopic quantities as ensemble averages of microscopic states.
+Traditionally, these macroscopic properties have usually been calculated from
+the time average of a single “long” duration trajectory. An intuitive and
+potentially more time efficient method to capture the mixing dynamics required
+to describe an equilibrium thermodynamic state is the use of an ensemble of
+separate trajectories. \cite{Coveney2016}
+
+The major sources of error in free energy calculations are the representation
+of the system chemistry encoded in the forcefield used, finite sampling and
+the free energy estimator. Protocols developed in the Coveney labs have
+obtained accurate and precise results which successfully reproduce
+experimental binding free energies from a wide range of systems.
+\cite{Wright2014, Wan2017brd4, Wan2015, Wan2011} Comparisons of results
+obtained for a large set of sequences will provide valuable insights on the
+importance of choices made in simulation and analysis for the overall accuracy
+and predictive power of free energy calculations, and facilitate the
+refinement of our protocols.
+
 
 Most methods for calculating binding affinities fit into one of two broad classes; so called alchemical and endpoint methodologies. 
 Alchemical free energy calculations employ unphysical (“alchemical”) intermediates to calculate changes in free energies between two systems. 
@@ -143,15 +197,10 @@ Endpoint methods, as the name suggests, consider the difference in energy betwee
 To obtain information on the differences in binding affinity of different sequences for a panel of kinase inhibitors requires a deployment of various strategies, incorporating both alchemical and endpoint approaches. 
 In this work we deploy approaches from both of these classes.
 
-\subsection{Ensemble Molecular Dynamics}\label{sec:emd}
-
-Statistical mechanics provides the prescription for calculating such macroscopic quantities as ensemble averages of microscopic states. Traditionally, these macroscopic properties have usually been calculated from the time average of a single “long” duration trajectory. An intuitive and potentially more time efficient method to capture the mixing dynamics required to describe an equilibrium thermodynamic state is the use of an ensemble of separate trajectories. \cite{Coveney2016}
-
-The major sources of error in free energy calculations are the representation of the system chemistry encoded in the forcefield used, finite sampling and the free energy estimator. Protocols developed in the Coveney labs have obtained accurate and precise results which successfully reproduce experimental binding free energies from a wide range of systems. \cite{Wright2014, Wan2017brd4, Wan2015, Wan2011} 
-Comparisons of results obtained for a large set of sequences will provide valuable insights on the importance of choices made in simulation and analysis for the overall accuracy and predictive power of free energy calculations, and facilitate the refinement of our protocols.
 
 
-\subsection{Alchemical Protocol (TIES)}\label{sec:ties}
+
+\subsubsection{Alchemical Protocol (TIES)}\label{sec:ties}
 
 Alchemical methods employ MD simulations of unphysical, alchemical intermediate states that attenuate the interactions of the small molecule with its environment. 
 These alchemical intermediate states include both the fully-interacting complex as well as replicas in which the ligand does not interact with its environment, and allow the total free energy of binding—including entropic and enthalpic contributions—to be efficiently computed. Typically, the alchemical path between the states of interest is described by a parameter, $\lambda$, which varies between 0 for the initial and 1 for the final state of the transformation of interest. 
@@ -163,16 +212,18 @@ The TIES (thermodynamic integration with enhanced sampling) protocol, developed 
 As currently designed, TIES computes the change in binding affinity between two related system (termed ‘relative binding affinities’).
 
 
-\subsection{Endpoint Protocol (ESMACS)}\label{sec:esmacs}
+\subsubsection{Endpoint Protocol (ESMACS)}\label{sec:esmacs}
 
 Computationally cheaper, but less rigorous methods, endpoint methods have been used to directly compute the binding strength of a drug to the target protein from MD simulations (as opposed to differences in affinity). 
 
 We have developed an ensemble-based endpoint protocol called ESMACS (enhanced sampling of molecular dynamics with approximation of continuum solvent). The protocol is built on the popular molecular mechanics Poisson–Boltzmann surface area (MMPBSA) \cite{Massova1999} method which makes a continuum approximation for the aqueous solvent in order to obtain results on practical timescales. Commonly, MMPBSA analyses are performed on a single MD trajectory, or even a single structure. We have demonstrated the lack of reproducibility of such an approach in both HIV-1 protease and MHC systems, with calculations for the same protein-ligand combination, with identical initial structure and force field, shown to produce binding affinities varying by up to 12 kcal/mol for small ligands (flexible ligands can vary even more). \cite{Wan2015} ESMACS employs MMPBSA to produce ensemble- based, converged and reproducible, determinations of binding free energies (separate ligand and receptor trajectories can also be used to account for adaptation energies). This provides a rapid quantitative approach sensitive enough to determine changes in binding free energies which differentiate susceptible and resistant sequences (typically of the order of 2 kcal/mol).
 
+
+
 % ---------------------------------------------------------------------------
 % Section II
 % ---------------------------------------------------------------------------
-\section{BRD4 System}\label{sec:system_description}
+\subsection{BRD4 System}\label{sec:system_description}
 
 Initial coordinates for the protein-ligand system were taken from the X-ray
 crystal structure PDB ID: 4BJX.
@@ -198,27 +249,46 @@ were solvated in orthorhombic water boxes with a minimum extension from the
 protein of 14 \AA\ (the resulting systems contain approximately 40 thousand
 atoms).
 
+% \subsection{Scientific Challenge}
+
+
+
 % ---------------------------------------------------------------------------
 % Section III
 % ---------------------------------------------------------------------------
 \section{Performance Metrics}\label{sec:performance}
 
+% \subsection{Ensemble Molecular Dynamics}\label{sec:emd}
+
+
+
 TIES is rigorous but computationally expensive and has a limited range of
 applicability; ESMACS is approximate but can be employed across any set of
-ligands at lower computational cost. Both protocols simulates a large range
-of mutations where each mutation is represented as an independent set of
-pipelines. Each pipeline is composed of multiple replicas, i.e., a sequence
-of simulations and a single analysis. This sequence is repeated over a number
-of iterations, depending on the convergence criteria of the analysis. 
+ligands at lower computational cost. 
 
-All the replicas of both TIES and ESMACS requires 16 cores, where each
-pipeline runs approximately 10 hours, over a range of 100 mutations where
-each mutations spawns either 25 or 65 replicas, depending on the
-protocol.\mtnote{We need a better description of TIES and ESMACS.}
+
+Both protocols are designed to simulate a large range of mutations. A single 
+protocol instance represents a unique physical system. Each protocol instance
+contains a pipeline which maps to a sequence of simulations steps which include
+minimization, equilibration and production MD simulation. 
+These simulation pipelines are replicated, where replicas differ 
+only by their parameter configurations,
+namely initial velocities, which are randomly generated and assigned by the MD
+engine at the start of execution. ESMACS consists of 25 replicas i.e. 
+25 pipelines, while TIES 
+consists of 13 $\lambda$ windows, which are additional sampling parameters,
+and 5 replicas for a total of 65 pipelines. The additional pipelines in TIES 
+contribute to the greater computational cost. Both protocols run for a total of 
+6 ns simulation durations. ESMACS produces 3.5 GB/system (24 MB/ns) while 
+TIES produces 10 GB/system (24 MB/ns). Each simulation step in TIES and ESMACS 
+requires 32 cores. Protocols run approximately 10-12 hours, 
+depending on the physical system and the number of timesteps provided by the 
+user. 
+
+\mtnote{We need a better description of TIES and ESMACS.}
 
 \mtnote{Is the title of the section wrong? I see no mention of performance
 metrics.}
-
 
 % ---------------------------------------------------------------------------
 % Section IV
@@ -312,6 +382,7 @@ adapted task graph to all components; (ii) consistency of the state of task
 graph between different components; and (iii) minimal overhead. Minimizing
 overheads is particularly relevant as performing adaptive operations should
 be irrelevant when compared to the time required by the tasks execution.
+
 
 
 % ---------------------------------------------------------------------------
@@ -506,7 +577,22 @@ HTBAC is designed to enable this types of workflow to be sustained, a developmen
 % ---------------------------------------------------------------------------
 \section{Demonstration}\label{sec:demo}
 
+If invited to the final round of SCALE 2018, we will demonstrate the following:
 
+\begin{enumerate}
+
+\item The number of drug candidates screened as function of number of cores marshalled; equivalentally as a function of the number of core-hours consumed
+
+\item Demonstration of switching between protocols so as to achieve "optimal"
+configurations so that best estimates for binding affinities for a give amount
+of resources. Traces of execution that will display adaptivity and resource
+allocation across protocols
+
+\item How scalable, accurate and rapid binding affinity calculation using
+HTBAC can enable effective clinical decision making
+
+
+\end{enumerate}
 % ---------------------------------------------------------------------------
 % BIBLIOGRAPHY
 % ---------------------------------------------------------------------------
