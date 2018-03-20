@@ -290,7 +290,6 @@ user.
 \mtnote{Is the title of the section wrong? I see no mention of performance
 metrics.}
 
-
 % ---------------------------------------------------------------------------
 % Section IV
 % ---------------------------------------------------------------------------
@@ -301,87 +300,88 @@ from his paper.}
 
 \jhanote{Need better organization. Separate out challenge of (i) simple and
 usable software systems, (ii) scale and interoperability, and (iii)
-adaptivity challenges. }
+adaptivity challenges. }\mtnote{Better?}
 
 As the nature of scientific inquiry and the applications to support that
-inquiry evolve, there is a critical need to support the scalable and
-concurrent execution of applications with a large number of interdependent
-tasks, often referred to as `workflows'. Currently, HPC platforms mostly
-enable the strong and weak scaling of applications with single simulation
-requiring large parallelism but have limited support for the concurrent
-execution of workflows composed of multiple heterogeneous tasks.
+inquiry evolve, there is a critical need to support the execution of
+scientific workflows on high-performance computing (HPC) infrastructures.
+This poses three main challenges: (1) scaling the distributed execution of
+workflows; (2) developing simple and usable workflow systems for HPC
+resources; and (3) implementing runtime adaptivity.
 
-The dependences of the tasks of a workflow determine the order of their
-execution. Often times, the structure of the task dependencies is simple and
-adheres to discernible patterns, even though the individual tasks and their
-duration are non-trivially distinct. Put together, it is a challenge to
-support the scalable execution of workflows on HPC resources due to the
-existing software ecosystem and runtime systems.
+\subsection{Scalability}
 
-Many workflow systems have emerged in response to the aforementioned problem.
-Each workflow system has its own strengths and unique capability but also its
+Applications composed of multiple tasks with dependences that determine the
+order of their execution are referred to as `workflows'. Often times, the
+structure of the task dependencies is simple and adheres to discernible
+patterns, even though the individual tasks and their duration are
+non-trivially distinct. Put together, it is a challenge to support the
+scalable execution of workflows on HPC resources due to the existing system
+and runtime software.
+
+Currently, HPC software ecosystem mostly enables strong and weak scaling of
+applications composed by a single simulation that requires large amount of
+parallelism. This ecosystem has instead limited support for the concurrent
+execution of workflows, especially when composed of multiple heterogeneous
+tasks. Particularly limiting are the need to submit every task to a batch
+system with long queue waiting time and the limited amount of concurrency and
+flexibility offered by machine and architecture-specific tools that enable
+bulk submission.
+
+Multiple workflow systems have emerged in response to this and other
+problems, each with its own strengths and unique capability but also with
 specific problems and challenges. In spite of the many successes of workflow
 systems, there is a perceived high barrier-to-entry, integration overhead and
 limited flexibility.
 
-Interestingly, many commonly used workflow systems emerged from an era when
-the support for distributed computing was fragile, missing features and
-services. As a consequence, workflow systems had a monolithic design that
-included the end-to-end capabilities needed to execute workflows on
-heterogeneous and distributed cyberinfrastructures. Further, these workflow
-systems were typically designed to support large ``big science'' projects
-such as those at the LHC~\cite{breskin2009cern} or
-LIGO~\cite{althouse1992ligo}, where the same workflow was used by thousands
-of scientists over many years. This justified the large overhead of
-integrating application workflows with existing workflow systems, influencing
-programming models and the design and implementation of interfaces.
+\subsection{Simplicity and Usability}
+
+Many commonly used workflow systems emerged from an era when the support for
+distributed computing was fragile, missing features and services.
+Consistently, workflow systems had a monolithic design that included the
+end-to-end capabilities needed to execute workflows on heterogeneous and
+distributed cyberinfrastructures. Further, these workflow systems were
+typically designed to support large ``big science'' projects such as those at
+the LHC~\cite{breskin2009cern} or LIGO~\cite{althouse1992ligo}. There, the
+same workflow was used by thousands of scientists over many years, justifying
+the large overhead of developing application workflows, and influencing
+programming models and interfaces.
 
 However as the nature, number and usage of workflows has evolved so have the
 requirements: scale remains important but only when delivered with the
-ability to prototype quickly and flexibly. Furthermore, there are also new
-performance requirements that arise from the need to support concurrent
-execution of heterogeneous tasks. For example, when executing multiple
+ability to prototype quickly and flexibly. Further, new performance
+requirements arise from the need to support concurrent execution of tasks
+with diverse requirements and relations. For example, when executing multiple
 homogeneous pipelines of heterogeneous tasks, efficient resource utilization
 requires to ensure that individual pipelines have similar execution times,
 minimizing both pipeline-to-pipeline and task-to-task runtime fluctuations.
 
-The concurrent execution of heterogeneous tasks poses both system software
-and middleware challenges: existing system software that is typically
-designed to support the execution of single large simulations on the one
-hand, and workflow systems that are designed to support specific use cases or
-`locked-in' end-to-end executions. In the next Section, we discuss the design
-and implementation of the RADICAL-Cybertools, a set of software building
-blocks that can be easily composed to design, implement and execute domain
-specific workflows rapidly and at scale.
+Together, these factors challenge workflow systems designed to mainly support
+specific use cases or `locked-in' end-to-end executions. In the next Section,
+we discuss the design and implementation of the RADICAL-Cybertools, a set of
+software building blocks that can be easily composed to design, implement and
+execute domain specific workflows rapidly and at scale.
 
-Adaptive applications focus on leveraging intermediate data to adapt the
-application to study larger problems, longer time scales and to engineer
-better fidelity in the modeling of complex phenomena. Enabling these
-capabilities on HPC systems can be beneficial to domain science applications
-but comes with its own set of challenges in expressibility, instantiation and
-implementation.
+\subsection{Adaptivity}
 
-The first challenges lies in the expressibility of adaptive applications.
-Composition of adaptive applications requires APIs that enable the expression
-of the application without adaptivity and specification of methods that
-capture how the application adapts to intermediate data. The former
-translates to a description of the application task graph, which consists of
-all tasks of the application and their interdependencies such that there
-exists a specific order of execution of the tasks, while the latter specifies
-adaptive methods that adapt this task graph.
+Adaptive applications use intermediate data to enable better fidelity in the
+modeling of complex phenomena that would otherwise require unfeasible amount
+of computing time. Enabling adaptive capability on HPC systems poses specific
+challenges in expressibility, instantiation and implementation.
 
-The second challenge lies in determining when the adaptation is instantiated.
-The adaptation is described at the end of the execution of a task wherein a
-new task graph is generated. Different strategies can be employed in the
-instantiation of the adaptation such as abort and rollback, proceed, forward
-recovery~\cite{van2000dealing}.
+Adaptive applications requires to express both the application workflow and
+how it should adapt depending on data generated at runtime. The former
+requires the description of the application task graph, the latter methods to
+change this task graph. These methods are called at the end of the execution
+of a task and, depending on its output, determine the generation of a new
+portion of the graph. Abort, rollback, proceed, forward and recovery are all
+examples of such methods~\cite{van2000dealing}.
 
-The third challenge lies in implementation of the adaptation of the
-application during runtime. We divide this challenge into three parts: (i)
-propagation of adapted task graph to all components, (ii) consistency of the
-state of task graph between different components and (iii) Minimal overhead:
-The overhead of performing adaptive operations should be minimal compared to
-the execution duration of the tasks.
+Adaptation of the application at runtime depends on: (i) propagation of
+adapted task graph to all components; (ii) consistency of the state of task
+graph between different components; and (iii) minimal overhead. Minimizing
+overheads is particularly relevant as performing adaptive operations should
+be irrelevant when compared to the time required by the tasks execution.
 
 
 
@@ -509,6 +509,9 @@ efficient execution of individual protocols.
 % abstraction that allows the user to interface closer to the science problem.
 
 
+% ---------------------------------------------------------------------------
+% Section VI
+% ---------------------------------------------------------------------------
 \section{Impact of Solution}\label{sec:impact}
 
 
@@ -554,6 +557,9 @@ genetic sequence, a specific individuals response to different
 treatments could be predicted.
 
 
+% ---------------------------------------------------------------------------
+% Section VII
+% ---------------------------------------------------------------------------
 \section{Analysis of Solution}\label{sec:analysis}
 
 Our previous work deploying both ESMACS and TIES has typically involved comparing 10 to 20 computed
