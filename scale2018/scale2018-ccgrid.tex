@@ -31,13 +31,6 @@
 
 \begin{abstract}
 
-\end{abstract}
-
-
-% ---------------------------------------------------------------------------
-% Introduction
-% ---------------------------------------------------------------------------
-\section{Introduction}\label{sec:intro}
 
 The efficacy of drug treatments depends on how tightly small molecules bind to
 their target proteins. Quantifying the strength of these interactions (the so
@@ -45,10 +38,8 @@ called ‘binding affinity’) is a grand challenge of computational chemistry,
 surmounting which could revolutionize drug design and provide the platform for
 patient specific medicine. Recently, evidence from blind challenge predictions
 and retrospective validation studies has suggested that molecular dynamics
-(MD) can now achieve useful predictive accuracy (1 kcal/mol) \cite{shirts-
-mobley-chodera:2007:annu-rep-comput-chem:prime-time, abel:jacs:2015:fep-plus}.
+(MD) can now achieve useful predictive accuracy (1 kcal/mol) 
 This accuracy is sufficient to greatly accelerate lead optimization 
-\cite{shirts-mobley-brown:2009:sbdd}.
 
 To translate these advances in predictive accuracy so as to impact clinical
 and/or industrial decision making requires that binding free energy results
@@ -59,19 +50,34 @@ Specifically, it requires refining algorithms and developing technologies to
 marshal huge simulation campaigns.
 
 In this SCALE challenge, we demonstrate the use of a framework -- HTBAC,
-   designed to support the aforementioned requirements of accurate and rapid
-   drug binding affinity calculations. HTBAC facilitates the execution of the
-   numbers of simulations while supporting the adaptive execution of
-   algorithms. Furthermore, HTBAC  enables the selection of experimental
-   parameters during runtime, which can in principle optimize the use of
-   computational resources whilst producing results with a target uncertainty.
+designed to support the aforementioned requirements of accurate and rapid drug
+binding affinity calculations. HTBAC facilitates the execution of the numbers
+of simulations while supporting the adaptive execution of algorithms.
+Furthermore, HTBAC  enables the selection of experimental parameters during
+runtime, which can in principle optimize the use of computational resources
+whilst producing results with a target uncertainty.
+
+
+\end{abstract}
+
+% \cite{shirts-mobley-chodera:2007:annu-rep-comput-chem:prime-time, 
+% abel:jacs:2015:fep-plus}.
+% \cite{shirts-mobley-brown:2009:sbdd}.
+
+
+% ---------------------------------------------------------------------------
+% Introduction
+% ---------------------------------------------------------------------------
+\section{Introduction}\label{sec:intro}
+
+
 
 
 % ---------------------------------------------------------------------------
 % Scientific Motivation
 % ---------------------------------------------------------------------------
 
-\subsection{Scientific Motivation}\label{sec:motivation}
+%\subsection{Scientific Motivation}\label{sec:motivation}
 
 This work is motivated by the real world problem of providing clinical insight
 from drug candidate data on a time scale that is as short as possible,
@@ -151,10 +157,20 @@ completion of studies comparable to those of high throughput chemistry.
 
 \subsection{Binding Affinity Calculation Protocols}\label{sec:bac}
 
-Computing accurate protein-drug binding affinities (also known as binding free energies) requires a simulation technique which captures the chemical detail of the system. 
-MD simulations are the time dependent numerical integration of the classical equations of motion for molecular systems. 
-Application of MD to atomistic models of proteins and their ligands can be used to answer questions about the properties of a specific system often more readily than experiments on the actual system. 
-Free-energy calculations in the framework of MD simulations not only yield quantitative estimates of binding strength but also provide insights into the most important interactions driving the process.
+Computing accurate protein-drug binding affinities (also known as binding free
+energies) requires a simulation technique which captures the chemical detail
+of the system. MD simulations are the time dependent numerical integration of
+the classical equations of motion for molecular systems. Application of MD to
+atomistic models of proteins and their ligands can be used to answer questions
+about the properties of a specific system often more readily than experiments
+on the actual system. Free-energy calculations in the framework of MD
+simulations not only yield quantitative estimates of binding strength but also
+provide insights into the most important interactions driving the process.
+Evidence from blind challenge predictions and retrospective validation studies
+has suggested that molecular dynamics (MD) can now achieve useful predictive
+accuracy (1 kcal/mol) 
+\cite{shirts-mobley-chodera:2007:annu-rep-comput-chem:prime-time, abel:jacs:2015:fep-plus}. This accuracy is sufficient to greatly
+accelerate lead optimization \cite{shirts-mobley-brown:2009:sbdd}.
 
 Statistical mechanics provides the prescription for calculating such
 macroscopic quantities as ensemble averages of microscopic states.
