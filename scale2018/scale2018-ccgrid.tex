@@ -163,6 +163,9 @@ Computationally cheaper, but less rigorous methods, endpoint methods have been u
 
 We have developed an ensemble-based endpoint protocol called ESMACS (enhanced sampling of molecular dynamics with approximation of continuum solvent). The protocol is built on the popular molecular mechanics Poisson–Boltzmann surface area (MMPBSA) \cite{Massova1999} method which makes a continuum approximation for the aqueous solvent in order to obtain results on practical timescales. Commonly, MMPBSA analyses are performed on a single MD trajectory, or even a single structure. We have demonstrated the lack of reproducibility of such an approach in both HIV-1 protease and MHC systems, with calculations for the same protein-ligand combination, with identical initial structure and force field, shown to produce binding affinities varying by up to 12 kcal/mol for small ligands (flexible ligands can vary even more). \cite{Wan2015} ESMACS employs MMPBSA to produce ensemble- based, converged and reproducible, determinations of binding free energies (separate ligand and receptor trajectories can also be used to account for adaptation energies). This provides a rapid quantitative approach sensitive enough to determine changes in binding free energies which differentiate susceptible and resistant sequences (typically of the order of 2 kcal/mol).
 
+% ---------------------------------------------------------------------------
+% Section II
+% ---------------------------------------------------------------------------
 \section{BRD4 System}\label{sec:system_description}
 
 Initial coordinates for the protein-ligand system were taken from the X-ray
@@ -189,22 +192,31 @@ were solvated in orthorhombic water boxes with a minimum extension from the
 protein of 14 \AA\ (the resulting systems contain approximately 40 thousand
 atoms).
 
+% ---------------------------------------------------------------------------
+% Section III
+% ---------------------------------------------------------------------------
 \section{Performance Metrics}\label{sec:performance}
 
 TIES is rigorous but computationally expensive and has a limited range of
-applicability. ESMACS is approximate but can be employed across any set of
-ligands at lower computational cost.
+applicability; ESMACS is approximate but can be employed across any set of
+ligands at lower computational cost. Both protocols simulates a large range
+of mutations where each mutation is repreesnted as an independent set of
+pipelines. Each pipeline is composed of multiple replicas, i.e., a sequence
+of simulations and a single analysis. This sequence is repeated over a number
+of iterations, depending on the convergence criteria of the analysis. 
 
-Each of these protocols run a large range of mutations where each
-mutation is captured as independent pipelines composed of multiple replicas
-where each replica consists of multi-stage short bursts
-of simulations, followed by a single replica for analysis. The process is
-repeated over a number of iterations depending on the convergence criteria
-in the analysis stage. Each replica requires 16 cores, where each pipeline
-runs approximately 10 hours, over a range of 100 mutations where each mutations
-spawns either 25 or 65 replicas, depending on the protocol.
+All the replicas of both TIES and ESMACS requires 16 cores, where each
+pipeline runs approximately 10 hours, over a range of 100 mutations where
+each mutations spawns either 25 or 65 replicas, depending on the
+protocol.\mtnote{We need a better description of TIES and ESMACS.}
+
+\mtnote{Is the title of the section wrong? I see no mention of performance
+metrics.}
 
 
+% ---------------------------------------------------------------------------
+% Section IV
+% ---------------------------------------------------------------------------
 \section{Computational Challenges}\label{sec:cc}
 
 \jhanote{There is no mention of adaptivity as a challenge. Vivek should add
