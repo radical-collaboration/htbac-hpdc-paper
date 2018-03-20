@@ -75,25 +75,37 @@ In this SCALE challenge, we demonstrate the use of a framework -- HTBAC,
 
 This work is motivated by the real world problem of providing clinical insight
 from drug candidate data on a time scale that is as short as possible,
-Specifically, we will demonstrate the scalability and flexibility of HTBAC by
-reproducing results from a collaboration project between UCL and
-GlaxoSmithKline to study a congeneric series of drug candidates binding to the
-BRD4 protein (inhibitors of which have shown promising preclinical efficacy in
-pathologies ranging from cancer to inflammation) ~\cite{Wan2017brd4}. These
-studies employed two different protocols, known as TIES and ESMACS
-~\cite{Bhati2017}, both based on multiple simulations of the same system. Drug
-design projects have limited resources, so initially large numbers of
-compounds must be cheaply screened to eliminate poor binders (using ESMACS),
-before more accurate methods (such as TIES) are needed as good binders are
-refined and improved.
+Specifically, we reproduce results from a collaboration project between UCL
+and GlaxoSmithKline to study a congeneric series of drug candidates binding to
+the BRD4 protein (inhibitors of which have shown promising preclinical
+efficacy in pathologies ranging from cancer to
+inflammation)~\cite{Wan2017brd4}.
 
-In order to support such investigations, in addition to being scalable, HTBAC
-must be enhanced to support flexible resource reallocations schemes where
-resources can be moved between simulations run using different protocols or
+These studies employed two different protocols, known as TIES and
+ESMACS~\cite{Bhati2017}, both based on multiple simulations of the same
+system. Drug design projects have limited resources, so initially large
+numbers of compounds must be cheaply screened to eliminate poor binders (using
+ESMACS), before more accurate methods (such as TIES) are needed as good
+binders are refined and improved.
+
+In order to support such investigations, in addition to scale, the protocols
+must be executed to utilize  flexible resource management schemes where
+resources can be (re-)allocated between instances of different protocols or
 systems, for example, when one calculation has converged whilst another has
-not. This adaptability makes it easier to manage complex programmes where
+not. Such adaptability makes it easier to manage complex programs where
 efficient use of resources is required in order to achieve a time to
 completion of studies comparable to those of high throughput chemistry.
+
+
+% We demonstrate the scalability and flexibility of HTBAC.
+
+% In order to support such investigations, in addition to being scalable, HTBAC
+% must be enhanced to support flexible resource reallocations schemes where
+% resources can be moved between simulations run using different protocols or
+% systems, for example, when one calculation has converged whilst another has
+% not. This adaptability makes it easier to manage complex programmes where
+% efficient use of resources is required in order to achieve a time to
+% completion of studies comparable to those of high throughput chemistry.
 
 Bromodomain-containing proteins, and in particular the four members of the BET
 (bromodomain and extra terminal domain) family, are currently a major focus of
