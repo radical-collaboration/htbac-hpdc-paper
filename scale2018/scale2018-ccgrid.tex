@@ -277,35 +277,33 @@ atoms).
 % ---------------------------------------------------------------------------
 % Section III
 % ---------------------------------------------------------------------------
-\section{Performance Metrics}\label{sec:performance}
+% \section{Performance Metrics}\label{sec:performance}
 
-% \subsection{Ensemble Molecular Dynamics}\label{sec:emd}
+% % \subsection{Ensemble Molecular Dynamics}\label{sec:emd}
 
+% TIES is rigorous but computationally expensive and has a limited range of
+% applicability; ESMACS is approximate but can be employed across any set of
+% ligands at lower computational cost. Both protocols are designed to simulate a
+% large range of mutations. A single protocol instance represents a unique
+% physical system. Each protocol instance contains a pipeline which maps to a
+% sequence of simulations steps which include minimization, equilibration and
+% production MD simulation. These simulation pipelines are replicated, where
+% replicas differ only by their parameter configurations, namely initial
+% velocities, which are randomly generated and assigned by the MD engine at the
+% start of execution. ESMACS consists of 25 replicas i.e. 25 pipelines, while
+% TIES consists of 13 $\lambda$ windows, which are additional sampling
+% parameters, and 5 replicas for a total of 65 pipelines. The additional
+% pipelines in TIES contribute to the greater computational cost. Both protocols
+% run for a total of 6 ns simulation durations. ESMACS produces 3.5 GB/system
+% (24 MB/ns) while TIES produces 10 GB/system (24 MB/ns). Each simulation step
+% in TIES and ESMACS requires 32 cores. Protocols run approximately 10-12 hours,
+% depending on the physical system and the number of timesteps provided by the
+% user.
 
+% \mtnote{We need a better description of TIES and ESMACS.}
 
-TIES is rigorous but computationally expensive and has a limited range of
-applicability; ESMACS is approximate but can be employed across any set of
-ligands at lower computational cost. Both protocols are designed to simulate a
-large range of mutations. A single protocol instance represents a unique
-physical system. Each protocol instance contains a pipeline which maps to a
-sequence of simulations steps which include minimization, equilibration and
-production MD simulation. These simulation pipelines are replicated, where
-replicas differ only by their parameter configurations, namely initial
-velocities, which are randomly generated and assigned by the MD engine at the
-start of execution. ESMACS consists of 25 replicas i.e. 25 pipelines, while
-TIES consists of 13 $\lambda$ windows, which are additional sampling
-parameters, and 5 replicas for a total of 65 pipelines. The additional
-pipelines in TIES contribute to the greater computational cost. Both protocols
-run for a total of 6 ns simulation durations. ESMACS produces 3.5 GB/system
-(24 MB/ns) while TIES produces 10 GB/system (24 MB/ns). Each simulation step
-in TIES and ESMACS requires 32 cores. Protocols run approximately 10-12 hours,
-depending on the physical system and the number of timesteps provided by the
-user.
-
-\mtnote{We need a better description of TIES and ESMACS.}
-
-\mtnote{Is the title of the section wrong? I see no mention of performance
-metrics.}
+% \mtnote{Is the title of the section wrong? I see no mention of performance
+% metrics.}
 
 % ---------------------------------------------------------------------------
 % Section IV
