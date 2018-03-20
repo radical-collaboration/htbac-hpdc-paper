@@ -136,10 +136,32 @@ protocols in collaboration with GlaxoSmithKline~\cite{Wan2017brd4}. The goal
 was to benchmark the ESMACS and TIES protocols in a realistic drug discovery
 scenario. In the original study, we investigated chemical structures of 16
 ligands based on a single tetrahydroquinoline (THQ) scaffold. % ~\cite{Gosmini2014}. 
-Here we focus on the first seven of these ligands to test
-and refine the protocols used and the way in which they were executed. The
-results of our previous work provide a benchmark of both accuracy and
-statistical uncertainty to which we can compare our new results.
+Here we focus on the first seven of these ligands to test and refine the
+protocols used and the way in which they were executed. The results of our
+previous work provide a benchmark of both accuracy and statistical uncertainty
+to which we can compare our new results.
+ 
+
+Statistical mechanics provides the prescription for calculating such
+macroscopic quantities as ensemble averages of microscopic states.
+Traditionally, these macroscopic properties have usually been calculated from
+the time average of a single “long” duration trajectory. An intuitive and
+potentially more time efficient method to capture the mixing dynamics required
+to describe an equilibrium thermodynamic state is the use of an ensemble of
+separate trajectories. \cite{Coveney2016}
+
+The major sources of error in free energy calculations are the representation
+of the system chemistry encoded in the forcefield used, finite sampling and
+the free energy estimator. Protocols developed in the Coveney labs have
+obtained accurate and precise results which successfully reproduce
+experimental binding free energies from a wide range of systems.
+\cite{Wright2014, Wan2017brd4, Wan2015, Wan2011} Comparisons of results
+obtained for a large set of sequences will provide valuable insights on the
+importance of choices made in simulation and analysis for the overall accuracy
+and predictive power of free energy calculations, and facilitate the
+refinement of our protocols.
+
+
 
 \subsection{Binding Affinity Calculation Protocols}\label{sec:bac}
 
@@ -207,6 +229,10 @@ were solvated in orthorhombic water boxes with a minimum extension from the
 protein of 14 \AA\ (the resulting systems contain approximately 40 thousand
 atoms).
 
+% \subsection{Scientific Challenge}
+
+
+
 % ---------------------------------------------------------------------------
 % Section III
 % ---------------------------------------------------------------------------
@@ -214,10 +240,7 @@ atoms).
 
 % \subsection{Ensemble Molecular Dynamics}\label{sec:emd}
 
-Statistical mechanics provides the prescription for calculating such macroscopic quantities as ensemble averages of microscopic states. Traditionally, these macroscopic properties have usually been calculated from the time average of a single “long” duration trajectory. An intuitive and potentially more time efficient method to capture the mixing dynamics required to describe an equilibrium thermodynamic state is the use of an ensemble of separate trajectories. \cite{Coveney2016}
 
-The major sources of error in free energy calculations are the representation of the system chemistry encoded in the forcefield used, finite sampling and the free energy estimator. Protocols developed in the Coveney labs have obtained accurate and precise results which successfully reproduce experimental binding free energies from a wide range of systems. \cite{Wright2014, Wan2017brd4, Wan2015, Wan2011} 
-Comparisons of results obtained for a large set of sequences will provide valuable insights on the importance of choices made in simulation and analysis for the overall accuracy and predictive power of free energy calculations, and facilitate the refinement of our protocols.
 
 TIES is rigorous but computationally expensive and has a limited range of
 applicability; ESMACS is approximate but can be employed across any set of
@@ -339,6 +362,7 @@ propagation of adapted task graph to all components, (ii) consistency of the
 state of task graph between different components and (iii) Minimal overhead:
 The overhead of performing adaptive operations should be minimal compared to
 the execution duration of the tasks.
+
 
 
 % ---------------------------------------------------------------------------
