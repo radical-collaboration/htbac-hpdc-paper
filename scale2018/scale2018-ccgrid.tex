@@ -42,23 +42,29 @@
 The efficacy of drug treatments depends on how tightly small molecules bind to
 their target proteins. Quantifying the strength of these interactions (the so
 called ‘binding affinity’) is a grand challenge of computational chemistry,
-the surmounting of which could revolutionize drug design and provide the
-platform for patient specific medicine. Recently, evidence from blind
-challenge predictions and retrospective validation studies has suggested that
-molecular dynamics (MD) can now achieve useful predictive accuracy (1
-kcal/mol)\cite{shirts-mobley-chodera:2007:annu-rep-comput-chem:prime-time,
-abel:jacs:2015:fep-plus}. This accuracy is sufficient to greatly accelerate
-lead optimization \cite{shirts-mobley-brown:2009:sbdd}. Exploiting these
-advances and further refining the technologies involved requires the
-marshaling of huge simulation campaigns, and impacting clinical or industrial
-decision making means that computations must be turned around in timescales of
-hours or days. In this SCALE challenge, we demonstrate the use of a framework
---- HTBAC, designed to support the computational requirements of high-
-throughput drug binding affinity calculations. HTBAC facilitates the execution
-of the numbers of simulations while supporting the adaptive execution of
-algorithms. Furthermore, HTBAC  enables the selection of experimental
-parameters during runtime, which can in principle optimize the use of
-computational resources whilst producing results with a target uncertainty.
+surmounting which could revolutionize drug design and provide the platform for
+patient specific medicine. Recently, evidence from blind challenge predictions
+and retrospective validation studies has suggested that molecular dynamics
+(MD) can now achieve useful predictive accuracy (1 kcal/mol) \cite{shirts-
+mobley-chodera:2007:annu-rep-comput-chem:prime-time, abel:jacs:2015:fep-plus}.
+This accuracy is sufficient to greatly accelerate lead optimization 
+\cite{shirts-mobley-brown:2009:sbdd}.
+
+To translate these advances in predictive accuracy so as to impact clinical
+and/or industrial decision making requires that binding free energy results
+must be turned around in timescales of hours or days without loss of accuracy.
+This requires advances in algorithms, scalable software systems, and
+intelligent and efficient utilization of supercomputing resources.
+Specifically, it requires refining algorithms and developing technologies to
+marshal huge simulation campaigns.
+
+In this SCALE challenge, we demonstrate the use of a framework -- HTBAC,
+   designed to support the aforementioned requirements of accurate and rapid
+   drug binding affinity calculations. HTBAC facilitates the execution of the
+   numbers of simulations while supporting the adaptive execution of
+   algorithms. Furthermore, HTBAC  enables the selection of experimental
+   parameters during runtime, which can in principle optimize the use of
+   computational resources whilst producing results with a target uncertainty.
 
 
 % ---------------------------------------------------------------------------
