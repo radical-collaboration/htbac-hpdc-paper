@@ -155,12 +155,7 @@ Endpoint methods, as the name suggests, consider the difference in energy betwee
 To obtain information on the differences in binding affinity of different sequences for a panel of kinase inhibitors requires a deployment of various strategies, incorporating both alchemical and endpoint approaches. 
 In this work we deploy approaches from both of these classes.
 
-\subsection{Ensemble Molecular Dynamics}\label{sec:emd}
 
-Statistical mechanics provides the prescription for calculating such macroscopic quantities as ensemble averages of microscopic states. Traditionally, these macroscopic properties have usually been calculated from the time average of a single “long” duration trajectory. An intuitive and potentially more time efficient method to capture the mixing dynamics required to describe an equilibrium thermodynamic state is the use of an ensemble of separate trajectories. \cite{Coveney2016}
-
-The major sources of error in free energy calculations are the representation of the system chemistry encoded in the forcefield used, finite sampling and the free energy estimator. Protocols developed in the Coveney labs have obtained accurate and precise results which successfully reproduce experimental binding free energies from a wide range of systems. \cite{Wright2014, Wan2017brd4, Wan2015, Wan2011} 
-Comparisons of results obtained for a large set of sequences will provide valuable insights on the importance of choices made in simulation and analysis for the overall accuracy and predictive power of free energy calculations, and facilitate the refinement of our protocols.
 
 
 \subsection{Alchemical Protocol (TIES)}\label{sec:ties}
@@ -181,10 +176,12 @@ Computationally cheaper, but less rigorous methods, endpoint methods have been u
 
 We have developed an ensemble-based endpoint protocol called ESMACS (enhanced sampling of molecular dynamics with approximation of continuum solvent). The protocol is built on the popular molecular mechanics Poisson–Boltzmann surface area (MMPBSA) \cite{Massova1999} method which makes a continuum approximation for the aqueous solvent in order to obtain results on practical timescales. Commonly, MMPBSA analyses are performed on a single MD trajectory, or even a single structure. We have demonstrated the lack of reproducibility of such an approach in both HIV-1 protease and MHC systems, with calculations for the same protein-ligand combination, with identical initial structure and force field, shown to produce binding affinities varying by up to 12 kcal/mol for small ligands (flexible ligands can vary even more). \cite{Wan2015} ESMACS employs MMPBSA to produce ensemble- based, converged and reproducible, determinations of binding free energies (separate ligand and receptor trajectories can also be used to account for adaptation energies). This provides a rapid quantitative approach sensitive enough to determine changes in binding free energies which differentiate susceptible and resistant sequences (typically of the order of 2 kcal/mol).
 
+
+
 % ---------------------------------------------------------------------------
 % Section II
 % ---------------------------------------------------------------------------
-\section{BRD4 System}\label{sec:system_description}
+\subsection{BRD4 System}\label{sec:system_description}
 
 Initial coordinates for the protein-ligand system were taken from the X-ray
 crystal structure PDB ID: 4BJX.
@@ -214,6 +211,13 @@ atoms).
 % Section III
 % ---------------------------------------------------------------------------
 \section{Performance Metrics}\label{sec:performance}
+
+% \subsection{Ensemble Molecular Dynamics}\label{sec:emd}
+
+Statistical mechanics provides the prescription for calculating such macroscopic quantities as ensemble averages of microscopic states. Traditionally, these macroscopic properties have usually been calculated from the time average of a single “long” duration trajectory. An intuitive and potentially more time efficient method to capture the mixing dynamics required to describe an equilibrium thermodynamic state is the use of an ensemble of separate trajectories. \cite{Coveney2016}
+
+The major sources of error in free energy calculations are the representation of the system chemistry encoded in the forcefield used, finite sampling and the free energy estimator. Protocols developed in the Coveney labs have obtained accurate and precise results which successfully reproduce experimental binding free energies from a wide range of systems. \cite{Wright2014, Wan2017brd4, Wan2015, Wan2011} 
+Comparisons of results obtained for a large set of sequences will provide valuable insights on the importance of choices made in simulation and analysis for the overall accuracy and predictive power of free energy calculations, and facilitate the refinement of our protocols.
 
 TIES is rigorous but computationally expensive and has a limited range of
 applicability; ESMACS is approximate but can be employed across any set of
