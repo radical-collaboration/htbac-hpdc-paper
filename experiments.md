@@ -26,3 +26,6 @@ We could show both in the paper.
 ### _Inter_ protocol adaptivity:
 
 Jumana is currently testing hybdrid ESMACS/TIES runs on BW, which is step 1 to implementing this type of adaptivity.
+
+## Weak/Strong Scaling
+[experiments](https://docs.google.com/spreadsheets/d/1YTKzKnerUo2f8EqYlgJBLS5bIwFrTcsKpbI1ld5j9To/edit#gid=0)
