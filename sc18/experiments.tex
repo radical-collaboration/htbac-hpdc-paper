@@ -97,7 +97,7 @@ given amount of time.
 \begin{figure}
   \centering
    \includegraphics[width=\columnwidth]
-   {figures/weak_scaling_TIES_instances_50,000_timesteps_with_16_instances.pdf}
+   {figures/ties_NCSA_BW_weak_scaling_with_overhead.pdf}
   \caption{Weak scaling properties of HTBAC. We investigate the
   weak scaling of HTBAC as the ratio of the number of protocol instances to
   resources is kept constant. Overheads of HTBAC (right), and runtime overhead 
@@ -149,11 +149,15 @@ derived by the time of resources inactivity while RP schedules new tasks.
 As such, the overhead is expected to grow proportionally to the number of 
 concurrent tasks.  
 
+The RP overhead decomposes into events that capture the pilot and tasks 
+lifespan. The pilot duration contains the time to bootstrap and terminate the 
+pilot. The task overheads contain the executor's spawning of the task, folder staging preparation, pre-executable, and operating system task spawning.  
+
 
 \begin{figure}
   \centering
    \includegraphics[width=\columnwidth]
-   {figures/strong_scaling_TIES_instances_50,000_timesteps.pdf}
+   {figures/ties_NCSA_BW_strong_scaling_with_overhead.pdf}
   \caption{Strong scaling properties of HTBAC. We investigate the
   strong scaling of HTBAC with a fixed number of protocol instances while
   varying the amount resources. Overheads of HTBAC and runtime overhead 
