@@ -27,5 +27,7 @@ We could show both in the paper.
 
 Jumana is currently testing hybdrid ESMACS/TIES runs on BW, which is step 1 to implementing this type of adaptivity.
 
+### [Description](https://slack-files.com/files-pri-safe/T5RUE0BRT-F9S7A5DC2/report.pdf?c=1522774148-a498b3091926692b08fbae2f77bbb189f1d18791)
+
 ## Weak/Strong Scaling
 [experiments](https://docs.google.com/spreadsheets/d/1YTKzKnerUo2f8EqYlgJBLS5bIwFrTcsKpbI1ld5j9To/edit#gid=0)
