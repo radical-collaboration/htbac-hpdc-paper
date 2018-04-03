@@ -9,10 +9,25 @@ We perform weak and strong scalability experiments on NCSA Blue Waters--a
 13.3. petaFLOPS Cray, with 32 Interlago cores/50 GB RAM per node, Cray Gemini,
 Lustre shared file system. Our experiments are launched on Blue Waters and
 monitored using a persistent virtual machine, as Blue Waters does not allow
-for executing applications directly on the login node.
+for executing applications directly on the login node. We used HTBAC version 0.1,
+EnTK version 0.6, and RP version 0.47. The MD engine used is NAMD-MPI on Blue 
+Waters. On Titan the MD engine is non-MPI multi-core NAMD compiled with CUDA. 
 
-We used HTBAC version 0.1 EnTK version 0.6 and RP version 0.47. The MD engine
-used is NAMD-MPI for tasks pertaining to $S1$ - $S4$, while the analysis
+We show homogeneous and heterogeneous weak scalability of the ESMACS 
+and TIES protocols by growing the number of protocol instances while adhering 
+to the required number of pipelines. By design of each protocol, an 
+increase in the number of instances simply means an increase in the number of 
+pipelines. The first weak scalability experiment demonstrates the 
+behavior of HTBAC, EnTK and RP using the multiple instances
+of the TIES protocols. The second experiment repeats the same design yet replaces
+TIES with ESMACS. The third experiment demonstrates concurrent execution of TIES
+and ESMACS in the same run. By design of weak scaling, the ratio between the 
+number of pipelines and cores are kept constant. As the number of cores 
+(measure of resource) changes by a factor of 2, we introduce twice as many 
+protocol instances. As designed, the weak scaling property provides insight 
+into the size of the workload that can be investigated in a given amount of time.
+
+For tasks pertaining to $S1$ - $S4$, while the analysis
 stage, $S5$ use AmberTools. For both adaptive and nonadaptive experiments, the
 minimization tasks of $S1$ are assigned 1000 steps, while the equilibration
 tasks in $S2$ and $S3$ are assigned 5000 steps. In the nonadaptive
@@ -24,8 +39,8 @@ $S4.4$ is assigned 50,000 steps.
 % resources via a single pilot. Accordingly, we request the maximum number of
 % cores required by the workload as the number of cores in a pilot.
 
-For weak scaling performance, we use between 4160 and 33280 cores as indicated 
-in Figure~\ref{fig:weak_scaling} because the NAMD executable used in all tasks
+For weak scaling performance of TIES, we use between 4160 and 33280 cores as 
+indicated in Figure~\ref{fig:weak_scaling_TIES} because the NAMD executable used in all tasks
 from $S1$-$S4$ require at least 32 cores per task. From our own scalability
 performance measurements of NAMD on Blue Waters, we observe the ideal cores
 per task to be 16, however Blue Waters does not permit running multiple MPI
@@ -34,7 +49,7 @@ maintain concurrency.
 
 For strong scaling performance, we fix the number of protocol instances to 
 8 instances while varying the amount of resources as demonstrated in 
-Figure~\ref{fig:strong_scaling}. 
+Figure~\ref{fig:strong_scaling_TIES}. 
 
 For the TIES protocol, each pipeline consists of six stages. Each of the
 simulation stages contains a task for every unique ($\lambda$, replica)
@@ -68,7 +83,7 @@ match the additional requirement of generating new protocols.
 The total time to completion (TTC) can be expressed as
 following: $TTC = TTX + T_{O}$ where
  \(TTX\) measures the execution duration across all task, including file
- staging, MD kernel execution, and post-executables, and $T_{O}$ the total
+ staging, MD kernel execution, pre- and post-executables, and $T_{O}$ the total
 overhead is given by the sum of the constituent overheads: $$T_{O} =
 T_{O}\textsuperscript{HTBAC} + T_{O}\textsuperscript{EnTK} +
 T_{O}\textsuperscript{RP}$$
@@ -105,8 +120,23 @@ given amount of time.
   weak scaling of TIES. We ran two trials for each protocol instance 
   configuration. Error bars in \(TTX\) in 2 and 8-protocol runs are 
   insignificant.}
-\label{fig:weak_scaling}
+\label{fig:weak_scaling_TIES}
 \end{figure}
+
+The second and third weak scalability experiment repeats the same experimental 
+design yet replaces the TIES protocols with ESMACS, and TIES plus ESMACS, 
+respectively.
+
+\begin{figure}
+  \centering
+   \includegraphics[width=\columnwidth]{figures/ties_NCSA_BW_weak_scaling_ESMACS.pdf}
+  \caption{Weak scaling properties of HTBAC (right side). We investigate the
+  weak scaling of HTBAC as the ratio of the number of ESMACS protocol instances to
+  resources is kept constant. (Left) Overheads of HTBAC, and runtime overhead (EnTK/RP) for
+  experimental configurations. We ran three trials for each protocol instance configuration.}
+\label{fig:weak_scaling_ESMACS}
+\end{figure}
+
 
 The HTBAC overhead shows a super linear increase as we grow the number of protocol
 instances. However, the HTBAC overhead is a minimal contributor to \(TTX\).
@@ -119,9 +149,11 @@ descriptions from the same database.
 % area networks, which introduces varying amounts of latency.
 In addition, each stage constructed by EnTK maintains sequential barriers. 
 RP remains dormant until completion of the current tasks before staging
-the next tasks. The impact of the synchronization barriers increases with the
-number of CUs as seen in the 16 protocol instances data point in
-\ref{fig:weak_scaling}.
+the next tasks \ref{fig:weak_scaling_TIES}. 
+
+% The impact of the synchronization barriers increases with the
+% number of CUs as seen in the 16 protocol instances data point in
+
 
 Furthermore, an additional overhead, driven by the aprun launch method,
 increases as we approach a system limit on the number of permissible aprun
@@ -151,8 +183,8 @@ concurrent tasks.
 
 The RP overhead decomposes into events that capture the pilot and tasks 
 lifespan. The pilot duration contains the time to bootstrap and terminate the 
-pilot. The task overheads contain the executor's spawning of the task, folder staging preparation, pre-executable, and operating system task spawning.  
-
+pilot. The task overheads contain the executor's spawning of the task, 
+folder staging preparation, and operating system task spawning.  
 
 \begin{figure}
   \centering
@@ -163,8 +195,12 @@ pilot. The task overheads contain the executor's spawning of the task, folder st
   varying the amount resources. Overheads of HTBAC and runtime overhead 
   (left) and \(TTX\) (right) for experimental configurations investigating the 
   strong scaling of TIES.}
-\label{fig:strong_scaling}
+\label{fig:strong_scaling_TIES}
 \end{figure}
+
+
+(introduce experiment showing difference in overhead for EoP and PoE)
+
 
 %------------------------------------------------------------------------------
 

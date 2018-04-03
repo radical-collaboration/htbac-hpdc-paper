@@ -35,27 +35,19 @@ T_{O}\textsuperscript{RP}$$
 
 \subsubsection{Weak Scaling Experiments}
 
-Here we show weak scalability for the TIES protocol by growing the number of
-protocol instances while adhering to the required number of pipelines. By
-design of each protocol, an increase in the number of instances simply means
-an increase in the number of pipelines. The first weak scalability experiment
-demonstrates the behavior of HTBAC, EnTK and RP using the multiple instances
-of the TIES protocol. By design of weak scaling, the ratio between the number
-of pipelines and cores are kept constant. As the number of cores (measure of
-resource) changes by a factor of 2, we introduce twice as many protocol
-instances. As designed, the weak scaling property provides insight into the
-size of the workload that can be investigated in a given amount of time.
-
-\begin{figure}
-  \centering
-   \includegraphics[width=\columnwidth]{weak_scaling_TIES_instances_50,000_timesteps.pdf}
-  \caption{Weak scaling properties of HTBAC (right side). We investigate the
-  weak scaling of HTBAC as the ratio of the number of protocol instances to
-  resources is kept constant. (Left) Overheads of HTBAC, and runtime overhead (EnTK/RP) for
-  experimental configurations investigating the weak scaling of TIES. We ran two trials for each protocol instance configuration.}
-\label{fig:weak_scaling}
-\end{figure}
-
+Here we show homogeneous and heterogeneous weak scalability of the ESMACS 
+and TIES protocols by growing the number of protocol instances while adhering 
+to the required number of pipelines. By design of each protocol, an 
+increase in the number of instances simply means an increase in the number of 
+pipelines. The first weak scalability experiment demonstrates the 
+behavior of HTBAC, EnTK and RP using the multiple instances
+of the TIES protocols. The second experiment repeats the same design yet replaces
+TIES with ESMACS. The third experiment demonstrates concurrent execution of TIES
+and ESMACS in the same run. By design of weak scaling, the ratio between the 
+number of pipelines and cores are kept constant. As the number of cores 
+(measure of resource) changes by a factor of 2, we introduce twice as many 
+protocol instances. As designed, the weak scaling property provides insight 
+into the size of the workload that can be investigated in a given amount of time.
 
 The HTBAC overhead accounts for approximately 0.1\% of \(TTX\). The remaining
 overheads, mainly EnTK and RP, depend on the number of tasks that need to be
@@ -65,12 +57,13 @@ submits CU descriptions to a MongoDB used by RP, and the RP pilot pulls these
 descriptions from the same database. This pull operation occurs over a wide
 area networks, which introduces varying amounts of latency. In addition, each
 Stage constructed by EnTK maintains sequential barriers. As such, RP remains
-dormant until completion of the current Stage before staging the next State.
+dormant until completion of the current Stage before executing later stages.
 The impact of the barrier increases with number of CUs as seen in the 16
-protocol instances data point in \ref{fig:weak_scaling}.  Together, these two
+protocol instances data point in \ref{fig:weak_scaling}. Together, these two
 factors introduce delays in the scheduling of the CUs and results in higher
 overheads. Each additional protocol instance contributes to roughly 55
 additional seconds in \(TTX\).
+
 
 
 % \(TTX\) measures the execution duration across all task, including file staging, MD kernel execution,
