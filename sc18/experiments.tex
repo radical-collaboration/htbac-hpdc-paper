@@ -5,27 +5,123 @@
 
 \subsubsection{Experiment Setup}\label{ssec:exp_design}
 
-We perform weak and strong scalability experiments on NCSA Blue Waters--a
-13.3. petaFLOPS Cray, with 32 Interlago cores/50 GB RAM per node, Cray Gemini,
-Lustre shared file system. Our experiments are launched on Blue Waters and
-monitored using a persistent virtual machine, as Blue Waters does not allow
-for executing applications directly on the login node. We used HTBAC version 0.1,
-EnTK version 0.6, and RP version 0.47. The MD engine used is NAMD-MPI on Blue 
-Waters. On Titan the MD engine is non-MPI multi-core NAMD compiled with CUDA. 
+We perform experiments to characterize the overheads of HTBAC, its runtime
+system and the weak and strong scaling performance on NCSA Blue Waters and 
+ORNL Titan. 
 
-We show homogeneous and heterogeneous weak scalability of the ESMACS 
-and TIES protocols by growing the number of protocol instances while adhering 
+
+\begin{table*}
+    \caption{Parameters of scalability experiments.}\label{tab:experiments}
+    \centering
+    \resizebox{\textwidth}{!}{
+    \begin{tabular}{l            % Experiment ID
+                    l            % CI
+                    l            % protocol type
+                    l            % number of protocols
+                    l            % total cores
+                    l            % executable
+                    }
+    %
+    \toprule
+    %
+    \B{ID}                            &  % Experiment ID
+    \B{Computing Infrastructure (CI)} &  % CI
+    \B{Protocol(s)}                   &  % protocol type
+    \B{No. Protocol(s)}                    &  % number of protocols
+    \B{Total Cores}                    &  % total cores
+    \B{Executable}                          \\ % executable
+    %
+    \midrule
+    %
+    \B{1}                             &  % Experiment ID
+    Blue Waters                       &  % CI
+    ESMACS                            &  % protocol type
+    (2, 4, 8, 16)                     &  % number of protocols
+    1600, 3200, 6400                  &  % total cores
+    NAMD-MPI                               \\ % executable
+    %
+    \B{2}                             &  % Experiment ID
+    Titan                          &  % CI
+    ESMACS                          &  % protocol type
+    (16, 64, 128)                    &  % number of protocols
+    6400, 25600, 51200              &  % total cores
+    NAMD (non-MPI)                 \\ % executable
+    % 
+    \B{3}                             &  % Experiment ID
+    Blue Waters                       &  % CI
+    TIES                              &  % protocol type
+    (2, 4, 8)                         &  % number of protocols
+    4160, 8320, 16640                 &  % total cores
+    NAMD-MPI                              \\ % executable
+    %
+    \B{4}                             &  % Experiment ID
+    Titan                          &  % CI
+    TIES                          &  % protocol type
+    (8, 32, 64)                    &  % number of protocols
+    16640, 66560, 133120              &  % total cores
+    NAMD (non-MPI)                 \\ % executable
+    %
+    \B{5}                             &  % Experiment ID
+    Blue Waters                       &  % CI
+    ESMACS + TIES                     &  % protocol type
+    (2, 4, 8)                    &  % number of protocols
+    5280, 10560, 21120              &  % total cores
+    NAMD-MPI                              \\ % executable
+    %
+    \B{6}                             &  % Experiment ID
+    Blue Waters                          &  % CI
+    TIES                          &  % protocol type
+    (8, 8, 8)                    &  % number of protocols
+    16640, 8320, 4160              &  % total cores
+    NAMD-MPI                              \\ % executable
+    %
+    \B{7}                             &  % Experiment ID
+    Blue Waters                          &  % CI
+    ESMACS                          &  % protocol type
+    (16, 16, 16)                    &  % number of protocols
+    6400, 3200, 1600              &  % total cores
+    NAMD-MPI                              \\ % executable
+    %
+    \bottomrule
+    %
+    \end{tabular}
+    }
+\up{}
+\end{table*}
+
+
+We show homogeneous and heterogeneous weak scalability of the protocols by 
+growing the number of protocol instances while adhering 
 to the required number of pipelines. By design of each protocol, an 
 increase in the number of instances simply means an increase in the number of 
 pipelines. The first weak scalability experiment demonstrates the 
 behavior of HTBAC, EnTK and RP using the multiple instances
-of the TIES protocols. The second experiment repeats the same design yet replaces
-TIES with ESMACS. The third experiment demonstrates concurrent execution of TIES
-and ESMACS in the same run. By design of weak scaling, the ratio between the 
-number of pipelines and cores are kept constant. As the number of cores 
-(measure of resource) changes by a factor of 2, we introduce twice as many 
-protocol instances. As designed, the weak scaling property provides insight 
-into the size of the workload that can be investigated in a given amount of time.
+of the ESMACS protocols on NCSA Blue Waters. The second experiment shows weak 
+scaling performance of ESMACS at higher scales, on ORNL Titan. 
+
+
+The third and fourth experiments repeats the same design as experiments 1 and 2
+yet demonstrate the performance of TIES. The fifth experiment demonstrates 
+concurrent execution of TIES and ESMACS in the same run. 
+By design of weak scaling, the ratio between the number of pipelines and cores 
+are kept constant. As the number of cores (measure of resource) changes by a 
+factor of 2, we introduce twice as many protocol instances. As designed, the 
+weak scaling property provides insight into the size of the workload that can be 
+investigated in a given amount of time.
+
+In addition, we demonstrate individual strong scaling performance of ESMACS and 
+TIES on Blue Waters in experiments 6 and 7, respectively. We fix the number of 
+protocols and vary the amount of resources in order to produce generations of 
+execution.
+
+All Blue Waters experiments were performed from a persistent virtual machine, as 
+Blue Waters does not permit executing applications directly on the login node. 
+The ORNL Titan experiments had to be performed from an ORNL login node. 
+We used HTBAC version 0.1, EnTK version 0.6, and RP version 0.47. The MD engine 
+used is NAMD-MPI on Blue Waters. On Titan the MD engine is non-MPI multi-core 
+NAMD compiled with CUDA for ESMACS, while for TIES we compiled our own internal
+non-CUDA multi-core OpenMP version as NAMD does not support alchemical 
+perturbations execution on GPU. 
 
 For tasks pertaining to $S1$ - $S4$, while the analysis
 stage, $S5$ use AmberTools. For both adaptive and nonadaptive experiments, the
@@ -40,12 +136,12 @@ $S4.4$ is assigned 50,000 steps.
 % cores required by the workload as the number of cores in a pilot.
 
 For weak scaling performance of TIES, we use between 4160 and 33280 cores as 
-indicated in Figure~\ref{fig:weak_scaling_TIES} because the NAMD executable used in all tasks
-from $S1$-$S4$ require at least 32 cores per task. From our own scalability
-performance measurements of NAMD on Blue Waters, we observe the ideal cores
-per task to be 16, however Blue Waters does not permit running multiple MPI
-applications on the same node, hence each NAMD task requires a full node to
-maintain concurrency.
+indicated in Figure~\ref{fig:weak_scaling_TIES} because the NAMD executable 
+used in all tasks from $S1$-$S4$ require at least 32 cores per task. 
+From our own scalability performance measurements of NAMD on Blue Waters, 
+we observe the ideal cores per task to be 16, however Blue Waters does not 
+permit running multiple MPI applications on the same node, hence each NAMD task 
+requires a full node to maintain concurrency.
 
 For strong scaling performance, we fix the number of protocol instances to 
 8 instances while varying the amount of resources as demonstrated in 
