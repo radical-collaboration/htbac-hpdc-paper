@@ -142,16 +142,21 @@ burden.
 
 In section \ref{sec:science-drivers}, we described a particular type of
 adaptivity within TIES that would enable the simulation to reach
-convergence earlier. Adaptive execution requires changes to the taskgraph 
-during runtime, capabilties that are supported by the RCT runtime layers~\cite{power-of-many17}.
+convergence earlier. Adaptive execution requires changes to the task graph 
+during runtime, capabilities that are supported by the RCT runtime 
+layers~\cite{power-of-many17}.
 
 The TIES adaptive workflow decides, post-mortem, about the placement
-of new lambda windows for the next set of simulations. In turn this requires task-
-count adaptivity which we define as runtime changes to the number of tasks in
-the taskgraph. HTBAC monitors the output results from the completed tasks
+of new lambda windows for the next set of simulations. In turn, this requires 
+task-count adaptivity which we define as runtime changes to the number of tasks in
+the task graph. HTBAC monitors the output results from the completed tasks
 during runtime, and redefines the existing workflow by adding more $\lambda$
-windows. Using EnTK, HTBAC creates the necessary set of
-new tasks. The \textbf{Application
+windows. A boolean results generated at the end of a pipeline defines a criteria
+of whether or not to spawn additional tasks. Spawning of new task contribute
+to task count adaptivity and task attribute adaptivity. 
+% Using EnTK, HTBAC creates the necessary set of new tasks. 
+
+The \textbf{Application
 Manager} in EnTK signals RP to bypass termination of the pilot and instead
 keep the session alive, as long as additional tasks are submitted. As the
 number of tasks grow during runtime, the ratio of core-to-task will fluctuate.

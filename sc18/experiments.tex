@@ -97,7 +97,7 @@ increase in the number of instances simply means an increase in the number of
 pipelines. The first weak scalability experiment demonstrates the 
 behavior of HTBAC, EnTK and RP using the multiple instances
 of the ESMACS protocols on NCSA Blue Waters. The second experiment shows weak 
-scaling performance of ESMACS at higher scales, on ORNL Titan. 
+scaling performance of ESMACS at higher scales, using ORNL Titan. 
 
 
 The third and fourth experiments repeats the same design as experiments 1 and 2
@@ -122,6 +122,13 @@ used is NAMD-MPI on Blue Waters. On Titan the MD engine is non-MPI multi-core
 NAMD compiled with CUDA for ESMACS, while for TIES we compiled our own internal
 non-CUDA multi-core OpenMP version as NAMD does not support alchemical 
 perturbations execution on GPU. 
+
+We perform all Blue Waters experiments using the APRUN launch method, which has
+an upper limit of avg 436 concurrent task execution. In order to continue 
+execution on higher scales, we perform higher scales on ORNL Titan, using the
+ORTE launch method. The difference in platforms produces overheads that 
+can be captured by RTS and are demonstrated in the figures as "APRUN overhead"
+and "ORTE overhead". 
 
 For tasks pertaining to $S1$ - $S4$, while the analysis
 stage, $S5$ use AmberTools. For both adaptive and nonadaptive experiments, the
