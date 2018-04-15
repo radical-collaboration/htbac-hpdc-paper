@@ -244,29 +244,25 @@ We have developed an ensemble-based endpoint protocol called ESMACS (enhanced sa
 % ---------------------------------------------------------------------------
 \subsection{BRD4 System}\label{sec:system_description}
 
-Initial coordinates for the protein-ligand system were taken from the X-ray
-crystal structure PDB ID: 4BJX.
-% ~\cite{Wyce2013}. 
-This structure contains a
-ligand based on the THQ template and other ligands were alligned with this
-common scaffold. Preparation and setup of the simulations were implemented
-using our automated tool, BAC~\cite{Sadiq2008}. This process including
-parametrization of the compounds, solvation of the complexes, electrostatic
-neutralization of the systems by adding counterions and generation of
-configurations files for the simulations. The AMBER ff99SB-ILDN
-% ~\cite{Lindorff-Larsen2010} 
-force field was used for the protein, and TIP3P was used
-for water molecules. Compound parameters were produced using the general AMBER
-force field (GAFF)~\cite{Wang2004} with Gaussian 03
-%~\cite{Frisch} 
-to optimize compound geometries and to determine electrostatic potentials at
-the Hartree–Fock level with 6-31G** basis functions. The restrained
-electrostatic potential (RESP) module in the AMBER package
-%~\cite{Case2005} 
-was used to calculate the partial atomic charges for the compounds. All systems
-were solvated in orthorhombic water boxes with a minimum extension from the
-protein of 14 \AA\ (the resulting systems contain approximately 40 thousand
-atoms).
+Initial coordinates for the protein-ligand system were taken from a Protein 
+Data Bank X-ray crystal structure (ID: 4BJX). This structure contains a ligand 
+with the tetrahydroquinoline scaffold. The other 15 ligands were aligned to 
+this common scaffold to create the hybrid alchemical systems. Preparation of 
+the input files were implemented using our automated tool, 
+BAC~\cite{Sadiq2008}. Preparation includes
+\begin{enumerate*}[label=(\roman*)]
+  \item parametrization of the compounds
+  \item solvation and neutralization of the system and
+  \item creation of MD engine configuration files.
+\end{enumerate*}
+Parametrization was done with the widely used AMBER ff99SB-ILDN force field  
+for the protein, TIP3P for water molecules, and the General Amber force field 
+(GAFF)~\cite{Wang2004} for the ligands. Ligand geometries and point charges 
+were produced using Gaussian 03 at the Hartree–Fock level with 6-31G** basis 
+functions and the restrained electrostatic potential (RESP) module of the AMBER 
+package. All systems were solvated in orthorhombic water boxes with a minimum 
+extension from the protein of 14 \AA. The resulting systems contain 
+approximately 40 thousand atoms.
 
 % \subsection{Scientific Challenge}
 
