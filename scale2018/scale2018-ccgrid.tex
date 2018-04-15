@@ -219,8 +219,6 @@ To obtain information on the differences in binding affinity of different sequen
 In this work we deploy approaches from both of these classes.
 
 
-
-
 \subsubsection{Alchemical Protocol (TIES)}\label{sec:ties}
 
 Alchemical methods employ MD simulations of unphysical, alchemical intermediate states that attenuate the interactions of the small molecule with its environment. 
@@ -609,49 +607,68 @@ treatments could be predicted.
 % ---------------------------------------------------------------------------
 \section{Analysis of Solution}\label{sec:analysis}
 
-Our previous work deploying both ESMACS and TIES has typically involved comparing 10 to 20 computed
-binding affinities.
-In the original BRD4 inhibitor study, conducted in collaboration by UCl and GlaxoSmithKline \cite{Wan2017brd4}, 16 drugs were investigated.
-All drugs were studied using ESMACS and 12 TIES transformations were performed.
-The non-adaptive protocols required approximately 10k and 25k core hours per system for ESMACS and TIES respectively, for a total of  $\sim$460k core hours for the whole study.
-Without HTBAC each system was run by hand.
-This scale of study is only appropriate for retrospective analysis showing the potential of the methods involved.
-For \textit{in silico} approaches to have a real impact in industrial scenarios much larger numbers of 
-systems must be run, which is not practical without appropriate middleware.
-HTBAC satisifies this need by providing a logically programmable interface which facilitates 
-the routine running of studies requiring sustained usage of millions of core hours per day.
+Our previous work deploying both ESMACS and TIES has typically involved 
+comparing 10 to 20 computed binding affinities. In the original BRD4 inhibitor 
+study, conducted in collaboration by UCL and GlaxoSmithKline \cite{Wan2017brd4}, 
+16 drugs were investigated. All drugs were studied using ESMACS and 12 TIES 
+transformations were performed. The non-adaptive protocols required 
+approximately 10k and 25k core hours per system for ESMACS and TIES 
+respectively, for a total of  $\sim$460k core hours for the whole study. Without 
+HTBAC, each system was run by hand. This scale of study is only appropriate for 
+retrospective analysis showing the potential of the methods involved. For 
+\textit{in silico} approaches to have a real impact in industrial scenarios much 
+larger numbers of systems must be run, which is not practical without 
+appropriate middleware. HTBAC satisfies this need by providing a logically 
+programmable interface which facilitates the routine of running studies 
+requiring sustained usage of millions of core hours per day.
 
-The drug design process involved the filtering of millions of compounds to smaller number of 'hits' that bind the target protein and then further refinement from to 'leads' that form the basis of candidate drugs.
-Encapsulation of the ESMACS and TIES protocols in HTBAC means that these protocols can be efficiently 
-applied to the middle and end of this process.
-Adaptive functionality means that HTBAC can ensure efficient use of the resources depending on the properties of the ligands under investigation.
-This flexibility also provides a platform to run the varied simulation campaigns needed to 
-stress test protocols and forcefields in order to further refine our modelling appraoches.
+The drug design process involved the filtering of millions of compounds to 
+smaller number of 'hits' that bind the target protein and then further 
+refinement to 'leads' that form the basis of candidate drugs. Encapsulation of 
+the ESMACS and TIES protocols in HTBAC means that these protocols can be 
+efficiently applied to the middle and end of this process. Adaptive 
+functionality means that HTBAC can ensure efficient use of the resources 
+depending on the properties of the ligands under investigation. This flexibility 
+also provides a platform to run the varied simulation campaigns needed to stress 
+test protocols and forcefields in order to further refine our modeling approaches.
 
 
 % ---------------------------------------------------------------------------
 % Demonstration
 % ---------------------------------------------------------------------------
-\section{Demonstration}\label{sec:demo}
+\section{Impact and Result}\label{sec:demo}
 
-If invited to the final round of SCALE 2018, we will demonstrate the following:
+% If invited to the final round of SCALE 2018, we will demonstrate the following:
 
-\begin{enumerate}
+% \begin{enumerate}
 
-\item The number of drug candidates screened as function of number of cores marshalled; equivalentally as a function of the number of core-hours consumed
+% \item The number of drug candidates screened as a function of the number of cores 
+% marshaled; equivalently as a function of the number of core-hours consumed.
 
-\item Demonstration of switching between protocols so as to achieve "optimal"
-configurations so that best estimates for binding affinities for a give amount
-of resources. Traces of execution that will display adaptivity and resource
-allocation across protocols
+% \item Demonstration of switching between protocols so as to achieve "optimal"
+% configurations so that best estimates for binding affinities for a given amount
+% of resources. Traces of execution that will display adaptivity and resource
+% allocation across protocols.
 
-\item Additional measures of performance and scale
+% \item Additional measures of performance and scale
 
-\item How scalable, accurate and rapid binding affinity calculation using
-HTBAC can enable effective clinical decision making
+% \item How scalable, accurate and rapid binding affinity calculation using
+% HTBAC can enable effective clinical decision making
 
 
-\end{enumerate}
+% \end{enumerate}
+
+We demonstrate how scalable, accurate and rapid binding affinity calculation 
+using HTBAC can enable effective clinical decision making by showing performance 
+and scale of the number of drug candidates screened as a function of the 
+number of core-hours. In addition, we show additional functionality of HTBAC 
+to enable the adaptive execution of the TIES protocol, thereby providing greater 
+convergence (i.e., lower errors) for a given amount of computational resources. 
+As such, HTBAC advances binding affinity calculation to support scale and 
+optimize for time-to-insight for investigative drug screening computational 
+campaigns. 
+
+
 % ---------------------------------------------------------------------------
 % BIBLIOGRAPHY
 % ---------------------------------------------------------------------------
