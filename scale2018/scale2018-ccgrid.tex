@@ -245,17 +245,18 @@ We have developed an ensemble-based endpoint protocol called ESMACS (enhanced sa
 \subsection{BRD4 System}\label{sec:system_description}
 
 Initial coordinates for the protein-ligand system were taken from a Protein 
-Data Bank X-ray crystal structure (ID: 4BJX). This structure contains a ligand 
-with the tetrahydroquinoline scaffold. The other 15 ligands were aligned to 
-this common scaffold to create the hybrid alchemical systems. Preparation of 
-the input files were implemented using our automated tool, 
+Data Bank X-ray crystal structure (ID: 4BJX), which contains BRD4 bound to one of 
+the ligands investigated in this study.
+The other 15 drugs were aligned to the common THQ scaffold of the ligand in the 
+crystal structure to provide initial bound conformations.
+Preparation of simulation input files were implemented using our automated tool, 
 BAC~\cite{Sadiq2008}. Preparation includes
 \begin{enumerate*}[label=(\roman*)]
   \item parametrization of the compounds
   \item solvation and neutralization of the system and
   \item creation of MD engine configuration files.
 \end{enumerate*}
-Parametrization was done with the widely used AMBER ff99SB-ILDN force field  
+Parametrization was performed with the widely used AMBER ff99SB-ILDN force field  
 for the protein, TIP3P for water molecules, and the General Amber force field 
 (GAFF)~\cite{Wang2004} for the ligands. Ligand geometries and point charges 
 were produced using Gaussian 03 at the Hartree–Fock level with 6-31G** basis 
@@ -263,6 +264,11 @@ functions and the restrained electrostatic potential (RESP) module of the AMBER
 package. All systems were solvated in orthorhombic water boxes with a minimum 
 extension from the protein of 14 \AA. The resulting systems contain 
 approximately 40 thousand atoms.
+Hybrid topologies for use in the TIES protocol were created by combining the 
+individual ligand parameters using the process described in Bhati 
+\textit{et al.}~\cite{Bhati2017}.
+
+
 
 % \subsection{Scientific Challenge}
 
