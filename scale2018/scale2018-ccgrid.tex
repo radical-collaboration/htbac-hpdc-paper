@@ -43,11 +43,12 @@ This accuracy is sufficient to greatly accelerate hit to lead and lead optimizat
 
 To translate these advances in predictive accuracy so as to impact clinical
 and/or industrial decision making requires that binding free energy results
-must be turned around in timescales of hours without loss of accuracy.
-This demands advances in algorithms, scalable software systems, and
-intelligent and efficient utilization of supercomputing resources.
-Specifically, it necessitates refining algorithms and developing technologies to
-marshal huge simulation campaigns.
+must be turned around on reduced timescales without loss of accuracy. This
+demands advances in algorithms, scalable software systems, and intelligent and
+ efficient utilization of supercomputing resources. 
+
+% Specifically, it necessitates refining algorithms and developing
+% technologies to marshal huge simulation campaigns.
 
 This work is motivated by the real world problem of providing insight
 from drug candidate data on a time scale that is as short as possible.
@@ -119,35 +120,48 @@ We have investigated a congeneric series of ligands binding to BRD4-BD1 (we shal
 from now on refer to this are simply BRD4). This was performed in the context
 of a blind test of the protocols in collaboration with
 GlaxoSmithKline~\cite{Wan2017brd4}. The goal was to benchmark free energy 
-calculations in a realistic drug discovery scenario. In the original study,
-we investigated chemical structures of 16 ligands based on a single
-tetrahydroquinoline (THQ) scaffold. These studies employed two different
-algorithms (simulation protocols), known as TIES and ESMACS~\cite{Bhati2017},
-both based on multiple simulations of the same system. Drug design projects
-have limited resources, so initially large numbers of compounds must be
-cheaply screened to eliminate poor binders (using ESMACS), before more
-accurate methods (such as TIES) are needed as good binders are refined and
-improved.
+calculations in a realistic drug discovery scenario. 
 
-In order to support such investigations, in addition to scale, the protocols
-must be executed to utilize  flexible resource management schemes where based
-upon intermediate results at runtime, resources can be (re-)allocated between
-instances of different protocols or systems, for example, when one calculation
-has converged whilst another has not. Such adaptability makes it easier to
-manage complex programs where efficient use of resources is required in order
-to achieve a time to completion of studies comparable to those of high
-throughput chemistry.
+In the original study, we investigated chemical structures of 16 ligands based
+on a single tetrahydroquinoline (THQ) scaffold. These studies employed two
+different algorithms (simulation protocols), known as TIES and
+ESMACS~\cite{Bhati2017}, both based on multiple simulations of the same
+system. Given the very large space of possibilities, a signficant number of
+compounds must be cheaply screened to eliminate poor binders (using ESMACS),
+before more accurate methods (such as TIES) are needed as good binders are
+refined and improved.
 
-This work is motivated by the real world problem of providing insight
-from drug candidate data on a time scale that is as short as possible. 
-We 
-demonstrate the use of a framework -- HTBAC, designed to
-support the aforementioned requirements of accurate and rapid drug binding
-affinity calculations. HTBAC facilitates the execution of the numbers of
-simulations while supporting the adaptive execution of algorithms.
-Furthermore, HTBAC enables the selection of experimental parameters during
-runtime, which can in principle optimize the use of computational resources
-whilst producing results with a target uncertainty.
+In addition to scale, this requires that the progress of simulations must be
+monitored and decisions about continued execution must be predicated on
+scientific significance at runtime, as opposed to running all protocols for a
+predetermined and invariable duration. For example, different instances of a
+protocal may converge at different rates; the instance that has converged
+faster may be swapped out for another instance. Effective utilization of
+resources is required in order to achieve a time to completion of studies
+comparable to those of high throughput chemistry. Such adaptive execution
+requires the ability to dynamically reallocate resources across different
+protocols, or different instances of the same protocol.
+
+
+% In order to support such investigations, in addition to scale, the protocols
+% must be executed to utilize  flexible resource management schemes where based
+% upon intermediate results at runtime, resources can be (re-)allocated between
+% instances of different protocols or systems, for example, when one calculation
+% has converged whilst another has not. Such adaptability makes it easier to
+% manage complex programs where efficient use of resources is required in order
+% to achieve a time to completion of studies comparable to those of high
+% throughput chemistry.
+
+This work is motivated by the real world problem of providing insight from
+drug candidate data on a time scale that is as short as possible. We
+demonstrate the use of a framework -- HTBAC, designed to support the
+aforementioned requirements of accurate and rapid drug binding affinity
+calculations. HTBAC facilitates the execution of multiple simulations
+\jhanote{simulations, protocols?} while supporting the adaptive execution of
+algorithms. \jhanote{Isn't the following just an example of adaptivity? If so,
+integrate into previous sentence} HTBAC enables the selection of experimental
+parameters during runtime, which can in principle optimize the use of
+computational resources whilst producing results with a target uncertainty.
 
 % We demonstrate the scalability and flexibility of HTBAC.
 
@@ -211,29 +225,49 @@ and predictive power of free energy calculations, and facilitate the
 refinement of our protocols.
 
 
-Most methods for calculating binding affinities fit into one of two broad classes; so called alchemical and endpoint methodologies. 
-Alchemical free energy calculations employ unphysical (“alchemical”) intermediates to calculate changes in free energies between two systems. 
-It is common in these methods to refer to a variable, $\lambda$, which describes the path taken to transform one protein sequence (or ligand) into another. 
-Endpoint methods, as the name suggests, consider the difference in energy between bound and unbound structures. 
-To obtain information on the differences in binding affinity of different sequences for a panel of kinase inhibitors requires a deployment of various strategies, incorporating both alchemical and endpoint approaches. 
-In this work we deploy approaches from both of these classes.
+Most methods for calculating binding affinities fit into one of two broad
+classes; so called alchemical and endpoint methodologies. Alchemical free
+energy calculations employ unphysical (“alchemical”) intermediates to
+calculate changes in free energies between two systems. It is common in these
+methods to refer to a variable, $\lambda$, which describes the path taken to
+transform one protein sequence (or ligand) into another. Endpoint methods, as
+the name suggests, consider the difference in energy between bound and unbound
+structures. To obtain information on the differences in binding affinity of
+different sequences for a panel of kinase inhibitors requires a deployment of
+various strategies, incorporating both alchemical and endpoint approaches. In
+this work we deploy approaches from both of these classes.
 
 
 \subsubsection{Alchemical Protocol (TIES)}\label{sec:ties}
 
-Alchemical methods employ MD simulations of unphysical, alchemical intermediate states that attenuate the interactions of the small molecule with its environment. 
-These alchemical intermediate states include both the fully-interacting complex as well as replicas in which the ligand does not interact with its environment, and allow the total free energy of binding—including entropic and enthalpic contributions—to be efficiently computed. Typically, the alchemical path between the states of interest is described by a parameter, $\lambda$, which varies between 0 for the initial and 1 for the final state of the transformation of interest. 
-Sampling is then performed at a series of points along this path and the gradient of the energy integrated to calculate the binding affinity.
-Simulations conducted at a given $\lambda$ value are said to be sampling a $\lambda$ window at that point.
+Alchemical methods employ MD simulations of unphysical, alchemical
+intermediate states that attenuate the interactions of the small molecule with
+its environment. These alchemical intermediate states include both the fully-
+interacting complex as well as replicas in which the ligand does not interact
+with its environment, and allow the total free energy of binding—including
+entropic and enthalpic contributions—to be efficiently computed. Typically,
+the alchemical path between the states of interest is described by a
+parameter, $\lambda$, which varies between 0 for the initial and 1 for the
+final state of the transformation of interest. Sampling is then performed at a
+series of points along this path and the gradient of the energy integrated to
+calculate the binding affinity. Simulations conducted at a given $\lambda$
+value are said to be sampling a $\lambda$ window at that point.
 
-The TIES (thermodynamic integration with enhanced sampling) protocol, developed within the Coveney lab, employs ensemble sampling at each $\lambda$ window to yield reproducible, accurate, and precise relative binding affinities. 
-\cite{ Wan2017brd4} Based on the direct calculation of ensemble averages, it allows us to determine statistically meaningful results along with complete control of errors. 
-As currently designed, TIES computes the change in binding affinity between two related system (termed ‘relative binding affinities’).
+The TIES (thermodynamic integration with enhanced sampling) protocol,
+developed within the Coveney lab, employs ensemble sampling at each $\lambda$
+window to yield reproducible, accurate, and precise relative binding
+affinities. \cite{ Wan2017brd4} Based on the direct calculation of ensemble
+averages, it allows us to determine statistically meaningful results along
+with complete control of errors. As currently designed, TIES computes the
+change in binding affinity between two related system (termed ‘relative
+binding affinities’).
 
 
 \subsubsection{Endpoint Protocol (ESMACS)}\label{sec:esmacs}
 
-Computationally cheaper, but less rigorous methods, endpoint methods have been used to directly compute the binding strength of a drug to the target protein from MD simulations (as opposed to differences in affinity). 
+Computationally cheaper, but less rigorous methods, endpoint methods have been
+used to directly compute the binding strength of a drug to the target protein
+from MD simulations (as opposed to differences in affinity).
 
 We have developed an ensemble-based endpoint protocol called ESMACS (enhanced sampling of molecular dynamics with approximation of continuum solvent). The protocol is built on the popular molecular mechanics Poisson–Boltzmann surface area (MMPBSA) \cite{Massova1999} method which makes a continuum approximation for the aqueous solvent in order to obtain results on practical timescales. Commonly, MMPBSA analyses are performed on a single MD trajectory, or even a single structure. We have demonstrated the lack of reproducibility of such an approach in both HIV-1 protease and MHC systems, with calculations for the same protein-ligand combination, with identical initial structure and force field, shown to produce binding affinities varying by up to 12 kcal/mol for small ligands (flexible ligands can vary even more). \cite{Wan2015} ESMACS employs MMPBSA to produce ensemble- based, converged and reproducible, determinations of binding free energies (separate ligand and receptor trajectories can also be used to account for adaptation energies). This provides a rapid quantitative approach sensitive enough to determine changes in binding free energies which differentiate susceptible and resistant sequences (typically of the order of 2 kcal/mol).
 
@@ -310,19 +344,23 @@ individual ligand parameters using the process described in Bhati
 % ---------------------------------------------------------------------------
 \section{Computational Challenges}\label{sec:cc}
 
-\jhanote{There is no mention of adaptivity as a challenge. Vivek should add
-from his paper.}
+% \jhanote{There is no mention of adaptivity as a challenge. Vivek should add
+% from his paper.}
 
-\jhanote{Need better organization. Separate out challenge of (i) simple and
-usable software systems, (ii) scale and interoperability, and (iii)
-adaptivity challenges. }\mtnote{Better?}
+% \jhanote{Need better organization. Separate out challenge of (i) simple and
+% usable software systems, (ii) scale and interoperability, and (iii) adaptivity
+% challenges. }\mtnote{Better?}
 
-As the nature of scientific inquiry and the applications to support that
-inquiry evolve, there is a critical need to support the execution of
-scientific workflows on high-performance computing (HPC) infrastructures.
-This poses three main challenges: (1) scaling the distributed execution of
-workflows; (2) developing simple and usable workflow systems for HPC
-resources; and (3) implementing runtime adaptivity.
+% As the nature of scientific inquiry and the applications to support that
+% inquiry evolve, there is a need to support the execution of
+% scientific workflows on high-performance computing (HPC) infrastructures.
+
+
+The scientific goals require advanced computational capabilities, which pose
+the following challenges: (1) scaling the adaptive execution of workflows
+comprised of multiple protocols; (2) developing simple and usable software
+systems that support adaptive workflows at scale on HPC resources; and (3)
+implementing different types of adaptivity.
 
 \subsection{Scalability}
 
@@ -349,54 +387,78 @@ specific problems and challenges. In spite of the many successes of workflow
 systems, there is a perceived high barrier-to-entry, integration overhead and
 limited flexibility.
 
-\subsection{Simplicity and Usability}
+% \subsection{Simplicity and Usability}
 
-Many commonly used workflow systems emerged from an era when the support for
-distributed computing was fragile, missing features and services.
-Consistently, workflow systems had a monolithic design that included the
-end-to-end capabilities needed to execute workflows on heterogeneous and
-distributed cyberinfrastructures. Further, these workflow systems were
-typically designed to support large ``big science'' projects such as those at
-the LHC~\cite{breskin2009cern} or LIGO~\cite{althouse1992ligo}. There, the
-same workflow was used by thousands of scientists over many years, justifying
-the large overhead of developing application workflows, and influencing
-programming models and interfaces.
+% Many commonly used workflow systems emerged from an era when the support for
+% distributed computing was fragile, missing features and services.
+% Consistently, workflow systems had a monolithic design that included the
+% end-to-end capabilities needed to execute workflows on heterogeneous and
+% distributed cyberinfrastructures. Further, these workflow systems were
+% typically designed to support large ``big science'' projects such as those at
+% the LHC~\cite{breskin2009cern} or LIGO~\cite{althouse1992ligo}. There, the
+% same workflow was used by thousands of scientists over many years, justifying
+% the large overhead of developing application workflows, and influencing
+% programming models and interfaces.
 
-However as the nature, number and usage of workflows has evolved so have the
-requirements: scale remains important but only when delivered with the
-ability to prototype quickly and flexibly. Further, new performance
-requirements arise from the need to support concurrent execution of tasks
-with diverse requirements and relations. For example, when executing multiple
-homogeneous pipelines of heterogeneous tasks, efficient resource utilization
-requires to ensure that individual pipelines have similar execution times,
-minimizing both pipeline-to-pipeline and task-to-task runtime fluctuations.
+% However as the nature, number and usage of workflows has evolved so have the
+% requirements: scale remains important but only when delivered with the
+% ability to prototype quickly and flexibly. Further, new performance
+% requirements arise from the need to support concurrent execution of tasks
+% with diverse requirements and relations. For example, when executing multiple
+% homogeneous pipelines of heterogeneous tasks, efficient resource utilization
+% requires to ensure that individual pipelines have similar execution times,
+% minimizing both pipeline-to-pipeline and task-to-task runtime fluctuations.
 
-Together, these factors challenge workflow systems designed to mainly support
-specific use cases or `locked-in' end-to-end executions. In the next Section,
-we discuss the design and implementation of the RADICAL-Cybertools, a set of
-software building blocks that can be easily composed to design, implement and
-execute domain specific workflows rapidly and at scale.
+% Together, these factors challenge workflow systems designed to mainly support
+% specific use cases or `locked-in' end-to-end executions. In the next Section,
+% we discuss the design and implementation of the RADICAL-Cybertools, a set of
+% software building blocks that can be easily composed to design, implement and
+% execute domain specific workflows rapidly and at scale.
 
-\subsection{Adaptivity}
+% \subsection{Adaptivity}
 
-Adaptive applications use intermediate data to enable better fidelity in the
-modeling of complex phenomena that would otherwise require unfeasible amount
-of computing time. Enabling adaptive capability on HPC systems poses specific
-challenges in expressibility, instantiation and implementation.
+% Adaptive applications use intermediate data to enable better fidelity in the
+% modeling of complex phenomena that would otherwise require unfeasible amount
+% of computing time. Enabling adaptive capability on HPC systems poses specific
+% challenges in expressibility, instantiation and implementation.
 
-Adaptive applications requires to express both the application workflow and
-how it should adapt depending on data generated at runtime. The former
-requires the description of the application task graph, the latter methods to
-change this task graph. These methods are called at the end of the execution
-of a task and, depending on its output, determine the generation of a new
-portion of the graph. Abort, rollback, proceed, forward and recovery are all
-examples of such methods~\cite{van2000dealing}.
+% Adaptive applications requires to express both the application workflow and
+% how it should adapt depending on data generated at runtime. The former
+% requires the description of the application task graph, the latter methods to
+% change this task graph. These methods are called at the end of the execution
+% of a task and, depending on its output, determine the generation of a new
+% portion of the graph. Abort, rollback, proceed, forward and recovery are all
+% examples of such methods~\cite{van2000dealing}.
 
-Adaptation of the application at runtime depends on: (i) propagation of
-adapted task graph to all components; (ii) consistency of the state of task
-graph between different components; and (iii) minimal overhead. Minimizing
-overheads is particularly relevant as performing adaptive operations should
-be irrelevant when compared to the time required by the tasks execution.
+% Adaptation of the application at runtime depends on: (i) propagation of
+% adapted task graph to all components; (ii) consistency of the state of task
+% graph between different components; and (iii) minimal overhead. Minimizing
+% overheads is particularly relevant as performing adaptive operations should
+% be irrelevant when compared to the time required by the tasks execution.
+
+
+\subsection{Encoding Adaptive Applications}\label{ssec:challenges}
+
+Adaptive capabilities can be beneficial to domain science applications but
+supporting them comes with three main challenges.
+
+The first challenges lies in the expressibility of adaptive applications.
+Composition of adaptive applications requires APIs that enable the expression
+of the initial state of the application and specification of methods that
+capture how the application adapts to intermediate data. The former translates
+to a description of the application Task Graph (TG) while the latter specifies
+adaptive methods that adapt this TG\@.
+
+The second challenge is in determining when the adaptation is instantiated.
+The adaptation is described at the end of the execution of a task wherein a
+new TG is generated. Different strategies can be employed in the
+instantiation of the adaptation~\cite{van2000dealing}.
+
+The third challenge lies in implementation of the adaptation of the
+application during runtime. We divide this challenge into three parts: (i)
+propagation of adapted TG to all components; (ii) consistency of the state of
+the TG among different components; and (iii) minimal overhead of performing
+adaptive operations compared to the execution duration of the tasks.
 
 
 
@@ -432,11 +494,11 @@ target protein, using two simulation protocols with differing
 levels of rigor and computational cost, ESMACS and TIES.
 
 HTBAC is not limited to these protocols as additional protocols can be
-expressed and implemented easily with the HTBAC user-facing API, however for
-demonstration we focus on these ensemble protocols HTBAC has demonstrated
-sizable execution and performance of the ESMACS~\cite{dakka2017} and TIES~\cite{dakka_farkaspall} protocols on leadership
-class machines including NCSA Blue Waters. For example, we demonstrated how HTBAC
-scales almost perfectly to hundreds of concurrent multi-stage pipelines for the TIES 
+expressed and implemented easily with the HTBAC user-facing API. HTBAC has
+scaled to sizable execution and performance of ESMACS~\cite{dakka2017} and
+TIES~\cite{dakka_farkaspall} protocols on leadership class machines including
+NCSA Blue Waters. For example, we demonstrated how HTBAC scales almost
+perfectly to hundreds of concurrent multi-stage pipelines for the TIES
 protocol in Fig. \ref{fig:weak_scaling}.
 
 \begin{figure}
@@ -525,6 +587,9 @@ efficient execution of individual protocols.
 
 \subsection{Performance Metrics}\label{sec:performance}
 
+\jhanote{(i) eliminate this as a stand alone section; (ii) merge with the
+opening of this section, as there is overlap \& also repetition.}
+
 % \subsection{Ensemble Molecular Dynamics}\label{sec:emd}
 
 TIES is rigorous but computationally expensive and has a limited range of
@@ -562,24 +627,32 @@ Titan for different protocols.
 \section{Impact of Solution}\label{sec:impact}
 
 
-The flexibility provided by HTBAC to run adaptive workflows offers huge advantages scientifically.
-First, the intra-protocol adaptivity allows the automated optimization of calculations to ensure that
-results are obtained with known precision across systems which may exhibit very different behavior (for example levels of `roughness' in the $\partial U/\partial\lambda$ curve in TIES).
-This has a significant impact of the reliability of comparisons between runs.
-The ability to switch between protocols on the other hand offers a mechanism through which `cheaper' approximate methods (such as ESMACS) can be used to scan large regions of chemical space, whilst more accurate and `expensive' ones are employed to investigate areas of specific interest (TIES).
-This maps directly onto processes such as hit to lead optimization in drug discovery and could be of particular use in investigating activity cliffs.
-This is a phenomena where small chemical changes provide large differences in drug efficacy.
-If changes are detected using an approximate method it is important to verify that they come from
-real chemical effects and not simply inaccuracies in the computational algorithm employed.
+The flexibility provided by HTBAC to run adaptive workflows offers huge
+advantages scientifically. First, the intra-protocol adaptivity allows the
+automated optimization of calculations to ensure that results are obtained
+with known precision across systems which may exhibit very different behavior
+(for example levels of `roughness' in the $\partial U/\partial\lambda$ curve
+in TIES). This has a significant impact on the reliability of comparisons
+between runs. The ability to switch between protocols on the other hand offers
+a mechanism through which `cheaper' approximate methods (such as ESMACS) can
+be used to scan large regions of chemical space, whilst more accurate and
+`expensive' ones are employed to investigate areas of specific interest
+(TIES). This maps directly onto processes such as hit to lead optimization in
+drug discovery and could be of particular use in investigating activity
+cliffs. This is a phenomena where small chemical changes provide large
+differences in drug efficacy. If changes are detected using an approximate
+method it is important to verify that they come from real chemical effects and
+not simply inaccuracies in the computational algorithm employed.
 
-The scale enabled by HTBAC also has an impact on the potential for scientific discovery using free energy calculations.
-Most studies in the literature are limited to the investigation of tens of protein-ligand complexes.
-In order to establish the validity of particular combinations of forcefield and simulation protocol and
-quantify uncertainties much larger campaigns are needed.
-Our ensemble has already provided evidence that the variability in single runs is sufficient to
-swamp true differences between systems of interest.
-The combined need for both large numbers of systems and multiple repeats of each one produces a requirement
-for middleware to manage huge numbers of simulations.
+The scale enabled by HTBAC also has an impact on the potential for scientific
+discovery using free energy calculations. Most studies in the literature are
+limited to the investigation of tens of protein-ligand complexes. In order to
+establish the validity of particular combinations of forcefield and simulation
+protocol and quantify uncertainties much larger campaigns are needed. Our
+ensemble has already provided evidence that the variability in single runs is
+sufficient to swamp true differences between systems of interest. The combined
+need for both large numbers of systems and multiple repeats of each one
+produces a requirement for middleware to manage huge numbers of simulations.
 
 HTBAC allows the concurrent screening
 for drug binding affinities of multiple compounds at unprecedented scales,
