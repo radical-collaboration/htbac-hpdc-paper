@@ -561,7 +561,7 @@ First, the intra-protocol adaptivity allows the automated optimization of calcul
 results are obtained with known precision across systems which may exhibit very different behavior (for example levels of `roughness' in the $\partial U/\partial\lambda$ curve in TIES).
 This has a significant impact of the reliability of comparisons between runs.
 The ability to switch between protocols on the other hand offers a mechanism through which `cheaper' approximate methods (such as ESMACS) can be used to scan large regions of chemical space, whilst more accurate and `expensive' ones are employed to investigate areas of specific interest (TIES).
-This maps directly onto processes such as hit to lead optimization in drug discovery and cold be of particular use in investigating activity cliffs.
+This maps directly onto processes such as hit to lead optimization in drug discovery and could be of particular use in investigating activity cliffs.
 This is a phenomena where small chemical changes provide large differences in drug efficacy.
 If changes are detected using an approximate method it is important to verify that they come from
 real chemical effects and not simply inaccuracies in the computational algorithm employed.
@@ -627,7 +627,10 @@ functionality means that HTBAC can ensure efficient use of the resources
 depending on the properties of the ligands under investigation. This flexibility 
 also provides a platform to run the varied simulation campaigns needed to stress 
 test protocols and forcefields in order to further refine our modeling approaches.
-
+HTBAC provides a platform that has the functionality to address various 
+computation goals of the drug screening campaigns, including models in which 
+accuracy can be traded for a reduction in computational cost; or inversely, by 
+enabling tighter calculations with efficient resource utilization. 
 
 % ---------------------------------------------------------------------------
 % Demonstration
@@ -658,7 +661,7 @@ We demonstrate how scalable, accurate and rapid binding affinity calculation
 using HTBAC can enable effective clinical decision making by showing performance 
 and scale of the number of drug candidates screened as a function of the 
 number of core-hours. In addition, we show additional functionality of HTBAC 
-to enable the adaptive execution of the TIES protocol, thereby providing greater 
+to enable the adaptivity of intra-protocol execution, thereby providing greater 
 convergence (i.e., lower errors) for a given amount of computational resources. 
 As such, HTBAC advances binding affinity calculation to support scale and 
 optimize for time-to-insight for investigative drug screening computational 
