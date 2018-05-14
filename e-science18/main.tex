@@ -1,0 +1,81 @@
+\documentclass[conference]{IEEEtran}
+
+\input{head}
+\input{include}
+
+
+\usepackage{xspace}
+\usepackage{xcolor}
+\usepackage{soul}
+\usepackage{xcolor}
+\usepackage{srcltx}
+\usepackage{xspace}
+\usepackage{wrapfig}
+
+% \newif\ifdraft{}
+% \drafttrue{}
+% \ifdraft{}
+%  \newcommand{\mtnote}[1]{ \textcolor{magenta}{***MT:#1}}
+%  \newcommand{\jhanote}[1]{ \textcolor{blue}{***SJ:#1}}
+%  \newcommand{\dwwnote}[1]{\textcolor{red}{***DWW:#1}}
+%  \newcommand{\jdnote}[1]{ \textcolor{orange}{***JD:#1}}
+%  \newcommand{\kfnote}[1]{ \textcolor{orange}{***KFP:#1}}
+% \else
+%  \newcommand{\mtnote}[1]{}
+%  \newcommand{\jhanote}[1]{}
+%  \newcommand{\dwwnote}[1]{}
+%  \newcommand{\jdnote}[1]{}
+%  \newcommand{\kfnote}[1]{}
+
+% \fi
+
+
+\title{}
+
+\author{
+\IEEEauthorblockN{}
+\IEEEauthorblockA{RADICAL Laboratory, Electric and Computer Engineering,
+                    Rutgers University, New Brunswick, NJ, USA}
+}
+\begin{document}
+\maketitle
+
+\section{Introduction}
+\input{introduction}
+
+%\section{Related Work}
+%\input{related_work}
+
+\section{Related Work}
+\label{sec:related-work}
+\input{related_work2}
+
+
+\section{Science Drivers}
+\label{sec:science-drivers}
+\input{fe_protocols}
+\input{brd4}
+
+\section{HTBAC: Design and Implementation}
+\input{design_implementation}
+
+
+\section{Experiments}
+\input{experiments}
+
+%\section{Results}
+%\input{results}
+
+
+\section{Discussion and Conclusion}
+\input{conclusions}
+
+\newpage
+
+% ---------------------------------------------------------------------------
+% BIBLIOGRAPHY
+% -------------------,--------------------------------------------------------
+\bibliographystyle{IEEEtran}
+\bibliography{rutgers,ucl}
+
+\end{document}
