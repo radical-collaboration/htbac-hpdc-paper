@@ -1,0 +1,43 @@
+Over the last ten years a plethora of molecular dynamics simulation engines, like NAMD, Gromacs, Amber, OpenMM and more have emerged, usually specializing in a certain domain of the biologically relevant simulations field. Nonetheless all of these have been used in one form or another as the simulation engine of choice in drug discovery studies. Desmond, Amber, HTMD for example are actively used in industry to provide a complete drug discovery pipeline for pharmaceutical companies. 
+
+The drug discovery pipeline is a well understood process that is continuously evolving, morphing from a fully experimental procedure, to more and more computational heavy, with some parts of the process already being replaced, or tested using biophysical simulation methods. In its most simple form, the aim of a drug discovery campaign is to optimize the binding affinity to a \emph{certain} target (usually a protein) as a function of a drug molecule. It aims to find the optimal drug molecule that maximizes the binding affinity (which loosely speaking is proportional to the efficacy of the medication). 
+
+\section{Binding affinity protocols}
+
+We have at our disposal two types of binding affinity protocols: absolute and relative. Absolute free energy methods calculate the binding affinity of a \emph{single} drug molecule to a protein, while relative methods calculate the \emph{difference} in binding affinity between two (usually similar in structure) drug molecules. The computational requirements of the two protocols differ sometimes significantly, but deciding which one is more appropriate for the task at hand is not trivial, as it is a function of resources, required time to convergence, accuracy thresholds etc.
+
+\textbf{Introduce and describe ESMACS and TIES, with science and computational details as well.}
+
+\subsection{ESMACS}
+
+\subsection{TIES}
+
+\section{Adaptivity}
+
+Most of the aforementioned simulation engines work by way of a simple static scheme: the user hand writes a configuration file, and together with the system description (topology, PDB) it passes these files to a binary executable and waits for the simulation to be over to analyze the results. There is a disconnect between the simulation run and the user, i.e. the user has no influence over the simulation \emph{after} it has been submitted. Certain decisions, like number of time steps to run for have to be made a priory, therefore the continuous accumulation of results can, by definition, have no effect of these parameters.
+
+The High Throughput binding affinity calculator (HTBAC) aims to solve this problem, by abstracting the configuration files into Python objects that are customizable. It also offers an execution layer, that is able to handle a wide range of supercomputer architectures, queuing systems, etc. The performance of HTBAC has been extensively tested, with weak and strong scaling results shown in the Results sections, scaling up to XXXXX cores. 
+
+Having the mobility and dynamism that HTBAC offers, we are able to alter our current protocols to enhance them using adaptive schemes. Utilizing adaptivity results in faster convergence rate, and more accurate results.
+
+In the protocols section we described TIES, a relative alchemical free energy method developed by Bhati et. al. It calculate the binding affinity along an alchemical path, starting from a thermodynamics state corresponding to drug A with $\lambda=0$ ending at drug B with $\lambda=1$. The transformation from A to B is done by running simulations with different values of $\lambda$ in  the range $[0, 1]$. The original TIES protocol devised these values to be $0.0, 0.05, 0.1, ... 0.9, 0.95, 1.0$, in the hope that these intermediate values will be sufficient to correctly describe the underlying function $f(\lambda)=XXX$. Here we describe and adaptive protocol based on adaptive quadrature implemented in HTBAC, that optimally finds the correct lambda spacing of the alchemical transformation.
+
+\subsection{Adaptive quadrature}
+
+Description, science behind it, results in different section.
+
+\subsection{Adaptive termination}
+
+Time series analysis, replicas, etc.
+
+\subsection{Adaptive protocol}
+
+\section{System description}
+
+The scientific and or computational improvements require validation across a number of ligand and protein complexes. We selected 3 proteins and 5 ligand pairs to run the adaptive relative free energy calculations. The systems were previously used for non-adaptive simulations by \cite{} et. al., offering a baseline comparison against our results. 
+
+The selected proteins are the Protein tyrosine phosphatase 1B (PTP1B), the Induced myeloid leukemia cell differentiation protein (MC1) and tyrosine kinase 2 (TYK2). The five ligand pairs complexed with the proteins were taken from \cite{} study.
+
+All systems were prepared using our automated building tool BAC \cite{} with the Amber force field for the protein, General Amber Force field for the ligands, and TIP3P water model. The complex was solvated in an orthorhombic water box with at least 14 \AA extension (systems containing around 40 thousand atoms).  
+
+ 
