@@ -45,7 +45,7 @@ computational efficiency.
 We model an application of HTBAC using the following user-facing constructs:
 
 \begin{itemize}
-  \item \textbf{Protocol:} A generic abstraction of a simulation protocol such
+  \item \textbf{Protocol:} A generic abstraction of a free energy protocol such
   as ESMACS or TIES. 
   \item \textbf{Simulation:} Simulation parameters that support and accompany 
   each protocol instance. 
@@ -53,22 +53,29 @@ We model an application of HTBAC using the following user-facing constructs:
   application. 
 \end{itemize}
 
-
-Define replica: 
-Define workflow: 
+The \textbf{Protocol} construct is the main abstraction of HTBAC. Each protocol
+represents a physical system i.e. drug candidate. A protocol defines a
+simulation pipeline composed of an ordered sequence of simulation steps. In
+ensemble-based free energy protocol such as ESMACS or TIES, these simulation 
+pipelines are replicated, where replicas differ by their parameter 
+configurations. In ESMACS and TIES, replicas only differ by initial velocities, 
+which are assigned randomly by the MD engine at the start of execution. By 
+nature of ensemble applications, each replica within a protocol can execute its 
+simulation pipeline independently. 
 
 The \textbf{Protocol} class enables multiple instantiations of protocol types
-such as ESMACS or TIES. Each protocol type follows the same initial sequence of 
+such as ESMACS or TIES. Each protocol follows the same initial sequence of 
 simulation steps i.e. minimization, equilibration and production simulation.  
-Protocols differ only by the analysis step, see figure X for 
-a visual representation of the ESMACS and TIES workflows. In addition, the 
-\textbf{Simulation} class specifies simulation parameters that shape the 
-protocol. The replica method defines the number of ensemble members for a 
-given protocol instance, while the system method defines the input
+Protocols differ only by their invididual analysis step which typically follows 
+production simulation and by the computational requirements,  
+see figure X for a visual representation of the ESMACS and TIES workflows. 
+In addition, the \textbf{Simulation} class specifies simulation parameters that
+shape the protocol. The replica method defines the number of ensemble members 
+for a given protocol instance, while the system method defines the input
 configuration files necessary to execute the protocol instance. Moreover the 
 \textbf{Simulation} class provides the granularity to specify individual 
 parameters per replica, including the number of cores per replica, MD execution 
-kernel and the number of time simulation time steps.
+kernel and the length of each simulation step.
 
 Some protocols require additional information. For 
 example, the TIES protocol contains additional sampling parameters or   
@@ -106,8 +113,8 @@ components, Ensemble Toolkit (EnTK) and RADICAL-Pilot (RP).
    \includegraphics[width=\columnwidth]{figures/htbac_workflow.png}
   \caption{Layered architecture of HTBAC, EnTK, and RP. The HTBAC API exposes 
   the Protocol component. Current protocols supporting the use cases include 
-  ESMACS/TIES. EnTK serves as the workflow execution system, and by managing 
-  the workflow and workload. RADICAL-Pilot serves as the runtime system.}
+  ESMACS and TIES. EnTK serves as the workload execution system. RADICAL-Pilot 
+  serves as the runtime system.}
 \label{fig:blockdiagram}
 \end{figure}
 
@@ -119,27 +126,56 @@ HTBAC and the underlying building blocks.
 EnTK simplifies the process of creating ensemble-based applications with
 complex coordination and communication requirements. The EnTK API exposes the
 PST model which consists of three components: \textbf{Pipeline},
-\textbf{Stage}, and \textbf{Task}. HTBAC promotes binding affinity  {\bf
-Protocols} as the user-facing construct, and also uses the programming model
-defined by the Pipeline, Stage and Tasks model to express a variety of
-protocols: each stage is a computational \textbf{task}, and the
-ordered aggregation of these stages alongside their dependencies as a
-\textbf{pipeline}~\cite{power-of-many17}. 
-A workflow is comprised of $N_P$ instances of the P$^{th}$ protocol.
+\textbf{Stage}, and \textbf{Task}. HTBAC promotes binding affinity {\bf
+Protocols} as the user-facing construct, and uses the programming model
+defined by the Pipeline, Stage and Tasks model to express a specific
+protocol. 
+
+Each HTBAC application aggregates one or more protocols. A workflow is comprised 
+of $N_P$ instances of the P$^{th}$ protocol. 
+
+% each stage is a computational \textbf{task}, and the
+% ordered aggregation of these stages alongside their dependencies as a
+% \textbf{pipeline}~\cite{power-of-many17}. 
+
+% Sets of tasks with dependencies that determine the order of their execution are usually referred to as “workflows”. 
+
+% In section \ref{sec:science-drivers}, we 
+% described two examples of ensemble-based protocols for computing binding 
+% affinities.
+
+Once the workflow is described, it is submitted to EnTK's
+\textbf{Application Manager} which sets up multiple processes, threads and a
+RabbitMQ message queue for communication.
+EnTK identifies tasks which have satisfied dependencies and can be executed
+concurrently. EnTK's \textbf{Execution Manager} uses the underlying runtime
+system, RADICAL-Pilot to execute the tasks on specific target resources.
+
+EnTK converts the set of pipelines into a set of tasks called compute unit 
+descriptions and submits them to RP. In addition, EnTK provides methods for the 
+user to specify a resource request including walltime, cores, queue, and user 
+credentials. EnTK converts this resource request into a pilot that RP submits to 
+a HPC machine. Once the pilot becomes active, it pulls compute unit descriptions 
+in bulk from a database, executing them on the pilot resources. 
+
+\begin{figure}
+  \centering
+   \includegraphics[width=\columnwidth]{figures/ht-bac-rp_integration.pdf}
+  \caption{Ensemble Toolkit (EnTK) and RADICAL-Pilot (RP) architecture and 
+  execution model.}
+\label{fig:integration}
+\end{figure}
+
+% Consistent with EnTK's programming model, HTBAC also uses the PST model to
+% express {\bf Protocols}.
+
+% Each protocol contains multiple stages with simulations and analysis tasks
+% interspersed, in the most general case. 
 
 
-
-Consistent with EnTK's programming model, HTBAC also uses the PST model to
-express {\bf Protocols}.
-
-Each protocol contains multiple stages with simulations and analysis tasks
-interspersed, in the most general case. 
+% programming model (that are consistent with the EnTK) to enable the user 
 
 
-programming model (that are consistent with the EnTK) to enable the user 
-
-In section \ref{sec:science-drivers}, we described two examples of ensemble-
-based protocols for computing binding affinities.
 
 
 
@@ -162,41 +198,22 @@ based protocols for computing binding affinities.
 % will be greater $>$ 2).
 
 
-
-
-Once the workflow is described, it is submitted to EnTK's
-\textbf{Application Manager} which sets up multiple processes, threads and a
-RabbitMQ message queue for communication.
-EnTK identifies tasks which have satisfied dependencies and can be executed
-concurrently. EnTK's \textbf{Execution Manager} uses the underlying runtime
-system, RADICAL-Pilot to execute the tasks on specific target resources.
-
-
-
-\begin{figure}
-  \centering
-   \includegraphics[width=\columnwidth]{figures/ht-bac-rp_integration.pdf}
-  \caption{Ensemble Toolkit (EnTK) and RADICAL-Pilot (RP) architecture and 
-  execution model.}
-\label{fig:integration}
-\end{figure}
-
 % protocol, a user can scale protocol instances to study as many physical systems as
 % desired.
 
 % The specification of protocols and their parameters are passed by the user to
 % the \textbf{Runner Handle} which translates the request to EnTK.
 
-In Section \ref{sec:related-work} we highlighted how an ensemble
-simulation approach can both aid sampling and improve uncertainty
-quantification for free energy calculations. Despite these crucial advantages,
-it remains non-trivial for field researchers to write biosimulation
-applications that involve individual protocols supporting multiple replicas,
-and by extension multiple protocols. With HTBAC, this burden is minimized by
-specifying the number of concurrent instances of the \textbf{Protocol} object.
-Moreover, the ability to generate multiple protocol instances enables the user
-to investigate a range of physical systems (i.e., drug candidates)
-concurrently.
+% In Section \ref{sec:related-work} we highlighted how an ensemble
+% simulation approach can both aid sampling and improve uncertainty
+% quantification for free energy calculations. Despite these crucial advantages,
+% it remains non-trivial for field researchers to write biosimulation
+% applications that involve individual protocols supporting multiple replicas,
+% and by extension multiple protocols. With HTBAC, this burden is minimized by
+% specifying the number of concurrent instances of the \textbf{Protocol} object.
+% Moreover, the ability to generate multiple protocol instances enables the user
+% to investigate a range of physical systems (i.e., drug candidates)
+% concurrently.
 
 HTBAC allows the simple expression and concurrent execution of multiple
 distinct protocols, thereby enabling concurrent screening of drug candidates.
