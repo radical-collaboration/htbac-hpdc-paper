@@ -1,12 +1,77 @@
-Recent developments in both algorithms and architectures (in particular
-GPGPUs) have led to increasing interest in the use of molecular simulation to
-estimate the strength of macromolecular binding free
-energies~\cite{DeVivo2016}. However, for molecular simulations to truly
+Computational drug campaigns require rapid screening of thousands of candidate 
+compounds in order to design new therapeutics for clinical insight. Creating 
+simulation protocols which have well defined uncertainty and produce 
+statistically meaningful results represents a significant computational 
+challenge. Differences amongst investigated systems will demand different 
+protocols as studies progress. For example, drug design campaigns often require 
+an initial screening of thousands of candidate compounds to filter out the worst 
+binders before using more sensitive methods to refine the structure. Not all 
+changes induced in protein shape or behavior are local to the drug binding site 
+and, in some cases, simulation protocols will need to adjust to account for 
+complex interactions between drugs and their targets within individual studies.
+
+These complexities of protocol selection and refinements are captured using 
+adaptive algorithms, which are algorithms whose dependencies are not know 
+\textit{a priori} and are predicated on intermediate results. 
+In bio-simulation several classes of adaptive algorithms exist which tackle 
+different problem spaces. For example, advanced sampling is a subset of adaptive
+sampling algorithms that guide simulations to explore and improve sampling 
+quality by steering execution towards more interesting phase spaces (cite). 
+Metadynamics and expanded ensemble dynamics are another class of well
+established adaptive algorithms where individual simulations jump between 
+simulation conditions. 
+
+Drug campaigns which screen for thousands of compounds specifically require 
+adaptive algorithms which can increasing the fidelity of statistical uncertainty
+and thereby reduce time to convergence for a drug candidate. Adaptive quadrature 
+algorithms deliver this requirement by adding additional simulations to reduce 
+errors on the predicated binding affinity. Once the error threshold criteria is 
+met for a candidate, the algorithm can halt simulations for that candidate while 
+the next candidate is considered. 
+
+Implementation of adaptive algorithms on high performance clusters (HPCs) are 
+predicated on adaptive runtime systems that provide the ability to make runtime 
+decisions based on intermediate results and can manage resources efficiently. 
+
+
+As such producing timely clinical 
+insight demands computational efficiency which is predicated upon advances in 
+algorithms, scalable software systems and intelligent and efficient utilization 
+of supercomputing resources. 
+
+
+
+For molecular simulations to truly
 influence decision making in industrial and clinical settings, the dual
-challenges of scale (concurrent screening of drug candidate using thousands of
-concurrent multi-stage pipelines) and sophistication (adaptive sampling or
-selection of binding affinity protocols based upon system behavior and
-statistical uncertainty) will need to be tackled.
+challenges of scalability of drug candidates and enhancements in adaptive 
+algorithms will need to be tackled. 
+ 
+
+
+Most advances in high-performance computing have focused on the scale,
+performance and optimization of single long simulations. Due to the end of
+Dennard scaling, methodological advances and resource architectures (in 
+particular GPGPUs), many applications are now
+formulated using multiple, shorter ensemble-based simulations. Recent
+development shows increasing interest in the use of molecular simulation to 
+estimate the strength of macromolecular binding free energies~\cite{DeVivo2016}.
+
+These methods in bio-molecular science have been developed to take advantage of 
+the growing number of compute resources where multiple tasks are executed on 
+these compute resources in parallel. Although these methods may suffice for 
+existing problems, studying more drug candidates systems for longer durations 
+will require sophistication in these algorithms. 
+There are however, limited software solutions that can support the 
+scalable execution of multiple tasks concurrently.
+
+
+
+Both from the domain perspective and computational perspective there are 
+deficiencies in throughput vs. high performance. the "fire and forget" mentality 
+no longer fulfills computational efficiency when campaigns are limited by a 
+computational budget or require rapid timely insight for clinical efficacy. 
+
+
 
 % which provides a domain specific interface to leverage recent advances in
 % abstracting the relatonships between building blocks in workflow systems to
@@ -19,10 +84,13 @@ Calculator (BAC)~\cite{Sadiq2008}. More recently we have introduced the
 High-Throughput Binding Affinity Calculator (HTBAC)~\cite{dakka2017}, 
 which brings advances in the design of domain-specific workflow systems 
 using building blocks to facilitate the automation of deployment 
-and execution of rapid and accurate calculation of binding affinities on 
-leadership class machines. In Dakka \textit{et al.}~\cite{dakka2017} we 
-demonstrated how HTBAC scales almost perfectly to hundreds of concurrent 
-multi-stage pipelines for a single protocol.
+and execution of rapid binding affinities on leadership class machines. 
+
+
+% In Dakka \textit{et al.}~\cite{dakka2017} we 
+% demonstrated how HTBAC scales almost perfectly to hundreds of concurrent 
+% multi-stage pipelines for a single protocol. 
+
 %, which permits rapid time-to-solution that is essentially invariant
 %of the size of candidate ligands.
 
@@ -93,6 +161,28 @@ those of high throughput chemistry.
 % This functionality provides the
 % foundations upon which we develop adaptable simulation schemes that
 % automatically handle different system characteristics.
+
+
+
+
+% In principle, many workflow management systems (WMS) can be used to express
+% ensemble-based workflows to compute binding free energies. General-purpose WMS
+% are however,  limited by a lack of specificity: workflow system with feature
+% rich, but complex interface models impose substantial overhead when
+% integrating application workflows in the runtime system, preventing users from
+% quick and flexible applications prototyping.
+
+% Furthermore, statistically meaningful results derived from simulations are of
+% critical interest, as they can leverage additional sampling of simulations
+% which could lead to an improvement in precision of free energy calculations.
+% Such decisions typically, cannot be made {\it a priori} and require postmortem
+% user intervention in order to analyze and spawn additional simulations.
+% Specific features such as steering and adaptivity (e.g., spawning additional
+% simulations) during runtime often require a redistribution of resources.
+% Current WMS do not provide adequate support for dynamic resource utilization
+% and require special extensions for adaptive formulations thus limiting the
+% possibility of adaptive workflows.
+
 
 In this work we demonstrate the use of HTBAC to adaptively run both protocols,
 including mixed protocol runs. 
