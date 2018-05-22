@@ -215,29 +215,29 @@ given amount of time.
 \begin{figure}
   \centering
    \includegraphics[width=\columnwidth]
-   {figures/ties_NCSA_BW_weak_scaling_with_overhead.pdf}
+   {figures/ties_ws_pseudo.pdf}
   \caption{Weak scaling properties of HTBAC. We investigate the
   weak scaling of HTBAC as the ratio of the number of protocol instances to
   resources is kept constant. Overheads of HTBAC (right), and runtime overhead 
   (left) and \(TTX\) (left) for experimental configurations investigating the 
-  weak scaling of TIES. We ran two trials for each protocol instance 
-  configuration. Error bars in \(TTX\) in 2 and 8-protocol runs are 
+  weak scaling of TIES. We ran X trials for each protocol instance 
+  configuration. Error bars in \(TTX\) in y-protocol runs are 
   insignificant.}
 \label{fig:weak_scaling_TIES}
 \end{figure}
 
-The second and third weak scalability experiment repeats the same experimental 
-design yet replaces the TIES protocols with ESMACS, and TIES plus ESMACS, 
+The second weak scalability experiment repeats the same experimental 
+design yet replaces the TIES protocols with TIES and ESMACS, 
 respectively.
 
 \begin{figure}
   \centering
-   \includegraphics[width=\columnwidth]{figures/ties_NCSA_BW_weak_scaling_ESMACS.pdf}
+   \includegraphics[width=\columnwidth]{figures/esmacs_ties_ws_pseudo.pdf}
   \caption{Weak scaling properties of HTBAC (right side). We investigate the
-  weak scaling of HTBAC as the ratio of the number of ESMACS protocol instances to
-  resources is kept constant. (Left) Overheads of HTBAC, and runtime overhead (EnTK/RP) for
-  experimental configurations. We ran three trials for each protocol instance configuration.}
-\label{fig:weak_scaling_ESMACS}
+  weak scaling of HTBAC as the ratio of the number of ESMACS and TIES protocol instances to
+  resources is kept constant. (Left) Overheads of HTBAC, and runtime overhead for
+  experimental configurations. We ran X trials for each protocol instance configuration.}
+\label{fig:weak_scaling_ESMACS_TIES}
 \end{figure}
 
 
@@ -252,7 +252,7 @@ descriptions from the same database.
 % area networks, which introduces varying amounts of latency.
 In addition, each stage constructed by EnTK maintains sequential barriers. 
 RP remains dormant until completion of the current tasks before staging
-the next tasks \ref{fig:weak_scaling_TIES}. 
+the next tasks \ref{fig:weak_scaling_ESMACS_TIES}. 
 
 % The impact of the synchronization barriers increases with the
 % number of CUs as seen in the 16 protocol instances data point in
@@ -292,8 +292,8 @@ folder staging preparation, and operating system task spawning.
 \begin{figure}
   \centering
    \includegraphics[width=\columnwidth]
-   {figures/ties_NCSA_BW_strong_scaling_with_overhead.pdf}
-  \caption{Strong scaling properties of HTBAC. We investigate the
+   {figures/ties_ss_pseudo.pdf}
+  \caption{Strong scaling properties of HTBAC using TIES protocols. We investigate the
   strong scaling of HTBAC with a fixed number of protocol instances while
   varying the amount resources. Overheads of HTBAC and runtime overhead 
   (left) and \(TTX\) (right) for experimental configurations investigating the 
