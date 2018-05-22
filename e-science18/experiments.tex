@@ -421,15 +421,23 @@ windows are chosen. However in this paper, we do not investigate the impact of
 such adaptivity, as the objective is to determine the feasibility of adaptive
 execution and resulting scientific merit of adaptive decision making.
 
+% \begin{figure}
+%   \centering
+%    \includegraphics[width=\columnwidth]{figures/Adaptive_TIES_1.png}
+%   \caption{Illustrating the adaptive workflow. After the 3 initial lambda 
+%   windows are equilibrated, the first production stage starts. 
+%   This is followed by analysis at every lambda interval, to decide whether 
+%   to add a new window in the middle. The production-analysis is repeated 
+%   for 4 production steps in our implementation, not shown here.}
+% \label{fig:adaptive_TIES}
+% \end{figure}
+
+
 \begin{figure}
   \centering
-   \includegraphics[width=\columnwidth]{figures/Adaptive_TIES_1.png}
-  \caption{Illustrating the adaptive workflow. After the 3 initial lambda 
-  windows are equilibrated, the first production stage starts. 
-  This is followed by analysis at every lambda interval, to decide whether 
-  to add a new window in the middle. The production-analysis is repeated 
-  for 4 production steps in our implementation, not shown here.}
-\label{fig:adaptive_TIES}
+   \includegraphics[width=\columnwidth]{figures/adaptive_vs_nonadaptive_pseudo.pdf}
+  \caption{Illustrating the adaptive vs. non-adaptive workflow given the same number of core hours}
+\label{fig:adaptive_vs_nonadaptive_TIES}
 \end{figure}
 
 \subsubsection{Adaptive Quadrature Experiments Results}
