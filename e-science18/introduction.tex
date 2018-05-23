@@ -34,20 +34,23 @@ These complexities of protocol selection and refinement can be captured using
 adaptive algorithms, where task  dependencies are not know 
 \textit{a priori} and are predicated on intermediate results. 
 In bio-simulations, several classes of adaptive algorithms exist which tackle 
-different problem spaces. For example, advanced sampling is a type of adaptive
-algorithms that guide simulations toward improve sampling quality by steering 
-execution towards more interesting regions of phase space (cite). 
-Metadynamics and expanded ensemble dynamics are another class of 
-well-established adaptive algorithms where individual simulations jump between 
-simulation conditions. 
+different problem spaces. 
+For example, an increasilngly popular approach is to used Markov state models to 
+learm a simplified representation of the phase space explored by simulations and
+use this to inform which regions are further sampled in furture simulatons (cite). 
+Other well-established techniques include metadynamics and expanded ensemble dynamics 
+based alorithms where individual simulations jump between simulation conditions. 
 
 Successful drug campaigns specifically require 
 adaptive algorithms which can increase the fidelity of statistical uncertainty
-and thereby reduce time to convergence for a drug candidate. Adaptive quadrature 
-algorithms (cite) deliver this requirement by adding additional simulations to 
-reduce errors on the predicated binding affinity. Once the error threshold 
-criteria is met for a candidate, the algorithm can decide to halt simulations 
-for that candidate while the next candidate is considered. 
+and thereby reduce time to convergence for a drug candidate. 
+Adaptive quadrature algorithms (cite) are a simple and attractive option for 
+achieving this in so called `alchemical' free energy methods which involve intagrating 
+the area under a curve drawn by sampling along a transfomation coordinate.
+Adding additional simulations in regions where the curve is changing most rapidly
+reduces errors on the predicated binding affinity. 
+Once an uncertainty threshold criteria is met for a given candidate, the algorithm can 
+decide to halt simulations for that compound while the next candidate is considered. 
 
 Implementation of adaptive algorithms on high performance clusters (HPCs) are 
 predicated on adaptive runtime systems that provide the ability to make runtime 
@@ -70,9 +73,18 @@ will require sophistication in these algorithms.
 There are however, limited software solutions that can support the 
 scalable execution of multiple tasks concurrently.
 
-The "fire and forget" mentality 
-no longer fulfills computational efficiency when campaigns are limited by a 
-computational budget or require rapid timely insight for clinical efficacy. 
+Until recently, simulation based studies of binding free energies have generally 
+been limited to at most tens of drug-target combinations. 
+As simulation campaigns become larger and more ambitious the inefficiency of 
+"fire and forget" approaches based on standardized sampling (e.g. simulations of 
+fixed length designed to ensure some level of convergence) becomes increasingly 
+costly.
+Both limited computational budget and/or strict time to insight deadlines are 
+characteristic of industrial and clinical applications and drive the need to be 
+able to obtain reliable results in an optimal manner.
+Adaptive approaches are capable of reducing the computational effort and 
+allowing informed trade offs between factors such as convergence tolerance, 
+time to completion and computational cost.
 
 % which provides a domain specific interface to leverage recent advances in
 % abstracting the relatonships between building blocks in workflow systems to
