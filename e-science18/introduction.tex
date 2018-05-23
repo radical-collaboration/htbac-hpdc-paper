@@ -1,28 +1,42 @@
-Computational drug campaigns require rapid screening of thousands of candidate 
-compounds in order to design new therapeutics for clinical insight. 
+One of the defining challenges facing computational chemistry is the accurate 
+determination of the strength of small molecule binding to target proteins.
+Reaching this goal would allow computational approaches to replace or supplement
+experimental techniques in drug design and refinement pipelines.
+This has the potential to reduce the cost of expensive experimental screening 
+programmes but in order to do so requires the capablity to rapidly screen of 
+thousands of candidate compounds. 
+Recent improvements in both simulation algorithms and hardware exploitation 
+mean that macromolecular binding free energies estiated from molecular simulation 
+and are reaching accuracies that can emulate successful drug campaigns 
+~\cite{DeVivo2016}.
+These developments are resulting in increasing industrial interest.
+Furthermore, the same technologies which are applicable in drug discovery 
+could also be used to determine the influence of individual patients genetic 
+sequence on drug efficacy in the context of clinical decsion support.
+In order for these approaches to gain traction however, requires the development 
+of simulation protocols which have well-defined uncertainty and 
+produce statistically meaningful results.
+This continues to represent a significant computational challenge. 
 
-Recent development shows increasing interest in the use of molecular simulation to 
-estimate the strength of macromolecular binding free energies~\cite{DeVivo2016}, 
-and are reaching accuracies that can emulate successful drug campaigns.
-However creating simulation protocols which have well-defined uncertainty and 
-produce statistically meaningful results represents a significant computational 
-challenge. 
+One of the difficulties involved in the defining adequate protocols is that 
+differences in drug candidate chemistry (or protein sequence) can alter 
+simulation behaviour and the convergence of binding strength estimates.
+For example, not all changes induced in protein shape or behavior are local 
+to the drug binding site and, in some cases, simulation protocols will need to 
+adjust to account for complex interactions between drugs and their targets within 
+individual studies.
+A more strategic concern is that during a study the requirements may change. 
+A typical example of this is that at the start of a drug design campaign
+an initial screening of candidate compounds is conducted to filter out the worst 
+binders before using more sensitive methods are employed to refine the structure.
 
-Differences amongst investigated candidates will demand different 
-protocols as studies progress. For example, drug design campaigns often require 
-an initial screening of candidate compounds to filter out the worst 
-binders before using more sensitive methods to refine the structure. Not all 
-changes induced in protein shape or behavior are local to the drug binding site 
-and, in some cases, simulation protocols will need to adjust to account for 
-complex interactions between drugs and their targets within individual studies.
-
-These complexities of protocol selection and refinements are captured using 
-adaptive algorithms, which are algorithms whose dependencies are not know 
+These complexities of protocol selection and refinement can be captured using 
+adaptive algorithms, where task  dependencies are not know 
 \textit{a priori} and are predicated on intermediate results. 
 In bio-simulations, several classes of adaptive algorithms exist which tackle 
 different problem spaces. For example, advanced sampling is a type of adaptive
 algorithms that guide simulations toward improve sampling quality by steering 
-execution towards more interesting phase spaces (cite). 
+execution towards more interesting regions of phase space (cite). 
 Metadynamics and expanded ensemble dynamics are another class of 
 well-established adaptive algorithms where individual simulations jump between 
 simulation conditions. 
