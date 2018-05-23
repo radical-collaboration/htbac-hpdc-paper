@@ -35,16 +35,85 @@ differences in drug candidate chemistry (or protein sequence) can alter
 simulation behavior and the convergence of binding strength estimates.
 For example, not all changes induced in protein shape or behavior are local 
 to the drug binding site and, in some cases, simulation protocols will need to 
+% <<<<<<< HEAD
 adjust to account for complex interactions between drugs and their targets 
 within individual studies.
 A more strategic concern is that during a study the requirements may change. 
+% =======
+% adjust to account for complex interactions between drugs and their targets within 
+% individual studies.
+% A more strategic concern is that over the course of a study the requirements made of 
+% the calculations may change. 
+% >>>>>>> 8e69b71820a07495000ed0c06ca7acb3baf7fd62
 A typical example of this is that at the start of a drug design campaign
 an initial screening of candidate compounds is conducted to filter out the worst 
 binders before using more sensitive methods to refine the structure.
 
+% <<<<<<< HEAD
 Moreover, the "fire and forget" mentality no longer fulfills computational 
 efficiency when campaigns are limited by a computational budget or require 
 timely insight for clinical efficacy. 
+% =======
+These complexities of protocol selection and refinement can be captured using 
+adaptive algorithms, where task  dependencies are not know 
+\textit{a priori} and are predicated on intermediate results. 
+In bio-simulations, several classes of adaptive algorithms exist which tackle 
+different problem spaces. 
+For example, an increasilngly popular approach is to used Markov state models to 
+learm a simplified representation of the phase space explored by simulations and
+use this to inform which regions are further sampled in furture simulatons (cite). 
+Other well-established techniques include metadynamics and expanded ensemble dynamics 
+based alorithms where individual simulations jump between simulation conditions. 
+
+Successful drug campaigns specifically require 
+adaptive algorithms which can increase the fidelity of statistical uncertainty
+and thereby reduce time to convergence for each drug candidate. 
+Adaptive quadrature algorithms (cite) are a simple and attractive option for 
+achieving this in so called `alchemical' free energy methods which involve intagrating 
+the area under a curve drawn by sampling along a transfomation coordinate.
+Adding additional simulations in regions where the curve is changing most rapidly
+reduces errors on the predicated binding affinity. 
+Once an uncertainty threshold criteria is met for a given candidate, the algorithm can 
+decide to halt simulations for that compound while the next candidate is considered. 
+This appraoch could even be combined with enhanced sampling techniques such as 
+REST.
+
+Until recently, simulation based studies of binding free energies have generally 
+been limited to at most tens of drug-target combinations. 
+As simulation campaigns become larger and more ambitious the inefficiency, and 
+associated cost, of "fire and forget" approaches based on standardized sampling 
+(e.g. simulations of fixed length designed to ensure some level of convergence) 
+become multiplied.
+Both limited computational budget and/or strict time to insight deadlines are 
+characteristic of industrial and clinical applications and drive the need to be 
+able to obtain reliable results in an optimal manner.
+Adaptive approaches are capable of reducing the computational effort and 
+allowing informed trade offs between factors such as convergence tolerance, 
+time to completion and computational cost.
+
+Most advances in high-performance computing have focused on the scale,
+performance and optimization of single long simulations. Due to the end of
+Dennard scaling, methodological advances and resource architectures (in 
+particular GPGPUs), many applications are now formulated using multiple, shorter 
+ensemble-based simulations.  
+These methods in bio-simulation science have been developed to take advantage of 
+the growing number of compute resources where multiple tasks are executed on 
+these compute resources in parallel. Although these methods may suffice for 
+existing problems, studying more drug candidates systems for longer durations 
+will require sophistication in these algorithms. 
+There are however, limited software solutions that can support the 
+scalable execution of multiple tasks concurrently.
+
+Implementation of adaptive algorithms on high performance clusters (HPCs) are 
+predicated on adaptive runtime systems that provide the ability to make runtime 
+decisions based on intermediate results and can manage resources efficiently. 
+For molecular simulations to truly influence decision making in industrial and 
+clinical settings, the dual challenges of scalability of drug candidates and 
+enhancements in adaptive algorithms will need to be tackled. 
+It is also possible that as simulation and machine learning approaches converge 
+higher level decisions of what simulations should be run may also be automated, 
+requiring adaptive runtime frameworks.
+% >>>>>>> 8e69b71820a07495000ed0c06ca7acb3baf7fd62
 
 These complexities of protocol selection and refinement can be captured using 
 adaptive algorithms, where task dependencies are not know 
