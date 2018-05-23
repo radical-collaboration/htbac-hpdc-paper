@@ -3,89 +3,115 @@ determination of the strength of small molecule binding to target proteins.
 Reaching this goal would allow computational approaches to replace or supplement
 experimental techniques in drug design and refinement pipelines.
 This has the potential to reduce the cost of expensive experimental screening 
-programmes but in order to do so requires the capablity to rapidly screen of 
+programs but in order to do so requires the capability to rapidly screen 
 thousands of candidate compounds. 
 Recent improvements in both simulation algorithms and hardware exploitation 
-mean that macromolecular binding free energies estiated from molecular simulation 
-and are reaching accuracies that can emulate successful drug campaigns 
-~\cite{DeVivo2016}.
-These developments are resulting in increasing industrial interest.
+mean that macromolecular binding free energies estimated from molecular simulation 
+are reaching accuracies that can emulate successful drug campaigns 
+~\cite{DeVivo2016}. 
+
+Specifically, ensemble-based approaches, which favor multiple shorter simulation 
+trajectories over few longer simulations, are showing improvements in biological 
+time scales. 
+
+% Most advances in high-performance computing have focused on the scale,
+% performance and optimization of single long simulations. Due to the end of
+% Dennard scaling, methodological advances and resource architectures (in 
+% particular GPGPUs), many applications are now formulated using multiple, shorter 
+% ensemble-based simulations. 
+
+These developments are resulting in higher throughput of molecular dynamics and
+thereby increasing industrial interest.
 Furthermore, the same technologies which are applicable in drug discovery 
 could also be used to determine the influence of individual patients genetic 
-sequence on drug efficacy in the context of clinical decsion support.
+sequence on drug efficacy in the context of clinical decision support.
 In order for these approaches to gain traction however, requires the development 
 of simulation protocols which have well-defined uncertainty and 
 produce statistically meaningful results.
 This continues to represent a significant computational challenge. 
 
-One of the difficulties involved in the defining adequate protocols is that 
+One of the difficulties involved in defining adequate protocols is that 
 differences in drug candidate chemistry (or protein sequence) can alter 
-simulation behaviour and the convergence of binding strength estimates.
+simulation behavior and the convergence of binding strength estimates.
 For example, not all changes induced in protein shape or behavior are local 
 to the drug binding site and, in some cases, simulation protocols will need to 
-adjust to account for complex interactions between drugs and their targets within 
-individual studies.
+adjust to account for complex interactions between drugs and their targets 
+within individual studies.
 A more strategic concern is that during a study the requirements may change. 
 A typical example of this is that at the start of a drug design campaign
 an initial screening of candidate compounds is conducted to filter out the worst 
-binders before using more sensitive methods are employed to refine the structure.
+binders before using more sensitive methods to refine the structure.
+
+Moreover, the "fire and forget" mentality no longer fulfills computational 
+efficiency when campaigns are limited by a computational budget or require 
+timely insight for clinical efficacy. 
 
 These complexities of protocol selection and refinement can be captured using 
-adaptive algorithms, where task  dependencies are not know 
-\textit{a priori} and are predicated on intermediate results. 
-In bio-simulations, several classes of adaptive algorithms exist which tackle 
-different problem spaces. For example, advanced sampling is a type of adaptive
-algorithms that guide simulations toward improve sampling quality by steering 
-execution towards more interesting regions of phase space (cite). 
-Metadynamics and expanded ensemble dynamics are another class of 
-well-established adaptive algorithms where individual simulations jump between 
-simulation conditions. 
+adaptive algorithms, where task dependencies are not know 
+\textit{a priori} and are predicated on intermediate results. In bio-simulations, 
+several classes of adaptive algorithms exist which tackle different problem spaces. 
 
-Successful drug campaigns specifically require 
-adaptive algorithms which can increase the fidelity of statistical uncertainty
-and thereby reduce time to convergence for a drug candidate. Adaptive quadrature 
-algorithms (cite) deliver this requirement by adding additional simulations to 
-reduce errors on the predicated binding affinity. Once the error threshold 
-criteria is met for a candidate, the algorithm can decide to halt simulations 
-for that candidate while the next candidate is considered. 
+Successful drug campaigns require adaptive algorithms in order to increase 
+the fidelity of statistical uncertainty and thereby reduce time to convergence 
+for a drug candidate. Leveraging ensemble-based simulations, we can now explore 
+new adaptive sampling schemes which increase convergence and improve 
+sampling quality of ligand binding affinity of individual drug 
+candidates~\cite{DeFabritiis2014}. Other adaptive methdos such as replica 
+exchange and well-known variations of replica exchange i.e. replica exchange 
+with solute tempering (REST) use the Metropolis-Hastings criteria to make 
+periodic decisions that impact which regions of the phase space are being 
+sampled (cite Schrodinger FEP/REST).
 
-Implementation of adaptive algorithms on high performance clusters (HPCs) are 
-predicated on adaptive runtime systems that provide the ability to make runtime 
-decisions based on intermediate results and can manage resources efficiently. 
-For molecular simulations to truly influence decision making in industrial and 
-clinical settings, the dual challenges of scalability of drug candidates and 
-enhancements in adaptive algorithms will need to be tackled.  
+Metadynamics and expanded ensemble (EE) dynamics are another class of 
+adaptive algorithms, where like replica exchange, individual simulations 
+can jump between simulation conditions. Once the error threshold 
+criteria is met for a drug candidate, the algorithm can decide to halt 
+simulations for that candidate while the next candidate is considered. 
+% Adaptive quadrature 
+% algorithms (cite) deliver this requirement by adding additional simulations to 
+% reduce errors on the predicated binding affinity. Once the error threshold 
+% criteria is met for a candidate, the algorithm can decide to halt simulations 
+% for that candidate while the next candidate is considered. 
 
-Most advances in high-performance computing have focused on the scale,
-performance and optimization of single long simulations. Due to the end of
-Dennard scaling, methodological advances and resource architectures (in 
-particular GPGPUs), many applications are now formulated using multiple, shorter 
-ensemble-based simulations. 
 
-These methods in bio-simulation science have been developed to take advantage of 
-the growing number of compute resources where multiple tasks are executed on 
-these compute resources in parallel. Although these methods may suffice for 
-existing problems, studying more drug candidates systems for longer durations 
-will require sophistication in these algorithms. 
-There are however, limited software solutions that can support the 
-scalable execution of multiple tasks concurrently.
 
-The "fire and forget" mentality 
-no longer fulfills computational efficiency when campaigns are limited by a 
-computational budget or require rapid timely insight for clinical efficacy. 
+% and other  adaptive sampling techniques guide 
+% simulations toward improving sampling quality by steering execution towards more 
+% interesting regions of phase space (cite). 
 
-% which provides a domain specific interface to leverage recent advances in
-% abstracting the relatonships between building blocks in workflow systems to
 
-Tools that facilitate the automated scalable and sophisticated computation of
-varied binding free energy calculations on high-performance computing
-resources are necessary. We have previously developed a tool for automating
+
+Implementation of such adaptive algorithms on high performance clusters (HPCs) 
+depend on both scalable and adaptive runtime systems that provide the 
+ability to make runtime decisions based on intermediate results and can manage 
+resources efficiently. For molecular simulations to truly influence 
+decision-making in industrial and clinical settings, the dual challenges of 
+scalability of drug candidates and enhancements in adaptive algorithms will 
+need to be tackled. There are however, limited software solutions that can 
+support the adaptive execution of high throughput binding affinity calculations 
+at scale.
+
+% Tools that facilitate the automated scalable and sophisticated computation of
+% varied binding free energy calculations on high-performance computing
+% resources are necessary. 
+
+We have previously developed a tool for automating
 system building and simulation input generation, the Binding Affinity
 Calculator (BAC)~\cite{Sadiq2008}. More recently we have introduced the 
 High-Throughput Binding Affinity Calculator (HTBAC)~\cite{dakka2017}, 
 which brings advances in the design of domain-specific workflow systems 
 using building blocks to facilitate the automation of deployment 
 and execution of rapid binding affinities on leadership class machines. 
+
+% These methods in bio-simulation science have been developed to take advantage of 
+% the growing number of compute resources where multiple tasks are executed on 
+% these compute resources in parallel. Although these methods may suffice for 
+% existing problems, studying more drug candidates systems for longer durations 
+% will require sophistication in these algorithms. 
+
+
+% which provides a domain specific interface to leverage recent advances in
+% abstracting the relatonships between building blocks in workflow systems to
 
 
 % In Dakka \textit{et al.}~\cite{dakka2017} we 
