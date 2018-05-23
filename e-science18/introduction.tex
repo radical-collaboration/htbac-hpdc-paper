@@ -25,7 +25,8 @@ For example, not all changes induced in protein shape or behavior are local
 to the drug binding site and, in some cases, simulation protocols will need to 
 adjust to account for complex interactions between drugs and their targets within 
 individual studies.
-A more strategic concern is that during a study the requirements may change. 
+A more strategic concern is that over the course of a study the requirements made of 
+the calculations may change. 
 A typical example of this is that at the start of a drug design campaign
 an initial screening of candidate compounds is conducted to filter out the worst 
 binders before using more sensitive methods are employed to refine the structure.
@@ -51,13 +52,15 @@ Adding additional simulations in regions where the curve is changing most rapidl
 reduces errors on the predicated binding affinity. 
 Once an uncertainty threshold criteria is met for a given candidate, the algorithm can 
 decide to halt simulations for that compound while the next candidate is considered. 
+This appraoch could even be combined with enhanced sampling techniques such as 
+REST.
 
 Until recently, simulation based studies of binding free energies have generally 
 been limited to at most tens of drug-target combinations. 
-As simulation campaigns become larger and more ambitious the inefficiency of 
-"fire and forget" approaches based on standardized sampling (e.g. simulations of 
-fixed length designed to ensure some level of convergence) becomes increasingly 
-costly.
+As simulation campaigns become larger and more ambitious the inefficiency, and 
+associated cost, of "fire and forget" approaches based on standardized sampling 
+(e.g. simulations of fixed length designed to ensure some level of convergence) 
+become multiplied.
 Both limited computational budget and/or strict time to insight deadlines are 
 characteristic of industrial and clinical applications and drive the need to be 
 able to obtain reliable results in an optimal manner.
