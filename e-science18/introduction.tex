@@ -35,16 +35,10 @@ differences in drug candidate chemistry (or protein sequence) can alter
 simulation behavior and the convergence of binding strength estimates.
 For example, not all changes induced in protein shape or behavior are local 
 to the drug binding site and, in some cases, simulation protocols will need to 
-% <<<<<<< HEAD
 adjust to account for complex interactions between drugs and their targets 
 within individual studies.
 A more strategic concern is that during a study the requirements may change. 
-% =======
-% adjust to account for complex interactions between drugs and their targets within 
-% individual studies.
-% A more strategic concern is that over the course of a study the requirements made of 
-% the calculations may change. 
-% >>>>>>> 8e69b71820a07495000ed0c06ca7acb3baf7fd62
+
 A typical example of this is that at the start of a drug design campaign
 an initial screening of candidate compounds is conducted to filter out the worst 
 binders before using more sensitive methods to refine the structure.
@@ -75,7 +69,8 @@ candidates~\cite{DeFabritiis2014}. Other adaptive methods such as replica
 exchange and well-known variations of replica exchange i.e. replica exchange 
 with solute tempering (REST) use the Metropolis-Hastings criteria to make 
 periodic decisions that impact which regions of the phase space are being 
-sampled (cite Schrodinger FEP/REST).
+sampled\jdnote{@dww which citation goes well with this? 
+the wang2015 paper only mentions FEP}.
 
 Metadynamics and expanded ensemble (EE) dynamics are another class of 
 adaptive algorithms, where like replica exchange, individual simulations 
@@ -90,7 +85,8 @@ changing most rapidly reduces errors on the predicated binding affinity.
 Once an uncertainty threshold criteria is met for a given candidate, the 
 algorithm can decide to halt simulations for that compound while the next 
 candidate is considered. This approach could even be combined with enhanced 
-sampling techniques such as REST (cite).
+sampling techniques such as REST \jdnote{@dww which citation goes well with this? 
+the wang2015 paper only mentions FEP}.
 
 Until recently, simulation based studies of binding free energies have generally 
 been limited to at most tens of drug-target combinations. 
@@ -272,7 +268,9 @@ In this work we demonstrate the use of HTBAC to enable adaptive
 algorithms to optimize for computational efficiency by coordinating runs with 
 % Calculations using either protocol require simulations of free and 
 % protein bound ligand necessitating the coordination of runs with 
-heterogeneous computational requirements.
+heterogeneous computational requirements. We demonstrate the benefits in 
+computational efficiency in using adaptive methods over nonadaptive and 
+show results for four different protein complexes. 
 %Executing either protocol often involves
 %running simulations of both free and  bound  ligand, with the later involving
 %a much larger system than the former. This means that even single calculations
