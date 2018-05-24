@@ -62,7 +62,8 @@ pipelines are replicated, where replicas differ by their parameter
 configurations. In ESMACS and TIES, replicas only differ by initial velocities, 
 which are assigned randomly by the MD engine at the start of execution. By 
 nature of ensemble applications, each replica within a protocol can execute its 
-simulation pipeline independently. 
+simulation pipeline independently. A computational \textbf{task} represents an 
+independent simulation. Aggregates of tasks create \textbf{workflows}... 
 
 The \textbf{Protocol} class enables multiple instantiations of protocol types
 such as ESMACS or TIES. Each protocol follows the same initial sequence of 
@@ -81,7 +82,7 @@ kernel and the length of each simulation step.
 Some protocols require additional information. For 
 example, the TIES protocol contains additional sampling parameters or   
 $\lambda$ windows. Moreover, the \textbf{Simulation} class exposes a 
-workflow method which enables the user to codify new algorithms, or modify
+method which enables the user to codify new algorithms, or modify
 an existing protocol such as specifying additional equilibration or analysis 
 steps. 
 
@@ -90,8 +91,6 @@ are defined, they are passed to the \textbf{Runner} class where the user defines
 the resource requirements including cyber-infrastructure and duration of the 
 application as well as additional flags for adaptive execution which are passed 
 down by the \textbf{Runner} to the workload management and runtime systems. 
-Figure X shows the control flow representation of HTBAC. 
-
 
 % For TIES, where each protocol  corresponds to a single 
 % physical system. The TIES protocol 
@@ -122,7 +121,13 @@ components, Ensemble Toolkit (EnTK) and RADICAL-Pilot (RP).
 Figure~\ref{fig:blockdiagram} shows a visual block diagram representation of 
 HTBAC and the underlying building blocks. 
 
+(include the mapping of protocols to PST model maybe using a better diagram) 
+
+
+
 \subsection{Workload Management and Runtime System}
+
+
 
 EnTK simplifies the process of creating ensemble-based applications with
 complex coordination and communication requirements. The EnTK API exposes the
@@ -153,12 +158,29 @@ concurrently. EnTK's \textbf{Execution Manager} uses the underlying runtime
 system, RADICAL-Pilot to execute the tasks on specific target resources.
 
 EnTK converts the set of pipelines into a set of tasks called compute unit 
-descriptions and submits them to RP. In addition, HTBAC passes the computational
+descriptions and submits them to RP. In EnTK, a Pipeline is created for 
+each unique combination of the following parameters: system, replica, 
+and thermodynamic state i.e. $\lambda$ window in the case of 
+TIES~\ref{fig:ties_workflow}
+
+In addition, HTBAC passes the computational
 requirements to EnTK which creates a resource request including walltime, cores, 
 queue, and user credentials. EnTK converts this resource request into a pilot 
 that RP submits to a HPC machine. Once the pilot becomes active, it pulls 
 compute unit descriptions in bulk from a database, executing them on the pilot 
 resources. 
+
+
+\begin{figure}
+  \centering
+   \includegraphics[width=\columnwidth]{figures/ties_workflow.pdf}
+  \caption{TIES workflow consisting a physical system, thermodynamic states and 
+  replicas. Each replica is assigned a thermodynamic state. The workflow is 
+  translated into an EnTK PST workflow. Construction Number of EnTK 
+  Pipelines = 2 * (($\lambda$(max)/$\delta$) + 1) * 5 where $\lambda$(max) = 1 }
+\label{fig:ties_workflow}
+\end{figure}
+
 
 \begin{figure}
   \centering
@@ -231,15 +253,15 @@ Explain adaptive API and how it is passed to EnTK
 % supporting generality of adaptive workflows at the inter and intra-protocol
 % level.
 
-\begin{figure}
-  \centering
-   \includegraphics[width=\columnwidth]{figures/_TIES_EnTK_implementation.pdf}
-  \caption{TIES protocol expressed using the EnTK PST model. Each protocol 
-  instance maps to a single Pipeline, comprised of Stage(s) which maintain 
-  temporal order. Each Stage executes $n$ tasks, where $n$ represents the 
-  number of unique lambda-replica combinations.}
-\label{fig:pst}
-\end{figure}
+% \begin{figure}
+%   \centering
+%    \includegraphics[width=\columnwidth]{figures/_TIES_EnTK_implementation.pdf}
+%   \caption{TIES protocol expressed using the EnTK PST model. Each protocol 
+%   instance maps to a single Pipeline, comprised of Stage(s) which maintain 
+%   temporal order. Each Stage executes $n$ tasks, where $n$ represents the 
+%   number of unique lambda-replica combinations.}
+% \label{fig:pst}
+% \end{figure}
 
 
 % \subsection{Scalability}
@@ -253,15 +275,18 @@ Explain adaptive API and how it is passed to EnTK
 
 In section \ref{sec:science-drivers}, we described a particular type of
 adaptivity within TIES that would enable the simulation to reach
-convergence earlier. Adaptive execution requires changes to the task graph 
+convergence earlier. Figure~\ref{fig:adaptive_ties} demonstrates the adaptive 
+workflow of TIES (change $\lambda$ step size as $\delta$). 
+Adaptive execution requires changes to the task graph 
 during runtime, capabilities that are supported by the RCT runtime 
 layers~\cite{power-of-many17}.
 
 The TIES adaptive workflow decides, post-mortem, about the placement
-of new lambda windows for the next set of simulations. In turn, the workflow
+of new $\lambda$ windows for the next set of simulations. In turn, the workflow
 makes runtime decisions to the number of tasks in the task graph. This type of 
 adaptivity in the workflow requires as task-count and task-attribute 
 adaptivity~\cite{adaptivebiomolecular}. 
+
 
 HTBAC monitors the output results from the completed tasks
 during runtime, and redefines the existing workflow by adding more $\lambda$
@@ -277,6 +302,17 @@ keep the session alive, as long as additional tasks are submitted. As the
 number of tasks grow during runtime, the ratio of core-to-task will fluctuate.
 HTBAC exposes the core allocation per task, and allows the user control to
 pre-specify resource requirements of additional tasks.
+
+\begin{figure}
+  \centering
+   \includegraphics[width=\columnwidth]{figures/adaptive_TIES_workflow_diagram.pdf}
+  \caption{Adaptive workflow of TIES consisting of multiple concurrent and 
+  independent simulations. The analysis step operates on a snapshot of the 
+  current simulations for each $\lambda$ window, and decides if the critical 
+  threshold is reached, else the current simulations continue executing and new 
+  simulations are spawned based on additional $\lambda$ values.}
+\label{fig:adaptive_ties}
+\end{figure}
 
 % ---------------------------------------------------------------------------
 
