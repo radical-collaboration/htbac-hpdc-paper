@@ -10,7 +10,6 @@ We perform experiments to characterize the overheads of HTBAC, its runtime
 system and the weak and strong scaling performance on NCSA Blue Waters and 
 ORNL Titan. 
 
-
 \begin{table*}
     \caption{Parameters of scalability experiments.}\label{tab:experiments}
     \centering
@@ -90,30 +89,34 @@ ORNL Titan.
 \up{}
 \end{table*}
 
-
 We show homogeneous and heterogeneous weak scalability of the protocols by
-growing the number of protocol instances while adhering to the required
-number of pipelines. By design of each protocol, an increase in the number of
-instances simply means an increase in the number of pipelines. The first weak
-scalability experiment demonstrates the behavior of HTBAC, EnTK and RP using
-the multiple instances of the ESMACS protocols on NCSA Blue Waters. The
-second experiment shows weak scaling performance of ESMACS at higher scales,
-using ORNL Titan.
+increasing the number of protocol instances while keeping the required number
+of pipelines. By design of each protocol, an increase in the number of
+instances means an increase in the number of pipelines. Experiment 1 measures
+the weak scalability of HTBAC, EnTK and RP using multiple instances of the
+ESMACS protocols on NCSA Blue Waters. Experiment 2 measures weak scaling
+performance of ESMACS at higher scales, using ORNL Titan.
+\mtnote{Would it be better to describe weak scaling in terms of solution
+time, number of resources and problem size, as done in the following
+paragraph?}
 
+Experiments 3 and 4 repeat the same design as experiments 1 and 2 using the
+TIES protocol instead of the ESMACS one. Experiment 5 uses both TIES and
+ESMACS in the same run. By design of weak scaling, the ratio between the
+number of pipelines and cores are kept constant. As the number of cores
+(measure of resource) changes by a factor of 2, we introduce twice as many
+protocol instances. In this way, the weak scaling property \mtnote{property
+of? I would replace with: ``weak scaling provides insight\ldots''} provides
+insight into the size of the workload that can be investigated in a given
+amount of time.
 
-The third and fourth experiments repeats the same design as experiments 1 and
-2 yet demonstrate the performance of TIES. The fifth experiment demonstrates
-concurrent execution of TIES and ESMACS in the same run. By design of weak
-scaling, the ratio between the number of pipelines and cores are kept
-constant. As the number of cores (measure of resource) changes by a factor of
-2, we introduce twice as many protocol instances. As designed, the weak
-scaling property provides insight into the size of the workload that can be
-investigated in a given amount of time.
-
-In addition, we demonstrate individual strong scaling performance of ESMACS
-and TIES on Blue Waters in experiments 6 and 7, respectively. We fix the
-number of protocols and vary the amount of resources in order to produce
-generations of execution.
+Experiments 6 and 7 measure individual\mtnote{I am not sure I understand what
+individual means in this context} strong scaling performance of ESMACS and
+TIES on Blue Waters. We fix the number of protocols and vary the amount of
+resources in order to produce generations \mtnote{The reader will struggle to
+understand what `generations' means in this context.} of execution.
+\mtnote{Two sizable paragraphs to describe weak scaling, four lines to
+describe strong scaling? I would expand.}
 
 All Blue Waters experiments were performed from a persistent virtual machine,
 as Blue Waters does not permit executing applications directly on the login
@@ -167,12 +170,12 @@ L &= \{ x_i: x_i\in[0,1]\; and\; x_{i+1} = x_i + \delta \}, where\ \delta\ is\ 0
 We append two additional values on both ends of $L$, completing 13 $\lambda$
 windows. Each $\lambda$ window consists of five replicas. Therefore there are
 a total of 65 tasks for every simulation stage. The production simulations
-stage, $S4$ as described in figure~\ref{fig:pst} executes a 4 ns simulation
-duration. The analysis stages of the protocol reduce the number of tasks. The
-first analysis task consists of five tasks where each task performs an
-aggregate analysis over all $\lambda$ windows for each replica. The second
-analysis stage consists of one task that aggregates the previous results and
-computes a single average across all replicas.
+stage, $S4$ as described in figure~\ref{fig:pst}\mtnote{missing figure}
+executes a 4 ns simulation duration. The analysis stages of the protocol
+reduce the number of tasks. The first analysis task consists of five tasks
+where each task performs an aggregate analysis over all $\lambda$ windows for
+each replica. The second analysis stage consists of one task that aggregates
+the previous results and computes a single average across all replicas.
 
 %----------------------------------------------------------------------------
 \subsubsection{Scaling and Performance Characterization}
