@@ -3,15 +3,6 @@
 \input{head}
 \input{include}
 
-
-\usepackage{xspace}
-\usepackage{xcolor}
-\usepackage{soul}
-\usepackage{xcolor}
-\usepackage{srcltx}
-\usepackage{xspace}
-\usepackage{wrapfig}
-
 % \newif\ifdraft{}
 % \drafttrue{}
 % \ifdraft{}
@@ -26,7 +17,6 @@
 %  \newcommand{\dwwnote}[1]{}
 %  \newcommand{\jdnote}[1]{}
 %  \newcommand{\kfnote}[1]{}
-
 % \fi
 
 
@@ -42,31 +32,33 @@
 \maketitle
 
 \begin{abstract}
-The efficacy of drug treatments depends on how tightly small molecules bind to
-their target proteins. Quantifying the strength of these interactions (the so
-called ‘binding affinity’) is a grand challenge of computational chemistry,
-surmounting which could revolutionize drug design and provide the platform for
-patient specific medicine. Recently, evidence from blind challenge predictions
-and retrospective validation studies has suggested that molecular dynamics
-(MD) can now achieve useful predictive accuracy ($\leq$ 1 kcal/mol).
-This accuracy is sufficient to greatly accelerate hit to lead and lead optimization.
+The efficacy of drug treatments depends on how tightly small molecules bind
+to their target proteins. Quantifying the strength of these interactions (the
+so called ‘binding affinity’) is a grand challenge of computational
+chemistry, surmounting which could revolutionize drug design and provide the
+platform for patient specific medicine. Recently, evidence from blind
+challenge predictions and retrospective validation studies has suggested that
+molecular dynamics (MD) can now achieve useful predictive accuracy ($\leq$ 1
+kcal/mol). This accuracy is sufficient to greatly accelerate hit to lead and
+lead optimization.
 
 To translate these advances in predictive accuracy so as to impact clinical
-decision making requires that binding free energy results
-must be turned around on reduced timescales without loss of accuracy. This
-demands advances in algorithms, scalable software systems, and intelligent and
-efficient utilization of supercomputing resources. 
+decision making requires that binding free energy results must be turned
+around on reduced timescales without loss of accuracy. This demands advances
+in algorithms, scalable software systems, and intelligent and efficient
+utilization of supercomputing resources.
 
 % Specifically, it necessitates refining algorithms and developing
 % technologies to marshal huge simulation campaigns.
 
-We demonstrate the use of a framework called HTBAC, designed to support
-the aforementioned requirements of accurate and rapid drug binding affinity
-calculations, to marshal huge simulation campaigns. HTBAC facilitates the 
-execution of the numbers of simulations while supporting the adaptive execution 
-of algorithms. Furthermore, HTBAC enables the selection of simulation parameters 
-during runtime which can, in principle, optimize the use of computational 
-resources whilst producing results within a target uncertainty.
+We introduce the use of a framework called HTBAC, designed to support the
+aforementioned requirements of accurate and rapid drug binding affinity
+calculations, to marshal huge simulation campaigns. HTBAC facilitates the
+execution of the numbers of simulations while supporting the adaptive
+execution of algorithms. Furthermore, HTBAC enables the selection of
+simulation parameters during runtime which can, in principle, optimize the
+use of computational resources whilst producing results within a target
+uncertainty.
 \end{abstract}
 
 \section{Introduction}
@@ -103,7 +95,7 @@ resources whilst producing results within a target uncertainty.
 
 % ---------------------------------------------------------------------------
 % BIBLIOGRAPHY
-% -------------------,--------------------------------------------------------
+% ---------------------------------------------------------------------------
 \bibliographystyle{IEEEtran}
 \bibliography{rutgers,ucl}
 
