@@ -219,15 +219,22 @@ previous results and computes a single average across all replicas.
 \mtnote{Is this meant to be a subsubsection?}
 
 We first characterize the overheads of HTBAC and the runtime system. HTBAC
-enables concurrent execution of multiple protocol instances. With each new
-protocol instance generated for an application, the HTBAC overhead grows to
-match the additional requirement of generating new protocols. The total time
-to completion (TTC) can be expressed as following: $TTC = TTX + T_{O}$ where
-\(TTX\) measures the execution duration across all task, including file
-staging, MD kernel execution, pre- and post-executables, and $T_{O}$ the
-total overhead is given by the sum of the constituent overheads: $$T_{O} =
-T_{O}\textsuperscript{HTBAC} + T_{O}\textsuperscript{EnTK} +
-T_{O}\textsuperscript{RP}$$
+enables concurrent execution of multiple protocol \mtnote{what type of
+protocols?} instances. The overhead of HTBAC depends \mtnote{mostly?} on the
+number of protocol instances that need to be generated for an application.
+% With each new protocol instance generated for an application, the HTBAC
+% overhead grows to match the additional requirement of generating new
+% protocols.
+The total time to completion (TTC) \mtnote{of what?} can be expressed as
+following: $TTC = TTX + T_{O}$ where \(TTX\) measures the execution duration
+across all task, including file staging, MD kernel execution, pre- and
+post-executables \mtnote{TTX should measure only the aggregated time spent
+executing the tasks' executables. All the rest should be part of RP
+overhead}; and $T_{O}$ the total overhead is \mtnote{grammar: I do not
+understand the sentence after the `;'} given by the sum of the constituent
+overheads: $$T_{O} = T_{O}\textsuperscript{HTBAC} +
+T_{O}\textsuperscript{EnTK} + T_{O}\textsuperscript{RP}$$ \mtnote{As defined,
+this formula seems to add twice part of the RP overheads.}
 
 % In order to understand the contribution of the various events in HTBAC,
 % termed as HTBAC overhead, to
@@ -245,7 +252,9 @@ ratio between the number of pipelines and cores are kept constant. As the
 number of cores (measure of resource) changes by a factor of 2, we introduce
 twice as many protocol instances. As designed, the weak scaling property
 provides insight into the size of the workload that can be investigated in a
-given amount of time.
+given amount of time.\mtnote{This paragraph is a copy of a previous
+paragraph. See comments and iterations of the previous paragraph before
+rewriting a new paragraph if needed.}
 
 \begin{figure}
   \centering
@@ -261,7 +270,8 @@ given amount of time.
 \end{figure}
 
 The second weak scalability experiment repeats the same experimental design
-yet replaces the TIES protocols with TIES and ESMACS, respectively.
+\mtnote{of what?}, replacing the TIES protocols \mtnote{should this be
+`protocol'?} with TIES and ESMACS, respectively. \mtnote{This paragraph needs to be further expanded}
 
 \begin{figure}
   \centering
@@ -276,28 +286,42 @@ yet replaces the TIES protocols with TIES and ESMACS, respectively.
 
 The HTBAC overhead shows a super linear increase as we grow the number of
 protocol instances. However, the HTBAC overhead is a minimal contributor to
-\(TTX\). The runtime overheads, mainly EnTK and RP, depend on the number of
-tasks that need to be translated in-memory from a Python object to a compute
-unit (CU) description. As such, it is expected to grow proportionally to the
-number of tasks. EnTK submits CU descriptions to a MongoDB used by RP. RP
-pilot pulls these descriptions from the same database.
+\(TTX\) \mtnote{Should this be TTC? HTBAC should contribute nothing to TTX.
+If this should be TTX, then we should write about comparison between HTBAC
+overhead and TTX}. The runtime overheads, mainly EnTK and RP, depend on the
+number of tasks that need to be translated in-memory from a Python object to
+a compute unit (CU) description \mtnote{This sentence is copied from a
+previous paper we wrote: does the reader know what a CU is?}. As such, those
+overheads are expected to grow proportionally to the number of tasks. EnTK
+submits CU descriptions to a MongoDB used by RP. RP pilot pulls these
+descriptions from the same database.\mtnote{I am not sure this is accurate}
 % This pull operation occurs over a wide area networks, which introduces
 % varying amounts of latency.
-In addition, each stage constructed by EnTK maintains sequential barriers. RP
-remains dormant until completion of the current tasks before staging the next
-tasks \ref{fig:weak_scaling_ESMACS_TIES}.
+In addition, each stage constructed by EnTK maintains sequential barriers
+\mtnote{Doe the reader know what a barrier is?}. RP remains dormant until
+completion of the current tasks before staging the next tasks
+\ref{fig:weak_scaling_ESMACS_TIES} \mtnote{This figure is about scaling
+behavior, not about the mechanics of EnTK and RP here discussed.}
 
 % The impact of the synchronization barriers increases with the number of CUs
 % as seen in the 16 protocol instances data point in
 
-Furthermore, an additional overhead, driven by the aprun launch method,
-increases as we approach a system limit on the number of permissible aprun
-processes when scaling from 8 to 16 protocols, which translates to 520 and
-1040 concurrent tasks, respectively. We account for the aprun failures in the
-\(TTX\). Together, the EnTK-enabled synchronization barriers and aprun
-overhead failures introduce delays in the scheduling of the CUs and results
-in higher overheads. Lastly, we notice that each additional protocol instance
-contributes to roughly 55 additional seconds in \(TTX\).
+Furthermore, an additional overhead, driven by the aprun \mtnote{Does the
+reader know what aprun is? Also, I would use something like textttt to
+identify the name of a command or executable} launch method, increases as we
+approach a system limit on the number of permissible \mtnote{concurrent?}
+aprun processes when scaling from 8 to 16 protocols, which translates to 520
+and 1040 concurrent tasks, respectively \mtnote{this sentence does not read
+well. I would refine it}. We account for the aprun failures in the \(TTX\)
+\mtnote{this needs further explanation}. Together, the EnTK-enabled
+synchronization barriers and aprun overhead failures \mtnote{until now, we
+have implicitly assumed that our overheads are measured in time. Did we now
+use also number of failures?} introduce delays in the scheduling of the CUs
+and results in higher overheads \mtnote{Is this sentence circular? Overhead
+increases contributing to increasing the overhead?}. Lastly, we notice that
+each additional protocol instance contributes to roughly 55 additional
+seconds in \(TTX\).\mtnote{All this needs to be clarified and expanded into
+an actual discussion of the results.}
 
 % ---------------------------------------------------------------------------
 \subsubsection{Strong Scaling Experiments}
