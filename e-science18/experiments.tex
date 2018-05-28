@@ -332,21 +332,47 @@ should change this one?}
 Next we repeat the same design of the weak scalability experiments but
 examine performance of strong scaling when fixing the number of pipelines and
 varying the resources. The comparison between weak and strong scalability
-demonstrates the overhead introduced by load balancing and scheduling tasks
-in multiple generations. As we scale the number of generation of concurrent
-tasks executions, we half the resources allocated by the pilot.
+shows the overhead introduced by load balancing and scheduling tasks in
+multiple generations \mtnote{See previous comments about
+terminology}\mtnote{I am not sure I understand: are we comparing overheads
+when weak and strong scaling our applications/workflows or are we first
+measuring the overheads when strong scaling and then comparing them to those
+of weak scaling?}. As we scale the number of generation of concurrent tasks
+executions, we half the resources allocated by the pilot \mtnote{this should
+be explained in the experiment setup and design}.
+
+\mtnote{General note. Experiments about weak and strong scaling show the
+behavior of our software stack with one or more workflows/workloads. The
+question these experiments answer to is: Given a workload/workflow, does this
+software stack scale weakly and/or strongly? This is why, in the analysis of
+our data, we look at the linearity (or lack of thereof) of our plots. The
+analysis of the overhead(s) answer to a different question: What part of a
+measure---e.g., time to completion---depends on the properties of an element
+used to produce that measure---e.g., a component of our software stack?
+Usually, the analysis of the overheads is used to explain why we observe lack
+of scalability (weak or strong) as represented by a superlinearity in our
+plots. The discussion of our experimental results should clearly distinguish
+these questions and properly relate the study of scalability to that of
+overheads. At the moment, our discussion does not do all this.}
 
 Furthermore, as we scale the number of generations, the runtime overhead of
-RP scales linearly. RP requires a proportional amount of time to schedule
-tasks to the scale of execution. The main contributor to the increase in
-overhead is derived by the time of resources inactivity while RP schedules
-new tasks. As such, the overhead is expected to grow proportionally to the
-number of concurrent tasks.
+RP scales linearly. RP requires an amount of time to schedule tasks
+proportional to the scale of execution. The main contributor to the increase
+in overhead \mtnote{which one?} is derived \mtnote{I am not sure a
+contributor is derived} by the time of resources inactivity while RP
+schedules new tasks \mtnote{this is derived from another publication: we need
+to reference the work we copy/paraphrase from}. As such, the overhead is
+expected to grow proportionally to the number of concurrent tasks.
 
-The RP overhead decomposes into events that capture the pilot and tasks
-lifespan. The pilot duration contains the time to bootstrap and terminate the
-pilot. The task overheads contain the executor's spawning of the task, folder
-staging preparation, and operating system task spawning.
+The RP overhead decomposes \mtnote{I do not think the overhead decomposes: Do
+we measure the components of the overhead?} into events \mtnote{we use events
+to record timestamps from which we derive durations that, once interpreted,
+measure our overheads. I would avoid to mention events in this context.} that
+capture the pilot and tasks lifespan. The pilot duration contains the time to
+bootstrap and terminate the pilot. The task overheads contain the executor's
+spawning of the task, folder staging preparation, and operating system task
+spawning. \mtnote{We need to explain to the reader why all this is relevant
+in this context.}
 
 \begin{figure}
   \centering
