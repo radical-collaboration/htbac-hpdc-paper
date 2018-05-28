@@ -439,43 +439,44 @@ improve the efficiency and accuracy of result. In \emph{adaptive experiments}
 we implemented the adaptive quadrature algorithm specifically customized for
 biosimulations.
 
-In the adaptive workflow, over the course of a protocol instance we alter the
-number of $\lambda$ windows being simulated. The position of new $\lambda$
-windows depends on the estimated error of the integral measured between
-adjacent windows. Increasing the number of $\lambda$ windows in regions of
-rapid change will increase the accuracy of the overall integral to a greater
-degree than an arbitrarily placed window. In order to adaptively add lambda
-windows, we need access to the $\partial U/\partial\lambda$ values during
-runtime. Therefore, we break down the single production simulation stage (S4)
-from the nonadaptive workflow into multiple smaller stages, each running for
-1 ns. Once each simulation is complete within a stage a decision is made
-about whether more $\lambda$ windows are required, and if so where they
-should be placed.
+In the adaptive workflow, we alter the number of $\lambda$ windows being
+simulated over the course of a protocol instance. The position of new
+$\lambda$ windows depends on the estimated error of the integral measured
+between adjacent windows. Increasing the number of $\lambda$ windows in
+regions of rapid change will increase the accuracy of the overall integral to
+a greater degree than an arbitrarily placed window. In order to adaptively
+add lambda windows, we need access to the $\partial U/\partial\lambda$ values
+during runtime. Therefore, we break down the single production simulation
+stage (S4) \mtnote{I would reference the figure with the workflow diagram
+here} from the nonadaptive workflow into multiple smaller stages \mtnote{how
+many?}, each running for 1 ns. Once each simulation is complete within a
+stage, a decision is made about whether more $\lambda$ windows are required,
+and, if so, where these windows should be placed.
 
-We start out the simulation with 5 replicas of \emph{3} equally spaced
-$\lambda$ windows, and equilibrate them. Then we repeatedly execute shorter
-production simulations followed by an analysis phase which determines where
-to place new lambda windows. This procedure is repeated until convergence, at
-which point all concurrent simulation are terminated. We define convergence
-as the point in the production-analysis loop at which a desired error
-threshold is reached.
+We start out the simulation with 5 replicas of \emph{3} \mtnote{why emphasis
+for 3?} equally spaced $\lambda$ windows, and equilibrate them. Then we
+repeatedly execute shorter production simulations followed by an analysis
+phase which determines where to place new lambda windows. This procedure is
+repeated until convergence, at which point all concurrent simulation are
+terminated. We define convergence as the point in the production-analysis
+loop at which a desired error threshold is reached.
 
 The success of this algorithm is determined by the decision where additional
 $\lambda$ windows should be introduced. In adaptive quadrature, this decision
 is made by calculating an error estimate on the integral and comparing this
-to a threshold value. Due to the stochastic nature of biosimulations, it is
-non-trivial to determine this error, and as a proof of concept we simplified
-this decision to replicate pre-calculated results. In future studies we plan
-to replace this with a dynamic decision process.
+estimate to a threshold value. Due to the stochastic nature of
+biosimulations, it is non-trivial to determine this error and, as a proof of
+concept, we simplified this decision to replicate pre-calculated results. In
+future studies, we plan to use a dynamic decision process.
 
 Inter-node communication introduces a constraint on the number of new lambda
-windows that can be added at each iteration. To reduce the overhead of
-inter-node communication, simulations must run on an integer number of nodes.
-This means that the number of new $\lambda$ windows (i.e. the number of
+windows that can be added at each iteration. Simulations must run on an
+integer number of nodes to reduce the overhead of inter-node communication.
+This means that the number of new $\lambda$ windows (i.e., the number of
 simulations) \emph{has} to be either doubled or left unchanged. If the number
-of window is doubled the nodes per simulation can be halved automatically.
-Our prototype algorithm loops through the current $\lambda$ window pairs
-until this criterion is reached, forcefully adding more if needed.
+of windows is doubled, the number of nodes per simulation can be halved
+automatically. Our algorithm loops through the current $\lambda$ window pairs
+until this criterion is reached, forcefully adding more windows when needed.
 
 
 % I don't think we need this equation here, it's too trivial.
@@ -484,20 +485,20 @@ until this criterion is reached, forcefully adding more if needed.
 % %&$$L=\{ x_i: x_i\in[0,1]\; and\; x_{i+1} = x_i + \delta \}$$%, where $\delta$ is $0.1$.
 % \end{flalign}
 
-% For every $\lambda$ window we initialize with five replicas therefore yielding a
-% total of 15 tasks. We run 15 tasks for stages $S1$ through $S4.1$. Between
-% stages $S4.1$ and $S4.3$ the number of $\lambda$ windows doubles
-% for every stage, which doubles the total number of tasks. The last production
-% simulation stage, $S4.4$, runs for the remaining 2 ns durations.
+% For every $\lambda$ window we initialize with five replicas therefore
+% yielding a total of 15 tasks. We run 15 tasks for stages $S1$ through
+% $S4.1$. Between stages $S4.1$ and $S4.3$ the number of $\lambda$ windows
+% doubles for every stage, which doubles the total number of tasks. The last
+% production simulation stage, $S4.4$, runs for the remaining 2 ns durations.
 
-We introduce only a single degree of freedom relative to baseline ``non-
-adaptive" experiments, thus our experiments implement adaptive change in the
-$\lambda$ windows sampled and not the timing of execution. HTBAC provides the
-functional capability to adaptively determine the time at which the $\lambda$
-windows are chosen. However in this paper, we do not investigate the impact
-of such adaptivity, as the objective is to determine the feasibility of
-adaptive execution and resulting scientific merit of adaptive decision
-making.
+Our experiments implement adaptive change in the $\lambda$ windows sampled
+and not the timing of execution. In this way, we introduce only a single
+\mtnote{additional?} degree of freedom relative to \mtnote{compared to?} our
+baseline ``non-adaptive" experiments. HTBAC provides the functional
+capability to adaptively determine the time at which the $\lambda$ windows
+are chosen. However, in this paper we do not investigate the impact of such
+adaptivity, as the objective is to determine the feasibility of adaptive
+execution and the scientific merit of adaptive decision making.
 
 % \begin{figure}
 %   \centering
