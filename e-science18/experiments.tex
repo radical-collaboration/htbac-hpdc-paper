@@ -34,8 +34,9 @@ run concurrent simulations for a large number of drug candidates. Therefore,
 we perform our experiments on machines that can deliver at the scale necessary 
 to support these demands. \jdnote{should we mention anything about exascale?}
 We perform experiments to characterize the overheads of HTBAC, its runtime 
-system and the weak and strong scaling performance on NCSA Blue Waters. We then 
-perform adaptive experiments of several ligands to characterize improvements in 
+system and the weak and strong scaling performance on NCSA Blue Waters. We 
+select Blue Waters for its ability to...
+We then perform adaptive experiments to show improvements in 
 time-to-convergence. 
 
 \begin{table*}
@@ -44,11 +45,12 @@ time-to-convergence.
     \centering
     \resizebox{\textwidth}{!}{
     \begin{tabular}{l            % Experiment ID
+                    l            % experiment type
+                    l            % physical system 
                     l            % CI
                     l            % protocol type
                     l            % number of protocols
                     l            % total cores
-                    l            % executable
                     }
     %
     \toprule
@@ -59,8 +61,8 @@ time-to-convergence.
     \B{Computing Infrastructure (CI)} &  % CI
     \B{Protocol(s)}                   &  % protocol type
     \B{No. Protocol(s)}                    &  % number of protocols
-    \B{Total Cores}                    &  % total cores
-    \B{Executable}                          \\ % executable
+    \B{Total Cores}                     \\ % total cores
+    % \B{Executable}                          \\ % executable
     %
     \midrule
     %
@@ -70,8 +72,8 @@ time-to-convergence.
     Blue Waters                       &  % CI
     ESMACS                            &  % protocol type
     (2, 4, 8, 16)                     &  % number of protocols
-    1600, 3200, 6400                  &  % total cores
-    NAMD-MPI                               \\ % executable
+    1600, 3200, 6400                  \\  % total cores
+    % NAMD-MPI                               \\ % executable
     %
     % \B{2}                             &  % Experiment ID
     % Weak scaling                      &
@@ -88,9 +90,9 @@ time-to-convergence.
     Blue Waters                       &  % CI
     TIES                              &  % protocol type
     (2, 4, 8)                         &  % number of protocols
-    4160, 8320, 16640                 &  % total cores
-    NAMD-MPI                              \\ % executable
-    %
+    4160, 8320, 16640                 \\  % total cores
+    % NAMD-MPI                              \\ % executable
+    % %
     % \B{4}                             &  % Experiment ID
     % Weak scaling                      &
     % BRD4                              &
@@ -106,8 +108,8 @@ time-to-convergence.
     Blue Waters                       &  % CI
     ESMACS + TIES                     &  % protocol type
     (2, 4, 8)                    &  % number of protocols
-    5280, 10560, 21120              &  % total cores
-    NAMD-MPI                              \\ % executable
+    5280, 10560, 21120               \\ % total cores
+    % NAMD-MPI                              \\ % executable
     %
     \B{4}                             &  % Experiment ID
     Strong scaling                      &
@@ -115,8 +117,8 @@ time-to-convergence.
     Blue Waters                          &  % CI
     TIES                          &  % protocol type
     (8, 8, 8)                    &  % number of protocols
-    16640, 8320, 4160              &  % total cores
-    NAMD-MPI                              \\ % executable
+    16640, 8320, 4160               \\ % total cores
+    % NAMD-MPI                              \\ % executable
     %
     \B{5}                             &  % Experiment ID
     Strong scaling                          &  % CI
@@ -124,17 +126,17 @@ time-to-convergence.
     Blue Waters                              &
     ESMACS                          &  % protocol type
     (16, 16, 16)                    &  % number of protocols
-    6400, 3200, 1600              &  % total cores
-    NAMD-MPI                              \\ % executable
+    6400, 3200, 1600                \\ % total cores
+    % NAMD-MPI                              \\ % executable
     %
     \B{6}                             &  % Experiment ID
-    Adaptivity
-    ?
+    adaptivity                       &  
+    ?                                  &  
     Blue Waters                          &  % CI                            
     TIES                          &  % protocol type
     (1)                           &  % number of protocols
-    2080                          &  % total cores
-    NAMD-MPI                              \\ % executable
+    2080                           \\ % total cores
+    % NAMD-MPI                              \\ % executable
     %
     \bottomrule
     %
@@ -165,14 +167,58 @@ scaling provides insight
 % \mtnote{property
 % of? I would replace with: ``weak scaling provides insight\ldots''} provides
 % insight 
-into the size of the workload that can be investigated in a given amount of time.
+into the size of the workload that can be investigated in a given amount of 
+time.
 
 Next, we demonstrate strong scaling performance of the protocols by fixing the 
 workload i.e. the number of pipelines but reducing the number of cores 
-by half in each run. We measure how the timing of the workload scale when adding 
-resources, while expecting fixed overheads in HTBAC, EnTK and RP. Experiments 4 
-measures the strong scaling performance of ESMACS while experiment 5 repeats the 
-same strong scaling experiment using the TIES workload. 
+by half in each run. We measure how the timing of the workload scales when
+adding resources, expecting linear speedup, and expect fixed overheads in HTBAC, 
+EnTK and RP. Experiments 4 measures the strong scaling performance of ESMACS 
+while experiment 5 repeats the same strong scaling experiment using the TIES 
+workload. 
+
+Lastly, we demonstrate perform TIES intra-protocol adaptivity experiments where 
+we shift computational resources during runtime. 
+
+In non-adaptive experiments we run simulations according to the original 
+TIES protocol where the MD simulation step is run for the full 4 ns duration. 
+In the adaptive experiments, we still adhere to the same TIES protocol, however
+we stop the MD simulation after each ns and allow the adaptive quadratures to 
+calculate the SEM. The calculation determines where to place additional lambda 
+windows in the next nanosecond duration. Once we reach a level of simulation 
+convergence, we can halt simulations for that candidate and shift resources
+over to another candidate whose simulations have not yet started. We demonstrate
+computational efficiency, i.e. given X number of core hours, what is the 
+difference between adaptive accuracy and nonadaptive accuracy? By extent we can
+also begin to inference the trade-offs between computational resources and 
+accuracy. 
+
+The benefit of running adaptive simulations produces greater fidelity. Since the
+exact placement of lambda windows and by extent the simulations are not known
+a priori, in the non-adaptive scenerio, lambda windows are approximated, 13 
+evenly spaced positions. While this placement does produce statistical 
+convergence, it does so at the cost of additional resources. Instead, in the 
+adaptive scenario, we begin the MD simulation with 3 approximated and evenly 
+spaced lambda windows. We run the MD simulation for only 1 nanosecond, and 
+aggregate the outputs from those lambda windows in order to calculate the 
+RMSE which determines where to position additional lambda windows. Since this 
+variability of lambda windows is highly dependent on the physical system, the 
+only way to capture more accurate placement of lambda windows is during runtime
+in order to inference lambda windows based on intermediate results. 
+
+We can glean two points from this:
+
+1) We can stop the simulation once we reach an acceptable error threshold 
+2) To produce tighter binding affinity as some clinical insights may require, 
+given the same amount of core hours, what is the added benefit of running 
+adaptive experiments over nonadaptive, i.e. how much more accuracy do we gain by 
+running adaptive simulations?  
+
+When one protocol has converged whilst 
+another has not, we can shift computational resources to favor simulations that 
+require additional resources. 
+
 
 % individual\mtnote{I am not sure I understand what
 % individual means in this context} 
@@ -189,16 +235,16 @@ same strong scaling experiment using the TIES workload.
 
 Due to the NCSA 
 % and ORNL 
-security policies, we performed the Blue Waters
-experiments from a persistent virtual machine 
+security policies, we performed the experiments from a persistent virtual 
+machine 
 % and the Titan ones from an ORNL login node.
 % as Blue Waters does not permit executing applications directly on the login
 % node. The ORNL Titan experiments had instead to be performed from an ORNL
 % login node.
 We used HTBAC 0.1, EnTK 0.6, and RP 0.47 for all the experiments and
 the same versions of the NAMD MD engine, compiled according to the
-capabilities of each environment and of NAMD itself. On Blue Waters we used
-NAMD-MPI 
+capabilities of each environment and of NAMD itself. For all experiments we used
+NAMD-MPI.
 % while on Titan a non-MPI, multi-core NAMD engine. On Titan we
 % compiled NAMD with CUDA for the ESMACS experiments, and with OpenMP for the
 % for TIES ones as NAMD does not support alchemical perturbations execution on
