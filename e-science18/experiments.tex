@@ -29,12 +29,18 @@
 % ---------------------------------------------------------------------------
 \subsection{Experiment Setup}\label{ssec:exp_design}
 
-We perform experiments to characterize the overheads of HTBAC, its runtime
-system and the weak and strong scaling performance on NCSA Blue Waters and 
-ORNL Titan. 
+Computational drug campaigns require sizable compute resources in order to 
+run concurrent simulations for a large number of drug candidates. Therefore, 
+we perform our experiments on machines that can deliver at the scale necessary 
+to support these demands. \jdnote{should we mention anything about exascale?}
+We perform experiments to characterize the overheads of HTBAC, its runtime 
+system and the weak and strong scaling performance on NCSA Blue Waters. We then 
+perform adaptive experiments of several ligands to characterize improvements in 
+time-to-convergence. 
 
 \begin{table*}
-    \caption{Parameters of scalability experiments.}\label{tab:experiments}
+    \caption{Parameters of scalability and adaptivity experiments.}
+    \label{tab:experiments}
     \centering
     \resizebox{\textwidth}{!}{
     \begin{tabular}{l            % Experiment ID
@@ -48,6 +54,8 @@ ORNL Titan.
     \toprule
     %
     \B{ID}                            &  % Experiment ID
+    \B{Type of Experiment} &            % Adaptive or Scale
+    \B{Physical System} &            % Adaptive or Scale
     \B{Computing Infrastructure (CI)} &  % CI
     \B{Protocol(s)}                   &  % protocol type
     \B{No. Protocol(s)}                    &  % number of protocols
@@ -57,52 +65,75 @@ ORNL Titan.
     \midrule
     %
     \B{1}                             &  % Experiment ID
+    Weak scaling                      &
+    BRD4                              &
     Blue Waters                       &  % CI
     ESMACS                            &  % protocol type
     (2, 4, 8, 16)                     &  % number of protocols
     1600, 3200, 6400                  &  % total cores
     NAMD-MPI                               \\ % executable
     %
-    \B{2}                             &  % Experiment ID
-    Titan                          &  % CI
-    ESMACS                          &  % protocol type
-    (16, 64, 128)                    &  % number of protocols
-    6400, 25600, 51200              &  % total cores
-    NAMD (non-MPI)                 \\ % executable
+    % \B{2}                             &  % Experiment ID
+    % Weak scaling                      &
+    % BRD4                              &
+    % Titan                          &  % CI
+    % ESMACS                          &  % protocol type
+    % (16, 64, 128)                    &  % number of protocols
+    % 6400, 25600, 51200              &  % total cores
+    % NAMD (non-MPI)                 \\ % executable
     % 
-    \B{3}                             &  % Experiment ID
+    \B{2}                             &  % Experiment ID
+    Weak scaling                      &
+    BRD4                              &
     Blue Waters                       &  % CI
     TIES                              &  % protocol type
     (2, 4, 8)                         &  % number of protocols
     4160, 8320, 16640                 &  % total cores
     NAMD-MPI                              \\ % executable
     %
-    \B{4}                             &  % Experiment ID
-    Titan                          &  % CI
-    TIES                          &  % protocol type
-    (8, 32, 64)                    &  % number of protocols
-    16640, 66560, 133120              &  % total cores
-    NAMD (non-MPI)                 \\ % executable
+    % \B{4}                             &  % Experiment ID
+    % Weak scaling                      &
+    % BRD4                              &
+    % Titan                          &  % CI
+    % TIES                          &  % protocol type
+    % (8, 32, 64)                    &  % number of protocols
+    % 16640, 66560, 133120              &  % total cores
+    % NAMD (non-MPI)                 \\ % executable
     %
-    \B{5}                             &  % Experiment ID
+    \B{3}                             &  % Experiment ID
+    Weak scaling                      &
+    BRD4                              &
     Blue Waters                       &  % CI
     ESMACS + TIES                     &  % protocol type
     (2, 4, 8)                    &  % number of protocols
     5280, 10560, 21120              &  % total cores
     NAMD-MPI                              \\ % executable
     %
-    \B{6}                             &  % Experiment ID
+    \B{4}                             &  % Experiment ID
+    Strong scaling                      &
+    BRD4                              &
     Blue Waters                          &  % CI
     TIES                          &  % protocol type
     (8, 8, 8)                    &  % number of protocols
     16640, 8320, 4160              &  % total cores
     NAMD-MPI                              \\ % executable
     %
-    \B{7}                             &  % Experiment ID
-    Blue Waters                          &  % CI
+    \B{5}                             &  % Experiment ID
+    Strong scaling                          &  % CI
+    BRD4                      &
+    Blue Waters                              &
     ESMACS                          &  % protocol type
     (16, 16, 16)                    &  % number of protocols
     6400, 3200, 1600              &  % total cores
+    NAMD-MPI                              \\ % executable
+    %
+    \B{6}                             &  % Experiment ID
+    Adaptivity
+    ?
+    Blue Waters                          &  % CI                            
+    TIES                          &  % protocol type
+    (1)                           &  % number of protocols
+    2080                          &  % total cores
     NAMD-MPI                              \\ % executable
     %
     \bottomrule
@@ -117,43 +148,61 @@ increasing the number of protocol instances while keeping the required number
 of pipelines. By design of each protocol, an increase in the number of
 instances means an increase in the number of pipelines. Experiment 1 measures
 the weak scalability of HTBAC, EnTK and RP using multiple instances of the
-ESMACS protocols on NCSA Blue Waters. Experiment 2 measures weak scaling
-performance of ESMACS at higher scales, using ORNL Titan.
+ESMACS protocols on NCSA Blue Waters. Experiment 2 measures weak scaling 
+performance of TIES.  
+% Experiment 2 measures weak scaling
+% performance of ESMACS at higher scales, using ORNL Titan.
 \mtnote{Would it be better to describe weak scaling in terms of solution
 time, number of resources and problem size, as done in the following
 paragraph?}
 
-Experiments 3 and 4 repeat the same design as experiments 1 and 2 using the
-TIES protocol instead of the ESMACS one. Experiment 5 uses both TIES and
-ESMACS in the same run. By design of weak scaling, the ratio between the
-number of pipelines and cores are kept constant. As the number of cores
-(measure of resource) changes by a factor of 2, we introduce twice as many
-protocol instances. In this way, the weak scaling property \mtnote{property
-of? I would replace with: ``weak scaling provides insight\ldots''} provides
-insight into the size of the workload that can be investigated in a given
-amount of time.
+Experiments 3 repeats the same design as experiments 1 and 2 using the
+TIES and ESMACS, to demonstrate heterogeneous protocol execution. 
+By design of weak scaling, the ratio between the number of pipelines and cores 
+are kept constant. As the number of cores (measure of resource) changes by a 
+factor of 2, we introduce twice as many protocol instances. In this way, weak 
+scaling provides insight  
+% \mtnote{property
+% of? I would replace with: ``weak scaling provides insight\ldots''} provides
+% insight 
+into the size of the workload that can be investigated in a given amount of time.
 
-Experiments 6 and 7 measure individual\mtnote{I am not sure I understand what
-individual means in this context} strong scaling performance of ESMACS and
-TIES on Blue Waters. We fix the number of protocols and vary the amount of
-resources in order to produce generations \mtnote{The reader will struggle to
-understand what `generations' means in this context.} of execution.
-\mtnote{Two sizable paragraphs to describe weak scaling, four lines to
-describe strong scaling? I would expand.}
+Next, we demonstrate strong scaling performance of the protocols by fixing the 
+workload i.e. the number of pipelines but reducing the number of cores 
+by half in each run. We measure how the timing of the workload scale when adding 
+resources, while expecting fixed overheads in HTBAC, EnTK and RP. Experiments 4 
+measures the strong scaling performance of ESMACS while experiment 5 repeats the 
+same strong scaling experiment using the TIES workload. 
 
-Due to the NCSA and ORNL security policies, we performed the Blue Waters
-experiments from a persistent virtual machine and the Titan ones from an ORNL
-login node.
+% individual\mtnote{I am not sure I understand what
+% individual means in this context} 
+
+% strong scaling performance of ESMACS and
+% TIES on Blue Waters. We fix the number of protocols and vary the amount of
+% resources in order to produce generations 
+
+
+% \mtnote{The reader will struggle to
+% understand what `generations' means in this context.} of execution.
+% \mtnote{Two sizable paragraphs to describe weak scaling, four lines to
+% describe strong scaling? I would expand.}
+
+Due to the NCSA 
+% and ORNL 
+security policies, we performed the Blue Waters
+experiments from a persistent virtual machine 
+% and the Titan ones from an ORNL login node.
 % as Blue Waters does not permit executing applications directly on the login
 % node. The ORNL Titan experiments had instead to be performed from an ORNL
 % login node.
 We used HTBAC 0.1, EnTK 0.6, and RP 0.47 for all the experiments and
-different versions of the NAMD MD engine, compiled according to the
+the same versions of the NAMD MD engine, compiled according to the
 capabilities of each environment and of NAMD itself. On Blue Waters we used
-NAMD-MPI while on Titan a non-MPI, multi-core NAMD engine. On Titan we
-compiled NAMD with CUDA for the ESMACS experiments, and with OpenMP for the
-for TIES ones as NAMD does not support alchemical perturbations execution on
-GPU.
+NAMD-MPI 
+% while on Titan a non-MPI, multi-core NAMD engine. On Titan we
+% compiled NAMD with CUDA for the ESMACS experiments, and with OpenMP for the
+% for TIES ones as NAMD does not support alchemical perturbations execution on
+% GPU.
 
 We perform \mtnote{We used the preterite until now} all Blue Waters
 experiments using the APRUN launch method \mtnote{does the reader know what
