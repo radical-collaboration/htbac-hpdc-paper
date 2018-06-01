@@ -46,12 +46,16 @@ methods, adaptive methods as described in Section III and Section IV are able to
 reduce the number of simulations for each lead candidate and thereby reduce
 computational load, without a loss in free energy accuracy. Adaptive methods 
 can support a type of computational efficiency by improving the rate of 
-statistical convergence given a defined number of resources. We perform 
-comparison experiments between nonadaptive and adaptive methods to characterize
-computational efficiency. 
+statistical convergence given a defined number of resources. This requires 
+a framework like HTBAC that can support runtime decisions to redistribute 
+resources in order support new simulations based on intermediate results. Using 
+HTBAC, we perform adaptive experiments that require such runtime decisions and 
+compare and characterize resource efficiency with non-adaptive experiments. 
 
 
-% Highlighted sections below will go in Section III and Section IV
+% Commented section below will go in Section III and Section IV
+
+% -------------------------------------------------------------------------- %
 
 % Drug screening typically occurs in two phases. The first phase runs simulations 
 % of all drug candidates and determines which candidates become lead candidates. 
@@ -101,6 +105,9 @@ computational efficiency.
 % We then perform adaptive experiments to show 
 % improvements in time-to-convergence. 
 
+% -------------------------------------------------------------------------- %
+
+
 \begin{table*}
     \caption{Parameters of scalability and adaptivity experiments.}
     \label{tab:experiments}
@@ -119,7 +126,7 @@ computational efficiency.
     %
     \B{ID}                            &  % Experiment ID
     \B{Type of Experiment} &            % Adaptive or Scale
-    \B{Physical System} &            % Adaptive or Scale
+    \B{Physical System(s)} &            % Adaptive or Scale
     \B{Computing Infrastructure (CI)} &  % CI
     \B{Protocol(s)}                   &  % protocol type
     \B{No. Protocol(s)}                    &  % number of protocols
@@ -196,7 +203,7 @@ computational efficiency.
     PTP1B, MC1, TYK2                     &  
     Blue Waters                          &  % CI                            
     TIES                          &  % protocol type
-    (1)                           &  % number of protocols
+    (1, 1, 1)                           &  % number of protocols
     2080                           \\ % total cores
     %
     \B{7}                             &  % Experiment ID
@@ -204,7 +211,7 @@ computational efficiency.
     PTP1B, MC1, TYK2                  &  
     Blue Waters                          &  % CI                            
     TIES                          &  % protocol type
-    (1)                           &  % number of protocols
+    (1, 1, 1)                           &  % number of protocols
     2080                           \\ % total cores
     % NAMD-MPI                              \\ % executable
     %
@@ -228,10 +235,10 @@ of time.
 % \mtnote{property
 % of? I would replace with: ``weak scaling provides insight\ldots''} provides
 % insight 
-    Experiment 1 measures the weak scalability of HTBAC, EnTK and RP using multiple 
-instances of the ESMACS protocols. Experiment 2 measures weak scaling 
-performance of TIES. Experiments 3 repeats the same design as experiments 1 and 2 using the
-TIES and ESMACS, to demonstrate heterogeneous protocol execution. 
+    Experiment 1 measures the weak scalability of HTBAC, EnTK and RP using 
+multiple instances of the ESMACS protocols. Experiment 2 measures weak scaling 
+performance of TIES. Experiments 3 repeats the same design as experiments 1 and 
+2 using the TIES and ESMACS, to demonstrate heterogeneous protocol execution. 
 % Experiment 2 measures weak scaling
 % performance of ESMACS at higher scales, using ORNL Titan.
 \mtnote{Would it be better to describe weak scaling in terms of solution
@@ -246,10 +253,57 @@ overheads} as well as the overheads in HTBAC, EnTK and RP. Experiments 4
 measures the strong scaling performance of ESMACS while experiment 5 repeats the 
 same strong scaling experiment using the TIES workload. 
 
-Lastly, we perform adaptivity experiments using the TIES protocol to demonstrate
-intra-protocol adaptivity where we shift computational resources during runtime.
-We compare results with nonadaptive experiments...  
-\jdnote{define intra-protocol adaptivity in section IV}
+    Lastly, we perform nonadaptive and adaptive experiments using the TIES 
+protocol to demonstrate intra-protocol adaptivity \jdnote{define intra-protocol 
+adaptivity in section IV}. 
+
+% Keep iterating on the next two paragraphs to get the right description from
+% Kristof 
+% -------------------------------------------------------------------------- %
+In the non-adaptive workflow, $\lambda$ windows are approximated, using 13 
+pre-assigned $\lambda$ windows. As described in the TIES workflow diagram 
+X, this produces a total of 65 concurrent simulations for stages $S1$ - $S4$. 
+The production simulation stage $S4$ executes each simulation for 4 nanoseconds. 
+The analysis stage, $S5$, assigns five analysis tasks which aggregate all 
+simulation results of $S4$ with respect to each replica and to calculate the 
+adaptive quadrature...The last stage $S6$ 
+assigns 1 task to perform a global analysis aggregating the results from $S5$. 
+In the adaptive quadratures, we alter the number of $\lambda$ windows. First, 
+we break down $S4$ into 4 stages, $S4.1$ - $S4.4$, where each stage shorter 
+production simulations of 1 nanosecond. We initially assign X $\lambda$ windows for stage 
+$S4.1$...
+Once each simulation is complete within a
+stage, a decision is made about whether more $\lambda$ windows are required,
+and, if so, where these windows should be placed.
+
+This procedure is
+repeated until convergence, at which point all concurrent simulation are
+terminated. We define convergence as the point in the production-analysis
+loop at which a desired error threshold is reached.
+
+
+% In the adaptive workflow, we alter the number of $\lambda$ windows being
+% simulated over the course of a protocol instance. The position of new
+% $\lambda$ windows depends on the estimated error of the integral measured
+% between adjacent windows. Increasing the number of $\lambda$ windows in
+% regions of rapid change will increase the accuracy of the overall integral to
+% a greater degree than an arbitrarily placed window. In order to adaptively
+% add lambda windows, we need access to the $\partial U/\partial\lambda$ values
+% during runtime. Therefore, we break down the single production simulation
+% stage (S4) \mtnote{I would reference the figure with the workflow diagram
+% here} from the nonadaptive workflow into multiple smaller stages \mtnote{how
+% many?}, each running for 1 ns. Once each simulation is complete within a
+% stage, a decision is made about whether more $\lambda$ windows are required,
+% and, if so, where these windows should be placed.
+
+% We start out the simulation with 5 replicas of \emph{3} \mtnote{why emphasis
+% for 3?} equally spaced $\lambda$ windows, and equilibrate them. Then we
+% repeatedly execute shorter production simulations followed by an analysis
+% phase which determines where to place new lambda windows. This procedure is
+% repeated until convergence, at which point all concurrent simulation are
+% terminated. We define convergence as the point in the production-analysis
+% loop at which a desired error threshold is reached.
+
 
 In non-adaptive experiments we run simulations according to the original 
 TIES protocol where the MD simulation step runs for the full 4 ns duration. 
