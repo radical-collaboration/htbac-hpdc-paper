@@ -33,11 +33,73 @@ Computational drug campaigns require sizable compute resources in order to
 run concurrent simulations for a large number of drug candidates. Therefore, 
 we perform our experiments on machines that can deliver at the scale necessary 
 to support these demands. \jdnote{should we mention anything about exascale?}
-We perform experiments to characterize the overheads of HTBAC, its runtime 
-system and the weak and strong scaling performance on NCSA Blue Waters. We 
-select Blue Waters for its ability to...
-We then perform adaptive experiments to show improvements in 
-time-to-convergence. 
+Before embarking on such drug campaign which utilize 150 million core hours
+(award) on NCSA Blue Waters, we perform experiments to characterize the 
+overheads of HTBAC, its runtime system and the weak and strong scaling 
+performance on Blue Waters. We validate our free energy calculation results 
+produced using HTBAC with results previously cited not having used HTBAC. 
+
+Given that certain protocols such as TIES are more computationally demanding, 
+the efficient use of resources becomes paramount, especially for campaigns that 
+are limited by a computational budget. Compared to non-adaptive 
+methods, adaptive methods as described in Section III and Section IV are able to 
+reduce the number of simulations for each lead candidate and thereby reduce
+computational load, without a loss in free energy accuracy. Adaptive methods 
+can support a type of computational efficiency by improving the rate of 
+statistical convergence given a defined number of resources. We perform 
+comparison experiments between nonadaptive and adaptive methods to characterize
+computational efficiency. 
+
+
+% Highlighted sections below will go in Section III and Section IV
+
+% Drug screening typically occurs in two phases. The first phase runs simulations 
+% of all drug candidates and determines which candidates become lead candidates. 
+% This phase is performed using less computationally intensive protocols such as 
+% ESMACS. Once we eliminate poor-binding candidates, we begin the second phase of 
+% the campaign where we investigate lead compounds using computationally more 
+% demanding protocols such as TIES. During the second phase, the accuracy of each 
+% candidate is evaluated. A high level of variability exists in the chemical 
+% properties across candidates. Therefore, the TIES protocols assumes the most 
+% general case in evaluating the binding free energy accuracy. To maintain 
+% generality, the TIES protocol requires 13 evenly spaced simulations, captured 
+% using a sampling parameter references as $\lambda$ windows in Section III. 
+% Although generality asserts the correct convergence criteria, this approximation 
+% of $\lambda$ windows induces higher computational costs as a result of executing 
+% large yet sometimes unnecessary simulations. 
+
+% On the other hand, adaptive methods such as the adaptive quadratures  
+% highlighted Section III, require less 
+% sampling and thereby reduce the number of simulations, without sacrificing 
+% accuracy. Because this method is tailored to every candidate, there is no way
+% to understand \textit{a priori} the placement of $\lambda$ windows and thereby 
+% the total number of simulations. 
+
+% This requires the ability to instantiate simulations that predicate on 
+% intermediate results during runtime. 
+
+% Define parameters: added simulations means task count adaptivity and
+% task attribute adaptivity. The next set (both number of resources) of simulations 
+% depends on the output properties of the previous simulations. When we adapt the 
+% number of simulations, the distribution of resources for each task within a 
+% static pilot will fluctuate. 
+
+% Carefully constructed $\lambda$ placement requires that the workflow can be 
+% adaptable by creating new computational tasks during execution, thereby modify 
+% the task graph during runtime. In HTBAC, construction of an adaptive workflow
+% is predicated upon the workload management system (define) that provides 
+% expression of adaptive features. 
+
+% while communicating those parameters down to the runtime system 
+% (define).  
+
+
+% The post-execution properties are captured by the workload management system,
+% EnTK.
+
+
+% We then perform adaptive experiments to show 
+% improvements in time-to-convergence. 
 
 \begin{table*}
     \caption{Parameters of scalability and adaptivity experiments.}
@@ -130,8 +192,16 @@ time-to-convergence.
     % NAMD-MPI                              \\ % executable
     %
     \B{6}                             &  % Experiment ID
-    adaptivity                       &  
-    ?                                  &  
+    Non-adaptivity                       &  
+    PTP1B, MC1, TYK2                     &  
+    Blue Waters                          &  % CI                            
+    TIES                          &  % protocol type
+    (1)                           &  % number of protocols
+    2080                           \\ % total cores
+    %
+    \B{7}                             &  % Experiment ID
+    Adaptivity                       &  
+    PTP1B, MC1, TYK2                  &  
     Blue Waters                          &  % CI                            
     TIES                          &  % protocol type
     (1)                           &  % number of protocols
@@ -145,44 +215,44 @@ time-to-convergence.
 \up{}
 \end{table*}
 
-We show homogeneous and heterogeneous weak scalability of the protocols by
+    We show homogeneous and heterogeneous weak scalability of the protocols by
 increasing the number of protocol instances while keeping the required number
 of pipelines. By design of each protocol, an increase in the number of
-instances means an increase in the number of pipelines. Experiment 1 measures
-the weak scalability of HTBAC, EnTK and RP using multiple instances of the
-ESMACS protocols on NCSA Blue Waters. Experiment 2 measures weak scaling 
-performance of TIES.  
+instances means an increase in the number of pipelines. \jdnote{mention the 
+relationship between protocols and pipelines.} By design of weak 
+scaling, the ratio between the number of pipelines and cores are kept constant. 
+As the number of cores (measure of resource) changes by a factor of 2, we 
+introduce twice as many protocol instances. In this way, weak scaling provides 
+insight into the size of the workload that can be investigated in a given amount 
+of time.
+% \mtnote{property
+% of? I would replace with: ``weak scaling provides insight\ldots''} provides
+% insight 
+    Experiment 1 measures the weak scalability of HTBAC, EnTK and RP using multiple 
+instances of the ESMACS protocols. Experiment 2 measures weak scaling 
+performance of TIES. Experiments 3 repeats the same design as experiments 1 and 2 using the
+TIES and ESMACS, to demonstrate heterogeneous protocol execution. 
 % Experiment 2 measures weak scaling
 % performance of ESMACS at higher scales, using ORNL Titan.
 \mtnote{Would it be better to describe weak scaling in terms of solution
 time, number of resources and problem size, as done in the following
-paragraph?}
+paragraph?}\jdnote{moved to previous para when first introducing weak scaling}
 
-Experiments 3 repeats the same design as experiments 1 and 2 using the
-TIES and ESMACS, to demonstrate heterogeneous protocol execution. 
-By design of weak scaling, the ratio between the number of pipelines and cores 
-are kept constant. As the number of cores (measure of resource) changes by a 
-factor of 2, we introduce twice as many protocol instances. In this way, weak 
-scaling provides insight  
-% \mtnote{property
-% of? I would replace with: ``weak scaling provides insight\ldots''} provides
-% insight 
-into the size of the workload that can be investigated in a given amount of 
-time.
+    Next, we demonstrate strong scaling performance of the protocols by fixing 
+the workload i.e. the number of pipelines but reducing the number of cores 
+by a factor of 2 in each run. We measure how the timing of the workload scales 
+when adding resources, \jdnote{expecting linear speedup, and expect fixed 
+overheads} as well as the overheads in HTBAC, EnTK and RP. Experiments 4 
+measures the strong scaling performance of ESMACS while experiment 5 repeats the 
+same strong scaling experiment using the TIES workload. 
 
-Next, we demonstrate strong scaling performance of the protocols by fixing the 
-workload i.e. the number of pipelines but reducing the number of cores 
-by half in each run. We measure how the timing of the workload scales when
-adding resources, expecting linear speedup, and expect fixed overheads in HTBAC, 
-EnTK and RP. Experiments 4 measures the strong scaling performance of ESMACS 
-while experiment 5 repeats the same strong scaling experiment using the TIES 
-workload. 
-
-Lastly, we demonstrate perform TIES intra-protocol adaptivity experiments where 
-we shift computational resources during runtime. 
+Lastly, we perform adaptivity experiments using the TIES protocol to demonstrate
+intra-protocol adaptivity where we shift computational resources during runtime.
+We compare results with nonadaptive experiments...  
+\jdnote{define intra-protocol adaptivity in section IV}
 
 In non-adaptive experiments we run simulations according to the original 
-TIES protocol where the MD simulation step is run for the full 4 ns duration. 
+TIES protocol where the MD simulation step runs for the full 4 ns duration. 
 In the adaptive experiments, we still adhere to the same TIES protocol, however
 we stop the MD simulation after each ns and allow the adaptive quadratures to 
 calculate the SEM. The calculation determines where to place additional lambda 
@@ -196,7 +266,7 @@ accuracy.
 
 The benefit of running adaptive simulations produces greater fidelity. Since the
 exact placement of lambda windows and by extent the simulations are not known
-a priori, in the non-adaptive scenerio, lambda windows are approximated, 13 
+a priori, in the non-adaptive scenario, lambda windows are approximated, 13 
 evenly spaced positions. While this placement does produce statistical 
 convergence, it does so at the cost of additional resources. Instead, in the 
 adaptive scenario, we begin the MD simulation with 3 approximated and evenly 
@@ -213,7 +283,7 @@ We can glean two points from this:
 2) To produce tighter binding affinity as some clinical insights may require, 
 given the same amount of core hours, what is the added benefit of running 
 adaptive experiments over nonadaptive, i.e. how much more accuracy do we gain by 
-running adaptive simulations?  
+running adaptive simulations?   
 
 When one protocol has converged whilst 
 another has not, we can shift computational resources to favor simulations that 
@@ -332,7 +402,7 @@ replica. The second analysis stage consists of one task that aggregates the
 previous results and computes a single average across all replicas.
 
 %----------------------------------------------------------------------------
-\subsubsection{Scaling and Performance Characterization}
+\subsection{Scaling and Performance Characterization}
 
 \mtnote{Is this meant to be a subsubsection?}
 
@@ -360,19 +430,19 @@ this formula seems to add twice part of the RP overheads.}
 %----------------------------------------------------------------------------
 % \subsubsection{Weak Scaling Experiments}
 
-We investigated the weak scalability properties for the TIES protocol by
-growing the number of protocol instances while adhering to the required
-number of pipelines. By design of each protocol, an increase in the number of
-instances simply means an increase in the number of pipelines. The first weak
-scalability experiment demonstrates the behavior of HTBAC, EnTK and RP using
-the multiple instances of the TIES protocol. By design of weak scaling, the
-ratio between the number of pipelines and cores are kept constant. As the
-number of cores (measure of resource) changes by a factor of 2, we introduce
-twice as many protocol instances. As designed, the weak scaling property
-provides insight into the size of the workload that can be investigated in a
-given amount of time.\mtnote{This paragraph is a copy of a previous
-paragraph. See comments and iterations of the previous paragraph before
-rewriting a new paragraph if needed.}
+% We investigated the weak scalability properties for the TIES protocol by
+% growing the number of protocol instances while adhering to the required
+% number of pipelines. By design of each protocol, an increase in the number of
+% instances simply means an increase in the number of pipelines. The first weak
+% scalability experiment demonstrates the behavior of HTBAC, EnTK and RP using
+% the multiple instances of the TIES protocol. By design of weak scaling, the
+% ratio between the number of pipelines and cores are kept constant. As the
+% number of cores (measure of resource) changes by a factor of 2, we introduce
+% twice as many protocol instances. As designed, the weak scaling property
+% provides insight into the size of the workload that can be investigated in a
+% given amount of time.\mtnote{This paragraph is a copy of a previous
+% paragraph. See comments and iterations of the previous paragraph before
+% rewriting a new paragraph if needed.}
 
 \begin{figure}
   \centering
@@ -389,7 +459,8 @@ rewriting a new paragraph if needed.}
 
 The second weak scalability experiment repeats the same experimental design
 \mtnote{of what?}, replacing the TIES protocols \mtnote{should this be
-`protocol'?} with TIES and ESMACS, respectively. \mtnote{This paragraph needs to be further expanded}
+`protocol'?} with TIES and ESMACS, respectively. \mtnote{This paragraph needs to 
+be further expanded}
 
 \begin{figure}
   \centering
