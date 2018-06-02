@@ -261,25 +261,59 @@ adaptivity in section IV}.
 % Kristof 
 % -------------------------------------------------------------------------- %
 In the non-adaptive workflow, $\lambda$ windows are approximated, using 13 
-pre-assigned $\lambda$ windows. As described in the TIES workflow diagram 
-X, this produces a total of 65 concurrent simulations for stages $S1$ - $S4$. 
-The production simulation stage $S4$ executes each simulation for 4 nanoseconds. 
-The analysis stage, $S5$, assigns five analysis tasks which aggregate all 
-simulation results of $S4$ with respect to each replica and to calculate the 
-adaptive quadrature...The last stage $S6$ 
-assigns 1 task to perform a global analysis aggregating the results from $S5$. 
-In the adaptive quadratures, we alter the number of $\lambda$ windows. First, 
-we break down $S4$ into 4 stages, $S4.1$ - $S4.4$, where each stage shorter 
-production simulations of 1 nanosecond. We initially assign X $\lambda$ windows for stage 
-$S4.1$...
-Once each simulation is complete within a
-stage, a decision is made about whether more $\lambda$ windows are required,
-and, if so, where these windows should be placed.
+pre-assigned $\lambda$ windows.  By design of the TIES protocol, each $\lambda$ window creates a new simulation condition that must be 
+replicated. TIES requires five replicas per $\lambda$, thereby producing
+n $\lambda$  5 total simulations. \jdnote{HTBAC section IV will explain how
+simulations map to computational tasks}. As described in the TIES workflow 
+Figure \jdnote{include nonadaptive workflow}, this produces a total of 65 concurrent simulations for stages $S1$ - $S4$. The production simulation stage 
+$S4$ executes each simulation for 4 nanoseconds (ns). The analysis stage, $S5$, 
+assigns five analysis tasks which aggregate simulation results of $S4$ with 
+respect to each replica. The global analysis stage $S6$ contains a single task
+that aggregates the results from $S5$.  
 
-This procedure is
-repeated until convergence, at which point all concurrent simulation are
-terminated. We define convergence as the point in the production-analysis
-loop at which a desired error threshold is reached.
+In the adaptive workflow~\ref{fig:adaptive_ties}, we run shorter 1 ns MD production simulations, followed by an analysis which is an an estimation 
+of the error of the free energy intervals between two $\lambda$ values. The estimation of the error determines whether or not to spawn additional $\lambda$ windows. If the error estimate in a certain interval is higher than the 
+acceptable threshold, a new $\lambda$ window is assigned halfway between the interval. If the critical threshold is reached, we have reached convergence and 
+the application stops; else, current simulations continue executing and new simulations begin executing based on newly generated $\lambda$ windows. 
+
+The estimation computation is captured as a single stage containing a single 
+task. By design of the adaptive quadrature algorithm, the number of additional
+$\lambda$ windows will vary across candidates, which will impact the number of simulation-analysis iterations.  \jdnote{will call this something else}. 
+
+
+
+% This procedure is
+% repeated until convergence, at which point all concurrent simulation are
+% terminated. We define convergence as the point in the production-analysis
+% loop at which a desired error threshold is reached.
+
+
+% move this to HTBAC Design & Implementation 
+% -------------------------------------------------------------------------- %
+
+% As discussed earlier, the free energy is calculated numerically using an integration algorithm, integrating the function $\partial U/\partial\lambda$ evaluated at discrete of $\lambda$. In a non-adaptive case these values of $\lambda$are selected a priori, and having no knowledge of the function's shape, equally spaced values are the optimal option. 
+
+
+
+% The aim of the general adaptive quadrature algorithm is to minimize the number 
+% of function evaluations while still estimating the integral under a specified 
+% error threshold. In our case a function evaluation means the full simulation for 
+% a given $\lambda$ window, and reducing this means a substantial efficiency gain. 
+
+
+% where each stage runs shorter 
+% production simulations of 1 nanosecond. We initialize $S4.1$ by assigning 3 
+% equally spaced $\lambda$ windows at $0$, $0.5$ and $1$. Once the simulations
+% have converged, we run a post-execution estimate the error of the free energy along each interval, i.e. $0$ to $0.5$ and $0.5$ and $1$. Once each simulation is complete within a stage, a decision is made about whether more $\lambda$ windows are required, and, if so, where these windows should be 
+% placed. 
+
+
+
+% We start the simulation with 3 equally spaces lambda windows at $0$, $0.5$ and $1$ and run the three simulation in parallel just until they have converged. Then we estimate the error of the free energy along each interval (0 to 0.5 and 0.5 to 1) to determine whether a new lambda window needs to be placed halfway in between. The we iterate until no more lambda windows need to be placed. Now we determined the minimum set of optimally placed set of lambda windows. Using this set we start full simulation protocols to calculate the free energy of the alchemical transformation.   
+
+
+
+% -------------------------------------------------------------------------- %
 
 
 % In the adaptive workflow, we alter the number of $\lambda$ windows being
@@ -305,43 +339,43 @@ loop at which a desired error threshold is reached.
 % loop at which a desired error threshold is reached.
 
 
-In non-adaptive experiments we run simulations according to the original 
-TIES protocol where the MD simulation step runs for the full 4 ns duration. 
-In the adaptive experiments, we still adhere to the same TIES protocol, however
-we stop the MD simulation after each ns and allow the adaptive quadratures to 
-calculate the SEM. The calculation determines where to place additional lambda 
-windows in the next nanosecond duration. Once we reach a level of simulation 
-convergence, we can halt simulations for that candidate and shift resources
-over to another candidate whose simulations have not yet started. We demonstrate
-computational efficiency, i.e. given X number of core hours, what is the 
-difference between adaptive accuracy and nonadaptive accuracy? By extent we can
-also begin to inference the trade-offs between computational resources and 
-accuracy. 
+% In non-adaptive experiments we run simulations according to the original 
+% TIES protocol where the MD simulation step runs for the full 4 ns duration. 
+% In the adaptive experiments, we still adhere to the same TIES protocol, however
+% we stop the MD simulation after each ns and allow the adaptive quadratures to 
+% calculate the SEM. The calculation determines where to place additional lambda 
+% windows in the next nanosecond duration. Once we reach a level of simulation 
+% convergence, we can halt simulations for that candidate and shift resources
+% over to another candidate whose simulations have not yet started. We demonstrate
+% computational efficiency, i.e. given X number of core hours, what is the 
+% difference between adaptive accuracy and nonadaptive accuracy? By extent we can
+% also begin to inference the trade-offs between computational resources and 
+% accuracy. 
 
-The benefit of running adaptive simulations produces greater fidelity. Since the
-exact placement of lambda windows and by extent the simulations are not known
-a priori, in the non-adaptive scenario, lambda windows are approximated, 13 
-evenly spaced positions. While this placement does produce statistical 
-convergence, it does so at the cost of additional resources. Instead, in the 
-adaptive scenario, we begin the MD simulation with 3 approximated and evenly 
-spaced lambda windows. We run the MD simulation for only 1 nanosecond, and 
-aggregate the outputs from those lambda windows in order to calculate the 
-RMSE which determines where to position additional lambda windows. Since this 
-variability of lambda windows is highly dependent on the physical system, the 
-only way to capture more accurate placement of lambda windows is during runtime
-in order to inference lambda windows based on intermediate results. 
+% The benefit of running adaptive simulations produces greater fidelity. Since the
+% exact placement of lambda windows and by extent the simulations are not known
+% a priori, in the non-adaptive scenario, lambda windows are approximated, 13 
+% evenly spaced positions. While this placement does produce statistical 
+% convergence, it does so at the cost of additional resources. Instead, in the 
+% adaptive scenario, we begin the MD simulation with 3 approximated and evenly 
+% spaced lambda windows. We run the MD simulation for only 1 nanosecond, and 
+% aggregate the outputs from those lambda windows in order to calculate the 
+% RMSE which determines where to position additional lambda windows. Since this 
+% variability of lambda windows is highly dependent on the physical system, the 
+% only way to capture more accurate placement of lambda windows is during runtime
+% in order to inference lambda windows based on intermediate results. 
 
-We can glean two points from this:
+% We can glean two points from this:
 
-1) We can stop the simulation once we reach an acceptable error threshold 
-2) To produce tighter binding affinity as some clinical insights may require, 
-given the same amount of core hours, what is the added benefit of running 
-adaptive experiments over nonadaptive, i.e. how much more accuracy do we gain by 
-running adaptive simulations?   
+% 1) We can stop the simulation once we reach an acceptable error threshold 
+% 2) To produce tighter binding affinity as some clinical insights may require, 
+% given the same amount of core hours, what is the added benefit of running 
+% adaptive experiments over nonadaptive, i.e. how much more accuracy do we gain by 
+% running adaptive simulations?   
 
-When one protocol has converged whilst 
-another has not, we can shift computational resources to favor simulations that 
-require additional resources. 
+% When one protocol has converged whilst 
+% another has not, we can shift computational resources to favor simulations that 
+% require additional resources. 
 
 
 % individual\mtnote{I am not sure I understand what
@@ -368,58 +402,80 @@ machine
 We used HTBAC 0.1, EnTK 0.6, and RP 0.47 for all the experiments and
 the same versions of the NAMD MD engine, compiled according to the
 capabilities of each environment and of NAMD itself. For all experiments we used
-NAMD-MPI.
+NAMD-MPI. Additionally, for the analysis stages in the TIES protocol we used
+AmberTools. 
 % while on Titan a non-MPI, multi-core NAMD engine. On Titan we
 % compiled NAMD with CUDA for the ESMACS experiments, and with OpenMP for the
 % for TIES ones as NAMD does not support alchemical perturbations execution on
 % GPU.
 
 We perform \mtnote{We used the preterite until now} all Blue Waters
-experiments using the APRUN launch method \mtnote{does the reader know what
-is a launch method?}, which has an upper limit of avg 436 concurrent task
-execution \mtnote{how do we know this average?}. In order to continue
-execution on higher scales \mtnote{Why do we need an higher scale?}, we
-perform higher scales \mtnote{I am not sure what `performing higher scales'
-means} on ORNL Titan, using the ORTE launch method \mtnote{Why don't we use
-ORTE on BW? The reader will probably know that they are similar machines}.
-The difference in platforms produces overheads \mtnote{Only overheads or also
-different execution time of NAMD---seeing the differences described in the
-previous paragraph} that can be captured by RTS \mtnote{does the reader know
-what a RTS is?} and are shown \mtnote{careful with the use of `demonstrate',
-especially in a scientific paper} in the figures \mtnote{which figures?} as
-"APRUN overhead" and "ORTE overhead" \mtnote{LaTeX requires different
-quotes}.
-
-For tasks pertaining to $S1$ - $S4$ \mtnote{What are $S1$ and $S4$? LaTeX
-wants double dash without space to indicate a range}, while the analysis
-stage, $S5$ use AmberTools \mtnote{grammar: I am not able to parse this
-sentence}. For both adaptive and nonadaptive experiments \mtnote{the reader
-knows about Experiment 1-7, not about adaptive/nonadaptive ones}, the
-minimization tasks of $S1$ are assigned 1000 steps, while the equilibration
-tasks in $S2$ and $S3$ are assigned 5000 steps. In the nonadaptive
-experiments, the production simulation tasks \mtnote{when/why a simulation
-task is `production'? I am not sure I understand what that means} in $S4$ are
-assigned 50,000 steps. For the adaptive experiments, each substage
-\mtnote{What is a `substage'?} of $S4$ i.e. $S4.1$--$S4.4$ is assigned 50,000
-steps.\mtnote{Why the difference is number of steps and why it is relevant?}
-
-% HTBAC submits a resource request to EnTK, to which EnTK uses RP to acquire
-% resources via a single pilot. Accordingly, we request the maximum number of
-% cores required by the workload as the number of cores in a pilot.
-
-For weak scaling performance of TIES \mtnote{I am not sure I understand this
-sentence: For measuring the weak scaling performance of TIES?}, we use
-between 4160 and 33280 cores as indicated in
-Figure~\ref{fig:weak_scaling_TIES} because the NAMD executable used in all
-tasks \mtnote{does the reader know what a task is in this context?} from
-$S1$-$S4$ require \mtnote{grammar: requires} at least 32 cores per task
-\mtnote{why?}. From our own scalability performance measurements of NAMD on
+experiments using the APRUN application launch method, which is the NCSA Blue Waters designated command for describing the application parameters and 
+resource requirements. \mtnote{does the reader know what
+is a launch method?} \jdnote{better?}. The APRUN launch method has several  limitations. First, we see a limitation in the number of concurrent tasks 
+executions. We characterized the failing limits of the APRUN launch method based 
+on the maximum number of concurrent simulations that can run successfully. On 
+average, we experience failing concurrency after approximately 436 concurrent tasks. \mtnote{how do we know this average?}. \jdnote{would it make sense to 
+show a bell curve of the distribution of failing units? and include Mark's Cray
+whitepaper?}. Secondly, APRUN does not permit multiple MPI applications to land
+on the same node. From our own scalability performance measurements of NAMD on
 Blue Waters, we observe the ideal cores per task to be 16, however Blue
 Waters does not permit running multiple MPI applications on the same node,
 hence each NAMD task requires a full node to maintain concurrency.
 \mtnote{This needs to go before previous sentence as it explains why we use
 32 cores for each NAMD executable. Note: it is not true that NAMD `requires'
-32 cores as stated above.}
+32 cores as stated above.}\jdnote{moved here since this para discusses APRUN 
+limitations}
+
+
+% In order to continue
+% execution on higher scales \mtnote{Why do we need an higher scale?}, we
+% perform higher scales \mtnote{I am not sure what `performing higher scales'
+% means} on ORNL Titan, using the ORTE launch method \mtnote{Why don't we use
+% ORTE on BW? The reader will probably know that they are similar machines}.
+
+
+% The difference in platforms produces overheads \mtnote{Only overheads or also
+% different execution time of NAMD---seeing the differences described in the
+% previous paragraph} that can be captured by RTS \mtnote{does the reader know
+% what a RTS is?} and are shown \mtnote{careful with the use of `demonstrate',
+% especially in a scientific paper} in the figures \mtnote{which figures?} as
+% "APRUN overhead" and "ORTE overhead" \mtnote{LaTeX requires different
+% quotes}.
+
+% For tasks pertaining to $S1$ -- $S4$ \mtnote{What are $S1$ and $S4$? LaTeX
+% wants double dash without space to indicate a range}, while the analysis
+% stage, $S5$ use AmberTools \mtnote{grammar: I am not able to parse this
+% sentence}. 
+
+% For both adaptive and nonadaptive experiments \mtnote{the reader
+% knows about Experiment 1-7, not about adaptive/nonadaptive ones}, 
+The minimization tasks of $S1$ are assigned 1000 steps, while the equilibration
+tasks in $S2$ and $S3$ are assigned 5000 steps. the production MD simulation 
+tasks \mtnote{when/why a simulation task is `production'? I am not sure I understand what that means} in $S4$ are assigned 50,000 steps. 
+
+% In the nonadaptive
+% experiments, 
+
+
+
+% For the adaptive experiments, each substage
+% \mtnote{What is a `substage'?} of $S4$ i.e. $S4.1$--$S4.4$ is assigned 50,000
+% steps.\mtnote{Why the difference is number of steps and why it is relevant?}
+
+% HTBAC submits a resource request to EnTK, to which EnTK uses RP to acquire
+% resources via a single pilot. Accordingly, we request the maximum number of
+% cores required by the workload as the number of cores in a pilot.
+
+To characterize the weak scaling performance of TIES \mtnote{I am not sure I understand this
+sentence: For measuring the weak scaling performance of TIES?} \jdnote{better?}, 
+we use between 4160 and 33280 cores as indicated in Figure~\ref{fig:weak_scaling_TIES} because the NAMD executable used in all
+tasks \mtnote{does the reader know what a task is in this context?}
+\jdnote{will be defined in Section IV} from
+$S1$-$S4$ require \mtnote{grammar: requires} a single node i.e. 32 cores per 
+task, as mentioned earlier in the APRUN limitation. 
+\mtnote{why?}\jdnote{32 cores/task addressed by earlier mention of aprun MPI 
+limit}
 
 For strong scaling performance, we fix the number of protocol instances to 8
 instances \mtnote{why 8?} and vary the amount of resources as shown in
