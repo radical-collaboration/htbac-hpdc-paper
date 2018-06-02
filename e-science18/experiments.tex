@@ -238,7 +238,7 @@ of time.
     Experiment 1 measures the weak scalability of HTBAC, EnTK and RP using 
 multiple instances of the ESMACS protocols. Experiment 2 measures weak scaling 
 performance of TIES. Experiments 3 repeats the same design as experiments 1 and 
-2 using the TIES and ESMACS, to demonstrate heterogeneous protocol execution. 
+2 using both TIES and ESMACS, to demonstrate heterogeneous protocol execution. 
 % Experiment 2 measures weak scaling
 % performance of ESMACS at higher scales, using ORNL Titan.
 \mtnote{Would it be better to describe weak scaling in terms of solution
@@ -251,7 +251,7 @@ by a factor of 2 in each run. We measure how the timing of the workload scales
 when adding resources, \jdnote{expecting linear speedup, and expect fixed 
 overheads} as well as the overheads in HTBAC, EnTK and RP. Experiments 4 
 measures the strong scaling performance of ESMACS while experiment 5 repeats the 
-same strong scaling experiment using the TIES workload. 
+same strong scaling experiment using the TIES protocol. 
 
     Lastly, we perform nonadaptive and adaptive experiments using the TIES 
 protocol to demonstrate intra-protocol adaptivity \jdnote{define intra-protocol 
@@ -265,20 +265,19 @@ pre-assigned $\lambda$ windows.  By design of the TIES protocol, each $\lambda$ 
 replicated. TIES requires five replicas per $\lambda$, thereby producing
 n $\lambda$  5 total simulations. \jdnote{HTBAC section IV will explain how
 simulations map to computational tasks}. As described in the TIES workflow 
-Figure \jdnote{include nonadaptive workflow}, this produces a total of 65 concurrent simulations for stages $S1$ - $S4$. The production simulation stage 
+Figure \jdnote{include nonadaptive workflow}, this produces a total of 65 concurrent simulations for stages $S1$ -- $S4$. The production simulation stage 
 $S4$ executes each simulation for 4 nanoseconds (ns). The analysis stage, $S5$, 
 assigns five analysis tasks which aggregate simulation results of $S4$ with 
 respect to each replica. The global analysis stage $S6$ contains a single task
 that aggregates the results from $S5$.  
 
-In the adaptive workflow~\ref{fig:adaptive_ties}, we run shorter 1 ns MD production simulations, followed by an analysis which is an an estimation 
-of the error of the free energy intervals between two $\lambda$ values. The estimation of the error determines whether or not to spawn additional $\lambda$ windows. If the error estimate in a certain interval is higher than the 
+In the adaptive workflow~\ref{fig:adaptive_ties}, we run shorter 1 ns MD production simulations, followed by a different analysis which estimates free energy errors with respect to each interval of two $\lambda$ values. The estimation of the error determines whether or not to spawn additional $\lambda$ windows. If the error estimate in a certain interval is higher than the 
 acceptable threshold, a new $\lambda$ window is assigned halfway between the interval. If the critical threshold is reached, we have reached convergence and 
 the application stops; else, current simulations continue executing and new simulations begin executing based on newly generated $\lambda$ windows. 
 
 The estimation computation is captured as a single stage containing a single 
 task. By design of the adaptive quadrature algorithm, the number of additional
-$\lambda$ windows will vary across candidates, which will impact the number of simulation-analysis iterations.  \jdnote{will call this something else}. 
+$\lambda$ windows will vary across candidates, which will impact the number of simulation-analysis iterations. \jdnote{will call this something else}. 
 
 
 
@@ -404,6 +403,16 @@ the same versions of the NAMD MD engine, compiled according to the
 capabilities of each environment and of NAMD itself. For all experiments we used
 NAMD-MPI. Additionally, for the analysis stages in the TIES protocol we used
 AmberTools. 
+
+For weak and strong scaling experiments we assigned the minimization tasks 
+of $S1$ to 1000 simulation time steps, while the equilibration
+tasks in $S2$ and $S3$ are assigned 5000 steps. the production MD simulation 
+tasks \mtnote{when/why a simulation task is `production'? I am not sure I understand what that means}\jdnote{address this} in $S4$ are assigned 50,000 
+steps. 
+
+\jdnote{Kristof to include the number of timesteps for adaptive/nonadaptive
+experiments}
+
 % while on Titan a non-MPI, multi-core NAMD engine. On Titan we
 % compiled NAMD with CUDA for the ESMACS experiments, and with OpenMP for the
 % for TIES ones as NAMD does not support alchemical perturbations execution on
@@ -450,9 +459,7 @@ limitations}
 
 % For both adaptive and nonadaptive experiments \mtnote{the reader
 % knows about Experiment 1-7, not about adaptive/nonadaptive ones}, 
-The minimization tasks of $S1$ are assigned 1000 steps, while the equilibration
-tasks in $S2$ and $S3$ are assigned 5000 steps. the production MD simulation 
-tasks \mtnote{when/why a simulation task is `production'? I am not sure I understand what that means} in $S4$ are assigned 50,000 steps. 
+
 
 % In the nonadaptive
 % experiments, 
@@ -478,16 +485,21 @@ task, as mentioned earlier in the APRUN limitation.
 limit}
 
 For strong scaling performance, we fix the number of protocol instances to 8
-instances \mtnote{why 8?} and vary the amount of resources as shown in
-Figure~\ref{fig:strong_scaling_TIES}. \mtnote{Please expand indicating and
+instances given that we experience failing 
+concurrency of tasks when we scale the workload to 8 protocols.\mtnote{why 8?} 
+We vary the amount of resources as shown in
+Figure~\ref{fig:strong_scaling_TIES} by showing reducing of resources by a 
+factor of 2. \mtnote{Please expand indicating and
 justifying the the chosen amount of resources. Experiments can be design in
 many ways, we need not only to describe but also to justify why we choose a
-specific design for our experiments.}
+specific design for our experiments.}\jdnote{better?}
 
 For the TIES protocol, each pipeline \mtnote{does the reader know what a
-pipeline is?} consists of six stages \mtnote{simulation stages?}. Each of the
+pipeline is?}\jdnote{will be address in Section IV} consists of six stages 
+\mtnote{simulation stages?}. Each of the
 simulation stages contains a task for every unique ($\lambda$, replica)
-combination \mtnote{does the reader understand this?}. In the non-adaptive
+combination \mtnote{does the reader understand this?}\jdnote{will be addressed
+better in section IV}. In the non-adaptive
 workflow \mtnote{we never used `workflow'. Previously we used non-adaptive
 (written as `nonadaptive') experiment. Note that we did not introduce
 adaptive/nonadaptive experiments} scenario, the first 11 $\lambda$ windows
