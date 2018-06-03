@@ -834,7 +834,99 @@ execution and the scientific merit of adaptive decision making.
 \subsubsection{Adaptive Quadrature Experiments Results}
 
 \mtnote{Should this be Results as a whole? Or are we missing the results for
-all the others?}
+all the others?} \kfnote{I think we results and experiments are one section. 
+This subsubsection is for the adaptive quadrature. There is a separate one for 
+adaptive termination.}
+
+The aim of introducing adaptive quadrature to alchemical free energy 
+calculation protocols (e.g. TIES) is to reduce time to completion while 
+maintaining (or increasing) the accuracy of the results. Time to completion is 
+measured by the number of core hours consumed by the simulations. Accuracy is 
+defined as the error with respect to a reference value, calculated via a dense 
+lambda window spacing (65 windows). This reference value is used to establish 
+the accuracy of the non-adaptive protocol (which has 13 lambda windows) and the 
+adaptive protocol (which has a variable number of lambda window, determined at 
+run time).
+
+One of the input parameters of the adaptive quadrature algorithm is the desired 
+error threshold that the estimated integral should be below of. We set this 
+threshold to the error of the non-adaptive algorithm calculated via the 
+reference value. The algorithm then tries to minimize the number of lambda 
+windows constrained by the accuracy requirement. Table~\ref{tab:adapquad} shows 
+the results of running adaptive quadrature on 5 protein ligand systems, 
+comparing the time to completion and accuracy versus the non-adaptive case. The 
+number of lambda windows are reduced on average by \SI{32}{\percent}, hence reducing the time to completion by the same amount. The error on the adaptive results is also decreased, on average by \SI{77}{\percent}. In the case of the TYK2 L7-L8 system, the non-adaptive error was very low, hence the algorithm had to use a large number of windows to match that accuracy. In fact, by using 1 more window it was able to increase accuracy by \SI{40}{\percent}. 
+
+\begin{table*}
+  \caption{Comparing results of adaptive, non-adaptive and reference runs}
+  \label{tab:adapquad}
+  \begin{tabular}{lSSSSSS}
+    \toprule
+    {System}                               & 
+    {Ref $\Delta \Delta$G}                 &
+    {Non-adaptive $\Delta \Delta$G}        &
+    {Adaptive $\Delta \Delta$G}            &
+    {Num. of $\lambda$ windows}            &
+    {Decrease in time to completion}       &
+    {Increase in accuracy}                 \\
+    \midrule
+    {PTP1B L1-L2}   & 
+    -58.51 & 
+    -57.87(64) & 
+    -58.60(9) & 
+    10 & 
+    \SI{23}{\percent} & 
+    \SI{86}{\percent} \\
+    %
+    {PTP1B L10-L12} & 
+    1.83   & 
+    2.05(22) & 
+    1.94(7)  & 
+    6  & 
+    \SI{54}{\percent} &
+    \SI{68}{\percent} \\
+    %
+    {MCL1  L32-L38} & 
+    2.13   & 
+    2.33(20) & 
+    2.14(1)      & 
+    7  & 
+    \SI{46}{\percent} & 
+    \SI{95}{\percent} \\
+    %
+    {TYK2  L4-L9}   &
+    -28.69 & 
+    -28.25(44) & 
+    -28.67(1)  & 
+    7  & 
+    \SI{46}{\percent} & 
+    \SI{98}{\percent} \\
+    %
+    {TYK2  L7-L8}   & 
+    4.97   & 
+    4.92(5) & 
+    5.00(3)      & 
+    14 &  
+    \SI{-8}{\percent} & 
+    \SI{40}{\percent} \\
+    \bottomrule 
+    
+  \end{tabular}
+\end{table*}
+
+Figure~\ref{fig:adapquad} shows progression of the algorithm, starting from the 
+3 initial lambda windows, and at each iteration bisecting the interval where 
+the error is above the set threshold. For system X, we can see as how the parts 
+of the function that change less have relatively fewer windows, while parts of 
+greater change (usually, though not always around the $\lambda=0.5$ mark) have 
+more lambda windows to capture the function shape better. 
+
+\kfnote{Move this to algorithm description} In previous studies \cite{} the 
+error estimation during the adaptive algorithm is done via calculating the 
+integral estimate via two methods, one lower and one higher in complexity, then 
+the difference between the two can constitute as a rough estimate of the error 
+on that interval.
+
 
 One way to visualize the adaptivity in this experiment is to plot the
 function and integral approximations at every iteration.
