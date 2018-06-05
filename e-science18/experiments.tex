@@ -900,51 +900,51 @@ results produced using HTBAC are indeed correct.
 \end{table}
 
 %----------------------------------------------------------------------------
-\subsection{Adaptive Experiments}
+% \subsection{Adaptive Experiments}
 
-The TIES workflow can benefit from an adaptive execution environment to
-improve the efficiency and accuracy of result. In \emph{adaptive experiments}
-we implemented the adaptive quadrature algorithm specifically customized for
-biosimulations.
+% The TIES workflow can benefit from an adaptive execution environment to
+% improve the efficiency and accuracy of result. In \emph{adaptive experiments}
+% we implemented the adaptive quadrature algorithm specifically customized for
+% biosimulations.
 
-In the adaptive workflow, we alter the number of $\lambda$ windows being
-simulated over the course of a protocol instance. The position of new
-$\lambda$ windows depends on the estimated error of the integral measured
-between adjacent windows. Increasing the number of $\lambda$ windows in
-regions of rapid change will increase the accuracy of the overall integral to
-a greater degree than an arbitrarily placed window. In order to adaptively
-add lambda windows, we need access to the $\partial U/\partial\lambda$ values
-during runtime. Therefore, we break down the single production simulation
-stage (S4) \mtnote{I would reference the figure with the workflow diagram
-here} from the nonadaptive workflow into multiple smaller stages \mtnote{how
-many?}, each running for 1 ns. Once each simulation is complete within a
-stage, a decision is made about whether more $\lambda$ windows are required,
-and, if so, where these windows should be placed.
+% In the adaptive workflow, we alter the number of $\lambda$ windows being
+% simulated over the course of a protocol instance. The position of new
+% $\lambda$ windows depends on the estimated error of the integral measured
+% between adjacent windows. Increasing the number of $\lambda$ windows in
+% regions of rapid change will increase the accuracy of the overall integral to
+% a greater degree than an arbitrarily placed window. In order to adaptively
+% add lambda windows, we need access to the $\partial U/\partial\lambda$ values
+% during runtime. Therefore, we break down the single production simulation
+% stage (S4) \mtnote{I would reference the figure with the workflow diagram
+% here} from the nonadaptive workflow into multiple smaller stages \mtnote{how
+% many?}, each running for 1 ns. Once each simulation is complete within a
+% stage, a decision is made about whether more $\lambda$ windows are required,
+% and, if so, where these windows should be placed.
 
-We start out the simulation with 5 replicas of 3 \mtnote{why emphasis
-for 3?}\jdnote{addressed} equally spaced $\lambda$ windows, and equilibrate 
-them. Then we repeatedly execute shorter production simulations followed by an 
-analysis phase which determines where to place new lambda windows. This 
-procedure is repeated until convergence, at which point all concurrent 
-simulation are terminated. We define convergence as the point in the 
-production-analysis loop at which a desired error threshold is reached.
+% We start out the simulation with 5 replicas of 3 \mtnote{why emphasis
+% for 3?}\jdnote{addressed} equally spaced $\lambda$ windows, and equilibrate 
+% them. Then we repeatedly execute shorter production simulations followed by an 
+% analysis phase which determines where to place new lambda windows. This 
+% procedure is repeated until convergence, at which point all concurrent 
+% simulation are terminated. We define convergence as the point in the 
+% production-analysis loop at which a desired error threshold is reached.
 
-The success of this algorithm is determined by the decision where additional
-$\lambda$ windows should be introduced. In adaptive quadrature, this decision
-is made by calculating an error estimate on the integral and comparing this
-estimate to a threshold value. Due to the stochastic nature of
-biosimulations, it is non-trivial to determine this error and, as a proof of
-concept, we simplified this decision to replicate pre-calculated results. In
-future studies, we plan to use a dynamic decision process.
+% The success of this algorithm is determined by the decision where additional
+% $\lambda$ windows should be introduced. In adaptive quadrature, this decision
+% is made by calculating an error estimate on the integral and comparing this
+% estimate to a threshold value. Due to the stochastic nature of
+% biosimulations, it is non-trivial to determine this error and, as a proof of
+% concept, we simplified this decision to replicate pre-calculated results. In
+% future studies, we plan to use a dynamic decision process.
 
-Inter-node communication introduces a constraint on the number of new $\lambda$
-windows that can be added at each iteration. Simulations must run on an
-integer number of nodes to reduce the overhead of inter-node communication.
-This means that the number of new $\lambda$ windows (i.e., the number of
-simulations) \emph{has} to be either doubled or left unchanged. If the number
-of windows is doubled, the number of nodes per simulation can be halved
-automatically. Our algorithm loops through the current $\lambda$ window pairs
-until this criterion is reached, forcefully adding more windows when needed.
+% Inter-node communication introduces a constraint on the number of new $\lambda$
+% windows that can be added at each iteration. Simulations must run on an
+% integer number of nodes to reduce the overhead of inter-node communication.
+% This means that the number of new $\lambda$ windows (i.e., the number of
+% simulations) \emph{has} to be either doubled or left unchanged. If the number
+% of windows is doubled, the number of nodes per simulation can be halved
+% automatically. Our algorithm loops through the current $\lambda$ window pairs
+% until this criterion is reached, forcefully adding more windows when needed.
 
 
 % I don't think we need this equation here, it's too trivial.
@@ -982,16 +982,16 @@ until this criterion is reached, forcefully adding more windows when needed.
 %----------------------------------------------------------------------------
 
 
-\begin{figure}
-  \centering
-    \includegraphics[width=\columnwidth]{figures/adaptive_vs_nonadaptive_pseudo.pdf}
-    \caption{Illustrating the adaptive vs. non-adaptive workflow given the
-    same number of core hours}
-\label{fig:adaptive_vs_nonadaptive_TIES}
-\end{figure}
+% \begin{figure}
+%   \centering
+%     \includegraphics[width=\columnwidth]{figures/adaptive_vs_nonadaptive_pseudo.pdf}
+%     \caption{Illustrating the adaptive vs. non-adaptive workflow given the
+%     same number of core hours}
+% \label{fig:adaptive_vs_nonadaptive_TIES}
+% \end{figure}
 
 % ---------------------------------------------------------------------------
-\subsection{Adaptive Quadrature Results}
+\subsection{Adaptive Experiments}
 
 \mtnote{Should this be Results as a whole? Or are we missing the results for
 all the others?} \kfnote{I think results and experiments are one section. 
