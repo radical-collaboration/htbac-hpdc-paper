@@ -35,8 +35,9 @@
           adaptive experiments
         - Added plots (some are incomplete) and rearranged analysis
         - Kristof added his data on (06/03) for adaptive experiments and wrote 
-        results (adaptive plots to come Tuesday 06/05)
-        - Strong scaling subsection still needs to be addressed}
+          results (adaptive plots to come Tuesday 06/05)
+        - Strong scaling subsection still needs to be addressed
+        - For now, removed anything related to Titan}
 % ---------------------------------------------------------------------------
 \subsection{Experiment Setup}\label{ssec:exp_design}
 
@@ -215,7 +216,7 @@ compare and characterize resource efficiency with non-adaptive experiments.
     Blue Waters                          &  % CI                            
     TIES                          &  % protocol type
     (1, 1, 1)                           &  % number of protocols
-    2080                           \\ % total cores
+    2080, 2080, 2080                       \\ % total cores
     %
     \B{7}                             &  % Experiment ID
     Adaptivity                       &  
@@ -223,7 +224,7 @@ compare and characterize resource efficiency with non-adaptive experiments.
     Blue Waters                          &  % CI                            
     TIES                          &  % protocol type
     (1, 1, 1)                           &  % number of protocols
-    2080                           \\ % total cores
+    2080, 2080, 2080                           \\ % total cores
     % NAMD-MPI                              \\ % executable
     %
     \bottomrule
@@ -258,8 +259,9 @@ paragraph?}\jdnote{moved to previous para when first introducing weak scaling}
 
     Next, we demonstrate strong scaling performance of the protocols by fixing 
 the workload i.e. the number of pipelines but reducing the number of cores 
-by a factor of 2 in each run. We measure how the timing of the workload scales 
-when adding resources, \jdnote{expecting linear speedup, and expect fixed 
+by a factor of 2 in each run. We measure how the timing of the workload\jdnote{
+    will be defined in section IV} 
+scales when adding resources, \jdnote{expecting linear speedup, and expect fixed 
 overheads} as well as the overheads in HTBAC, EnTK and RP. Experiments 4 
 measures the strong scaling performance of ESMACS while experiment 5 repeats the 
 same strong scaling experiment using the TIES protocol. 
@@ -274,7 +276,8 @@ adaptivity in section IV}.
 In the non-adaptive workflow, we use 13 pre-assigned and approximated $\lambda$ 
 windows.  By design of the TIES protocol, each $\lambda$ 
 window creates a new simulation condition that must be replicated. TIES requires 
-5 replicas per $\lambda$, thereby producing $\lambda$ $4\times 5$
+5 replicas per $\lambda$, thereby producing 
+$\lambda \times 5$ 
 total simulations. \jdnote{Section IV will explain how
 simulations map to computational tasks}. As described in the TIES workflow 
 Figure \jdnote{include nonadaptive workflow}, this produces a total of 65 
@@ -296,7 +299,8 @@ simulations begin executing based on newly generated $\lambda$ windows.
 
 The estimation computation is captured as a single stage containing a single 
 task. By design of the adaptive quadrature algorithm, the number of additional
-$\lambda$ windows will vary across candidates, which will impact the number of simulation-analysis iterations. \jdnote{will call this something else}. 
+$\lambda$ windows will vary across candidates, which will impact the number of 
+simulation-analysis iterations. \jdnote{will call this something else}. 
 \jdnote{check with Kristof on the local and global analysis that happen for 
 nonadaptive}
 
@@ -432,7 +436,7 @@ tasks \mtnote{when/why a simulation task is `production'? I am not sure I
 understand what that means}\jdnote{removed production for weak/strong. 
 Production applies to adaptive/nonadaptive which need to show the production 
 scale timesteps i.e. 2 or 3M} in $S4$ are assigned 50,000 
-steps. 
+steps. \jdnote{the reader will be able to understand $S$ once I fix section IV}
 
 \jdnote{Kristof to include the number of timesteps for adaptive/nonadaptive
 experiments}
@@ -449,7 +453,8 @@ and resource requirements. \mtnote{does the reader know what
 is a launch method?} \jdnote{better?}. The \texttt{aprun} launch method has 
 several limitations. First, we see a limitation in the number of concurrent 
 tasks executions. We characterized the failing limits of the \texttt{aprun} 
-launch method based on the maximum number of concurrent simulations that can run successfully. On average, we experience failing concurrency at approximately 
+launch method based on the maximum number of concurrent simulations that can run 
+successfully. On average, we experience failing concurrency at approximately 
 436 concurrent tasks. \mtnote{how do we know this average?}. 
 \jdnote{would it make sense to show a bell curve of the distribution of failing 
 units? I have 8 data points, but I can run more and include Mark's 
@@ -502,56 +507,56 @@ hence each NAMD task requires a complete node to maintain concurrency.
 % resources via a single pilot. Accordingly, we request the maximum number of
 % cores required by the workload as the number of cores in a pilot.
 
-To characterize the weak scaling performance of TIES \mtnote{I am not sure I 
-understand this sentence: For measuring the weak scaling performance of TIES?} 
-\jdnote{better?}, 
-we use between 4160 and 33280 cores as indicated in 
-Figure~\ref{fig:weak_scaling_TIES} because the NAMD executable used in all
-tasks \mtnote{does the reader know what a task is in this context?}
-\jdnote{will be defined in Section IV} from
-$S1$-$S4$ require \mtnote{grammar: requires} a single node i.e. 32 cores per 
-task, as mentioned earlier in the APRUN limitation. 
-\mtnote{why?}\jdnote{32 cores/task addressed by earlier mention of aprun MPI 
-limit}
+% To characterize the weak scaling performance of TIES \mtnote{I am not sure I 
+% understand this sentence: For measuring the weak scaling performance of TIES?} 
+% \jdnote{better?}, 
+% we use between 4160 and 33280 cores as indicated in 
+% Figure~\ref{fig:weak_scaling_TIES} because the NAMD executable used in all
+% tasks \mtnote{does the reader know what a task is in this context?}
+% \jdnote{will be defined in Section IV} from
+% $S1$-$S4$ require \mtnote{grammar: requires} a single node i.e. 32 cores per 
+% task, as mentioned earlier in the APRUN limitation. 
+% \mtnote{why?}\jdnote{32 cores/task addressed by earlier mention of aprun MPI 
+% limit}
 
-For strong scaling performance, we fix the number of protocol instances to 8
-instances given that we experience failing 
-concurrency of tasks when we scale the workload to 8 protocols.\mtnote{why 8?} 
-We vary the amount of resources as shown in
-Figure~\ref{fig:strong_scaling_TIES} by showing reducing of resources by a 
-factor of 2. \mtnote{Please expand indicating and
-justifying the the chosen amount of resources. Experiments can be design in
-many ways, we need not only to describe but also to justify why we choose a
-specific design for our experiments.}\jdnote{better?}
+% For strong scaling performance, we fix the number of protocol instances to 8
+% instances given that we experience failing 
+% concurrency of tasks when we scale the workload to 8 protocols.\mtnote{why 8?} 
+% We vary the amount of resources as shown in
+% Figure~\ref{fig:strong_scaling_TIES} by showing reducing of resources by a 
+% factor of 2. \mtnote{Please expand indicating and
+% justifying the the chosen amount of resources. Experiments can be design in
+% many ways, we need not only to describe but also to justify why we choose a
+% specific design for our experiments.}\jdnote{better?}
 
-For the TIES protocol, each pipeline \mtnote{does the reader know what a
-pipeline is?}\jdnote{will be address in Section IV} consists of six stages 
-\mtnote{simulation stages?}. Each of the
-simulation stages contains a task for every unique ($\lambda$, replica)
-combination \mtnote{does the reader understand this?}\jdnote{will be addressed
-better in section IV}. In the non-adaptive
-workflow \mtnote{we never used `workflow'. Previously we used non-adaptive
-(written as `nonadaptive') experiment. Note that we did not introduce
-adaptive/nonadaptive experiments} scenario, the first 11 $\lambda$ windows
-\mtnote{does the reader know what a lambda window is?} consist of the
-following values: $L$ is a vector with
-\begin{flalign}
-L &= \{ x_i: x_i\in[0,1]\; and\; x_{i+1} = x_i + \delta \}, where\ \delta\ is\ 0.1.
-%&$$L=\{ x_i: x_i\in[0,1]\; and\; x_{i+1} = x_i + \delta \}$$%, where $\delta$ is $0.1$.
-\end{flalign}
+% For the TIES protocol, each pipeline \mtnote{does the reader know what a
+% pipeline is?}\jdnote{will be address in Section IV} consists of six stages 
+% \mtnote{simulation stages?}. Each of the
+% simulation stages contains a task for every unique ($\lambda$, replica)
+% combination \mtnote{does the reader understand this?}\jdnote{will be addressed
+% better in section IV}. In the non-adaptive
+% workflow \mtnote{we never used `workflow'. Previously we used non-adaptive
+% (written as `nonadaptive') experiment. Note that we did not introduce
+% adaptive/nonadaptive experiments} scenario, the first 11 $\lambda$ windows
+% \mtnote{does the reader know what a lambda window is?} consist of the
+% following values: $L$ is a vector with
+% \begin{flalign}
+% L &= \{ x_i: x_i\in[0,1]\; and\; x_{i+1} = x_i + \delta \}, where\ \delta\ is\ 0.1.
+% %&$$L=\{ x_i: x_i\in[0,1]\; and\; x_{i+1} = x_i + \delta \}$$%, where $\delta$ is $0.1$.
+% \end{flalign}
 
-We append two additional values on both ends of $L$, completing 13 $\lambda$
-windows. Each $\lambda$ window consists of five replicas. Therefore there are
-a total of 65 tasks for every simulation stage \mtnote{depending on the
-previous sections of the paper, this `therefore' may have to be better
-explained to the reader}. The production simulations stage, $S4$ as described
-in figure~\ref{fig:pst}\mtnote{missing figure} executes a 4 ns simulation
-duration \mtnote{grammar: executes a simulation for 4 ns? a simulation with a
-4 ns duration?}. The analysis stages of the protocol reduce the number of
-tasks \mtnote{Why/how?}. The first analysis task consists of five tasks where
-each task performs an aggregate analysis over all $\lambda$ windows for each
-replica. The second analysis stage consists of one task that aggregates the
-previous results and computes a single average across all replicas.
+% We append two additional values on both ends of $L$, completing 13 $\lambda$
+% windows. Each $\lambda$ window consists of five replicas. Therefore there are
+% a total of 65 tasks for every simulation stage \mtnote{depending on the
+% previous sections of the paper, this `therefore' may have to be better
+% explained to the reader}. The production simulations stage, $S4$ as described
+% in figure~\ref{fig:pst}\mtnote{missing figure} executes a 4 ns simulation
+% duration \mtnote{grammar: executes a simulation for 4 ns? a simulation with a
+% 4 ns duration?}. The analysis stages of the protocol reduce the number of
+% tasks \mtnote{Why/how?}. The first analysis task consists of five tasks where
+% each task performs an aggregate analysis over all $\lambda$ windows for each
+% replica. The second analysis stage consists of one task that aggregates the
+% previous results and computes a single average across all replicas.
 
 %----------------------------------------------------------------------------
 \subsection{Weak Scaling and Performance Characterization}
@@ -561,7 +566,7 @@ adaptive experiments \& results to subsections}
 
 We investigate the weak scaling properties of HTBAC using three applications,
 where each application uses a different protocol configuration. The upper bounds
-in the number of protocol instances for each experiments is inflicted due to 
+in the number of protocol instances for each experiments is determined by 
 the \texttt{aprun} limitations on concurrent executions. In each weak scaling 
 experiment we increase the number of TIES protocol instances proportionally to 
 the amount of resources. In experiment 1, we show weak scalability of the TIES 
@@ -611,7 +616,9 @@ protocol instances.
 % HTBAC enables concurrent execution of multiple protocol \mtnote{what type of
 % protocols?} instances. 
 The overhead of HTBAC depends mostly on the number of protocol instances that 
-need to be generated for an application. However, the HTBAC overhead is a minimal contributor to\(TTX\) \mtnote{Should this be TTC? HTBAC should contribute nothing to TTX.
+need to be generated for an application. However, the HTBAC overhead is a 
+minimal contributor to\(TTX\) \mtnote{Should this be TTC? HTBAC should 
+contribute nothing to TTX.
 If this should be TTX, then we should write about comparison between HTBAC
 overhead and TTX} \jdnote{what I meant here is different, see next sentence} 
 Comparing the HTBAC overhead with \(TTX\) measurements, we see that the HTBAC 
@@ -636,6 +643,31 @@ out figure ref}
 
 % The impact of the synchronization barriers increases with the number of CUs
 % as seen in the 16 protocol instances data point in
+
+Furthermore, as we scale the number of tasks, the runtime overhead of
+RP scales linearly. RP requires an amount of time to schedule tasks
+proportional to the scale of execution. The main contributor to the increase
+in overhead in RP \mtnote{which one?} is based on the  
+\mtnote{I am not sure a contributor is derived} the time of resources 
+inactivity while RP schedules new tasks \mtnote{this is derived from another publication: we need
+to reference the work we copy/paraphrase from}. As such, the overhead is
+expected to grow proportionally to the number of concurrent 
+tasks~\cite{dakka2017}. 
+
+The RP overhead consist of event that record timestamps which derive
+durations of different RP components that are relevant to the execution of the 
+application. \mtnote{I do not think the overhead decomposes: Do
+we measure the components of the overhead?} into events \mtnote{we use events
+to record timestamps from which we derive durations that, once interpreted,
+measure our overheads. I would avoid to mention events in this context.} that
+capture the pilot and tasks lifespan. The pilot duration contains the time to
+bootstrap and terminate the pilot. The task overheads contain the executor's
+spawning of the task, folder staging preparation, and operating system task
+spawning. \mtnote{We need to explain to the reader why all this is relevant
+in this context.} \jdnote{need to discuss on 06/04, 
+should we keep these details or keep the focus on the paragraph just above this 
+one?}
+
 
 Furthermore, an additional overhead, driven by the \texttt{aprun} \mtnote{Does 
 the reader know what aprun is? Also, I would use something like textttt to
@@ -753,17 +785,44 @@ synchronization until I can justify better.}
 \mtnote{Should we have also a `Weak Scaling Experiments' header? Or maybe we
 should change this one?}
 
-Next we repeat the same design of the weak scalability experiments but
-examine performance of strong scaling when fixing the number of pipelines and
-varying the resources. The comparison between weak and strong scalability
-shows the overhead introduced by load balancing and scheduling tasks in
-multiple generations \mtnote{See previous comments about
-terminology}\mtnote{I am not sure I understand: are we comparing overheads
-when weak and strong scaling our applications/workflows or are we first
-measuring the overheads when strong scaling and then comparing them to those
-of weak scaling?}. As we scale the number of generation of concurrent tasks
-executions, we half the resources allocated by the pilot \mtnote{this should
-be explained in the experiment setup and design}.
+To investigate strong scaling, we run two applications on Blue Waters. We 
+investigate the strong scaling behavior considering only homogeneous protocols.
+The investigation of heterogeneous protocols is of interest but not at the risk
+of cluttering the paper. Both applications use the BRD4-GSK physical systems.
+The first application shows strong scaling behavior of TIES alone, using
+\texttt{NAMD-MPI} with 32 cores per task. We fix the number of TIES protocol 
+instances to 8 due to \texttt{aprun} limitations and vary the amount of 
+resources between 4160, 8320 and 16640 cores. Given 4160 cores, we can execute 4 
+generations of 130 concurrent tasks. Given 8320 cores, we can execute 2 
+generations of 260 concurrent tasks. The second application demonstrates strong
+scaling behavior using the ESMACS protocol. We fix the number of ESMACS protocol
+instances to 16, and vary the amount of resources between 3200, 6400 and 12800
+cores. This produces the same number of generations of execution as the first 
+application. \jdnote{will add the plot for ESMACS ss once I receive 2 full 
+trials}. As we increase the number of parallel resources, 
+Figure~\ref{strong_scaling_TIES} shows linear speedup in \(TTX\) while 
+maintaining fixed $T_{O}$. The fixed $T_{O}$ suggests that the overheads are 
+mainly driven by the scheduling in the number of protocols and 
+thereby the number of tasks, not by the amount of resources. This is confirmed 
+for RP in Ref.~\cite{merzky2018}.\jdnote{I need to investigate this but I also
+presume that aprun limits are also a factor of overhead.}
+
+% The comparison between weak and strong 
+% scalability shows the overhead introduced by load balancing and scheduling 
+% tasks in multiple generations. 
+
+% By design of
+% the TIES protocol, this workload show up to $65 \times 8$ concurrent tasks, 
+% where each task uses 32 cores. The total number of concurrent 
+
+
+% \mtnote{See previous comments about
+% terminology}\mtnote{I am not sure I understand: are we comparing overheads
+% when weak and strong scaling our applications/workflows or are we first
+% measuring the overheads when strong scaling and then comparing them to those
+% of weak scaling?}. As we scale the number of generation of concurrent tasks
+% executions, we half the resources allocated by the pilot \mtnote{this should
+% be explained in the experiment setup and design}.
 
 \mtnote{General note. Experiments about weak and strong scaling show the
 behavior of our software stack with one or more workflows/workloads. The
@@ -777,35 +836,19 @@ Usually, the analysis of the overheads is used to explain why we observe lack
 of scalability (weak or strong) as represented by a superlinearity in our
 plots. The discussion of our experimental results should clearly distinguish
 these questions and properly relate the study of scalability to that of
-overheads. At the moment, our discussion does not do all this.}
-
-Furthermore, as we scale the number of generations, the runtime overhead of
-RP scales linearly. RP requires an amount of time to schedule tasks
-proportional to the scale of execution. The main contributor to the increase
-in overhead \mtnote{which one?} is derived \mtnote{I am not sure a
-contributor is derived} by the time of resources inactivity while RP
-schedules new tasks \mtnote{this is derived from another publication: we need
-to reference the work we copy/paraphrase from}. As such, the overhead is
-expected to grow proportionally to the number of concurrent tasks.
-
-The RP overhead decomposes \mtnote{I do not think the overhead decomposes: Do
-we measure the components of the overhead?} into events \mtnote{we use events
-to record timestamps from which we derive durations that, once interpreted,
-measure our overheads. I would avoid to mention events in this context.} that
-capture the pilot and tasks lifespan. The pilot duration contains the time to
-bootstrap and terminate the pilot. The task overheads contain the executor's
-spawning of the task, folder staging preparation, and operating system task
-spawning. \mtnote{We need to explain to the reader why all this is relevant
-in this context.} \jdnote{need to discuss on 06/04}
+overheads. At the moment, our discussion does not do all this.}\jdnote{I 
+reduced the discussion of scalability down to the properties that relate to 
+contributions of overheads and trends observed in TTX.}
 
 \begin{figure}
   \centering
-    \includegraphics[width=\columnwidth]{figures/ties_ss_pseudo.pdf}
-    \caption{Strong scaling properties of HTBAC using TIES protocols. We
+    \includegraphics[width=\columnwidth]{figures/new_ss_ties.pdf}
+    \caption{Strong scaling properties of HTBAC using TIES protocol. We
     investigate the strong scaling of HTBAC with a fixed number of protocol
     instances while varying the amount resources. Overheads of HTBAC and
     runtime overhead (left) and \(TTX\) (right) for experimental
-    configurations investigating the strong scaling of TIES.}
+    configurations investigating the strong scaling of TIES. We ran 3 trials
+    for each configuration.}
 \label{fig:strong_scaling_TIES}
 \end{figure}
 
@@ -821,8 +864,8 @@ in this context.} \jdnote{need to discuss on 06/04}
 % results. 
 
 In order to validate the correctness of the results produced using 
-HTBAC and the BRD-GSK physical systems, we have devised
-a set of experiments. These experiments are vital to gain confidence in the
+HTBAC and the BRD4-GSK physical systems, we compare our results with those 
+previously cited. These experiments are vital to gain confidence in the
 algorithm and to prove that it is indeed calculating the correct values.
 
 The validation experiments were based on the original study of Wan et. al.
@@ -832,8 +875,8 @@ were the subject of that study: they are the ligand transformations 3 to 1,
 the binding affinity (see Table~\ref{tab:exp2}) using HTBAC.
 
 The results show that all three $\Delta \Delta$G values are within error bars
-of the original study, reinforcing the fact that HTBAC has indeed correctly
-implemented the complex workflow of TIES.
+of the original study using the TIES protocol, reinforcing the fact that our 
+results produced using HTBAC are indeed correct. 
 
 \begin{table}
   \centering
@@ -857,64 +900,64 @@ implemented the complex workflow of TIES.
 \end{table}
 
 %----------------------------------------------------------------------------
-% \subsection{Adaptive Experiments}
+\subsection{Adaptive Experiments}
 
-% The TIES workflow can benefit from an adaptive execution environment to
-% improve the efficiency and accuracy of result. In \emph{adaptive experiments}
-% we implemented the adaptive quadrature algorithm specifically customized for
-% biosimulations.
+The TIES workflow can benefit from an adaptive execution environment to
+improve the efficiency and accuracy of result. In \emph{adaptive experiments}
+we implemented the adaptive quadrature algorithm specifically customized for
+biosimulations.
 
-% In the adaptive workflow, we alter the number of $\lambda$ windows being
-% simulated over the course of a protocol instance. The position of new
-% $\lambda$ windows depends on the estimated error of the integral measured
-% between adjacent windows. Increasing the number of $\lambda$ windows in
-% regions of rapid change will increase the accuracy of the overall integral to
-% a greater degree than an arbitrarily placed window. In order to adaptively
-% add lambda windows, we need access to the $\partial U/\partial\lambda$ values
-% during runtime. Therefore, we break down the single production simulation
-% stage (S4) \mtnote{I would reference the figure with the workflow diagram
-% here} from the nonadaptive workflow into multiple smaller stages \mtnote{how
-% many?}, each running for 1 ns. Once each simulation is complete within a
-% stage, a decision is made about whether more $\lambda$ windows are required,
-% and, if so, where these windows should be placed.
+In the adaptive workflow, we alter the number of $\lambda$ windows being
+simulated over the course of a protocol instance. The position of new
+$\lambda$ windows depends on the estimated error of the integral measured
+between adjacent windows. Increasing the number of $\lambda$ windows in
+regions of rapid change will increase the accuracy of the overall integral to
+a greater degree than an arbitrarily placed window. In order to adaptively
+add lambda windows, we need access to the $\partial U/\partial\lambda$ values
+during runtime. Therefore, we break down the single production simulation
+stage (S4) \mtnote{I would reference the figure with the workflow diagram
+here} from the nonadaptive workflow into multiple smaller stages \mtnote{how
+many?}, each running for 1 ns. Once each simulation is complete within a
+stage, a decision is made about whether more $\lambda$ windows are required,
+and, if so, where these windows should be placed.
 
-% We start out the simulation with 5 replicas of \emph{3} \mtnote{why emphasis
-% for 3?} equally spaced $\lambda$ windows, and equilibrate them. Then we
-% repeatedly execute shorter production simulations followed by an analysis
-% phase which determines where to place new lambda windows. This procedure is
-% repeated until convergence, at which point all concurrent simulation are
-% terminated. We define convergence as the point in the production-analysis
-% loop at which a desired error threshold is reached.
+We start out the simulation with 5 replicas of 3 \mtnote{why emphasis
+for 3?}\jdnote{addressed} equally spaced $\lambda$ windows, and equilibrate 
+them. Then we repeatedly execute shorter production simulations followed by an 
+analysis phase which determines where to place new lambda windows. This 
+procedure is repeated until convergence, at which point all concurrent 
+simulation are terminated. We define convergence as the point in the 
+production-analysis loop at which a desired error threshold is reached.
 
-% The success of this algorithm is determined by the decision where additional
-% $\lambda$ windows should be introduced. In adaptive quadrature, this decision
-% is made by calculating an error estimate on the integral and comparing this
-% estimate to a threshold value. Due to the stochastic nature of
-% biosimulations, it is non-trivial to determine this error and, as a proof of
-% concept, we simplified this decision to replicate pre-calculated results. In
-% future studies, we plan to use a dynamic decision process.
+The success of this algorithm is determined by the decision where additional
+$\lambda$ windows should be introduced. In adaptive quadrature, this decision
+is made by calculating an error estimate on the integral and comparing this
+estimate to a threshold value. Due to the stochastic nature of
+biosimulations, it is non-trivial to determine this error and, as a proof of
+concept, we simplified this decision to replicate pre-calculated results. In
+future studies, we plan to use a dynamic decision process.
 
-% Inter-node communication introduces a constraint on the number of new $\lambda$
-% windows that can be added at each iteration. Simulations must run on an
-% integer number of nodes to reduce the overhead of inter-node communication.
-% This means that the number of new $\lambda$ windows (i.e., the number of
-% simulations) \emph{has} to be either doubled or left unchanged. If the number
-% of windows is doubled, the number of nodes per simulation can be halved
-% automatically. Our algorithm loops through the current $\lambda$ window pairs
-% until this criterion is reached, forcefully adding more windows when needed.
+Inter-node communication introduces a constraint on the number of new $\lambda$
+windows that can be added at each iteration. Simulations must run on an
+integer number of nodes to reduce the overhead of inter-node communication.
+This means that the number of new $\lambda$ windows (i.e., the number of
+simulations) \emph{has} to be either doubled or left unchanged. If the number
+of windows is doubled, the number of nodes per simulation can be halved
+automatically. Our algorithm loops through the current $\lambda$ window pairs
+until this criterion is reached, forcefully adding more windows when needed.
 
 
-% % I don't think we need this equation here, it's too trivial.
-% % \begin{flalign}
-% % L &= \{ x_i: x_i\in[0,1]\; and\; x_{i+1} = x_i + \delta \}, where\ \delta\ is\ 0.5.
-% % %&$$L=\{ x_i: x_i\in[0,1]\; and\; x_{i+1} = x_i + \delta \}$$%, where $\delta$ is $0.1$.
-% % \end{flalign}
+% I don't think we need this equation here, it's too trivial.
+% \begin{flalign}
+% L &= \{ x_i: x_i\in[0,1]\; and\; x_{i+1} = x_i + \delta \}, where\ \delta\ is\ 0.5.
+% %&$$L=\{ x_i: x_i\in[0,1]\; and\; x_{i+1} = x_i + \delta \}$$%, where $\delta$ is $0.1$.
+% \end{flalign}
 
-% % For every $\lambda$ window we initialize with five replicas therefore
-% % yielding a total of 15 tasks. We run 15 tasks for stages $S1$ through
-% % $S4.1$. Between stages $S4.1$ and $S4.3$ the number of $\lambda$ windows
-% % doubles for every stage, which doubles the total number of tasks. The last
-% % production simulation stage, $S4.4$, runs for the remaining 2 ns durations.
+% For every $\lambda$ window we initialize with five replicas therefore
+% yielding a total of 15 tasks. We run 15 tasks for stages $S1$ through
+% $S4.1$. Between stages $S4.1$ and $S4.3$ the number of $\lambda$ windows
+% doubles for every stage, which doubles the total number of tasks. The last
+% production simulation stage, $S4.4$, runs for the remaining 2 ns durations.
 
 % Our experiments implement adaptive change in the $\lambda$ windows sampled
 % and not the timing of execution. In this way, we introduce only a single
@@ -925,16 +968,16 @@ implemented the complex workflow of TIES.
 % adaptivity, as the objective is to determine the feasibility of adaptive
 % execution and the scientific merit of adaptive decision making.
 
-% \begin{figure}
-%   \centering
-%    \includegraphics[width=\columnwidth]{figures/Adaptive_TIES_1.png}
-%   \caption{Illustrating the adaptive workflow. After the 3 initial lambda 
-%   windows are equilibrated, the first production stage starts. 
-%   This is followed by analysis at every lambda interval, to decide whether 
-%   to add a new window in the middle. The production-analysis is repeated 
-%   for 4 production steps in our implementation, not shown here.}
-% \label{fig:adaptive_TIES}
-% \end{figure}
+\begin{figure}
+  \centering
+   \includegraphics[width=\columnwidth]{figures/Adaptive_TIES_1.png}
+  \caption{Illustrating the adaptive workflow. After the 3 initial lambda 
+  windows are equilibrated, the first production stage starts. 
+  This is followed by analysis at every lambda interval, to decide whether 
+  to add a new window in the middle. The production-analysis is repeated 
+  for 4 production steps in our implementation, not shown here.}
+\label{fig:adaptive_TIES}
+\end{figure}
 
 %----------------------------------------------------------------------------
 
@@ -948,7 +991,7 @@ implemented the complex workflow of TIES.
 \end{figure}
 
 % ---------------------------------------------------------------------------
-\subsubsection{Adaptive Quadrature Experiments Results}
+\subsection{Adaptive Quadrature Results}
 
 \mtnote{Should this be Results as a whole? Or are we missing the results for
 all the others?} \kfnote{I think results and experiments are one section. 
@@ -960,19 +1003,25 @@ calculation protocols (e.g. TIES) is to reduce time to completion while
 maintaining (or increasing) the accuracy of the results. Time to completion is 
 measured by the number of core hours consumed by the simulations. Accuracy is 
 defined as the error with respect to a reference value, calculated via a dense 
-lambda window spacing (65 windows). This reference value is used to establish 
-the accuracy of the non-adaptive protocol (which has 13 lambda windows) and the 
-adaptive protocol (which has a variable number of lambda window, determined at 
-run time).
+$\lambda$ window spacing (65 windows). This reference value is used to establish 
+the accuracy of the non-adaptive protocol (which has 13 $\lambda$ windows) and 
+the adaptive protocol (which has a variable number of $\lambda$ windows, 
+determined at run time).
 
 One of the input parameters of the adaptive quadrature algorithm is the desired 
-error threshold that the estimated integral should be below of. We set this 
+acceptable error threshold of the estimated integral. We set this 
 threshold to the error of the non-adaptive algorithm calculated via the 
-reference value. The algorithm then tries to minimize the number of lambda 
+reference value. The algorithm then tries to minimize the number of $\lambda$ 
 windows constrained by the accuracy requirement. Table~\ref{tab:adapquad} shows 
 the results of running adaptive quadrature on 5 protein ligand systems, 
-comparing the time to completion and accuracy versus the non-adaptive case. The 
-number of lambda windows are reduced on average by \SI{32}{\percent}, hence reducing the time to completion by the same amount. The error on the adaptive results is also decreased, on average by \SI{77}{\percent}. In the case of the TYK2 L7-L8 system, the non-adaptive error was very low, hence the algorithm had to use a large number of windows to match that accuracy. In fact, by using 1 more window it was able to increase accuracy by \SI{40}{\percent}. 
+comparing the \(TTX\) and accuracy versus the non-adaptive case. The 
+number of lambda windows are reduced on average by \SI{32}{\percent}, hence 
+reducing \(TTX\) by the same amount. The error on the adaptive 
+results is also decreased, on average by \SI{77}{\percent}. In the case of the 
+TYK2 L7-L8 system, the non-adaptive error was very low, hence the algorithm 
+implemented a larger number of windows in comparison to the non-adaptive in 
+match that accuracy. In fact, by using 1 more window it was able to increase 
+accuracy by \SI{40}{\percent}. 
 
 \begin{table*}
   \caption{Comparing results of adaptive, non-adaptive and reference runs}
@@ -1031,18 +1080,18 @@ number of lambda windows are reduced on average by \SI{32}{\percent}, hence redu
   \end{tabular}
 \end{table*}
 
-Figure~\ref{fig:adapquad} shows progression of the algorithm, starting from the 
+Figure~\ref{fig:adapquad} shows progression of the algorithm, starting from  
 3 initial lambda windows, and at each iteration bisecting the interval where 
 the error is above the set threshold. For system X, we can see as how the parts 
 of the function that change less have relatively fewer windows, while parts of 
 greater change (usually, though not always around the $\lambda=0.5$ mark) have 
-more lambda windows to capture the function shape better. 
+more $\lambda$ windows to represent the shape of the function more closely. 
 
 \kfnote{Move this to algorithm description} In previous studies \cite{} the 
-error estimation during the adaptive algorithm is done via calculating the 
-integral estimate via two methods, one lower and one higher in complexity, then 
-the difference between the two can constitute as a rough estimate of the error 
-on that interval.
+error estimation during the adaptive algorithm is done by calculating the 
+integral estimate using two methods, one lower and one higher in complexity, 
+then the difference between the two can constitute as a rough estimate of the 
+error on that interval.
 
 
 One way to visualize the adaptivity in this experiment is to plot the
@@ -1106,7 +1155,7 @@ paving the way to more advanced biosimulation algorithms.
 
 \end{axis}
 \end{tikzpicture}
-\caption{Approximating the intergral under the curve, hence calculating
+\caption{Approximating the integral under the curve, hence calculating
 $\Delta$G. The adaptive algorithm reevaluates the efficiency of the lambda
 window mesh after every \SI{1}{\nano\second} and makes a decision whether to
 place more lambda windows inside certain ranges. As we iterate every 1 ns,
