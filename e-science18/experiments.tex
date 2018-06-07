@@ -633,124 +633,149 @@ see the note above about the need to progressively refine each paragraph.}
 %----------------------------------------------------------------------------
 \subsection{Weak Scaling and Performance Characterization}
 
-\mtnote{Is this meant to be a subsubsection?}\jdnote{changed weak, strong and
-adaptive experiments \& results to subsections}
+% \mtnote{Is this meant to be a subsubsection?}\jdnote{changed weak, strong
+% and adaptive experiments \& results to subsections}
 
-We investigate the weak scaling properties of HTBAC using three applications,
-where each application uses a different protocol configuration. The upper
-bounds in the number of protocol instances for each experiments is determined
-by the \texttt{aprun} limitations on concurrent executions. In each weak
-scaling experiment we increase the number of TIES protocol instances
-proportionally to the amount of resources. In experiment 1, we show weak
-scalability of the TIES protocol. Each TIES protocol instance contains a
-single pipeline with 4 stages and 65 concurrent tasks
-\mtnote{does the reader know what a task is in this context?} \jdnote{will be
-defined in Section IV}. We scale the number of protocol instances linearly
-between 2 and 8. In experiment 2, we show weak scalability using the ESMACS
-protocol. Each ESMACS protocols contains 1 pipeline with 4 stages and 25
-concurrent tasks. Experiment 3 shows weak scalability using heterogeneous
-protocol instances. We scale both ESMACS and TIES instances linearly, ranging
-from 2 to 8 protocol instances. For all weak scaling experiments we used
-physical systems from the BRD4-GSK library which have the same number of
-atoms and similar chemical properties. \jdnote{this is to say that the
-fluctuations in execution times between data points are invariant to the
-physical systems}.
+We investigate the weak scaling of HTBAC using three
+applications\mtnote{which ones?}: \ldots, \ldots and \ldots. Each application
+uses a different protocol configuration with a number of instances determined
+by the number of concurrent executions supported by \texttt{aprun}. In each
+experiment, we increase the number of instances of the TIES protocol,
+proportionally to the amount of requested resources. 
 
-We characterize the execution time of the application, and overheads of
-HTBAC, EnTK, RP and \texttt{aprun}.  For each application, the total time to
-completion (TTC) \mtnote{of what?} \jdnote{per application} can be expressed
-as following: $TTC = TTX + T_{O}$ where \(TTX\) measures the execution
-duration across all task.
+Experiment 1 measures the weak scalability of HTBAC with the TIES protocol.
+Each instance of the TIES protocol contains a single pipeline with 4 stages
+and 65 concurrent tasks. We increase the number of instances linearly,
+between 2 and 8. Experiment 2 measures weak scalability with the ESMACS
+protocol. Each ESMACS protocol contains 1 pipeline with 4 stages and 25
+concurrent tasks \mtnote{Do we `increase the number of instances linearly,
+between 2 and 8' also in experiment 2? If so, we should say that only once
+for Experiment 1--3. If not, why?}. Experiment 3 measures weak scalability
+with instances of both TIES and ESMACS protocols. Also in this case, we scale
+the instances of both protocols linearly, between 2 and 8. For all weak
+scaling experiments we used \mtnote{Grammar: conjugation} physical systems
+from the \texttt{BRD4-GSK} library with the same number of atoms and similar
+chemical properties. \jdnote{this is to say that the fluctuations in
+execution times between data points are invariant to the physical
+systems}\mtnote{Nice comment, I would edit it and put it in the text!}.
+
+% \mtnote{does the reader know what a task is in this context?} \jdnote{will
+% be defined in Section IV}
+
+We characterize the execution time of the application \mtnote{which one?},
+and overheads of HTBAC, EnTK, RP and \texttt{aprun}.  The total time to
+completion (TTC) of each application \mtnote{of what?} \jdnote{per
+application} \mtnote{you see the difference produced by my editing?} can be
+expressed as $TTC = TTX + T_{O}$ where \(TTX\) measures the aggregated
+duration of all task of an application.
 \mtnote{TTX should measure only the aggregated time spent executing the
 tasks' executables. All the rest should be part of RP overhead}\jdnote{for
-discussion with Matteo 06/04}. $T_{O}$ equates to the total overheads
-produced by HTBAC, EnTK, and RP: $$T_{O} = T_{O}\textsuperscript{HTBAC} +
-T_{O}\textsuperscript{EnTK} + T_{O}\textsuperscript{RP}$$ \mtnote{As defined,
-this formula seems to add twice part of the RP overheads.}\jdnote{I think I'm
-missing something: The RP overhead is what I get from the pilot duration
-logs. Not sure where I'm duplicating}
+discussion with Matteo 06/04}\mtnote{I am afraid I do not understand this
+comment} $T_{O}$ equates to the total overheads produced by HTBAC, EnTK, and
+RP: $$T_{O} = T_{O}\textsuperscript{HTBAC} + T_{O}\textsuperscript{EnTK} +
+T_{O}\textsuperscript{RP}$$ \mtnote{As defined, this formula seems to add
+twice part of the RP overheads.}\jdnote{I think I'm missing something: The RP
+overhead is what I get from the pilot duration logs. Not sure where I'm
+duplicating}\mtnote{If TTX is more than just the aggregated execution time of
+all the tasks' executable, then TTX and $T_{O}$ both contain part of RP
+overhead.}
 
 % \mtnote{grammar: I do not understand the sentence after the `;'} given by
 % the sum of the constituent overheads: $$T_{O} =
 % T_{O}\textsuperscript{HTBAC} + T_{O}\textsuperscript{EnTK} +
 % T_{O}\textsuperscript{RP}$$.
 
-In all weak scaling experiments, Figure~\ref{fig:weak_scaling_TIES},
-Figure~\ref{fig:weak_scaling_ESMACS}
-Figure~\ref{fig:weak_scaling_ESMACS_TIES}, we observe TTX (right axis) to be
-within error margin and showing ideal weak scaling behavior. The error bars
-are calculated using 3 trials per protocol instance measure.
+In all weak scaling experiments (Figures~\ref{fig:weak_scaling_TIES},
+~\ref{fig:weak_scaling_ESMACS} and~\ref{fig:weak_scaling_ESMACS_TIES}) we
+observe TTX (right axis) to be within error margin and showing ideal weak
+scaling behavior \mtnote{Please refine the previous sentence as it might not
+say what I think you want to say: What does it mean that TTX is `within error
+margin'? And how this relates to `ideal weak scaling behavior'? Maybe the
+former applies to the latter instead of TTX?}. The error bars are calculated
+using 3 trials per protocol instance measure.\mtnote{This might be consider
+little without further explanation}
 
-The HTBAC overhead shows a super linear increase as we grow the number of
-protocol instances.
+The HTBAC overhead depends mostly on the number of protocol instances that
+need to be generated for an application. This overhead shows a super linear
+increase as we grow the number of protocol instances, but its duration is
+negligible when compared to \(TTX\).
 % HTBAC enables concurrent execution of multiple protocol \mtnote{what type
 % of protocols?} instances.
-The overhead of HTBAC depends mostly on the number of protocol instances that
-need to be generated for an application. However, the HTBAC overhead is a
-minimal contributor to\(TTX\) \mtnote{Should this be TTC? HTBAC should
-contribute nothing to TTX. If this should be TTX, then we should write about
-comparison between HTBAC overhead and TTX} \jdnote{what I meant here is
-different, see next sentence} Comparing the HTBAC overhead with \(TTX\)
-measurements, we see that the HTBAC overhead is negligible. The runtime
-overheads, mainly EnTK and RP, depend on the number of tasks that need to be
-translated in-memory from a Python object to a compute unit (CU)
-description~\cite{dakka2017}. \mtnote{This sentence is copied from a previous
-paper we wrote: does the reader know what a CU is?}
-\jdnote{I will add in a brief mention of CU in Section IV}. As such, those
-overheads are expected to grow proportionally to the number of tasks. EnTK
-submits CU descriptions to a MongoDB used by RP. RP pilot pulls these
-descriptions from the database.\mtnote{I am not sure this is accurate}
-\jdnote{took out "same" database}
-% This pull operation occurs over a wide area networks, which introduces
-% varying amounts of latency.
-In addition, each stage constructed by EnTK maintains sequential barriers.
-\mtnote{Doe the reader know what a barrier is?}\jdnote{I will add this to the
-EnTK description in Section IV} RP remains dormant until completion of the
-current tasks before staging the next tasks.
-\mtnote{This figure is about scaling behavior, not about the mechanics of
-EnTK and RP here discussed.}\jdnote{took out figure ref}
+
+The runtime overheads, mainly EnTK and RP, mostly depend on the number of
+tasks that need to be translated in-memory from a Python object to a compute
+unit (CU) description~\cite{dakka2017}. \mtnote{This sentence is copied from
+a previous paper we wrote: does the reader know what a CU is?}
+\jdnote{I will add in a brief mention of CU in Section IV}\mtnote{I would
+just use task as you do in the following sentence. IMHO, using CU adds yet
+another pseudo-technical term as a synonym of a term we are already using,
+i.e., task}. As such, those overheads are expected to grow proportionally to
+the number of tasks as observed in Figure\ldots, bar in \ldots color, \ldots.\mtnote{Please add reference to the relevant figure(s) and details.} 
+
+\mtnote{I commented all the following. IMHO, it does not contribute to
+understand the current analysis of the results. Do we need to expand the
+analysis?}
+% ------------------------- COMMENTED BY MT -------------------------
+% EnTK submits CU descriptions to a database that is then pulled by
+% RP.\mtnote{I am not sure this is accurate}\jdnote{took out "same" database}
+% In addition, each stage constructed by EnTK maintains sequential barriers.
+% \mtnote{Doe the reader know what a barrier is?}\jdnote{I will add this to
+% the EnTK description in Section IV} RP remains dormant until completion of
+% the current tasks before staging the next tasks. \mtnote{This figure is
+% about scaling behavior, not about the mechanics of EnTK and RP here
+% discussed.}\jdnote{took out figure ref}
+% ------------------------- END COMMENTED BY MT ----------------------
 
 % The impact of the synchronization barriers increases with the number of CUs
 % as seen in the 16 protocol instances data point in
+% This pull operation occurs over a wide area networks, which introduces
+% varying amounts of latency.
 
-Furthermore, as we scale the number of tasks, the runtime overhead of RP
-scales linearly. RP requires an amount of time to schedule tasks proportional
-to the scale of execution. The main contributor to the increase in overhead
-in RP \mtnote{which one?} is based on the
-\mtnote{I am not sure a contributor is derived} the time of resources
-inactivity while RP schedules new tasks \mtnote{this is derived from another
-publication: we need to reference the work we copy/paraphrase from}. As such,
-the overhead is expected to grow proportionally to the number of concurrent
-tasks~\cite{dakka2017}.
+The RP overhead is calculated measuring and aggregating the execution time
+(i.e., duration) of the RP components that manage and coordinate the
+execution of the application. Among these components, the task scheduler of
+RP introduces the largest overhead. The task scheduling overhead scales
+linearly with the number of tasks because the time taken to schedule a task
+depends on the total number of tasks that need to be scheduled. 
+% The main contributor to the increase in overhead in RP is based on the the
+% time of resources inactivity while RP schedules new tasks. As such, the
+% overhead is expected to grow proportionally to the number of concurrent
+% tasks~\cite{dakka2017}.
+\mtnote{I am afraid this whole paragraph needed to be
+rewritten. I tried to fix it but we are missing a comparative evaluation of
+this overhead. For example, does this overhead matter when compared to TTX or
+TTC? Given a computation campaign with TIES and ESMACS, how much allocation
+time would be spent on this overhead? What would be the total percentage of
+allocation/resources spent in overheads?}
 
-The RP overhead consist of event that record timestamps which derive
-durations of different RP components that are relevant to the execution of
-the application. \mtnote{I do not think the overhead decomposes: Do we
-measure the components of the overhead?} into events \mtnote{we use events to
-record timestamps from which we derive durations that, once interpreted,
-measure our overheads. I would avoid to mention events in this context.} that
-capture the pilot and tasks lifespan. The pilot duration contains the time to
-bootstrap and terminate the pilot. The task overheads contain the executor's
-spawning of the task, folder staging preparation, and operating system task
-spawning. \mtnote{We need to explain to the reader why all this is relevant
-in this context.} \jdnote{need to discuss on 06/04, should we keep these
-details or keep the focus on the paragraph just above this one?}
+% Among these durations, the pilot duration contains the time to bootstrap
+% and terminate the pilot. The task overheads contain the executor's spawning
+% of the task, folder staging preparation, and operating system task
+% spawning. \mtnote{We need to explain to the reader why all this is relevant
+% in this context.} \jdnote{need to discuss on 06/04, should we keep these
+% details or keep the focus on the paragraph just above this one?}
 
+Furthermore, an additional overhead, driven by the \texttt{aprun} launch
+method increases as we approach a system limit on the number of concurrent
+\texttt{aprun} processes. For example, when scaling to 8 TIES protocol
+instances as shown in Figure~\ref{fig:weak_scaling_TIES}, the application
+requires 520 concurrent tasks. Considering that we observe \texttt{aprun}
+failures at approximately 436 concurrent processes, this accounts for
+additional time that is factored into \(TTX\). \jdnote{add in the aprun
+graph} \mtnote{We need to explain why TTX is affected. Are tasks restarted?
+Also, does this overhead matter? See previous comment about RP overhead
+impact on TTX/TTC/Resource utilization.}
 
-Furthermore, an additional overhead, driven by the \texttt{aprun}
-\mtnote{Does the reader know what aprun is? Also, I would use something like
-textttt to identify the name of a command or executable}\jdnote{addressed}
-launch method increases as we approach a system limit on the number of
-concurrent \mtnote{concurrent?}\jdnote{addressed} \texttt{aprun} processes.
-For example, when scaling to 8 TIES protocol instances as shown in
-Figure~\ref{fig:weak_scaling_TIES}, the application requires 520 concurrent
-tasks. Considering that we observe \texttt{aprun} failures at approximately
-436 concurrent processes, this accounts for additional time that is factored
-into \(TTX\). \jdnote{add in the aprun graph}
-\mtnote{this sentence does not read well. I would refine it}
-\mtnote{this needs further explanation}
-\jdnote{reworded paragraph, also commented out next paragraph on EnTK
-synchronization until I can justify better.}
+% \mtnote{this sentence does not read well. I would refine it}
+% \mtnote{this needs further explanation}
+% \jdnote{reworded paragraph, also commented out next paragraph on EnTK
+% synchronization until I can justify better.}
+
+% \mtnote{Does the reader know what aprun is? Also, I would use something
+% like textttt to identify the name of a command or
+% executable}\jdnote{addressed}
+
+% \mtnote{concurrent?}\jdnote{addressed} 
 
 % Together, the EnTK-enabled synchronization barriers and \texttt{aprun}
 % overhead failures \mtnote{until now, we have implicitly assumed that our
