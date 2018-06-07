@@ -702,6 +702,9 @@ negligible when compared to \(TTX\).
 % HTBAC enables concurrent execution of multiple protocol \mtnote{what type
 % of protocols?} instances.
 
+\mtnote{I would create a subsection with overheads, discussing their behavior
+and nature while referencing both weak and strong scaling experiments.}
+
 The runtime overheads, mainly EnTK and RP, mostly depend on the number of
 tasks that need to be translated in-memory from a Python object to a compute
 unit (CU) description~\cite{dakka2017}. \mtnote{This sentence is copied from
@@ -871,27 +874,36 @@ impact on TTX/TTC/Resource utilization.}
 \mtnote{Should we have also a `Weak Scaling Experiments' header? Or maybe we
 should change this one?}
 
-To investigate strong scaling, we run two applications on Blue Waters. We
-investigate the strong scaling behavior considering only homogeneous
-protocols. The investigation of heterogeneous protocols is of interest but
-not at the risk of cluttering the paper. Both applications use the BRD4-GSK
-physical systems. The first application shows strong scaling behavior of TIES
-alone, using \texttt{NAMD-MPI} with 32 cores per task. We fix the number of
-TIES protocol instances to 8 due to \texttt{aprun} limitations and vary the
-amount of resources between 4160, 8320 and 16640 cores. Given 4160 cores, we
-can execute 4 generations of 130 concurrent tasks. Given 8320 cores, we can
-execute 2 generations of 260 concurrent tasks. The second application
-demonstrates strong scaling behavior using the ESMACS protocol. We fix the
-number of ESMACS protocol instances to 16, and vary the amount of resources
-between 3200, 6400 and 12800 cores. This produces the same number of
-generations of execution as the first application. \jdnote{will add the plot
-for ESMACS ss once I receive 2 full trials}. As we increase the number of
-parallel resources, Figure~\ref{strong_scaling_TIES} shows linear speedup in
-\(TTX\) while maintaining fixed $T_{O}$. The fixed $T_{O}$ suggests that the
-overheads are mainly driven by the scheduling in the number of protocols and
-thereby the number of tasks, not by the amount of resources. This is
-confirmed for RP in Ref.~\cite{merzky2018}.\jdnote{I need to investigate this
-but I also presume that aprun limits are also a factor of overhead.}
+To investigate strong scaling, we run two applications on Blue Waters: \ldots
+and \ldots \mtnote{Please add name of the applications}. We investigate the
+strong scaling behavior considering only homogeneous protocols. The
+investigation of heterogeneous protocols is of interest but not at the risk
+of cluttering the paper \mtnote{I am afraid we will need a better explanation
+for this omission}. Both applications use the \texttt{BRD4-GSK} physical
+systems \mtnote{Should this detail go in experiment design? This would apply
+also to the weak scaling in the previous section}.
+
+The first application \mtnote{name?} shows the strong scaling behavior of
+TIES alone \mtnote{Are you sure this should not be the `nth experiment shows'
+instead of the `first application shows'?}, using \texttt{NAMD-MPI} with 32
+cores per task. We fix the number of instances of the TIES protocol to 8 due
+to the described \texttt{aprun} limitations. We vary the amount of resources
+between 4160, 8320 and 16640 cores. Given 4160 cores, we can execute 4
+generations of 130 concurrent tasks; with 8320 cores, we can execute 2
+generations of 260 concurrent tasks. The second application shows the strong
+scaling behavior of the ESMACS protocol \mtnote{See previous comment about
+application/experiment}. We fix the number of instances of the ESMACS
+protocol to 16 and vary the amount of resources between 3200, 6400 and 12800
+cores. This produces the same number of generations of execution \mtnote{add
+reference to the subsection where generation is defined} as the first
+application. \jdnote{will add the plot for ESMACS ss once I receive 2 full
+trials}. As we increase the number of parallel resources,
+Figure~\ref{fig:strong_scaling_TIES} shows linear speedup in \(TTX\) while
+maintaining fixed $T_{O}$. The fixed $T_{O}$ suggests that the overheads are
+mainly driven by the scheduling in the number of protocols and thereby the
+number of tasks, not by the amount of resources. This is confirmed for RP in
+Ref.~\cite{merzky2018}.\jdnote{I need to investigate this but I also presume
+that aprun limits are also a factor of overhead.}
 
 % The comparison between weak and strong scalability shows the overhead
 % introduced by load balancing and scheduling tasks in multiple generations.
