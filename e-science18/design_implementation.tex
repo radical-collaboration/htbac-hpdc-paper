@@ -34,13 +34,13 @@ Based on the requirements of computational drug campaigns \mtnote{which
 one?}\jdnote{keeping it general to campaigns} 
 which requires the ability to run multiple concurrent protocols in order to 
 scale the number of drug candidates or protein ligand systems, this poses 
-challenges in the coordination of heterogeneous protocols that differ in 
-computational requirements as well as setup of execution environments and data
-management, while preserving efficient resource utilization.  This poses many 
-challenges that need to be addressed by HTBAC as well as the management system 
-to coordinate protocols with heterogeneous computational dependencies and 
-runtime system. \jdnote{reworded this paragraph and hesitant to say workload 
-management system.}
+several computational challenges. First, ensemble-based protocols that differ in 
+computational requirements require execution coordination and resource 
+management. Second, the setup of execution environments and data 
+management should preserve efficient resource utilization. This poses many 
+challenges that need to be addressed by HTBAC as well as the underlying 
+management and runtime system. \jdnote{reworded this paragraph and hesitant 
+to say workload management system.}
 
 % and minimal overhead
 % workload management system and the runtime system 
@@ -60,24 +60,24 @@ management system.}
 % while preserving efficient resource utilization and minimal
 % overhead.\mtnote{Why this is relevant for HTBAC?}
 
+Based on intermediate results during runtime, the control logic of the
+algorithm may decide to invest additional compute resources in more
+interesting simulations that can yield lower error averages, while reducing
+resources for simulations that have already met an error threshold.
+HTBAC thereby requires an adaptive execution strategy \mtnote{system}
+\jdnote{changed from adaptive RTS to adaptive execution strategy} that enables 
+adaptive algorithms to maximize computational efficiency.\mtnote{Seeing that we 
+are speaking about requirements, does it make sense here to mention a RTS? RTS 
+are an implementation detail: for example, we could design HTBAC as an 
+end-to-end solution for a specific machine and still match the set of 
+requirements we have reported in this subsection. Note also that we introduce 
+RTS above but use ``runtime system'' again here.}\jdnote{I've removed all 
+mention of workload management system and RTS and kept generality} 
+
 Usability plays an important role in the development of HTBAC, in order to
 provide a flexible interface which enables users to easily scale the number
 of drug candidates and quickly prototype existing and novel free energy
-protocols.
-
-Based on intermediate results during runtime, the control logic of the
-algorithm may decide to invest additional compute resources in more
-interesting simulations that can yield higher accuracy, while reducing
-resources for simulations that have already met an accuracy threshold.
-HTBAC thereby requires an adaptive runtime system \mtnote{system}
-\jdnote{addressed} that enables adaptive algorithms to maximize computational
-efficiency.\mtnote{Seeing that we are speaking about requirements, does it
-make sense here to mention a RTS? RTS are an implementation detail: for
-example, we could design HTBAC as an end-to-end solution for a specific
-machine and still match the set of requirements we have reported in this
-subsection. Note also that we introduce RTS above but use ``runtime system''
-again here.}\jdnote{I've removed all mention of workload management system 
-and RTS and kept generality in runtime system and management system}
+protocols. In addition, an abstraction is needed to encode adaptivity. 
 
 % ---------------------------------------------------------------------------
 \subsection{Design}
@@ -100,7 +100,8 @@ constructs:
 
 The \textbf{Protocol} construct \mtnote{we used `construct' before, as a synonym
 of abstraction}\jdnote{I've removed any reference to object-orientation and kept
-everything to construct} enables multiple instantiations of protocol types. 
+everything to construct in design but in implementation it changes to 
+components} enables multiple instantiations of protocol types. 
 The \textbf{Simulation} construct \mtnote{we used `construct' 
 before, as a synonym of abstraction} specifies simulation parameters that shape 
 each protocol. The \textbf{Runner} construct provides the functionality to 
@@ -109,11 +110,11 @@ specify the resource requirements and duration to execute the application.
 \subsubsection{Architecture}
 
 HTBAC rests between the domain scientist and the cyber-infrastructure, 
-abstracting the complexity of encoding protocols and the resource and 
+abstracting the complexity of encoding end-to-end protocols and the resource and 
 execution management. The Runner initializes HTBAC and holds the global state of 
-the application, submits protocols and communicates with the management system 
-that handles the dependencies of the protocols, and acquires resources via the 
-runtime systems. 
+the application, submits protocols and communicates with the ensemble management 
+system that handles the dependencies of the protocols, and acquires resources 
+via a runtime system. 
 
 
 %  -----------------------------------------------------------------------------
@@ -169,7 +170,7 @@ be confused with lack of precision or of scientific rigor: the goal of this
 paper is to show how HTBAC architecture and design support better science in
 a very specific domain, not to argue for their rigorous nature.}
 \jdnote{I've modified the design to be more consistent in showing functionality
-of components}
+of constructs and separated architecture design from application model}
 
 
 % Each replica follows the same sequence of simulation
@@ -192,65 +193,169 @@ HTBAC is a domain specific library implemented in Python. All components of
 HTBAC are implemented as objects. An application of HTBAC consists of one or 
 more protocol instance(s). Each protocol models a unique protein ligand physical 
 system \mtnote{see the previous comment about using `i.e.'}\jdnote{removed i.e.}. 
-Each protocol consists of a set of ensemble members where each member is 
-assigned to execute the same sequence of simulation steps. Each ensemble member 
-can execute independently from other members. By design of free energy 
-protocols, each ensemble member is referred to a \textbf{replica}. Each 
-replica is assigned a different initial velocity, which enables simulations to 
-begin in different parts of the ligand's phase space. 
+Each protocol follows a sequence of simulation and analysis steps and assigns ensemble 
+members to execute independent simulations or analysis. An ensemble member 
+that executes an independent simulation within a simulation step is referred to 
+as a \textbf{replica}. Each replica simulation is assigned a different initial 
+velocity, which enables simulations to begin in different parts of the ligand's 
+phase space. 
 
-We define a simulation step in a replica as a computational \textbf{task}, which 
+We define a simulation or analysis task as a computational \textbf{task}, which 
 has a defined input, output, termination criteria and dedicated 
 resources~\cite{power-of-many17}. Aggregates of tasks with dependencies that 
-determine the order of their execution describe workflows. A workflow is 
-comprised of $N_P$ instances of the P$^{th}$ protocol.\jdnote{does this confuse
-the term application with workflow?}
+determine the order of their execution describe \textbf{workflows}. A workflow 
+is comprised of $N_P$ instances of the P$^{th}$ protocol.\jdnote{does this 
+confuse the term application with workflow?}
+
+Given a protocol type such as ESMACS or TIES the user can create an adaptive or
+nonadaptive workflow. The nonadaptive workflow specifies all its requirements 
+prior to execution. The adaptive workflow provides partial requirements but 
+learns the remaining requirements during execution. 
+
+\jdnote{introducing EnTK as workload 
+management system requires the definition of workload}
 
 HTBAC uses the RADICAL-Cybertools (RCTs) which are middleware building 
 blocks~\cite{review_bb_2016} that support HTBAC's workflow execution across 
 diverse computing platforms~\cite{turilli2017comprehensive}. HTBAC rests on two 
-primary RCT components, Ensemble Toolkit (EnTK) and RADICAL-Pilot (RP).
+primary RCT libraries, Ensemble Toolkit (EnTK) and RADICAL-Pilot (RP).
 
-EnTK is a workload management system that provides specific interfaces and 
-execution models for ensemble-based applications~\cite{power-of-many17}. EnTK 
-provides an application model that simplifies both the codifying and execution 
-of scalable free energy protocols that differ in computational requirements. 
-HTBAC uses the programming model of EnTK to construct workflows. EnTK exposes 3 
+EnTK serves HTBAC as the ensemble management system that provides specific 
+interfaces and execution models for ensemble-based 
+applications~\cite{power-of-many17}. EnTK provides an application model that 
+simplifies both the encoding and execution of scalable and adaptive free energy 
+protocols that differ in computational requirements. HTBAC uses the programming 
+model of EnTK to construct workflows. EnTK exposes 3 
 user-facing constructs, \textbf{Task}, \textbf{Stage} and \textbf{Pipeline}. 
-Reference~\cite{power-of-many17} defines the constructs as follows: a task 
+Reference~\cite{power-of-many17} defines these constructs as follows: a task 
 contains information regarding an executable, its software environment and its 
 data dependencies. A stage is a set of tasks without mutual dependencies and 
 that can be executed concurrently. A pipeline is a list of stages where any 
 stage $i$ can only be executed after stage $i - 1$ has been executed. Each 
-pipeline can execute independently. 
+pipeline can execute independently. In HTBAC, a protocol instance is encoded as 
+a single pipeline, which contains stages of simulation and analysis steps. 
+Replicas or analysis tasks are bundled as tasks within a stage. All protocol 
+types are implemented as pipelines...We show the implementation of two types of
+protocol types, ESMACS and TIES.
 
-In HTBAC, each replica is constructed as a pipeline, which contains stages of 
-simulation steps. Each stage contains a single task that executes a
-simulation. Each protocol consists of an aggregate of replicas, or independent 
-pipelines. 
+\subsection{ESMACS}
 
-EnTK also abstracts the complexity of execution and resource management. 
-Once the workflow is described in HTBAC, \mtnote{the previous paragraph does not
+\subsection{TIES}
+
+
+% In HTBAC, each replica is encoded as a pipeline, which contains stages of 
+% simulation steps. Each stage contains a single task which performs a
+% simulation. Each protocol consists of an aggregate of replicas, or independent 
+% pipelines. 
+
+\subsubsection{Execution Model}
+
+Once the workflow is described in HTBAC, 
+\mtnote{the previous paragraph does not
 mention workflow(s) so this surprises and confuses the reader. Note that this
 is a byproduct of commenting out part of the text where a connection between
-protocol and workflow was explicitly established}\jdnote{provided earlier 
-definition of workflows}, protocols are translated into EnTK pipelines, and are 
-submitted to EnTK's 
-\textbf{Application Manager} which sets up multiple processes, threads and a 
-RabbitMQ message queue for communication. EnTK identifies tasks which have 
-satisfied dependencies and can be executed concurrently. EnTK's 
-\textbf{Execution Manager} uses the underlying runtime system RADICAL-Pilot (RP) 
-to execute the tasks on specific target resources. EnTK converts the set of 
-pipelines into a set of tasks---called compute unit descriptions---and submits 
-them to RP \mtnote{Is RP defined?}\jdnote{it is now}.
+protocol and workflow was explicitly established}
 
-The Runner component of HTBAC specifies the computational requirements of the 
+\jdnote{provided earlier 
+definition of workflows}, protocols are encoded into EnTK pipelines. 
+% EnTK abstracts the complexity of execution and resource management. 
+Pipelines are submitted to EnTK's \textbf{Application Manager} which sets up 
+multiple processes, threads and a message queue for communication. EnTK 
+identifies tasks which have satisfied dependencies and can be executed 
+concurrently. EnTK's \textbf{Execution Manager} uses its underlying runtime 
+system RADICAL-Pilot (RP) to execute the tasks on specific target resources. 
+EnTK converts the set of pipelines into a set of tasks---called compute unit 
+descriptions---and submits them to RP \mtnote{Is RP defined?}\jdnote{It is now}.
+
+The Runner component of HTBAC describes the computational requirements of the 
 workflow including walltime, cores, queue, and user credentials 
 \mtnote{of what?}\jdnote{addressed} for which EnTK creates a resource request. 
-EnTK converts this resource request into a pilot that RP submits to a HPC 
+EnTK converts this resource request into a pilot that RP submits to an HPC 
 machine. Once the pilot becomes active, it pulls compute unit descriptions in 
 bulk from a database, executing them on the pilot 
 resources~\cite{merzky2015radical}. 
+
+\subsection{Adaptivity}
+
+We demonstrate the implementation and execution of an adaptive workflow using 
+the TIES protocol. In TIES the workflow consists of an iterative pipeline in two 
+stages: ensemble simulation and adaptive quadratures to determine optimal 
+placement of further simulations. 
+
+We implement TIES adaptive workflow as an ensemble of simulation tasks and 
+an analysis task. The workflow is executed iteratively until the simulation 
+duration determines termination. 
+
+The adaptive quadratures task operates over the simulation results to generate
+a new set of simulation configurations. These configurations are used in the 
+simulation tasks of the next iterations. 
+
+
+The flexibility at the protocol component enables the user to modify the 
+simulation steps.
+
+% In section~\ref{sec:science-drivers}, we described a particular type of
+% adaptivity within TIES that would enable the simulation \mtnote{which one? Or
+% should this be `a simulation' or `simulations'?} to reach convergence
+% earlier. Figure~\ref{fig:adaptive_ties} illustrates the adaptive workflow of
+% TIES (change $\lambda$ step size as $\delta$ \mtnote{is this a comment?
+% Please clearly identify comments in the text.}). Adaptive execution requires
+% changes to the task graph during runtime, a capability supported by the RCT
+% runtime layers~\cite{power-of-many17}.
+
+% The TIES adaptive workflow decides, postmortem \mtnote{no dash}, about the
+% placement of new $\lambda$ windows for the next set of simulations. In turn,
+% the workflow makes runtime decisions about the number of tasks in the task
+% graph. This type of adaptivity in the workflow requires as \mtnote{as what?
+% Requires capabilities to count tasks and changing the attribute of tasks
+% depending on \ldots?} task-count and task-attribute
+% adaptivity~\cite{adaptivebiomolecular}.
+
+% HTBAC monitors the output of the completed tasks during runtime, and
+% redefines the existing workflow by adding more $\lambda$ windows \mtnote{as
+% required? The sentence appears to be incomplete}. A boolean results generated
+% at the end of a pipeline defines a criteria of whether or not
+% \mtnote{when using `whether' the `or not' is implied} to spawn additional
+% tasks. 
+
+
+
+% For users to design an 
+% adaptive workflow requires the flexibility and granularity to enhance specific 
+% parts of the workflow to act upon runtime decisions. 
+
+% Within a protocol, there may
+% be a case for hybrid workflows. Certain steps in the protocol may be completely 
+% specified while others require stopping the simulations to perform an 
+% evaluation that aids in deciding the continued set of requirements. 
+
+
+In HTBAC, the protocol component allows the user to decompose a single
+protocol instance into multiple protocols that execute shorter simulations.
+
+When describing the application, the user can directly specify between 
+sub-protocols that analyze results of the most recent snapshot of simulations, 
+and exchange this information with the next sub-protocol. 
+
+In HTBAC, the application terminates once the control logic returns to the user
+after executing all protocols. The segmented sub-protocols allow for more 
+control between executions. 
+
+Each pipeline is tagged with an ID. During re-execution we reintroduce
+the previous pipelines and incorporate new pipelines, in order to continue
+simulations for previous pipelines and starting the execution of new pipelines. 
+
+% Spawning of new task contribute to task count adaptivity and task attribute
+% adaptivity. Using EnTK, HTBAC creates the necessary set of new tasks.
+
+The \textbf{Application Manager} in EnTK signals RP to bypass termination of
+the pilot and instead keep the session alive, as long as additional tasks are
+submitted within provisional walltime. As the number of tasks grows during 
+runtime, the ratio of core-to-task fluctuates. HTBAC exposes the core allocation 
+per task, and allows users to specify before runtime the resource requirements 
+of additional tasks.\mtnote{I tried to fix a bit the paragraph but it still
+difficult to read and understand.}
+
 
 % TIES 
 % -------------------------------------------------------------------------------
@@ -434,42 +539,26 @@ identify comments in the text.}
 % candidates.
 
 % ---------------------------------------------------------------------------
-\subsection{Adaptivity}
+\subsubsection{Adaptivity}
 
-In section~\ref{sec:science-drivers}, we described a particular type of
-adaptivity within TIES that would enable the simulation \mtnote{which one? Or
-should this be `a simulation' or `simulations'?} to reach convergence
-earlier. Figure~\ref{fig:adaptive_ties} illustrates the adaptive workflow of
-TIES (change $\lambda$ step size as $\delta$ \mtnote{is this a comment?
-Please clearly identify comments in the text.}). Adaptive execution requires
-changes to the task graph during runtime, a capability supported by the RCT
-runtime layers~\cite{power-of-many17}.
+By design of free energy protocols, some protocols are amenable and produce 
+higher accuracy by running simulations that are discovered during runtime. 
 
-The TIES adaptive workflow decides, postmortem \mtnote{no dash}, about the
-placement of new $\lambda$ windows for the next set of simulations. In turn,
-the workflow makes runtime decisions about the number of tasks in the task
-graph. This type of adaptivity in the workflow requires as \mtnote{as what?
-Requires capabilities to count tasks and changing the attribute of tasks
-depending on \ldots?} task-count and task-attribute
-adaptivity~\cite{adaptivebiomolecular}.
+adaptive execution model 
 
-HTBAC monitors the output of the completed tasks during runtime, and
-redefines the existing workflow by adding more $\lambda$ windows \mtnote{as
-required? The sentence appears to be incomplete}. A boolean results generated
-at the end of a pipeline defines a criteria of whether or not
-\mtnote{when using `whether' the `or not' is implied} to spawn additional
-tasks.
 
-% Spawning of new task contribute to task count adaptivity and task attribute
-% adaptivity. Using EnTK, HTBAC creates the necessary set of new tasks.
 
-The \textbf{Application Manager} in EnTK signals RP to bypass termination of
-the pilot and instead keep the session alive, as long as additional tasks are
-submitted within provisional walltime. As the number of tasks grows during runtime, the ratio of
-core-to-task fluctuates. HTBAC exposes the core allocation per task, and
-allows users to specify before runtime the resource requirements of
-additional tasks.\mtnote{I tried to fix a bit the paragraph but it still
-difficult to read and understand.}
+\subsection{ESMACS}
+
+The ESMACS protocol contains 4 simulations steps: minimization, initial 
+equilibration, secondary equilibration, and MD simulation.  
+
+
+
+\subsection{TIES}
+
+TIES 
+
 
 \begin{figure}
   \centering
