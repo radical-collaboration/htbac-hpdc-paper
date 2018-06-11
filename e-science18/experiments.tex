@@ -341,6 +341,18 @@ convergence and the application stops; else, current simulations continue
 executing and new simulations begin executing based on newly generated
 $\lambda$ windows.
 
+\begin{figure}
+  \centering
+  \includegraphics[width=\columnwidth]{figures/Adaptive_TIES_1.png}
+  \caption{\mtnote{For quality reasons, it would be better to use 
+  figures in pdf format.}Illustrating the adaptive workflow. After the 3
+  initial lambda windows are equilibrated, the first production stage starts.
+  This is followed by analysis at every lambda interval, to decide whether to
+  add a new window in the middle. The production-analysis is repeated for 4
+  production steps in our implementation, not shown here.}
+\label{fig:adaptive_TIES}
+\end{figure}
+
 The estimation computation \mtnote{This is too compressed. In itself,
 `estimation computation' means little. The reader has to go back to the
 previous paragraph to understand what those two words refer to. `We compute
@@ -695,6 +707,44 @@ former applies to the latter instead of TTX?}. The error bars are calculated
 using 3 trials per protocol instance measure.\mtnote{This might be consider
 little without further explanation}
 
+\begin{figure}
+  \centering
+    \includegraphics[width=\columnwidth]{figures/new_ws_ties.pdf}
+    \caption{Weak scaling properties of HTBAC using TIES protocol. We
+    investigate the weak scaling of HTBAC as the ratio of the number of
+    protocol instances to resources is kept constant. Overheads of HTBAC
+    (right), and runtime overhead (left) and \(TTX\) (left) for experimental
+    configurations investigating the weak scaling of TIES. We ran 3 trials
+    for each protocol instance configuration.}
+\label{fig:weak_scaling_TIES}
+\end{figure}
+
+\begin{figure}
+  \centering
+    \includegraphics[width=\columnwidth]{figures/new_ws_esmacs.pdf}
+    \caption{Weak scaling properties of HTBAC using ESMACS. We investigate
+    the weak scaling of HTBAC as the ratio of the number of protocol
+    instances to resources is kept constant. Overheads of HTBAC (right), and
+    runtime overhead (left) and \(TTX\) (left) for experimental
+    configurations investigating the weak scaling of TIES. We ran 2 trials
+    for each protocol instance configuration.}
+\label{fig:weak_scaling_ESMACS}
+\end{figure}
+
+\begin{figure}
+  \centering
+    \includegraphics[width=\columnwidth]{figures/new_ws_esmacs_ties.pdf}
+    \caption{Weak scaling properties of HTBAC using ESMACS and TIES. We
+    investigate the weak scaling of HTBAC as the ratio of the number of
+    protocol instances to resources is kept constant. Overheads of HTBAC
+    (right), and runtime overhead (left) and \(TTX\) (left) for experimental
+    configurations investigating the weak scaling of TIES. We ran 2 trials
+    for each protocol instance configuration.}
+\label{fig:weak_scaling_ESMACS_TIES}
+\end{figure}
+
+\jdnote{Maybe combine captions into 1?}\mtnote{Agreed.}
+
 The HTBAC overhead depends mostly on the number of protocol instances that
 need to be generated for an application. This overhead shows a super linear
 increase as we grow the number of protocol instances, but its duration is
@@ -829,45 +879,6 @@ impact on TTX/TTC/Resource utilization.}
 % a previous paragraph. See comments and iterations of the previous paragraph
 % before rewriting a new paragraph if needed.}
 
-\begin{figure}
-  \centering
-    \includegraphics[width=\columnwidth]{figures/new_ws_ties.pdf}
-    \caption{Weak scaling properties of HTBAC using TIES protocol. We
-    investigate the weak scaling of HTBAC as the ratio of the number of
-    protocol instances to resources is kept constant. Overheads of HTBAC
-    (right), and runtime overhead (left) and \(TTX\) (left) for experimental
-    configurations investigating the weak scaling of TIES. We ran 3 trials
-    for each protocol instance configuration.}
-\label{fig:weak_scaling_TIES}
-\end{figure}
-
-\begin{figure}
-  \centering
-    \includegraphics[width=\columnwidth]{figures/new_ws_esmacs.pdf}
-    \caption{Weak scaling properties of HTBAC using ESMACS. We investigate
-    the weak scaling of HTBAC as the ratio of the number of protocol
-    instances to resources is kept constant. Overheads of HTBAC (right), and
-    runtime overhead (left) and \(TTX\) (left) for experimental
-    configurations investigating the weak scaling of TIES. We ran 2 trials
-    for each protocol instance configuration.}
-\label{fig:weak_scaling_ESMACS}
-\end{figure}
-
-\begin{figure}
-  \centering
-    \includegraphics[width=\columnwidth]{figures/new_ws_esmacs_ties.pdf}
-    \caption{Weak scaling properties of HTBAC using ESMACS and TIES. We
-    investigate the weak scaling of HTBAC as the ratio of the number of
-    protocol instances to resources is kept constant. Overheads of HTBAC
-    (right), and runtime overhead (left) and \(TTX\) (left) for experimental
-    configurations investigating the weak scaling of TIES. We ran 2 trials
-    for each protocol instance configuration.}
-\label{fig:weak_scaling_ESMACS_TIES}
-\end{figure}
-
-\jdnote{Maybe combine captions into 1?}
-
-
 % ---------------------------------------------------------------------------
 \subsubsection{Strong Scaling and Performance Characterization}
 
@@ -965,24 +976,33 @@ previous sentence writes about a comparison.} are vital to gain confidence in
 the algorithm \mtnote{which algorithm?} and to prove that it is indeed
 calculating the correct values.
 
-The validation experiments were based on the original study of Wan et.
-al.~\cite{Wan2017brd4}. We selected a subset of the protein ligand systems
-that were the subject of that study: they are the ligand transformations 3 to
-1, 4, and 7. We then performed a full simulation on all 3 systems and
-calculated the binding affinity (see Table~\ref{tab:exp2}) using HTBAC.
+The validation experiments were based on the original study of Wan et
+al.~\cite{Wan2017brd4} \mtnote{Note: `et al.' is an abbreviation of 'et
+alia', Latin for `and [et] others [alia]'. As such, the correct spelling is
+`et al.'. It is now corrected both here and in the table caption}. We
+selected a subset of the protein ligand systems that were the subject of that
+study: ligand transformations 3 to 1, 4, and 7. We then performed a full
+simulation on all 3 systems and calculated the binding affinity using HTBAC.
 
-The results show that all three $\Delta \Delta$G values are within error bars
-of the original study using the TIES protocol, reinforcing the fact that our
-results produced using HTBAC are indeed correct.
+The results of our experiments, collected in Table~\ref{tab:exp2}, show that
+all three $\Delta \Delta$G values are within error bars of the original study
+using the TIES protocol, reinforcing \mtnote{validating? Based on what we
+wrote before this would seem to contradict our intent} the fact that the
+results produced using HTBAC are indeed correct
+\mtnote{I am not sure `correct' here applies to the results. We may want to
+have a look about the difference between validation and verification,
+focusing on the separation between methodology and results.}.
 
 \begin{table}
   \centering
   \caption{Comparison of the calculated binding free energies using HTBAC,
-  from the original study by Wan et. al and experimental data. In principle,
-  the two theoretical studies used the same protocol. This experiment proved
-  that HTBAC implemented TIES correctly, as the calculated values are either
-  the same or within error bar of the original study. All values are in
-  \textbf{kcal mol\textsuperscript{-1}}.}  % \begin{tabular}{l@{\hskip 1in}r@{\hskip 0.2in}r@{\hskip 0.2in}r}
+  from the original study by Wan et al. and experimental data. In
+  principle,\mtnote{Do they use the same protocol? If there are differences
+  we should explain them.} the two theoretical studies used the same
+  protocol. This experiment proved that HTBAC implemented TIES correctly, as
+  the calculated values are either the same or within error bar of the
+  original study. All values are in \textbf{kcal mol\textsuperscript{-1}}.}  
+  % \begin{tabular}{l@{\hskip 1in}r@{\hskip 0.2in}r@{\hskip 0.2in}r}
   \begin{tabular}{lrrr}
     \toprule
     System & HTBAC & Wan et. al & Experiment \\
@@ -1066,18 +1086,6 @@ results produced using HTBAC are indeed correct.
 % adaptivity, as the objective is to determine the feasibility of adaptive
 % execution and the scientific merit of adaptive decision making.
 
-\begin{figure}
-  \centering
-  \includegraphics[width=\columnwidth]{figures/Adaptive_TIES_1.png}
-  \caption{\mtnote{For quality reasons, it would be better to use 
-  figures in pdf format.}Illustrating the adaptive workflow. After the 3
-  initial lambda windows are equilibrated, the first production stage starts.
-  This is followed by analysis at every lambda interval, to decide whether to
-  add a new window in the middle. The production-analysis is repeated for 4
-  production steps in our implementation, not shown here.}
-\label{fig:adaptive_TIES}
-\end{figure}
-
 %----------------------------------------------------------------------------
 
 
@@ -1096,7 +1104,10 @@ results produced using HTBAC are indeed correct.
 \mtnote{Should this be Results as a whole? Or are we missing the results for
 all the others?} \kfnote{I think results and experiments are one section.
 This subsubsection is for the adaptive quadrature. There is a separate one
-for adaptive termination.}
+for adaptive termination.}\mtnote{I agree and both approaches would work for
+me. We may want to be consistent across all experiments though: either we use
+a single subsection illustrating the results of all the experiment or we
+discuss the result of each experiment as we introduce it.}
 
 The aim of introducing adaptive quadrature to alchemical free energy
 calculation protocols (e.g. TIES) is to reduce time to completion while
@@ -1112,16 +1123,18 @@ One of the input parameters of the adaptive quadrature algorithm is the
 desired acceptable error threshold of the estimated integral. We set this
 threshold to the error of the non-adaptive algorithm calculated via the
 reference value. The algorithm then tries to minimize the number of $\lambda$
-windows constrained by the accuracy requirement. Table~\ref{tab:adapquad}
-shows the results of running adaptive quadrature on 5 protein ligand systems,
-comparing the \(TTX\) and accuracy versus the non-adaptive case. The number
-of lambda windows are reduced on average by \SI{32}{\percent}, hence reducing
-\(TTX\) by the same amount. The error on the adaptive results is also
-decreased, on average by \SI{77}{\percent}. In the case of the TYK2 L7-L8
-system, the non-adaptive error was very low, hence the algorithm implemented
-a larger number of windows in comparison to the non-adaptive in match that
-accuracy. In fact, by using 1 more window it was able to increase accuracy by
-\SI{40}{\percent}.
+windows constrained by the accuracy requirement. 
+
+Table~\ref{tab:adapquad} shows the results of running adaptive quadrature on
+5 protein ligand systems, comparing the \(TTX\) and accuracy versus the
+non-adaptive case. The number of lambda windows are reduced on average by
+\SI{32}{\percent}, hence reducing \(TTX\) by the same amount. The error on
+the adaptive results is also decreased, on average by \SI{77}{\percent}. In
+the case of the TYK2 L7-L8 system, the non-adaptive error was very low, hence
+the algorithm implemented a larger number of windows in comparison to the
+non-adaptive in \mtnote{to? The sentence would benefit from an iteration}
+match that accuracy. In fact, by using 1 more window it was able to increase
+accuracy by \SI{40}{\percent}.
 
 \begin{table*}
   \caption{Comparing results of adaptive, non-adaptive and reference runs}
@@ -1180,13 +1193,14 @@ accuracy. In fact, by using 1 more window it was able to increase accuracy by
   \end{tabular}
 \end{table*}
 
-Figure~\ref{fig:adapquad} shows progression of the algorithm, starting from 3
-initial lambda windows, and at each iteration bisecting the interval where
-the error is above the set threshold. For system X, we can see as how the
-parts of the function that change less have relatively fewer windows, while
-parts of greater change (usually, though not always around the $\lambda=0.5$
-mark) have more $\lambda$ windows to represent the shape of the function more
-closely.
+Figure~\ref{fig:adapquad} \mtnote{missing figure? There is a table with the
+label `adapquad' but not a figure.} shows progression of the algorithm,
+starting from 3 initial lambda windows, and at each iteration bisecting the
+interval where the error is above the set threshold. For system X, we can see
+as how the parts of the function that change less have relatively fewer
+windows, while parts of greater change (usually, though not always around the
+$\lambda=0.5$ mark) have more $\lambda$ windows to represent the shape of the
+function more closely.
 
 \kfnote{Move this to algorithm description} In previous studies \cite{} the
 error estimation during the adaptive algorithm is done by calculating the
