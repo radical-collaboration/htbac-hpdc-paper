@@ -82,9 +82,9 @@ enable the user to design protocols that utilize adaptive functionality in order
 to leverage intermediate results.
 
 % ---------------------------------------------------------------------------
-\subsection{Design}
+\subsection{Architecture}
 
-\subsubsection{Application Model}
+% \subsubsection{Application Model}
 
 We model an application in HTBAC\mtnote{what is an ``application of HTBAC''?
 `In' (instead of `of') HTBAC?}\jdnote{addressed} using the following user-facing 
@@ -109,7 +109,7 @@ before, as a synonym of abstraction} specifies simulation parameters that shape
 each protocol. The \textbf{Runner} construct provides the functionality to 
 specify the resource requirements and duration to execute the application.
 
-\subsubsection{Architecture}
+% \subsubsection{Architecture}
 
 HTBAC rests between the domain scientist and the cyber-infrastructure, 
 abstracting the complexity of encoding end-to-end protocols and the resource and 
@@ -195,12 +195,12 @@ HTBAC is a domain specific library implemented in Python. All components of
 HTBAC are implemented as objects. An application of HTBAC consists of one or 
 more protocol instance(s). Each protocol models a unique protein ligand physical 
 system \mtnote{see the previous comment about using `i.e.'}\jdnote{removed i.e.}. 
-Each protocol follows a sequence of simulation and analysis steps and assigns ensemble 
-members to execute independent simulations or analysis. An ensemble member 
-that executes an independent simulation within a simulation step is referred to 
-as a \textbf{replica}. Each replica simulation is assigned a different initial 
-velocity, which enables simulations to begin in different parts of the ligand's 
-phase space. 
+Each protocol follows a sequence of simulation and analysis steps and assigns 
+ensemble members to execute independent simulations or analysis. An ensemble 
+member that executes an independent simulation within a simulation step is 
+referred to as a \textbf{replica}. Each replica simulation is assigned a 
+different initial velocity, which enables simulations to begin in different 
+parts of the ligand's phase space. 
 
 We define an individual simulation or analysis as a computational \textbf{task}, 
 which has a defined input, output, termination criteria and dedicated 
@@ -295,24 +295,24 @@ of requirements. We demonstrate the implementation of an intra-protocol adaptive
 workflow using the TIES protocol. As indicated in section~\ref{science-drivers}, 
 the optimal positions of the $\lambda$ windows are not known \textit{a priori}. 
 Therefore the number of simulations and their descriptions, which are 
-dictated by corresponding $\lambda$ windows, cannot be pre-specified in the 
+dictated the $\lambda$ windows parameter, cannot be pre-specified in the 
 workflow. 
 
 Instead, we construct an adaptive workflow for TIES as an iterative pipeline in 
-two stages: a simulation step and analysis step which determines optimal 
+two stages: a simulation step and analysis which determines optimal 
 placement of further simulations, as shown in Figure~\ref{adaptive_ties}. We 
 initialize the workflow with $y$ evenly spaced $\lambda$ windows, which 
 generates $y \times n$ initial replicas. After the first pass of simulations, 
-the analysis step operates on the simulation results to determine 
+the analysis operates on the simulation results to determine 
 the next placement of $\lambda$ windows and generates a new set of simulation 
 configurations for the upcoming iterations. Each simulation step within an 
 iteration executes for a single nanosecond simulation duration. The analysis 
-step consists of a single task that computes the adaptive quadratures 
+consists of a single task that computes the adaptive quadratures 
 calculations as defined in section~\ref{science-drivers} which decides whether 
-to spawn additional simulations \textit{in between} existing simulations. This 
+to spawn additional $\lambda$ windows \textit{in between} existing windows. This 
 enables continuous execution of existing simulations and beginning of new 
 simulations. The workflow is executed iteratively until the total simulation 
-duration, as defined by the user, determines termination of the iterations. 
+duration, as defined by the user, determines termination. 
 
 \begin{figure}
   \centering
@@ -328,14 +328,15 @@ duration, as defined by the user, determines termination of the iterations.
 
 \subsection{Execution Model}
 
-Once the adaptive or static workflow is partially or fully described in HTBAC, 
+Once an adaptive or static workflow is described in HTBAC, 
 \mtnote{the previous paragraph does not
 mention workflow(s) so this surprises and confuses the reader. Note that this
 is a byproduct of commenting out part of the text where a connection between
 protocol and workflow was explicitly established}
 
 \jdnote{provided earlier 
-definition of workflows}, protocols are encoded into EnTK pipelines. 
+definition of workflows}, the Runner component tags each protocol instance with 
+a unique ID and converts protocols into EnTK pipelines. 
 % EnTK abstracts the complexity of execution and resource management. 
 Pipelines are submitted to EnTK's \textbf{Application Manager} which sets up 
 multiple processes, threads and a message queue for communication. EnTK 
@@ -356,28 +357,69 @@ resources~\cite{merzky2015radical}.
 Figure~\ref{} shows a visual block diagram representation
 \mtnote{`visual block diagram representation' seems unclear to me. Should we
 just have an architecture diagram here?} of HTBAC and the underlying building
-blocks.\jdnote{adding architecture diagram}
+blocks.\jdnote{adding architecture diagram -- in draft currently}
 
-Support for adaptive workflows requires a redistribution of resources in order 
-to support execution of existing simulations and simulations that are 
-incorporated during runtime. 
+\subsection{Adaptive Execution Model}
 
-The Runner tags each protocol instance with a unique ID. 
+Support for intra-protocol adaptive workflows requires an adaptive execution 
+strategy. We leverage the adaptive capabilities provided by 
+EnTK~\cite{adaptivebiomolecular} to raise the level of adaptive features 
+abstraction in HTBAC. 
 
-During re-execution we reintroduce
-the previous pipeline and incorporate a new pipeline, in order to continue
-simulations for previous pipelines and starting the execution of new pipelines. 
+intra-protocol adaptivity schema requires the 
+redistribution of resources to account for additional simulations generated 
+during runtime. 
+
+% As demonstrated by the requirements of the TIES intra-protocol 
+% adaptivity schema, the runtime system that provisions resources to support 
+% execution of concurrent simulations will need to redistribute resources in order 
+% to support concurrent execution of both existing and new simulations. 
+
+Using the protocol, runner, simulation components, users express the initial 
+protocol configuration and resource requirements. The user also provides the 
+analysis script that is required to generate conditions of new simulations. 
+
+% The workflow method exposed by
+% the protocol component enables granularity in creating multiple ``shorter" 
+% protocols. 
+
+The runner maintains the state of the submitted protocol by tagging each 
+protocol instance with a unique ID. This enables the runner to keep track of
+protocol instances that require additional simulations. 
+% The protocol component 
+% contains a post-execution property that invokes the application once the protocol 
+% terminates. In HTBAC, the 
+
+Once simulations have executed, a post-execution property of the protocol object
+performs a write operation of the simulation results. After the initial protocol 
+executes, the control logic returns back to the main script where the user has 
+already pre-specified a function that computes the next placement of simulations 
+based on the output generated by the protocol. The choice of this strategy is to 
+account for various functionalities that are specific to the requirements of the 
+user. The protocol component contains a parameter that accepts new simulation 
+conditions and builds a new workflow that extends the current protocol by 
+incorporating new simulations.
+
+As the number of simulations grows during runtime, the ratio of cores-to-task 
+fluctuates. The runner redistributes an even share of the total requested cores 
+to each simulation. This strategy was based on the assumption that the runtime 
+system does not provide dynamic pilots, where additional resources can be 
+submitted to the batch system. In addition, by design of ensemble-based free
+energy protocols, all simulations require the same resources. 
+
+The \textbf{Application Manager} in EnTK signals RP to 
+bypass termination of the pilot and instead keep the session alive, as long as 
+additional tasks are submitted within provisional walltime. \mtnote{I tried to 
+fix a bit the paragraph but it still difficult to read and understand.}
+\jdnote{a lot has changed in this subsection...}
+
 
 % Spawning of new task contribute to task count adaptivity and task attribute
 % adaptivity. Using EnTK, HTBAC creates the necessary set of new tasks.
 
-The \textbf{Application Manager} in EnTK signals RP to bypass termination of
-the pilot and instead keep the session alive, as long as additional tasks are
-submitted within provisional walltime. As the number of tasks grows during 
-runtime, the ratio of core-to-task fluctuates. HTBAC exposes the core allocation 
-per task, and allows users to specify before runtime the resource requirements 
-of additional tasks.\mtnote{I tried to fix a bit the paragraph but it still
-difficult to read and understand.}
+
+
+
 
 
 % In section~\ref{sec:science-drivers}, we described a particular type of
