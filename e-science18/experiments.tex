@@ -34,8 +34,8 @@
         - Created subsections for weak scaling, strong scaling, validation,
           adaptive experiments
         - Added plots (some are incomplete) and rearranged analysis
-        - Kristof added his data on (06/03) for adaptive experiments and
-          wrote results (adaptive plots to come Tuesday 06/05)
+        - Kristof added his data for adaptive experiments and
+          wrote results 
         - Strong scaling subsection still waiting on data from ESMACS
         - For now, removed anything related to Titan}
 
@@ -43,99 +43,58 @@
 \subsection{Experiment Setup}\label{ssec:exp_design}
 
 Computational drug campaigns require sizable compute resources % in order 
-to run concurrent simulations for a large number of drug candidates.
-Therefore, we perform our experiments on machines that can deliver at the
+to run concurrent simulations for a large number of drug candidates, on the 
+order of $>$ 10,000 concurrent simulations. Therefore, we perform our 
+experiments on machines that can deliver at the
 scale necessary to support these demands. \jdnote{should we mention anything
 about exascale?}\mtnote{I would not but I would quantify the scale at which
 we need to run. As it stands, this sentence appears too generic too me.}
+\jdnote{mentioned lower bound on concurrent number of simulations}
+
 Before embarking on a drug campaign that will utilize 150 million core hours
 on NCSA Blue Waters, we perform experiments to characterize the weak and
 strong scaling performance of HTBAC and its overheads on Blue Waters. We
-validate the free energy calculation results produced using HTBAC by
-comparing them with results previously cited \mtnote{what does this mean? We
-cited the results already in the paper? These results are published?}
+validate the free energy calculation results produced using HTBAC with 
+previously published results cited in the literature. \mtnote{what does this 
+mean? We cited the results already in the paper? These results are published?}
 % not having used HTBAC
 \mtnote{This sentence does not read well to me. I would refine, depending on
 the answer to the previous comment}.
+\jdnote{I meant to say we validate our free energy calculation results from this 
+paper with known results that are available in the chemistry literature. Does it
+make more sense now?}
 
-Given that protocols like TIES are more computationally demanding
-\mtnote{Grammar: more than?}, it is paramount to use resource efficiently,
-especially for campaigns that have a predefined computational budget. as
-described in Section III\mtnote{please use LaTeX references} and IV
-\mtnote{please use LaTeX references}, adaptive methods \mtnote{Methods for?
-Maybe `simulation methods'?} have the potential for an higher computational
-efficiency when compared to non-adaptive methods. Specifically, adaptive
+Given that protocols like TIES are more computationally demanding than ESMACS
+\mtnote{Grammar: more than?}\jdnote{more than ESMACS}, it is paramount to use 
+resource efficiently, especially for campaigns that have a predefined 
+computational budget. As described in Section~\ref{sec:science-drivers} and 
+Section~\ref{sec:htbac} adaptive simulation methods 
+% \mtnote{Methods for? Maybe `simulation methods'?} 
+have the potential for higher computational efficiency when compared to 
+non-adaptive simulation methods. Specifically, adaptive simulation
 methods can reduce the number of simulations for each lead candidate without
 a loss in free energy accuracy and with a lower computational load. Further,
 given a defined number of resources, adaptive methods can also increase
-computational efficiency by improving the rate of statistical convergence.
+computational efficiency by improving the rate of statistical convergence and 
+thereby reducing the time to solution.
 
-Specifying, coordinating and executing adaptive \mtnote{simulation?} methods
-requires system software supporting runtime decisions. As seen in
+Specifying, coordinating and executing adaptive simulation 
+% \mtnote{simulation?} 
+methods requires system software supporting runtime decisions. As seen in
 Section~\ref{sec:htbac}, HTBAC as been designed to enable decisions based on
 intermediate runtime results. These results are evaluated to determine a
 redistribution of resource to better support the execution of new
 simulations. We use HTBAC to perform experiments about adaptivity, comparing
-and characterizing resource efficiency with non-adaptive \mtnote{simulation?}
-methods. \mtnote{Note: experiments are not adaptive, they are about adaptive
-simulation methods. Analogously, experiments are not compared to non-adaptive
-experiments but they (should) offer comparable data about both types of
-methods.} \mtnote{Note: I rewrote the whole paragraph. The previous version
-was compressed and ``left too much in the authors' pens''.}
+and characterizing resource efficiency with non-adaptive simulation methods
+% \mtnote{simulation?}
+ 
 
-% Commented section below will go in Section III and Section IV
+% \mtnote{Note: experiments are not adaptive, they are about adaptive
+% simulation methods. Analogously, experiments are not compared to non-adaptive
+% experiments but they (should) offer comparable data about both types of
+% methods.} \mtnote{Note: I rewrote the whole paragraph. The previous version
+% was compressed and ``left too much in the authors' pens''.}
 
-% -------------------------------------------------------------------------- 
-%
-% Drug screening typically occurs in two phases. The first phase runs
-% simulations of all drug candidates and determines which candidates become
-% lead candidates. This phase is performed using less computationally
-% intensive protocols such as ESMACS. Once we eliminate poor-binding
-% candidates, we begin the second phase of the campaign where we investigate
-% lead compounds using computationally more demanding protocols such as TIES.
-% During the second phase, the accuracy of each candidate is evaluated. A
-% high level of variability exists in the chemical properties across
-% candidates. Therefore, the TIES protocols assumes the most general case in
-% evaluating the binding free energy accuracy. To maintain generality, the
-% TIES protocol requires 13 evenly spaced simulations, captured using a
-% sampling parameter references as $\lambda$ windows in Section III. Although
-% generality asserts the correct convergence criteria, this approximation of
-% $\lambda$ windows induces higher computational costs as a result of
-% executing large yet sometimes unnecessary simulations.
-
-% On the other hand, adaptive methods such as the adaptive quadratures
-% highlighted Section III, require less sampling and thereby reduce the
-% number of simulations, without sacrificing accuracy. Because this method is
-% tailored to every candidate, there is no way to understand \textit{a
-% priori} the placement of $\lambda$ windows and thereby the total number of
-% simulations.
-
-% This requires the ability to instantiate simulations that predicate on
-% intermediate results during runtime.
-
-% Define parameters: added simulations means task count adaptivity and task
-% attribute adaptivity. The next set (both number of resources) of
-% simulations depends on the output properties of the previous simulations.
-% When we adapt the number of simulations, the distribution of resources for
-% each task within a static pilot will fluctuate.
-
-% Carefully constructed $\lambda$ placement requires that the workflow can be
-% adaptable by creating new computational tasks during execution, thereby
-% modify the task graph during runtime. In HTBAC, construction of an adaptive
-% workflow is predicated upon the workload management system (define) that
-% provides expression of adaptive features.
-
-% while communicating those parameters down to the runtime system (define).
-
-
-% The post-execution properties are captured by the workload management
-% system, EnTK.
-
-
-% We then perform adaptive experiments to show improvements in
-% time-to-convergence.
-
-% -------------------------------------------------------------------------- %
 
 
 \begin{table*}
@@ -254,7 +213,12 @@ was compressed and ``left too much in the authors' pens''.}
 
 \mtnote{The following paragraphs are disconnected from the previous ones. We
 need a `joining' paragraph starting from something like: ``We designed n
-experiments\ldots We used m protocols\ldots See Table o\ldots''. Moved a paragraph here as a starting point.} 
+experiments\ldots We used m protocols\ldots See Table o\ldots''. Moved a paragraph here as a starting point.}\jdnote{provided ``segway"}
+
+We designed 7 experiments as shown in Table~\ref{tab:experiments}. We used 2
+protocols, ESMACS and TIES. Experiments 1 -- 5 were executed using the BRD4 
+physical systems provided by GlaxoSmithKline, while experiments 6 and 7 utilized 
+PTP1B, MC1, and TYK2 physical systems which are a diverse set of proteins. 
 Experiment 1 measures the weak scalability of HTBAC, EnTK and RP using
 multiple instances of the ESMACS protocols. Experiment 2 measures weak
 scaling performance of TIES. Experiments 3 repeats the same design as
@@ -262,47 +226,83 @@ experiments 1 and 2 using both TIES and ESMACS, to demonstrate heterogeneous
 protocol execution.
 % Experiment 2 measures weak scaling performance of ESMACS at higher scales,
 % using ORNL Titan.
-\mtnote{Would it be better to describe weak scaling in terms of solution
-time, number of resources and problem size, as done in the following
-paragraph?}\jdnote{moved to previous para when first introducing weak
-scaling}
+% \mtnote{Would it be better to describe weak scaling in terms of solution
+% time, number of resources and problem size, as done in the following
+% paragraph?}\jdnote{moved to previous para when first introducing weak
+% scaling}
 
-We show homogeneous and heterogeneous weak scalability of the protocols
+In each weak scaling experiment, the ratio between the number of protocol 
+instances and cores are kept constant. We increase the number of protocol 
+instances and the resources required by each protocol instance by the same 
+ratio. 
+
+
+% of the protocols
 \mtnote{which protocols? So far we wrote about methods (but we did not
-specify what type of methods are we referring to)} by increasing the number
-of protocol instances while keeping the required \mtnote{required by
+specify what type of methods are we referring to)} 
+by increasing the number
+of protocol instances while keeping the required 
+\mtnote{required by
 what/whom? ``keeping the number of pipelines fixed at the number required by
-\ldots'' or something like that?} number of pipelines. By design of each
-protocol, an increase in the number of instances means an increase in the
-number of pipelines. Further,
-\jdnote{mention the relationship between protocols and pipelines in section
-IV.} by design of weak scaling, the ratio between the number of pipelines and
-cores are kept constant. As the number of cores (measure of resource) changes
-by a factor of 2, we introduce twice as many protocol instances. In this way,
-weak scaling provides insight into the size of the workload that can be
-investigated in a given amount of time.
+\ldots'' or something like that?} number of pipelines. 
+\jdnote{I've changed this introduction describing ws, does it make sense?}
+
+% By design of each
+% protocol, an increase in the number of instances means an increase in the
+% number of pipelines. 
+
+% Further,
+% \jdnote{mention the relationship between protocols and pipelines in section
+% IV.} 
+
+As the number of cores (measure of 
+resource) changes by a factor of 2, we introduce twice as many protocol 
+instances. In this way, weak scaling provides insight into the size of the 
+workload that can be investigated in a given amount of time.
 % \mtnote{property of? I would replace with: ``weak scaling provides
 % insight\ldots''} provides insight
 
-Next, we measure strong scaling performance of the protocols \mtnote{which
-ones?} by fixing the workload i.e. \mtnote{Grammar: please be careful about
-the use of `i.e.' as explained in my previous set of comments} the number of
-pipelines but reducing \mtnote{Why do we need the `i.e.' at all? What does
-`workload' add? ``\ldots by fixing the number of pipelines of each protocol
-and reducing \ldots''} the number of cores by a factor of 2 in each run. We
-measure how the timing \mtnote{what does `timing' mean in this context?
-Duration? } of the workload \jdnote{will be defined in section IV}\mtnote{we
-will define `what'?} scales when adding resources, \jdnote{expecting linear
-speedup, and expect fixed overheads}\mtnote{is this comment about text that
-still needs to be written? If so, I would not mention expectations of results
-in the design section.} as well as the overheads in \mtnote{of?} HTBAC, EnTK
-and RP. Experiments 4 measures the strong scaling performance of ESMACS while
-experiment 5 repeats the same strong scaling experiment using the TIES
-protocol.
+Next, we measure strong scaling performance of the ESMACS and TIES protocols in 
+experiments 4 and 5, respectively, by fixing the number of protocol instances, 
+but reducing the cores by a factor of 2 in each run. 
 
-Lastly, we perform nonadaptive and adaptive experiments using the TIES
-protocol to show intra-protocol adaptivity \jdnote{define intra-protocol
-adaptivity in section IV}.\mtnote{This is a placeholder for an actual
+\mtnote{which
+ones?} by fixing the workload i.e. \mtnote{Grammar: please be careful about
+the use of `i.e.' as explained in my previous set of comments} 
+% the number of pipelines but reducing 
+\mtnote{Why do we need the `i.e.' at all? What does
+`workload' add? ``\ldots by fixing the number of pipelines of each protocol
+and reducing \ldots''} 
+\jdnote{also changed this introduction to ss.}
+
+% the number of cores by a factor of 2 in each run. 
+We measure how the time duration
+\mtnote{what does `timing' mean in this context?
+Duration? } of the workload 
+\jdnote{will be defined in section IV}\mtnote{we
+will define `what'?}\jdnote{ignore earlier comment, the correct phrasing is time
+duration of the workload, but I am not sure if this causes confusion}\jdnote{
+also workload will be defined in Section IV}
+scales when adding resources, 
+
+% \jdnote{expecting linear
+% speedup, and expect fixed overheads}\mtnote{is this comment about text that
+% still needs to be written? If so, I would not mention expectations of results
+% in the design section.}
+
+as well as the overheads of \mtnote{of?}\jdnote{addressed} HTBAC, EnTK
+and RP. 
+
+% Experiments 4 measures the strong scaling performance of ESMACS while
+% experiment 5 repeats the same strong scaling experiment using the TIES
+% protocol.
+
+Lastly, we perform experiments of nonadaptive and adaptive simulation methods 
+using the TIES protocol. We run both methods with the same cores and simulation
+durations for 3 different physical and compare the differences in accuracy and 
+time to solution. 
+
+\mtnote{This is a placeholder for an actual
 paragraph: note how the previous paragraphs have a structure based on
 numbering experiments (and referring them to the table via references that
 are still missing), while this and the following paragraphs do not use the
@@ -312,34 +312,69 @@ same structure. Please expand as needed and note that a section is not
 % Keep iterating on the next two paragraphs to get the right description from
 % Kristof
 % -------------------------------------------------------------------------- %
-In the non-adaptive workflow\mtnote{Reference figure}, we use 13 preassigned
-and approximated $\lambda$ windows \mtnote{Reference table and exp number}.
-By design of the TIES protocol, each $\lambda$ window creates a new
+Experiment 6 in Table~\ref{tab:experiments} indicates the parameters for the 
+non-adaptive simulation method. By design of the nonadaptive TIES workflow in 
+Figure~\ref{fig:ties_esmacs_application} 
+\mtnote{Reference table and exp 
+number}
+\jdnote{addressed}, 
+each $\lambda$ window creates a new
 simulation condition that must be replicated. TIES requires 5 replicas per
-$\lambda$, thereby producing $\lambda \times 5$ simulations. \jdnote{Section
-IV will explain how simulations map to computational tasks}. As described in
-the TIES workflow Figure \mtnote{Reference to the figure is missing}
-\jdnote{include nonadaptive workflow}, this \mtnote{Grammar: it is not clear
-to what this `this' refers to} produces a total of 65 concurrent simulations
-for stages $S1$--$S4$ \mtnote{Reference table with S*} \mtnote{Grammar: no
-spaces before and after dashes}. The production simulation stage $S4$
-executes each simulation for 4ns. The analysis stage $S5$ assigns 5 analysis
+$\lambda$, thereby producing $\lambda \times 5$ or simulations. For this 
+experiment we use 13 preassigned and approximated $\lambda$ windows which was 
+chosen based on the reported value in Ref.~\cite{Bhati2017}, to produce 
+65 concurrent simulations for stages $S1$--$S4$.\mtnote{Reference table with S*}
+\jdnote{the ref to Figure~\ref{fig:ties_esmacs_application} already points to 
+the description of S*, no?} 
+\mtnote{Grammar: no
+spaces before and after dashes}
+\jdnote{noted}
+The production simulation stage 
+$S4$ executes each simulation for 4ns. The analysis stage $S5$ assigns 5 analysis
 tasks which aggregate simulation results of $S4$ with respect to each
 replica. The global analysis stage $S6$ contains a single task that
-aggregates the results from $S5$.
+aggregates the results from $S5$.\jdnote{reworded this paragraph}
+
+
+% \mtnote{Grammar: it is not clear
+% to what this `this' refers to} produces a total of 65 concurrent simulations
+% for stages $S1$--$S4$ \mtnote{Reference table with S*} \mtnote{Grammar: no
+% spaces before and after dashes}\jdnote{noted}. The production simulation stage 
+% $S4$ executes each simulation for 4ns. The analysis stage $S5$ assigns 5 analysis
+% tasks which aggregate simulation results of $S4$ with respect to each
+% replica. The global analysis stage $S6$ contains a single task that
+% aggregates the results from $S5$.
 
 In the adaptive workflow~\ref{fig:adaptive_ties}, we run shorter 1ns MD
-production simulations, followed by a different \mtnote{different from what?}
-analysis which estimates free energy errors with respect to each interval of
-two $\lambda$ values. The estimation of the error determines whether
-\mtnote{Grammar: as already commented in the previous draft, `whether'
-implies already `or not'. Adding it is redundant.} to spawn additional
-$\lambda$ windows. If the error estimate in a certain interval is higher than
-the acceptable threshold, a new $\lambda$ window is assigned halfway between
-the interval. If the critical threshold is reached, we have reached
-convergence and the application stops; else, current simulations continue
-executing and new simulations begin executing based on newly generated
-$\lambda$ windows.
+production simulations by separating step $S4$ into multiple sub-steps. We 
+initialize the protocol with 3 $\lambda$ windows, or 15 replicas. We run each 
+simulation sub-step within an iteration for 1ns, for a total of 4 iterations to 
+complete 4ns simulation duration. Each simulation sub-step is followed by the 
+adaptive quadratures analysis
+\mtnote{different from what?}\jdnote{addressed}
+which estimates free energy errors with respect to each interval of
+two $\lambda$ values. We evaluate the total number of $\lambda$ windows as 
+determined by the adaptive quadrature results in order to measure the 
+differences in time duration between adaptive and non-adaptive methods as well
+as the differences in accuracy. 
+
+
+% The estimation of the error determines whether
+% \mtnote{Grammar: as already commented in the previous draft, `whether'
+% implies already `or not'.\jdnote{noted} Adding it is redundant.}\jdnote{noted} 
+% to spawn additional $\lambda$ windows. If the error estimate in a certain 
+% interval is higher than the acceptable threshold, a new $\lambda$ window is 
+% assigned halfway between the interval. If the critical threshold is reached, we 
+% have reached convergence and the application stops; else, current simulations 
+% continue executing and new simulations begin executing based on newly generated
+% $\lambda$ windows. 
+
+Define the beginning lambda windows 
+Maybe instead of all this just mention the number of tasks (variable) between 
+iterations and the number of iterations. Define the decision point
+
+
+
 
 \begin{figure}
   \centering
@@ -353,21 +388,21 @@ $\lambda$ windows.
 \label{fig:adaptive_TIES}
 \end{figure}
 
-The estimation computation \mtnote{This is too compressed. In itself,
-`estimation computation' means little. The reader has to go back to the
-previous paragraph to understand what those two words refer to. `We compute
-the free energy errors\ldots'?} is captured \mtnote{`captured' is
-metaphorical. Metaphors should be avoided when writing science. Also, the
-sentence is passive and also this should be avoided in scientific writing} as
-a single stage \mtnote{Does the reader know what a stage is?} containing a
-single task. By design of the adaptive quadrature algorithm \mtnote{where
-this algorithm is used? Does the reader know about it?}, the number of
-additional $\lambda$ windows will vary across candidates, which will impact
-the number of simulation-analysis iterations. \mtnote{And\ldots We are
-missing an explanation of why this is important from an experimental design
-point of view. Maybe because it changes the number of tasks?}
-\jdnote{will call this something else}.\jdnote{check with Kristof on the
-local and global analysis that happen for nonadaptive}
+% The estimation computation \mtnote{This is too compressed. In itself,
+% `estimation computation' means little. The reader has to go back to the
+% previous paragraph to understand what those two words refer to. `We compute
+% the free energy errors\ldots'?} is captured \mtnote{`captured' is
+% metaphorical. Metaphors should be avoided when writing science. Also, the
+% sentence is passive and also this should be avoided in scientific writing} as
+% a single stage \mtnote{Does the reader know what a stage is?} containing a
+% single task. By design of the adaptive quadrature algorithm \mtnote{where
+% this algorithm is used? Does the reader know about it?}, the number of
+% additional $\lambda$ windows will vary across candidates, which will impact
+% the number of simulation-analysis iterations. \mtnote{And\ldots We are
+% missing an explanation of why this is important from an experimental design
+% point of view. Maybe because it changes the number of tasks?}
+% \jdnote{will call this something else}.\jdnote{check with Kristof on the
+% local and global analysis that happen for nonadaptive}
 
 \mtnote{Note: paragraphs like this indicate lack of iteration before
 releasing the manuscript for review. Too much is assumed, too little is
@@ -378,102 +413,14 @@ iterated until it is grammatically correct and it stands on its own
 content-wise. When a manuscript is received for review, the reviewer focus on
 the content of each paragraph and section, assessing their completeness and
 conceptual/formal correctness. Each grammatical error, each inconsistency or
-missing detail distracts the reviewer impeding her work.}
+missing detail distracts the reviewer impeding her work.}\jdnote{I've removed
+the previous paragraph that gave trouble and updated the experimental setup of 
+the adaptive and non-adaptive methods.}
 
 % This procedure is repeated until convergence, at which point all concurrent
 % simulation are terminated. We define convergence as the point in the
 % production-analysis loop at which a desired error threshold is reached.
 
-% move this to HTBAC Design & Implementation
-% -------------------------------------------------------------------------- %
-% As discussed earlier, the free energy is calculated numerically using an
-% integration algorithm, integrating the function $\partial
-% U/\partial\lambda$ evaluated at discrete of $\lambda$. In a non-adaptive
-% case these values of $\lambda$are selected a priori, and having no
-% knowledge of the function's shape, equally spaced values are the optimal
-% option.
-
-% The aim of the general adaptive quadrature algorithm is to minimize the
-% number of function evaluations while still estimating the integral under a
-% specified error threshold. In our case a function evaluation means the full
-% simulation for a given $\lambda$ window, and reducing this means a
-% substantial efficiency gain.
-
-% where each stage runs shorter production simulations of 1 nanosecond. We
-% initialize $S4.1$ by assigning 3 equally spaced $\lambda$ windows at $0$,
-% $0.5$ and $1$. Once the simulations have converged, we run a post-execution
-% estimate the error of the free energy along each interval, i.e. $0$ to
-% $0.5$ and $0.5$ and $1$. Once each simulation is complete within a stage, a
-% decision is made about whether more $\lambda$ windows are required, and, if
-% so, where these windows should be placed.
-
-% We start the simulation with 3 equally spaces lambda windows at $0$, $0.5$
-% and $1$ and run the three simulation in parallel just until they have
-% converged. Then we estimate the error of the free energy along each
-% interval (0 to 0.5 and 0.5 to 1) to determine whether a new lambda window
-% needs to be placed halfway in between. The we iterate until no more lambda
-% windows need to be placed. Now we determined the minimum set of optimally
-% placed set of lambda windows. Using this set we start full simulation
-% protocols to calculate the free energy of the alchemical transformation.
-
-% -------------------------------------------------------------------------- %
-% In the adaptive workflow, we alter the number of $\lambda$ windows being
-% simulated over the course of a protocol instance. The position of new
-% $\lambda$ windows depends on the estimated error of the integral measured
-% between adjacent windows. Increasing the number of $\lambda$ windows in
-% regions of rapid change will increase the accuracy of the overall integral
-% to a greater degree than an arbitrarily placed window. In order to
-% adaptively add lambda windows, we need access to the $\partial
-% U/\partial\lambda$ values during runtime. Therefore, we break down the
-% single production simulation stage (S4) \mtnote{I would reference the
-% figure with the workflow diagram here} from the nonadaptive workflow into
-% multiple smaller stages \mtnote{how many?}, each running for 1 ns. Once
-% each simulation is complete within a stage, a decision is made about
-% whether more $\lambda$ windows are required, and, if so, where these
-% windows should be placed.
-
-% We start out the simulation with 5 replicas of \emph{3} \mtnote{why
-% emphasis for 3?} equally spaced $\lambda$ windows, and equilibrate them.
-% Then we repeatedly execute shorter production simulations followed by an
-% analysis phase which determines where to place new lambda windows. This
-% procedure is repeated until convergence, at which point all concurrent
-% simulation are terminated. We define convergence as the point in the
-% production-analysis loop at which a desired error threshold is reached.
-
-% In non-adaptive experiments we run simulations according to the original
-% TIES protocol where the MD simulation step runs for the full 4 ns duration.
-% In the adaptive experiments, we still adhere to the same TIES protocol,
-% however we stop the MD simulation after each ns and allow the adaptive
-% quadratures to calculate the SEM. The calculation determines where to place
-% additional lambda windows in the next nanosecond duration. Once we reach a
-% level of simulation convergence, we can halt simulations for that candidate
-% and shift resources over to another candidate whose simulations have not
-% yet started. We demonstrate computational efficiency, i.e. given X number
-% of core hours, what is the difference between adaptive accuracy and
-% nonadaptive accuracy? By extent we can also begin to inference the
-% trade-offs between computational resources and accuracy.
-
-% The benefit of running adaptive simulations produces greater fidelity.
-% Since the exact placement of lambda windows and by extent the simulations
-% are not known a priori, in the non-adaptive scenario, lambda windows are
-% approximated, 13 evenly spaced positions. While this placement does produce
-% statistical convergence, it does so at the cost of additional resources.
-% Instead, in the adaptive scenario, we begin the MD simulation with 3
-% approximated and evenly spaced lambda windows. We run the MD simulation for
-% only 1 nanosecond, and aggregate the outputs from those lambda windows in
-% order to calculate the RMSE which determines where to position additional
-% lambda windows. Since this variability of lambda windows is highly
-% dependent on the physical system, the only way to capture more accurate
-% placement of lambda windows is during runtime in order to inference lambda
-% windows based on intermediate results.
-
-% We can glean two points from this:
-
-% 1) We can stop the simulation once we reach an acceptable error threshold
-% 2) To produce tighter binding affinity as some clinical insights may
-%    require, given the same amount of core hours, what is the added benefit
-%    of running adaptive experiments over nonadaptive, i.e. how much more
-%    accuracy do we gain by running adaptive simulations?
 
 % When one protocol has converged whilst another has not, we can shift
 % computational resources to favor simulations that require additional
@@ -506,13 +453,26 @@ each environment and of NAMD itself. For all experiments we used
 \texttt{NAMD-MPI}. Additionally, for the analysis stages in the TIES protocol
 we used \texttt{AmberTools}.
 
-For weak and strong scaling experiments \mtnote{reference table}, we
-assigned the minimization tasks of $S1$ to 1000 simulation time steps, while
-the equilibration tasks in $S2$ and $S3$ are \mtnote{Grammar: inconsistent
-tense. `Were' or `assign'} assigned 5000. The MD simulation tasks in $S4$ are
-assigned 50,000 steps. \jdnote{the reader will be able to understand $S$ once
-I fix section IV} \jdnote{Kristof to include the number of timesteps for
-adaptive/nonadaptive experiments}
+For the experiments that examine nonadaptive simulation methods, we assign the 
+following simulation time-steps: $S1$: 3000; $S2$: 50000; $S3$: 50000; $S4$: 
+2000000. The adaptive simulation method contain the same simulation steps, apart 
+from $S4$ which is divided into 4 sub-steps of 500000 time-steps. 
+\jdnote{should we mention relationship between ns and time-steps?}
+
+For weak and strong scaling experiments~\ref{tab:experiments} 
+\mtnote{reference table}
+\jdnote{addressed}, 
+we reduce the number of time-steps omit the analysis steps $S5$ and $S6$, as the
+focus of scalability is not based on duration but rather characterization of 
+performance. We assign the following time-steps: $S1$: 1000; $S2$: 5000; $S3$: 
+5000; $S4$: 50000. 
+
+% The minimization tasks of $S1$ to 1000 simulation time steps, while
+% the equilibration tasks in $S2$ and $S3$ are \mtnote{Grammar: inconsistent
+% tense. `Were' or `assign'} assigned 5000. The MD simulation tasks in $S4$ are
+% assigned 50,000 steps.
+
+
 
 % \mtnote{when/why a simulation task is `production'? I am not sure I
 % understand what that means}\jdnote{removed production for weak/strong.
@@ -524,17 +484,32 @@ adaptive/nonadaptive experiments}
 % as NAMD does not support alchemical perturbations execution on GPU.
 
 We perform \mtnote{Grammar: We used the preterite until now} all Blue Waters
-experiments using the \texttt{aprun} application launch method, which is the
-NCSA Blue Waters designated command for describing the application parameters
-and resource requirements \mtnote{does the reader know what is a launch
+experiments using the \texttt{aprun} command to launch the MD simulations. 
+% application launch method, which is the
+% NCSA Blue Waters designated command for describing the application parameters
+% and resource requirements 
+\mtnote{does the reader know what is a launch
 method?} \jdnote{better?} \mtnote{Unfortunately not:
 https://bluewaters.ncsa.illinois.edu/using-aprun . Alternative: `We perform
 (or performed depending on what tense you will decide to use) all Blue Waters
 experiments using the \texttt{aprun} command to launch the MD simulations'}.
-Unfortunately, \texttt{aprun} has several \mtnote{this is too generic. Based
+\jdnote{noted and addressed.}
+During our scalability experiments we found two main limitations of 
+\texttt{aprun}. First, the number of
+concurrent tasks execution is limited to \ldots. On average, during our 
+experiments we were not able to execute more than 436 concurrent tasks. 
+\mtnote{this is too generic. Based
 on this paragraph, we found two main limitations. This is what we should
-therefore write.} limitations: First, the number of
-concurrent tasks execution is limited to \ldots. On average, during our experiments we were not able to execute more than 436 concurrent tasks. \mtnote{how do we know
+therefore write.} \jdnote{addressed}
+
+
+
+% Unfortunately, \texttt{aprun} has several \mtnote{this is too generic. Based
+% on this paragraph, we found two main limitations. This is what we should
+% therefore write.} limitations: First, the number of
+% concurrent tasks execution is limited to \ldots. On average, during our 
+% experiments we were not able to execute more than 436 concurrent tasks. 
+\mtnote{how do we know
 this average?}.
 \jdnote{would it make sense to show a bell curve of the distribution of
 failing units? I have 8 data points, but I can run more and include Mark's
