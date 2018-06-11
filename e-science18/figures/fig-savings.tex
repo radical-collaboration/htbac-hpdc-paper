@@ -1,0 +1,38 @@
+\begin{tikzpicture}
+\begin{axis}[
+  ybar,
+  ymin=0,
+  ylabel=Error (kcal/mol),
+  x tick label style  = {text width=1.5cm,align=center},
+  symbolic x coords={PTP1B L1-L2,PTP1B L10-L12,TYK2 L7-L8,TYK2 L4-L9,MCL1 L32-L38}
+  ]
+  
+\addplot+[color=Orchid] table [x=System, y=Non-adaptive error, col sep=comma] {figures/savings.csv};
+
+\addplot+[color=YellowGreen] table [x=System, y=Adaptive error, col sep=comma] {figures/savings.csv};
+
+
+\legend{Non-adaptive,Adaptive}
+  
+\end{axis}
+\end{tikzpicture}%
+%
+%
+\begin{tikzpicture}
+\begin{axis}[
+  ybar,
+  ymin=0,
+  ylabel=Resource consumption (CPU-hours),
+  x tick label style  = {text width=1.5cm,align=center},
+  symbolic x coords={PTP1B L1-L2,PTP1B L10-L12,TYK2 L7-L8,TYK2 L4-L9,MCL1 L32-L38}
+  ]
+  
+\addplot+[color=Orchid] table [x=System, y=Non-adaptive cpuh, col sep=comma] {figures/savings.csv};
+
+\addplot+[color=YellowGreen] table [x=System, y=Adaptive cpuh, col sep=comma] {figures/savings.csv};
+
+
+\legend{Non-adaptive,Adaptive}
+  
+\end{axis}
+\end{tikzpicture}
