@@ -7,29 +7,62 @@ The drug discovery pipeline is continuously evolving and morphing from a fully e
 
 % Intro to binding affinity ----------------------------------------------------
 
-There exists two types of free energy calculation protocols: absolute and relative. Absolute free energy methods calculate the binding affinity of a \emph{single} drug molecule to a protein, while relative methods calculate the \emph{difference} in binding affinity between two (usually similar in structure) drug molecules. The computational requirements of the two protocols differ sometimes significantly, but deciding which one is more appropriate for the task at hand is not trivial, as it is a function of resources, required time to convergence, accuracy thresholds etc.
+There exists two types of free energy calculation protocols: absolute and 
+relative. Absolute free energy methods calculate the binding affinity of a 
+\emph{single} drug molecule to a protein, while relative methods calculate the 
+\emph{difference} in binding affinity between two (usually similar in 
+structure) drug molecules. The computational requirements of the two protocols 
+differ sometimes significantly, but deciding which one is more appropriate for 
+the task at hand is not trivial, as it is a function of resources, required 
+time to convergence, accuracy thresholds etc.
 
-Briefly introduced in the previous section, the two free energy calculation protocols, ESMACS and TIES ~\cite{Wan2017brd4, Bhati2017}, are our implementations of the absolute and relative methods. Here we provide more details of their practical specifications and of the protein ligand systems we used to benchmark and refine them in this work.
+Briefly introduced in the previous section, the two free energy calculation 
+protocols, ESMACS and TIES ~\cite{Wan2017brd4, Bhati2017}, are our 
+implementations of the absolute and relative methods. Here we provide more 
+details of their practical specifications and of the protein ligand systems we 
+used to benchmark and refine them in this work.
 
 % Some notes on ensembles and replicas. ----------------------------------------
 
-In both protocols, ensembles of MD simulations are employed to perform averaging and to obtain tight control of error bounds in our estimates. In addition, the ability to run replica simulations concurrently means that, as long as sufficient compute resources are available, turnaround times can be  significantly reduced compared to the generation of single long trajectories. Due to their shared philosophical underpinning both protocols share similar middleware requirements.
+In both protocols, ensembles of MD simulations are employed to perform 
+averaging and to obtain tight control of error bounds in our estimates. In 
+addition, the ability to run replica simulations concurrently means that, as 
+long as sufficient compute resources are available, turnaround times can be  
+significantly reduced compared to the generation of single long trajectories. 
+Due to their shared philosophical underpinning both protocols share similar 
+middleware requirements.
 
 % First a quick intro to NAMD, then generic simulation protocol description. ---
 
-The current implementation of both TIES and ESMACS uses the the NAMD package~\cite{Phillips2005} to conduct the simulations. Conceptually, each replica simulation consists of three stages: minimization, equilibration and production MD. In practice the equilibration phase is broken into multiple steps to ensure that the size of the simulation box does not alter too much over the simulation. During these steps positional constraints are gradually released from the structure and the system is heated to a physiologically realistic temperature. Whilst both protocols share a common workflow for individual replicas, the make up of the ensemble is different.
+The current implementation of both TIES and ESMACS uses the the NAMD 
+package~\cite{Phillips2005} to conduct the simulations. Conceptually, each 
+replica simulation consists of three stages: minimization, equilibration and 
+production MD. In practice the equilibration phase is broken into multiple 
+steps to ensure that the size of the simulation box does not alter too much 
+over the simulation. During these steps positional constraints are gradually 
+released from the structure and the system is heated to a physiologically 
+realistic temperature. Whilst both protocols share a common workflow for 
+individual replicas, the make up of the ensemble is different.
 
-% TIES intro -------------------------------------------------------------------
+% TIES and ESMACS intro --------------------------------------------------------
 
-TIES is based on rigorous, but computationally expensive, calculations of relative free energies (i.e. results provide a comparison between two drugs). ESMACS, in contrast, provides absolute binding free energies at low computational cost, but to achieve this coarse grains many of the details of the system being studied. The simplifications employed by ESMACS can reduce its effectiveness in some systems. 
-
-% ESMACS intro -----------------------------------------------------------------
-
-In the case of ESMACS, an ensemble consists of a set of identical simulations  differing only in the initial velocities assigned to each atom. Upon completion of the MD simulation, free energy computation (via MMPBSA and potentially normal mode analysis) is performed using AmberTools.
+TIES is based on rigorous, but computationally expensive, calculations of 
+relative free energies (i.e. results provide a comparison between two drugs). 
+ESMACS, in contrast, provides absolute binding free energies at low 
+computational cost, but to achieve this coarse grains many of the details of 
+the system being studied. The simplifications employed by ESMACS can reduce its 
+effectiveness in some systems. In the case of ESMACS, an ensemble consists of a 
+set of 25 identical simulations differing only in the initial velocities 
+assigned to each atom. In TIES the ensemble also contains the set of $\lambda$ 
+windows along the replicas. Upon completion of the MD simulation, free energy 
+computations are performed on a per replica basis and then globally across all 
+ensembles. 
 
 %~\cite{amber14, Case2005, MillerIII2012}.
 
 % TIES more details ------------------------------------------------------------
+
+
 
 TIES is a so called ``alchemical'' method in which the fact that the potential 
 used to describe the system is user definable to transform one system into 
@@ -44,12 +77,7 @@ using the same system description, in TIES sub-ensembles are executed at
 different points along $\lambda$. The change in free energy associated 
 with the transformation is calculated by numerically integrating 
 (via adaptive quadrature) the values of the $\partial U/\partial\lambda$ 
-across the full set of $\lambda$ windows simulated. The TIES protocol, 
-for example, relies on the numerical integration of $\partial U/\partial\lambda$. 
-%Obtaining values for the function means running
-%multiple replicas of full simulation workflows with a given $\lambda$,
-%therefore we would like to minimize the number of $\lambda$ values that need to 
-%be evaluted for our given accuracy threshold. 
+across the full set of $\lambda$ windows simulated. 
 
 Obtaining accurate and precise results from TIES requires that the $\lambda$ 
 windows correctly capture the changes of $\partial U/\partial\lambda$ over 
