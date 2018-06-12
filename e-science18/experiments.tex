@@ -42,60 +42,60 @@
 % ---------------------------------------------------------------------------
 \subsection{Experiment Setup}\label{ssec:exp_design}
 
-Computational drug campaigns require sizable compute resources % in order 
-to run concurrent simulations for a large number of drug candidates, on the 
-order of $>$ 10,000 concurrent simulations. Therefore, we perform our 
-experiments on machines that can deliver at the
-scale necessary to support these demands. \jdnote{should we mention anything
-about exascale?}\mtnote{I would not but I would quantify the scale at which
-we need to run. As it stands, this sentence appears too generic too me.}
-\jdnote{mentioned lower bound on concurrent number of simulations}
+Computational campaigns for drug discovery require sizable compute resources
+both in terms of scale and allocation. Typically, a computational campaign
+explores a large number of drug candidates by running several workflows
+multiple times, each requiring thousands of concurrent simulations. Before
+embarking on a drug campaign that will utilize 150 million core hours on NCSA
+Blue Waters, we perform experiments to characterize the weak and strong
+scaling performance of HTBAC and its overheads on Blue Waters. We validate
+the results of the free energy calculations produced using HTBAC by comparing
+them to the results that are already available in the chemistry literature.
 
-Before embarking on a drug campaign that will utilize 150 million core hours
-on NCSA Blue Waters, we perform experiments to characterize the weak and
-strong scaling performance of HTBAC and its overheads on Blue Waters. We
-validate the free energy calculation results produced using HTBAC with 
-previously published results cited in the literature. \mtnote{what does this 
-mean? We cited the results already in the paper? These results are published?}
-% not having used HTBAC
-\mtnote{This sentence does not read well to me. I would refine, depending on
-the answer to the previous comment}.
-\jdnote{I meant to say we validate our free energy calculation results from this 
-paper with known results that are available in the chemistry literature. Does it
-make more sense now?}
+% \jdnote{should we mention anything about exascale?}\mtnote{I would not but
+% I would quantify the scale at which we need to run. As it stands, this
+% sentence appears too generic too me.} \jdnote{mentioned lower bound on
+% concurrent number of simulations}
 
-Given that protocols like TIES are more computationally demanding than ESMACS
-\mtnote{Grammar: more than?}\jdnote{more than ESMACS}, it is paramount to use 
-resource efficiently, especially for campaigns that have a predefined 
-computational budget. As described in Section~\ref{sec:science-drivers} and 
-Section~\ref{sec:htbac} adaptive simulation methods 
+% \mtnote{what does this mean? We cited the results already in the paper?
+% These results are published?}
+% \mtnote{This sentence does not read well to me. I would refine, depending
+% on the answer to the previous comment}.
+% \jdnote{I meant to say we validate our free energy calculation results from
+% this paper with known results . Does it make more sense now?}
+
+Given that protocols like TIES are more computationally demanding than
+protocols like ESMACS, it is paramount to use resource efficiently,
+especially for campaigns that have a predefined computational budget. As
+described in Sections~\ref{sec:science-drivers} and~\ref{sec:htbac} adaptive
+simulation methods have the potential for higher computational efficiency
+when compared to non-adaptive simulation methods. Specifically, adaptive
+simulation methods can reduce the number of simulations for each lead
+candidate without a loss in free energy accuracy and with a lower
+computational load. Further, given a defined number of resources, adaptive
+methods can also increase computational efficiency by improving the rate of
+statistical convergence and thereby reducing the time to solution.
+
+% \mtnote{Grammar: more than?}\jdnote{more than ESMACS}
 % \mtnote{Methods for? Maybe `simulation methods'?} 
-have the potential for higher computational efficiency when compared to 
-non-adaptive simulation methods. Specifically, adaptive simulation
-methods can reduce the number of simulations for each lead candidate without
-a loss in free energy accuracy and with a lower computational load. Further,
-given a defined number of resources, adaptive methods can also increase
-computational efficiency by improving the rate of statistical convergence and 
-thereby reducing the time to solution.
 
-Specifying, coordinating and executing adaptive simulation 
-% \mtnote{simulation?} 
-methods requires system software supporting runtime decisions. As seen in
-Section~\ref{sec:htbac}, HTBAC as been designed to enable decisions based on
-intermediate runtime results. These results are evaluated to determine a
-redistribution of resource to better support the execution of new
-simulations. We use HTBAC to perform experiments about adaptivity, comparing
-and characterizing resource efficiency with non-adaptive simulation methods
+Specifying, coordinating and executing adaptive simulation methods requires
+middleware supporting runtime decisions. As seen in Section~\ref{sec:htbac},
+HTBAC has been designed to enable decisions based on intermediate runtime
+results. These results are evaluated to determine a redistribution of
+resource to better support the execution of new simulations. We use HTBAC to
+perform experiments about adaptivity, comparing and characterizing resource
+efficiency with non-adaptive simulation methods.
+
 % \mtnote{simulation?}
+% \mtnote{simulation?} 
  
-
 % \mtnote{Note: experiments are not adaptive, they are about adaptive
-% simulation methods. Analogously, experiments are not compared to non-adaptive
-% experiments but they (should) offer comparable data about both types of
-% methods.} \mtnote{Note: I rewrote the whole paragraph. The previous version
-% was compressed and ``left too much in the authors' pens''.}
-
-
+% simulation methods. Analogously, experiments are not compared to
+% non-adaptive experiments but they (should) offer comparable data about both
+% types of methods.} \mtnote{Note: I rewrote the whole paragraph. The
+% previous version was compressed and ``left too much in the authors'
+% pens''.}
 
 \begin{table*}
     \caption{Parameters of scalability and adaptivity experiments.}
@@ -211,19 +211,21 @@ and characterizing resource efficiency with non-adaptive simulation methods
 \up{}
 \end{table*}
 
-\mtnote{The following paragraphs are disconnected from the previous ones. We
-need a `joining' paragraph starting from something like: ``We designed n
-experiments\ldots We used m protocols\ldots See Table o\ldots''. Moved a paragraph here as a starting point.}\jdnote{provided ``segway"}
+% \mtnote{The following paragraphs are disconnected from the previous ones.
+% We need a `joining' paragraph starting from something like: ``We designed n
+% experiments\ldots We used m protocols\ldots See Table o\ldots''. Moved a
+% paragraph here as a starting point.}\jdnote{provided ``segway"}
 
 We designed 7 experiments as shown in Table~\ref{tab:experiments}. We used 2
-protocols, ESMACS and TIES. Experiments 1 -- 5 were executed using the BRD4 
-physical systems provided by GlaxoSmithKline, while experiments 6 and 7 utilized 
-PTP1B, MC1, and TYK2 physical systems which are a diverse set of proteins. 
+protocols, ESMACS and TIES. Experiments 1--5 use the BRD4 physical systems
+provided by GlaxoSmithKline, while experiments 6 and 7 utilize the PTP1B,
+MC1, and TYK2 physical systems which are a diverse set of proteins.
 Experiment 1 measures the weak scalability of HTBAC, EnTK and RP using
 multiple instances of the ESMACS protocols. Experiment 2 measures weak
 scaling performance of TIES. Experiments 3 repeats the same design as
-experiments 1 and 2 using both TIES and ESMACS, to demonstrate heterogeneous
+experiments 1 and 2 using both TIES and ESMACS to characterize heterogeneous
 protocol execution.
+
 % Experiment 2 measures weak scaling performance of ESMACS at higher scales,
 % using ORNL Titan.
 % \mtnote{Would it be better to describe weak scaling in terms of solution
@@ -231,11 +233,10 @@ protocol execution.
 % paragraph?}\jdnote{moved to previous para when first introducing weak
 % scaling}
 
-In each weak scaling experiment, the ratio between the number of protocol 
-instances and cores are kept constant. We increase the number of protocol 
-instances and the resources required by each protocol instance by the same 
-ratio. 
-
+In each weak scaling experiment, the ratio between the number of protocol
+instances and cores are kept constant. We increase the number of protocol
+instances and the resources required by each protocol instance by the same
+ratio.
 
 % of the protocols
 \mtnote{which protocols? So far we wrote about methods (but we did not
@@ -1073,13 +1074,15 @@ focusing on the separation between methodology and results.}.
 % ---------------------------------------------------------------------------
 \subsection{Adaptive Experiments}
 
-\mtnote{Should this be Results as a whole? Or are we missing the results for
-all the others?} \kfnote{I think results and experiments are one section.
-This subsubsection is for the adaptive quadrature. There is a separate one
-for adaptive termination.}\mtnote{I agree and both approaches would work for
-me. We may want to be consistent across all experiments though: either we use
-a single subsection illustrating the results of all the experiment or we
-discuss the result of each experiment as we introduce it.}
+\mtnote{Should this be Results as a whole? Or are we missing the results for all
+the others?} \kfnote{I think results and experiments are one section. This
+subsubsection is for the adaptive quadrature. There is a separate one for
+adaptive termination.}\mtnote{I agree and both approaches would work for me. We
+may want to be consistent across all experiments though: either we use a single
+subsection illustrating the results of all the experiment or we discuss the
+result of each experiment as we introduce it.} \kfnote{Okay. We are going
+with the second approach. Describe experiment then results in the same
+subsection.}
 
 The aim of introducing adaptive quadrature to alchemical free energy
 calculation protocols (e.g. TIES) is to reduce time to completion while
@@ -1095,18 +1098,23 @@ One of the input parameters of the adaptive quadrature algorithm is the
 desired acceptable error threshold of the estimated integral. We set this
 threshold to the error of the non-adaptive algorithm calculated via the
 reference value. The algorithm then tries to minimize the number of $\lambda$
-windows constrained by the accuracy requirement. 
+windows constrained by the accuracy requirement.
 
-Table~\ref{tab:adapquad} shows the results of running adaptive quadrature on
-5 protein ligand systems, comparing the \(TTX\) and accuracy versus the
+Table~\ref{tab:adapquad} shows the results of running adaptive quadrature on 5
+protein ligand systems, comparing the \(TTX\) and accuracy versus the
 non-adaptive case. The number of lambda windows are reduced on average by
-\SI{32}{\percent}, hence reducing \(TTX\) by the same amount. The error on
-the adaptive results is also decreased, on average by \SI{77}{\percent}. In
-the case of the TYK2 L7-L8 system, the non-adaptive error was very low, hence
-the algorithm implemented a larger number of windows in comparison to the
-non-adaptive in \mtnote{to? The sentence would benefit from an iteration}
-match that accuracy. In fact, by using 1 more window it was able to increase
-accuracy by \SI{40}{\percent}.
+\SI{32}{\percent}, hence reducing \(TTX\) by the same amount. The error on the
+adaptive results is also decreased, on average by \SI{77}{\percent}. More
+importantly, the error on all of the systems are reduced to below \num{0.2}
+kcal/mol, which has recently been shown \cite{} to be the upper bound of
+reproducibility across different MD engines. 
+
+The TTX of the TYK2 L7-L8 system has increased for the adaptive run by 1
+$\lambda$ window compared to the non-adaptive case. This is due to the
+non-adaptive error begin very low, and matching that same accuracy required the
+use of a large number of windows. Nonetheless due to the efficient placing of
+the windows, the accuracy of the free energy still increased by
+\SI{40}{\percent}.
 
 \begin{table*}
   \caption{Comparing results of adaptive, non-adaptive and reference runs}
@@ -1165,14 +1173,14 @@ accuracy by \SI{40}{\percent}.
   \end{tabular}
 \end{table*}
 
-Figure~\ref{tab:adapquad} \mtnote{missing figure? There is a table with the
-label `adapquad' but not a figure.} shows progression of the algorithm,
-starting from 3 initial lambda windows, and at each iteration bisecting the
-interval where the error is above the set threshold. For system X, we can see
-as how the parts of the function that change less have relatively fewer
-windows, while parts of greater change (usually, though not always around the
-$\lambda=0.5$ mark) have more $\lambda$ windows to represent the shape of the
-function more closely.
+Figure~\ref{fig:adapconv} \mtnote{missing figure? There is a table with the
+label `adapquad' but not a figure.} \kfnote{Fixed} shows progression of the
+algorithm, starting from 3 initial lambda windows, and at each iteration
+bisecting the interval where the error is above the set threshold. For system X,
+we can see as how the parts of the function that change less have relatively
+fewer windows, while parts of greater change (usually, though not always around
+the $\lambda=0.5$ mark) have more $\lambda$ windows to represent the shape of
+the function more closely.
 
 \kfnote{Move this to algorithm description} In previous studies \cite{} the
 error estimation during the adaptive algorithm is done by calculating the
@@ -1182,12 +1190,12 @@ error on that interval.
 
 \begin{figure}
   \input{figures/fig-adapt.tex}
-  \caption{This is a good plot!}
+  \caption{\sout{This is a good plot!} Please provide a meaningful caption}
   \label{fig:adapconv}
 \end{figure}
 
 \begin{figure*}
   \input{figures/fig-savings.tex}
-  \caption{This is also a good plot!}
+\caption{\sout{This is a good plot!} Please provide a meaningful caption}
   \label{fig:savings}
 \end{figure*}

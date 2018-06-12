@@ -258,19 +258,23 @@ RP but we then introduce only EnTK explaining how HTBAC uses it.}
 % ---------------------------------------------------------------------------
 \subsection{ESMACS and TIES}
 
+\jhanote{As written, this sub-section has nothing about HTBAC and would be better
+placed/merged in Science Driver.  What would be useful is psuedo-code or code listing to show how ESMACS and TIES are encoded in HTBAC}
+
 While ESMACS and TIES protocols compute binding affinity calculations for
-different systems and purposes, their implementation in HTBAC have a similar
-pattern that consists of simulations steps, followed by one or more analysis
-step(s). In this paper, we focus on the default sequence of simulation steps
-which consist of minimization, initial equilibration, secondary
-equilibration, and production MD simulation. Designers of free energy
-protocols are not bound by this sequence and can utilize the Protocol
-component to provide an alternative sequence. ESMACS contains 25 replicas per
-simulation step. TIES contains a $\lambda$ sampling parameter which generates
-5 replicas per $\lambda$ window. In this paper, we implement TIES with 13
-$\lambda$ windows to spawn a total of 65 replicas in each simulation step.
-Figure~\ref{fig:ties_esmacs_application} demonstrates the implementation of
-the ESMACS and TIES protocols.
+different systems and purposes, their implementation in HTBAC have the same
+underlying pattern, consisting of simulations steps, followed by one or more
+analysis step(s). In this paper, we focus on the default sequence of
+simulation steps which consist of minimization, initial equilibration,
+secondary equilibration, and production MD simulation. Designers of free
+energy protocols are not bound by this sequence and can utilize the Protocol
+component of HTBAC to enable arbitrary sequences. 
+
+Figure~\ref{fig:ties_esmacs_application} shows the implementation of the
+ESMACS and TIES protocols. ESMACS contains 25 replicas per simulation step
+while TIES contains a $\lambda$ sampling parameter which generates 5 replicas
+per $\lambda$ window. In this paper, we implement TIES with 13 $\lambda$
+windows to spawn a total of 65 replicas in each simulation step.
 
 \begin{figure}
   \centering
@@ -278,14 +282,8 @@ the ESMACS and TIES protocols.
   \captionsetup{singlelinecheck=off}
   \caption[]{TIES and ESMACS protocols consist of simulations steps followed
   by analysis step(s). All replicas within a simulation step are assigned the
-  following simulation timesteps, for 6 nanoseconds simulation duration.
-     \begin{itemize}[label={--}]
-      \item $S1$ : 1000
-      \item $S2$ : 30,000
-      \item $S3$ : 800,000
-      \item $S4$ : 2,000,000 
-    \end{itemize}
-  }
+  following simulation timesteps, for 6 nanoseconds simulation duration:
+  $S1=1000$; $S2=30,000$; $S3=800,000$; $S4=2,000,000$.}
 \label{fig:ties_esmacs_application}
 \end{figure}
 
@@ -306,85 +304,98 @@ replicas.
 % ---------------------------------------------------------------------------
 \subsection{Intra-protocol Adaptivity} 
 
+\jhanote{Also, as written, this has nothing to do HTBAC. These are details 
+about algorithms, none of which is specific to their implementation in HTBAC.
+I think we need a different section that discusses how HTBAC is used to
+support adaptivity in the context of TIES.}
+
 % Protocols that have the ability to The flexibility at the protocol
 % component enables the user to modify the simulation steps.
 
-Given a protocol type such as ESMACS or TIES the user can create an adaptive
-or nonadaptive workflow. The nonadaptive workflow specifies all its
-requirements prior to execution. The adaptive workflow provides partial
-requirements but learns the remaining requirements during execution.
+\mtnote{As agreed yesterday, I started to edit heavily the text.}
 
-Intra-protocol adaptivity is a type of adaptive workflow that relies on the
-intermediate results \textit{within} a protocol instance to define the next
-set of requirements. We demonstrate the implementation of an intra-protocol
-adaptive workflow using the TIES protocol. As indicated in
-section~\ref{sec:science-drivers}, the optimal positions of the $\lambda$ windows
-are not known \textit{a priori}. Therefore the number of simulations and
-their descriptions, which are dictated the $\lambda$ windows parameter,
-cannot be pre-specified in the workflow.
+Protocol like ESMACS or TIES can be implemented via a workflow with or
+without adaptivity. The nonadaptive implementation specifies all the
+requirements of the protocol prior to execution. The adaptive implementation
+provides instead partial requirements before execution but ``learns'' the
+remaining requirements during execution.
 
-Instead, we construct an adaptive workflow for TIES as an iterative pipeline
-in two stages: a simulation step and analysis which determines optimal
-placement of further simulations, as shown in Figure~\ref{fig:adaptive_ties}.
-We initialize the workflow with $y$ evenly spaced $\lambda$ windows, which
-generates $y \times n$ initial replicas. After the first pass of simulations,
-the analysis operates on the simulation results to determine the next
-placement of $\lambda$ windows and generates a new set of simulation
-configurations for the upcoming iterations. Each simulation step within an
-iteration executes for a single nanosecond simulation duration. The analysis
-consists of a single task that computes the adaptive quadratures calculations
-as defined in section~\ref{sec:science-drivers} which decides whether to
-spawn additional $\lambda$ windows \textit{in between} existing windows. This
+Intra-protocol adaptivity relies on the intermediate results \textit{within}
+a protocol instance to define the next set of requirements. In this paper, we
+use an intra-protocol adaptive implementation of TIES because, as indicated
+in section~\ref{sec:science-drivers}, the optimal positions of the $\lambda$
+windows are not known \textit{a priori}. Therefore, the number of simulations
+and their descriptions, which are dictated by the $\lambda$ windows
+parameter, cannot be specified before execution \mtnote{`cannot be specified'
+or `cannot be effectively specified'? If the former, then would that imply
+that a nonadaptive implementation is not possible?}.
+
+Figure~\ref{fig:adaptive_ties} shows our implementation of TIES as a workflow
+with an iterative pipeline of two stages: a simulation step followed by an
+analysis step which determines optimal placement \mtnote{is placement the
+correct term here? In the previous paragraph we wrote about number of
+simulations and their description, not about their placement} of further
+simulations. We initialize the workflow with $y$ evenly-spaced $\lambda$
+windows, which generates $y \times n$ initial replicas. After the first
+simulation step, the analysis step operates on the simulation results to
+determine the next placement of $\lambda$ windows and to generate a second
+simulation step with new configurations. 
+
+Each simulation step consists of multiple tasks that simulates 1 nanosecond
+of \ldots \mtnote{please add here what we are simulating}. The analysis
+consists of a single task that computes adaptive quadrature calculations (as
+defined in section~\ref{sec:science-drivers}) to determine whether to spawn
+additional $\lambda$ windows \textit{in between} existing windows. This
 enables continuous execution of existing simulations and beginning of new
-simulations. The workflow is executed iteratively until the total simulation
-duration, as defined by the user, determines termination.
+simulations \mtnote{I do not understand this sentence. Can we eliminate it?}.
+The workflow is executed iteratively until the total simulation duration
+defined by the user is reached, determining termination.
 
 \begin{figure}
   \centering
   \includegraphics[width=\columnwidth]{figures/adaptive_TIES_workflow_diagram.pdf}
-  \caption{Adaptive workflow of TIES consisting of multiple concurrent and
-  independent simulations. The analysis (adaptive quadratures) operates on a
-  snapshot of the current simulations for each $\lambda$ window, and decides
-  if the critical threshold is reached, else current simulations continue
-  executing and new simulations are spawned based on additional $\lambda$
-  values.}
+  \caption{Adaptive workflow of TIES with multiple concurrent and independent
+  simulations. The analysis (adaptive quadratures) operates on a snapshot of
+  the current simulations for each $\lambda$ window, and decides whether the
+  critical threshold is reached, else current simulations continue executing
+  and new simulations are spawned based on additional $\lambda$ values.}
 \label{fig:adaptive_ties}
 \end{figure}
 
 % ---------------------------------------------------------------------------
 \subsection{Execution Model}
 
-Once an adaptive or static workflow is described in HTBAC,
-\mtnote{the previous paragraph does not mention workflow(s) so this surprises
-and confuses the reader. Note that this is a byproduct of commenting out part
-of the text where a connection between protocol and workflow was explicitly
-established}
+Once an adaptive or nonadaptive workflow is described in HTBAC, the Runner
+component tags each protocol instance with a unique ID and converts protocols
+into EnTK pipelines or stages of tasks. Pipelines are submitted to EnTK's
+Application Manager component which sets up multiple processes, threads and a
+message queue for communication. EnTK identifies tasks which have satisfied
+dependencies and can be executed concurrently. EnTK's Execution Manager
+component uses its underlying runtime system (RP) to execute the tasks of the
+pipelines on specific target resources.
 
-\jdnote{provided earlier definition of workflows}, the Runner component tags
-each protocol instance with a unique ID and converts protocols into EnTK
-pipelines.
-% EnTK abstracts the complexity of execution and resource management. 
-Pipelines are submitted to EnTK's \textbf{Application Manager} which sets up
-multiple processes, threads and a message queue for communication. EnTK
-identifies tasks which have satisfied dependencies and can be executed
-concurrently. EnTK's \textbf{Execution Manager} uses its underlying runtime
-system RADICAL-Pilot (RP) to execute the tasks on specific target resources.
-EnTK converts the set of pipelines into a set of tasks---called compute unit
-descriptions---and submits them to RP \mtnote{Is RP defined?}\jdnote{It is
-now}.
+% \mtnote{the previous paragraph does not mention workflow(s) so this
+% surprises and confuses the reader. Note that this is a byproduct of
+% commenting out part of the text where a connection between protocol and
+% workflow was explicitly established}\jdnote{provided earlier definition of
+% workflows},
 
-The Runner component of HTBAC describes the computational requirements of the
-workflow including walltime, cores, queue, and user credentials
-\mtnote{of what?}\jdnote{addressed} for which EnTK creates a resource
-request. EnTK converts this resource request into a pilot that RP submits to
-an HPC machine. Once the pilot becomes active, it pulls compute unit
-descriptions in bulk from a database, executing them on the pilot
-resources~\cite{merzky2015radical}.
+The Runner component of HTBAC also describes the computational requirements
+of the workflow including walltime, cores, queue, and user credentials. EnTK
+uses these requirements to derive a resource request that is then converted
+into a pilot description for RP. RP converts this pilot requests into a batch
+script that is submitted to a suitable HPC machine. Once the pilot becomes
+active, it pulls the tasks made available by EnTK in bulk, executing them on
+the pilot resources~\cite{merzky2015radical}.
 
-Figure~\ref{} shows a visual block diagram representation
-\mtnote{`visual block diagram representation' seems unclear to me. Should we
-just have an architecture diagram here?} of HTBAC and the underlying building
-blocks.\jdnote{adding architecture diagram -- in draft currently}
+Figure~\ref{} shows a visual block diagram representation \mtnote{`visual
+block diagram representation' seems unclear to me. Should we just have an
+architecture diagram here?} of HTBAC and the underlying building
+blocks.\jdnote{adding architecture diagram -- in draft
+currently}\mtnote{Note: architecture diagrams are static. They can be
+`augmented' with numbers (and often arrows) to support the description of an
+execution model. Please review a couple of papers the group wrote with this
+type of diagram.}
 
 % ---------------------------------------------------------------------------
 \subsection{Adaptive Execution Model}
