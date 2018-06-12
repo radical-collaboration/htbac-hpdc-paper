@@ -462,10 +462,10 @@ from $S4$ which is divided into 4 sub-steps of 500000 time-steps.
 For weak and strong scaling experiments~\ref{tab:experiments} 
 \mtnote{reference table}
 \jdnote{addressed}, 
-we reduce the number of time-steps omit the analysis steps $S5$ and $S6$, as the
-focus of scalability is not based on duration but rather characterization of 
-performance. We assign the following time-steps: $S1$: 1000; $S2$: 5000; $S3$: 
-5000; $S4$: 50000. 
+we reduce the number of time-steps and omit the analysis steps $S5$ and $S6$, as 
+the focus of scalability is not based on simulation duration but rather 
+characterization of scalability performance. We assign the following reduced
+time-steps: $S1$: 1000; $S2$: 5000; $S3$: 5000; $S4$: 50000. 
 
 % The minimization tasks of $S1$ to 1000 simulation time steps, while
 % the equilibration tasks in $S2$ and $S3$ are \mtnote{Grammar: inconsistent
@@ -690,7 +690,7 @@ little without further explanation}
     protocol instances to resources is kept constant. Overheads of HTBAC
     (right), and runtime overhead (left) and \(TTX\) (left) for experimental
     configurations investigating the weak scaling of TIES. We ran 3 trials
-    for each protocol instance configuration.}
+    for each protocol instance configuration.} 
 \label{fig:weak_scaling_TIES}
 \end{figure}
 
@@ -1168,7 +1168,7 @@ accuracy by \SI{40}{\percent}.
   \end{tabular}
 \end{table*}
 
-Figure~\ref{fig:adapquad} \mtnote{missing figure? There is a table with the
+Figure~\ref{tab:adapquad} \mtnote{missing figure? There is a table with the
 label `adapquad' but not a figure.} shows progression of the algorithm,
 starting from 3 initial lambda windows, and at each iteration bisecting the
 interval where the error is above the set threshold. For system X, we can see
