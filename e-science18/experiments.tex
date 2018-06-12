@@ -1073,13 +1073,15 @@ focusing on the separation between methodology and results.}.
 % ---------------------------------------------------------------------------
 \subsection{Adaptive Experiments}
 
-\mtnote{Should this be Results as a whole? Or are we missing the results for
-all the others?} \kfnote{I think results and experiments are one section.
-This subsubsection is for the adaptive quadrature. There is a separate one
-for adaptive termination.}\mtnote{I agree and both approaches would work for
-me. We may want to be consistent across all experiments though: either we use
-a single subsection illustrating the results of all the experiment or we
-discuss the result of each experiment as we introduce it.}
+\mtnote{Should this be Results as a whole? Or are we missing the results for all
+the others?} \kfnote{I think results and experiments are one section. This
+subsubsection is for the adaptive quadrature. There is a separate one for
+adaptive termination.}\mtnote{I agree and both approaches would work for me. We
+may want to be consistent across all experiments though: either we use a single
+subsection illustrating the results of all the experiment or we discuss the
+result of each experiment as we introduce it.} \kfnote{Okay. We are going
+with the second approach. Describe experiment then results in the same
+subsection.}
 
 The aim of introducing adaptive quadrature to alchemical free energy
 calculation protocols (e.g. TIES) is to reduce time to completion while
@@ -1095,18 +1097,23 @@ One of the input parameters of the adaptive quadrature algorithm is the
 desired acceptable error threshold of the estimated integral. We set this
 threshold to the error of the non-adaptive algorithm calculated via the
 reference value. The algorithm then tries to minimize the number of $\lambda$
-windows constrained by the accuracy requirement. 
+windows constrained by the accuracy requirement.
 
-Table~\ref{tab:adapquad} shows the results of running adaptive quadrature on
-5 protein ligand systems, comparing the \(TTX\) and accuracy versus the
+Table~\ref{tab:adapquad} shows the results of running adaptive quadrature on 5
+protein ligand systems, comparing the \(TTX\) and accuracy versus the
 non-adaptive case. The number of lambda windows are reduced on average by
-\SI{32}{\percent}, hence reducing \(TTX\) by the same amount. The error on
-the adaptive results is also decreased, on average by \SI{77}{\percent}. In
-the case of the TYK2 L7-L8 system, the non-adaptive error was very low, hence
-the algorithm implemented a larger number of windows in comparison to the
-non-adaptive in \mtnote{to? The sentence would benefit from an iteration}
-match that accuracy. In fact, by using 1 more window it was able to increase
-accuracy by \SI{40}{\percent}.
+\SI{32}{\percent}, hence reducing \(TTX\) by the same amount. The error on the
+adaptive results is also decreased, on average by \SI{77}{\percent}. More
+importantly, the error on all of the systems are reduced to below \num{0.2}
+kcal/mol, which has recently been shown \cite{} to be the upper bound of
+reproducibility across different MD engines. 
+
+The TTX of the TYK2 L7-L8 system has increased for the adaptive run by 1
+$\lambda$ window compared to the non-adaptive case. This is due to the
+non-adaptive error begin very low, and matching that same accuracy required the
+use of a large number of windows. Nonetheless due to the efficient placing of
+the windows, the accuracy of the free energy still increased by
+\SI{40}{\percent}.
 
 \begin{table*}
   \caption{Comparing results of adaptive, non-adaptive and reference runs}
@@ -1165,14 +1172,14 @@ accuracy by \SI{40}{\percent}.
   \end{tabular}
 \end{table*}
 
-Figure~\ref{tab:adapquad} \mtnote{missing figure? There is a table with the
-label `adapquad' but not a figure.} shows progression of the algorithm,
-starting from 3 initial lambda windows, and at each iteration bisecting the
-interval where the error is above the set threshold. For system X, we can see
-as how the parts of the function that change less have relatively fewer
-windows, while parts of greater change (usually, though not always around the
-$\lambda=0.5$ mark) have more $\lambda$ windows to represent the shape of the
-function more closely.
+Figure~\ref{fig:adapconv} \mtnote{missing figure? There is a table with the
+label `adapquad' but not a figure.} \kfnote{Fixed} shows progression of the
+algorithm, starting from 3 initial lambda windows, and at each iteration
+bisecting the interval where the error is above the set threshold. For system X,
+we can see as how the parts of the function that change less have relatively
+fewer windows, while parts of greater change (usually, though not always around
+the $\lambda=0.5$ mark) have more $\lambda$ windows to represent the shape of
+the function more closely.
 
 \kfnote{Move this to algorithm description} In previous studies \cite{} the
 error estimation during the adaptive algorithm is done by calculating the
