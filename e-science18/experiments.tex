@@ -240,13 +240,14 @@ ratio.
 
 % of the protocols
 \mtnote{which protocols? So far we wrote about methods (but we did not
-specify what type of methods are we referring to)} 
-by increasing the number
-of protocol instances while keeping the required 
+specify what type of methods are we referring to)} \jdnote{Does the modified
+description of the protocol types in the earlier paragraph give enough
+insight?}
 \mtnote{required by
 what/whom? ``keeping the number of pipelines fixed at the number required by
-\ldots'' or something like that?} number of pipelines. 
-\jdnote{I've changed this introduction describing ws, does it make sense?}
+\ldots'' or something like that?}
+\jdnote{I've changed this description of ws, do this sentence and the next 
+suffice?}
 
 % By design of each
 % protocol, an increase in the number of instances means an increase in the
@@ -274,7 +275,7 @@ the use of `i.e.' as explained in my previous set of comments}
 \mtnote{Why do we need the `i.e.' at all? What does
 `workload' add? ``\ldots by fixing the number of pipelines of each protocol
 and reducing \ldots''} 
-\jdnote{also changed this introduction to ss.}
+\jdnote{also changed this description of ss.}
 
 % the number of cores by a factor of 2 in each run. 
 We measure how the time duration
@@ -308,7 +309,8 @@ paragraph: note how the previous paragraphs have a structure based on
 numbering experiments (and referring them to the table via references that
 are still missing), while this and the following paragraphs do not use the
 same structure. Please expand as needed and note that a section is not
-`ready' until this kind of uniformity is not achieved.}
+`ready' until this kind of uniformity is not achieved.}\jdnote{I've added 
+experimental design of adaptive/nonadaptive methods.}
 
 % Keep iterating on the next two paragraphs to get the right description from
 % Kristof
@@ -318,7 +320,7 @@ non-adaptive simulation method. By design of the nonadaptive TIES workflow in
 Figure~\ref{fig:ties_esmacs_application} 
 \mtnote{Reference table and exp 
 number}
-\jdnote{addressed}, 
+\jdnote{addressed in this and previous sentence}, 
 each $\lambda$ window creates a new
 simulation condition that must be replicated. TIES requires 5 replicas per
 $\lambda$, thereby producing $\lambda \times 5$ or simulations. For this 
@@ -352,7 +354,7 @@ initialize the protocol with 3 $\lambda$ windows, or 15 replicas. We run each
 simulation sub-step within an iteration for 1ns, for a total of 4 iterations to 
 complete 4ns simulation duration. Each simulation sub-step is followed by the 
 adaptive quadratures analysis
-\mtnote{different from what?}\jdnote{addressed}
+\mtnote{different from what?}\jdnote{changed}
 which estimates free energy errors with respect to each interval of
 two $\lambda$ values. We evaluate the total number of $\lambda$ windows as 
 determined by the adaptive quadrature results in order to measure the 
@@ -438,13 +440,14 @@ persistent virtual machine \mtnote{This sentence seems to suggest that we run
 our experiments on a virtual machine. I know what you mean but the average
 reader has no idea about the capabilities of our middleware and the policies
 of not executing persistent processes on the head node of Blue Waters.}
+\jdnote{Can we omit this sentence?} 
 % and the Titan ones from an ORNL login node.
 % as Blue Waters does not permit executing applications directly on the login
 % node. The ORNL Titan experiments had instead to be performed from an ORNL
 % login node.
-We used HTBAC 0.1, EnTK 0.6, and RP 0.47 for all the experiments and the same
+We use HTBAC 0.1, EnTK 0.6, and RP 0.47 for all the experiments and the same
 versions of the NAMD MD engine, compiled according to the capabilities of
-each environment and of NAMD itself. For all experiments we used
+each environment and of NAMD itself. For all experiments we use
 \texttt{NAMD-MPI}. Additionally, for the analysis stages in the TIES protocol
 we used \texttt{AmberTools}.
 
@@ -454,7 +457,7 @@ following simulation time-steps: $S1$: 3000; $S2$: 50000; $S3$: 50000; $S4$:
 from $S4$ which is divided into 4 sub-steps of 500000 time-steps. 
 \jdnote{should we mention relationship between ns and time-steps?}
 
-For weak and strong scaling experiments~\ref{tab:experiments} 
+For weak and strong scaling experiments in Table~\ref{tab:experiments} 
 \mtnote{reference table}
 \jdnote{addressed}, 
 we reduce the number of time-steps and omit the analysis steps $S5$ and $S6$, as 
@@ -478,8 +481,12 @@ time-steps: $S1$: 1000; $S2$: 5000; $S3$: 5000; $S4$: 50000.
 % with CUDA for the ESMACS experiments, and with OpenMP for the for TIES ones
 % as NAMD does not support alchemical perturbations execution on GPU.
 
-We perform \mtnote{Grammar: We used the preterite until now} all Blue Waters
+We perform \mtnote{Grammar: We used the preterite until now}\jdnote{tense change
+} all Blue Waters
 experiments using the \texttt{aprun} command to launch the MD simulations. 
+Blue Waters is a 26,868 node Cray XE6/XK6 SuperComputer with peak performance 
+of 13.3 petaFLOPS.  
+
 % application launch method, which is the
 % NCSA Blue Waters designated command for describing the application parameters
 % and resource requirements 
@@ -489,13 +496,27 @@ https://bluewaters.ncsa.illinois.edu/using-aprun . Alternative: `We perform
 (or performed depending on what tense you will decide to use) all Blue Waters
 experiments using the \texttt{aprun} command to launch the MD simulations'}.
 \jdnote{noted and addressed.}
-During our scalability experiments we found two main limitations of 
-\texttt{aprun}. First, the number of
-concurrent tasks execution is limited to \ldots. On average, during our 
-experiments we were not able to execute more than 436 concurrent tasks. 
+During our scalability experiments we found two main limitations. 
 \mtnote{this is too generic. Based
 on this paragraph, we found two main limitations. This is what we should
-therefore write.} \jdnote{addressed}
+therefore write.} 
+
+\jdnote{I've changed this again because the limitation on the
+max no. of concurrent CUs is a system setting (similar to what we experienced 
+first-hand on Titan), but it's not a technical limitation of APRUN.}
+
+
+First, we observe the number of concurrent tasks execution is limited to 
+approximately 450. NCSA sets a system policy on the maximum number 
+of processes that \texttt{aprun} can spawn. During the 
+execution of scalability experiment 2~\ref{tab:experiments}, we observed 
+failing tasks once we scale up to 8 TIES protocol instances, which is
+equivalent to 520 concurrent tasks. In a trial of 10 repetitions at this scale,
+calculated an average of 70 failing tasks, with a standard deviation of 6.67, 
+and range of 59 to 83 tasks. Given that we only ran a small number of trials, 
+more data is required to properly model the distribution type of these results. 
+
+
 
 
 
@@ -510,14 +531,24 @@ this average?}.
 failing units? I have 8 data points, but I can run more and include Mark's
 Cray paper?}\mtnote{Agreed. The comment was about saying that you observed
 this average while performing experiments. See how I rewrote the paragraph}.
-Second, \texttt{aprun} does not permit multiple \texttt{MPI} applications to
-land \mtnote{this is metaphorical. Please change using a factual predicate.}
-on the same node. As a consequence, we had to run each MD simulation with 32
+\jdnote{added the data for the failing units however including a distribution
+of this data is not meaningful as the sample size in the number of trials is 
+very small. By looking at some histograms where I vary the bin size, it could 
+be either Gaussian or multimodal distribution. Only more data will tell us for 
+sure what kind of distribution we have. Moreover, Mark's Cray paper shows 
+range of concurrent units using ORTE-LIB, so I will not reference this here.}
+
+Second, NCSA allows only one \texttt{MPI} application to run on a compute node. 
+\mtnote{this is metaphorical. Please change using a factual predicate.}
+\jdnote{changed the phrasing a bit}
+As a consequence, we had to run each MD simulation with 32
 cores (i.e., one full compute node) even if our performance measurement of
 NAMD on Blue Waters indicated that 16 cores would offer the best trade-off
 between computing time and communication overhead.\mtnote{Note: I had to
 rewrite the paragraph because the current version was too unrefined. Please
 see the note above about the need to progressively refine each paragraph.}
+\jdnote{thanks, should we include the scalability plot of a single NAMD 
+task using aprun?}
 
 % From our own scalability performance measurements of NAMD on Blue Waters,
 % we observe the ideal cores per task to be 16, however Blue Waters does not
