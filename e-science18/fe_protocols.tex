@@ -29,19 +29,39 @@ time to convergence, accuracy thresholds etc.
 
 Briefly introduced in the previous section, the two free energy calculation 
 protocols, ESMACS and TIES ~\cite{Wan2017brd4, Bhati2017}, are our 
-implementations of the absolute and relative methods. Here we provide more 
+implementations of the absolute and relative methods. 
+In both protocols, ensembles of MD simulations are employed to perform 
+averaging and to obtain tight control of error bounds in our estimates.
+Due to their shared philosophical underpinning both protocols share similar 
+middleware requirements.
+Here we provide more 
 details of their practical specifications and of the protein ligand systems we 
 used to benchmark and refine them in this work.
 
 % Some notes on ensembles and replicas. ----------------------------------------
 
-In both protocols, ensembles of MD simulations are employed to perform 
-averaging and to obtain tight control of error bounds in our estimates. In 
-addition, the ability to run replica simulations concurrently means that, as 
-long as sufficient compute resources are available, turnaround times can be  
-significantly reduced compared to the generation of single long trajectories. 
-Due to their shared philosophical underpinning both protocols share similar 
-middleware requirements.
+%In 
+%addition, the ability to run replica simulations concurrently means that, as 
+%long as sufficient compute resources are available, turnaround times can be  
+%significantly reduced compared to the generation of single long trajectories. 
+%Due to their shared philosophical underpinning both protocols share similar 
+%middleware requirements.
+Using these protocols, we have demonstrated the lack of reproducibility of
+binding affinities derived from individual simulations for a variety of protein 
+systems, with calculations for the same protein-ligand combination (using almost 
+identical initial conditions) producing results varying by up to 12 kcal
+mol $^{-1}$ for small molecules, whilst flexible ligands can vary even
+more ~\cite{Sadiq2010, Wright2014}. 
+Indeed, our work has revealed how completely unreliable single simulation based 
+approaches are. 
+We have shown that averaging across multiple runs reliably produces results in
+agreement with previously published experimental findings~\cite{Sadiq2010,
+Wan2011, Wright2014, Bhati2017, Wan2017brd4, Wan2017trk}, and correctly
+predicted the results of experimental studies performed by colleagues in
+collaboration~\cite{Bunney2015}. 
+%We term this approach ensemble molecular
+%dynamics, ``ensemble'' here referring to the set of individual (replica)
+%simulations conducted for the same physical system.
 
 % First a quick intro to NAMD, then generic simulation protocol description. ---
 
