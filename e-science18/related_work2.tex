@@ -1,3 +1,56 @@
+\begin{itemize}
+  \item Binding affinity calculations in general
+  \item Binding affinity using ensemble approach
+  \item How are people doing scalable binding affinity calculations currently
+  \item Overview of adaptive algorithms used for free energy calculations i.e. 
+  MSM, REST, EE 
+  \item How are adaptive algorithms managed
+  \item What are the existing tools: HPCs: MPI mainly, clouds and 
+  ensemble-based middleware 
+  \item Appreciate why ensemble-based methods are not done in clouds
+\end{itemize}
 
+Free-energy calculations using molecular dynamics simulations are now used in 
+a wide range of research spanning thermodynamics, protein folding, etc. 
+Free-energy calculation require 3 main components, a suitable model Hamiltonian,
+sampling protocol and estimator for free energy. Several approaches in 
+free-energy binding exist, amongst which relative binding affinity calculations 
+are generating accurate predictions delivering considerable promising for
+hit-to-lead optimization\jdnote{something like this to get the ball rolling}. 
 
+The improvements in hardware, namely GPGPUs, are leveraging more rapid 
+simulations, however to deliver clinical insight for drug screening campaigns 
+requires more rapid timescales and better binding precision...
+\jdnote{EnTK paper mentions D.E. Shaw paper on specialized hardware and 
+running single long simulation}
+
+Ensemble-based simulations, which utilize shorter can deliver at the timescales
+and precision necessary to meet the requirements of drug campaings...
+
+In bio-simulations, several classes of ensemble-based algorithms exist to 
+compute binding free energy. Each exist to tackle different problem spaces. 
+For example, an increasingly popular approach is to
+used Markov state models (MSM)to learn a simplified representation of the
+phase space explored by simulations and use this to inform which regions are
+further sampled in future simulations.
+
+Other adaptive methods such as replica exchange and well-known variations of
+replica exchange i.e. replica exchange with solute tempering (REST) use the
+Metropolis-Hastings criteria to make periodic decisions that impact which
+regions of the phase space are being sampled\jdnote{@dww which citation goes
+well with this? the wang2015 paper?}.
+
+Individual simulations that learn by exchanging information have shown better 
+sampling results. Adding additional simulations in regions where the curve is 
+changing most rapidly reduces errors on the predicated binding affinity. 
+
+Executing simulations directly on HPCs using ensemble-based methods presents 
+several challenges. Most users rely on using MD kernels directly with 
+execution models such as MPI to run simulations. 
+
+Why is running adaptive ensemble-based simulations on clouds a big faux-pas?
+
+Some existing workflow tools enable scalable execution of ensemble-based 
+approaches on HPCs, yet only offer end-to-end solutions...\jdnote{BAC is one 
+that is domain specific, we have others}
 
