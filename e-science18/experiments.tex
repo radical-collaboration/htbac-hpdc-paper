@@ -1,47 +1,3 @@
-% - Weak Scalability Design : Keep Pipeline of Ensembles to show barrier
-%   needed in S5 and S6.
-% - Performance, generality with weak scaling (agnostic to kernel) Added
-%   functionality (do not speak about binding adaptivity to performance or
-%   generality).
-% - In use case: add in why TIES is challenging, and why adaptivity is
-%   challenging.
-
-\mtnote{General note. \\
-        - Currently, this section is a merge of two distinct contributions.
-          These need to be better merged. For example, we should consider
-          whether (i) the description of the adaptive experiments should be
-          moved to the first subsection ``Experimental Setup''; (ii) Table 1
-          should be extended to include the adaptive/nonadaptive properties;
-          (iii) the discussion of the results should have a uniform
-          argumentative format; etc.\\
-        - The structure of the section should be revise making the division
-          in subsections consistent and changing/refining their naming.\\
-        - A.0,1,2 require major rewriting of the text and the writing of
-          relevant portions of new text. This includes: (i) eliminating
-          redundant (copied) text; (ii) Eliminating or referencing text
-          copied from other publications; (iii) reorganize the argumentation
-          following the other general note left in the comments and better
-          separating the experimental variables (especially including
-          adaptive/nonadaptive) properties; (iv) adding plots (even if with
-          incomplete results) and writing an actual analysis of the results
-          for each plot.}
-
-
-\jdnote{Revisions: \\ 
-        - Rewrote experimental setup by starting with motivation and
-          explaining overview of experiments
-        - Appended all experiments to table
-        - Created subsections for weak scaling, strong scaling, validation,
-          adaptive experiments
-        - Added plots (some are incomplete) and rearranged analysis
-        - Kristof added his data for adaptive experiments and
-          wrote results 
-        - Strong scaling subsection still waiting on data from ESMACS
-        - For now, removed anything related to Titan}
-
-% ---------------------------------------------------------------------------
-\subsection{Experiment Setup}\label{ssec:exp_design}
-
 Computational campaigns for drug discovery require sizable compute resources
 both in terms of scale and allocation. Typically, a computational campaign
 explores a large number of drug candidates by running several workflows
@@ -50,7 +6,68 @@ embarking on a drug campaign that will utilize 150 million core hours on NCSA
 Blue Waters, we perform experiments to characterize the weak and strong
 scaling performance of HTBAC and its overheads on Blue Waters. We validate
 the results of the free energy calculations produced using HTBAC by comparing
-them to the results that are already available in the chemistry literature.
+them to results that are already available in the chemistry literature.
+
+Given that protocols like TIES are more computationally demanding than
+protocols like ESMACS, it is paramount to use resource efficiently,
+especially for campaigns that have a predefined computational budget. As
+described in Sections~\ref{sec:science-drivers} and~\ref{sec:htbac}, adaptive
+simulation methods have the potential for higher computational efficiency
+when compared to non-adaptive simulation methods. Specifically, adaptive
+simulation methods can reduce the number of simulations for each lead
+candidate without a loss in free energy accuracy and with a lower
+computational load. Further, given a defined number of resources, adaptive
+methods can also increase computational efficiency by improving the rate of
+statistical convergence and thereby reducing the time to solution.
+
+Specifying, coordinating and executing adaptive simulation methods requires
+middleware supporting runtime decisions. As seen in Section~\ref{sec:htbac},
+HTBAC has been designed to enable decisions based on intermediate runtime
+results. These results are evaluated to determine a redistribution of
+resource to better support the execution of new simulations. We use HTBAC to
+perform experiments about adaptivity, comparing and characterizing resource
+efficiency with non-adaptive simulation methods.
+
+% - Weak Scalability Design : Keep Pipeline of Ensembles to show barrier
+%   needed in S5 and S6.
+% - Performance, generality with weak scaling (agnostic to kernel) Added
+%   functionality (do not speak about binding adaptivity to performance or
+%   generality).
+% - In use case: add in why TIES is challenging, and why adaptivity is
+%   challenging.
+
+% \mtnote{General note. \\
+%         - Currently, this section is a merge of two distinct contributions.
+%           These need to be better merged. For example, we should consider
+%           whether (i) the description of the adaptive experiments should be
+%           moved to the first subsection ``Experimental Setup''; (ii) Table 1
+%           should be extended to include the adaptive/nonadaptive properties;
+%           (iii) the discussion of the results should have a uniform
+%           argumentative format; etc.\\
+%         - The structure of the section should be revise making the division
+%           in subsections consistent and changing/refining their naming.\\
+%         - A.0,1,2 require major rewriting of the text and the writing of
+%           relevant portions of new text. This includes: (i) eliminating
+%           redundant (copied) text; (ii) Eliminating or referencing text
+%           copied from other publications; (iii) reorganize the argumentation
+%           following the other general note left in the comments and better
+%           separating the experimental variables (especially including
+%           adaptive/nonadaptive) properties; (iv) adding plots (even if with
+%           incomplete results) and writing an actual analysis of the results
+%           for each plot.}
+
+
+% \jdnote{Revisions: \\ 
+%         - Rewrote experimental setup by starting with motivation and
+%           explaining overview of experiments
+%         - Appended all experiments to table
+%         - Created subsections for weak scaling, strong scaling, validation,
+%           adaptive experiments
+%         - Added plots (some are incomplete) and rearranged analysis
+%         - Kristof added his data for adaptive experiments and
+%           wrote results 
+%         - Strong scaling subsection still waiting on data from ESMACS
+%         - For now, removed anything related to Titan}
 
 % \jdnote{should we mention anything about exascale?}\mtnote{I would not but
 % I would quantify the scale at which we need to run. As it stands, this
@@ -64,28 +81,8 @@ them to the results that are already available in the chemistry literature.
 % \jdnote{I meant to say we validate our free energy calculation results from
 % this paper with known results . Does it make more sense now?}
 
-Given that protocols like TIES are more computationally demanding than
-protocols like ESMACS, it is paramount to use resource efficiently,
-especially for campaigns that have a predefined computational budget. As
-described in Sections~\ref{sec:science-drivers} and~\ref{sec:htbac} adaptive
-simulation methods have the potential for higher computational efficiency
-when compared to non-adaptive simulation methods. Specifically, adaptive
-simulation methods can reduce the number of simulations for each lead
-candidate without a loss in free energy accuracy and with a lower
-computational load. Further, given a defined number of resources, adaptive
-methods can also increase computational efficiency by improving the rate of
-statistical convergence and thereby reducing the time to solution.
-
 % \mtnote{Grammar: more than?}\jdnote{more than ESMACS}
-% \mtnote{Methods for? Maybe `simulation methods'?} 
-
-Specifying, coordinating and executing adaptive simulation methods requires
-middleware supporting runtime decisions. As seen in Section~\ref{sec:htbac},
-HTBAC has been designed to enable decisions based on intermediate runtime
-results. These results are evaluated to determine a redistribution of
-resource to better support the execution of new simulations. We use HTBAC to
-perform experiments about adaptivity, comparing and characterizing resource
-efficiency with non-adaptive simulation methods.
+% \mtnote{Methods for? Maybe `simulation methods'?}
 
 % \mtnote{simulation?}
 % \mtnote{simulation?} 
@@ -97,6 +94,16 @@ efficiency with non-adaptive simulation methods.
 % previous version was compressed and ``left too much in the authors'
 % pens''.}
 
+% ---------------------------------------------------------------------------
+\subsection{Experiment Setup}\label{ssec:exp_design}
+
+Table~\ref{tab:experiments} shows 7 experiments we designed to characterize
+the behavior of HTBAC on Blue Waters. Each experiment executes the ESMACS
+and/or TIES protocol for different physical systems. Experiments 1--5 use the
+BRD4 physical systems provided by GlaxoSmithKline, while experiments 6 and 7
+utilize the PTP1B, MC1, and TYK2 physical systems which are a diverse set of
+proteins.
+
 \begin{table*}
     \caption{Parameters of scalability and adaptivity experiments.}
     \label{tab:experiments}
@@ -105,7 +112,7 @@ efficiency with non-adaptive simulation methods.
     \begin{tabular}{l            % Experiment ID
                     l            % experiment type
                     l            % physical system 
-                    l            % CI
+    %                l            % CI
                     l            % protocol type
                     l            % number of protocols
                     l            % total cores
@@ -114,95 +121,70 @@ efficiency with non-adaptive simulation methods.
     \toprule
     %
     \B{ID}                            &  % Experiment ID
-    \B{Type of Experiment} &            % Adaptive or Scale
-    \B{Physical System(s)} &            % Adaptive or Scale
-    \B{Computing Infrastructure (CI)} &  % CI
+    \B{Type of Experiment}            &  % experiment type
+    \B{Physical System(s)}            &  % physical system
+    % \B{Computing Infrastructure (CI)} &  % CI
     \B{Protocol(s)}                   &  % protocol type
-    \B{No. Protocol(s)}                    &  % number of protocols
-    \B{Total Cores}                     \\ % total cores
-    % \B{Executable}                          \\ % executable
+    \B{No. Protocol(s)}               &  % number of protocols
+    \B{Total Cores}                   \\ % total cores
     %
     \midrule
     %
     \B{1}                             &  % Experiment ID
-    Weak scaling                      &
-    BRD4                              &
-    Blue Waters                       &  % CI
+    Weak scaling                      &  % experiment type
+    BRD4                              &  % physical system
+    % Blue Waters                       &  % CI
     ESMACS                            &  % protocol type
     (2, 4, 8, 16)                     &  % number of protocols
-    1600, 3200, 6400                  \\  % total cores
-    % NAMD-MPI                               \\ % executable
-    %
-    % \B{2}                             &  % Experiment ID
-    % Weak scaling                      &
-    % BRD4                              &
-    % Titan                          &  % CI
-    % ESMACS                          &  % protocol type
-    % (16, 64, 128)                    &  % number of protocols
-    % 6400, 25600, 51200              &  % total cores
-    % NAMD (non-MPI)                 \\ % executable
+    1600, 3200, 6400                  \\ % total cores
     % 
     \B{2}                             &  % Experiment ID
-    Weak scaling                      &
-    BRD4                              &
-    Blue Waters                       &  % CI
+    Weak scaling                      &  % experiment type
+    BRD4                              &  % physical system
+    % Blue Waters                       &  % CI
     TIES                              &  % protocol type
     (2, 4, 8)                         &  % number of protocols
-    4160, 8320, 16640                 \\  % total cores
-    % NAMD-MPI                              \\ % executable
-    % %
-    % \B{4}                             &  % Experiment ID
-    % Weak scaling                      &
-    % BRD4                              &
-    % Titan                          &  % CI
-    % TIES                          &  % protocol type
-    % (8, 32, 64)                    &  % number of protocols
-    % 16640, 66560, 133120              &  % total cores
-    % NAMD (non-MPI)                 \\ % executable
+    4160, 8320, 16640                 \\ % total cores
     %
     \B{3}                             &  % Experiment ID
-    Weak scaling                      &
-    BRD4                              &
-    Blue Waters                       &  % CI
+    Weak scaling                      &  % experiment type
+    BRD4                              &  % physical system
+    % Blue Waters                       &  % CI
     ESMACS + TIES                     &  % protocol type
-    (2, 4, 8)                    &  % number of protocols
-    5280, 10560, 21120               \\ % total cores
-    % NAMD-MPI                              \\ % executable
+    (2, 4, 8)                         &  % number of protocols
+    5280, 10560, 21120                \\ % total cores
     %
     \B{4}                             &  % Experiment ID
-    Strong scaling                      &
-    BRD4                              &
-    Blue Waters                          &  % CI
-    TIES                          &  % protocol type
-    (8, 8, 8)                    &  % number of protocols
-    16640, 8320, 4160               \\ % total cores
-    % NAMD-MPI                              \\ % executable
+    Strong scaling                    &  % experiment type
+    BRD4                              &  % physical system
+    % Blue Waters                       &  % CI
+    TIES                              &  % protocol type
+    (8, 8, 8)                         &  % number of protocols
+    16640, 8320, 4160                 \\ % total cores
     %
     \B{5}                             &  % Experiment ID
-    Strong scaling                          &  % CI
-    BRD4                      &
-    Blue Waters                              &
-    ESMACS                          &  % protocol type
-    (16, 16, 16)                    &  % number of protocols
-    6400, 3200, 1600                \\ % total cores
-    % NAMD-MPI                              \\ % executable
+    Strong scaling                    &  % experiment type
+    BRD4                              &  % physical system
+    % Blue Waters                       &. % CI
+    ESMACS                            &  % protocol type
+    (16, 16, 16)                      &  % number of protocols
+    6400, 3200, 1600                  \\ % total cores
     %
     \B{6}                             &  % Experiment ID
-    Non-adaptivity                       &  
-    PTP1B, MC1, TYK2                     &  
-    Blue Waters                          &  % CI                            
-    TIES                          &  % protocol type
-    (1, 1, 1)                           &  % number of protocols
-    2080, 2080, 2080                       \\ % total cores
+    Non-adaptivity                    &  % experiment type
+    PTP1B, MC1, TYK2                  &  % physical system
+    % Blue Waters                       &  % CI
+    TIES                              &  % protocol type
+    (1, 1, 1)                         &  % number of protocols
+    2080, 2080, 2080                  \\ % total cores
     %
     \B{7}                             &  % Experiment ID
-    Adaptivity                       &  
-    PTP1B, MC1, TYK2                  &  
-    Blue Waters                          &  % CI                            
-    TIES                          &  % protocol type
-    (1, 1, 1)                           &  % number of protocols
-    2080, 2080, 2080                           \\ % total cores
-    % NAMD-MPI                              \\ % executable
+    Adaptivity                        &  % experiment type
+    PTP1B, MC1, TYK2                  &  % physical system
+    % Blue Waters                       &  % CI
+    TIES                              &  % protocol type
+    (1, 1, 1)                         &  % number of protocols
+    2080, 2080, 2080                  \\ % total cores
     %
     \bottomrule
     %
@@ -211,167 +193,59 @@ efficiency with non-adaptive simulation methods.
 \up{}
 \end{table*}
 
-% \mtnote{The following paragraphs are disconnected from the previous ones.
-% We need a `joining' paragraph starting from something like: ``We designed n
-% experiments\ldots We used m protocols\ldots See Table o\ldots''. Moved a
-% paragraph here as a starting point.}\jdnote{provided ``segway"}
+Experiment 1 and 2 measure the weak scalability of HTBAC using multiple
+instances of the ESMACS (experiment 1) and TIES (experiment 2) protocol.
+Experiments 3 uses both the TIES and ESMACS protocols, characterizing the
+weak scaling of heterogeneous protocol executions. Experiments 4 and 5
+measure the strong scalability of HTBAC using a fix number of instances of
+the ESMACS (experiment 4) or TIES (experiment 5) protocol. Experiments 6 and
+7 characterize nonadaptive and adaptive simulation methods using the TIES
+protocol.
 
-We designed 7 experiments as shown in Table~\ref{tab:experiments}. We used 2
-protocols, ESMACS and TIES. Experiments 1--5 use the BRD4 physical systems
-provided by GlaxoSmithKline, while experiments 6 and 7 utilize the PTP1B,
-MC1, and TYK2 physical systems which are a diverse set of proteins.
-Experiment 1 measures the weak scalability of HTBAC, EnTK and RP using
-multiple instances of the ESMACS protocols. Experiment 2 measures weak
-scaling performance of TIES. Experiments 3 repeats the same design as
-experiments 1 and 2 using both TIES and ESMACS to characterize heterogeneous
-protocol execution.
+In each weak scaling experiment (1--3), we keep the ratio between resources
+allocated and protocol instances constant. Consistently, for each experiment
+we progressively increase both the number of cores (i.e., measure of
+resource) and the number of protocol instances by a factor of 2. In each
+strong scaling experiment (4--5), we change the ration between resources
+allocated and the number of protocol instances. For each experiment, we fix
+the number of protocol instances and reduce the number of cores by a factor
+of 2.
 
-% Experiment 2 measures weak scaling performance of ESMACS at higher scales,
-% using ORNL Titan.
-% \mtnote{Would it be better to describe weak scaling in terms of solution
-% time, number of resources and problem size, as done in the following
-% paragraph?}\jdnote{moved to previous para when first introducing weak
-% scaling}
+Weak scaling experiments provide insight into the size of the workload that
+can be executed in a given amount of time, while strong scaling experiments
+show how the time duration of the workload scales when adding resources. For
+all the weak and strong scaling experiments we also characterize the
+overheads of HTBAC, EnTK and RP. This offers insight about the impact of
+HTBAC and its middleware on the time to completion of each workload.
 
-In each weak scaling experiment, the ratio between the number of protocol
-instances and cores are kept constant. We increase the number of protocol
-instances and the resources required by each protocol instance by the same
-ratio.
+For weak and strong scaling experiments, we reduced the number of time-steps
+of the protocols and omitted the analysis steps $S5$ and $S6$ of their
+workflows (Figure~\ref{fig:ties_esmacs_application}). These simplifications
+are consistent with characterizing scalability performance instead of
+simulation duration. For the experiments 1--5 we used the following
+time-steps: $S1=1000$; $S2=5000$; $S3=5000$; and $S4=50000$.
 
-% of the protocols
-\mtnote{which protocols? So far we wrote about methods (but we did not
-specify what type of methods are we referring to)} \jdnote{Does the modified
-description of the protocol types in the earlier paragraph give enough
-insight?}
-\mtnote{required by
-what/whom? ``keeping the number of pipelines fixed at the number required by
-\ldots'' or something like that?}
-\jdnote{I've changed this description of ws, do this sentence and the next 
-suffice?}
+Experiments 6 and 7 compare the the accuracy and time to solution of
+nonadaptive and adaptive simulation methods. For the nonadaptive simulation
+method of Experiment 6 we use 13 preassigned and approximated $\lambda$
+windows, consistent with the value reported in Ref.~\cite{Bhati2017}. In this
+way, we produce 65 concurrent simulations for stages $S1$--$S4$ of the TIES
+workflow (Figure~\ref{fig:ties_esmacs_application}). The production
+simulation stage $S4$ executes each simulation for 4ns, while stage $S5$
+consists of 5 analysis tasks which aggregate the simulation results of $S4$.
+The global analysis stage $S6$ contains a single task that aggregates the
+results from $S5$.
 
-% By design of each
-% protocol, an increase in the number of instances means an increase in the
-% number of pipelines. 
-
-% Further,
-% \jdnote{mention the relationship between protocols and pipelines in section
-% IV.} 
-
-As the number of cores (measure of 
-resource) changes by a factor of 2, we introduce twice as many protocol 
-instances. In this way, weak scaling provides insight into the size of the 
-workload that can be investigated in a given amount of time.
-% \mtnote{property of? I would replace with: ``weak scaling provides
-% insight\ldots''} provides insight
-
-Next, we measure strong scaling performance of the ESMACS and TIES protocols in 
-experiments 4 and 5, respectively, by fixing the number of protocol instances, 
-but reducing the cores by a factor of 2 in each run. 
-
-\mtnote{which
-ones?} by fixing the workload i.e. \mtnote{Grammar: please be careful about
-the use of `i.e.' as explained in my previous set of comments} 
-% the number of pipelines but reducing 
-\mtnote{Why do we need the `i.e.' at all? What does
-`workload' add? ``\ldots by fixing the number of pipelines of each protocol
-and reducing \ldots''} 
-\jdnote{also changed this description of ss.}
-
-% the number of cores by a factor of 2 in each run. 
-We measure how the time duration
-\mtnote{what does `timing' mean in this context?
-Duration? } of the workload 
-\jdnote{will be defined in section IV}\mtnote{we
-will define `what'?}\jdnote{ignore earlier comment, the correct phrasing is time
-duration of the workload, but I am not sure if this causes confusion}\jdnote{
-also workload will be defined in Section IV}
-scales when adding resources, 
-
-% \jdnote{expecting linear
-% speedup, and expect fixed overheads}\mtnote{is this comment about text that
-% still needs to be written? If so, I would not mention expectations of results
-% in the design section.}
-
-as well as the overheads of \mtnote{of?}\jdnote{addressed} HTBAC, EnTK
-and RP. 
-
-% Experiments 4 measures the strong scaling performance of ESMACS while
-% experiment 5 repeats the same strong scaling experiment using the TIES
-% protocol.
-
-Lastly, we perform experiments of nonadaptive and adaptive simulation methods 
-using the TIES protocol. We run both methods with the same cores and simulation
-durations for 3 different physical and compare the differences in accuracy and 
-time to solution. 
-
-\mtnote{This is a placeholder for an actual
-paragraph: note how the previous paragraphs have a structure based on
-numbering experiments (and referring them to the table via references that
-are still missing), while this and the following paragraphs do not use the
-same structure. Please expand as needed and note that a section is not
-`ready' until this kind of uniformity is not achieved.}\jdnote{I've added 
-experimental design of adaptive/nonadaptive methods.}
-
-% Keep iterating on the next two paragraphs to get the right description from
-% Kristof
-% -------------------------------------------------------------------------- %
-Experiment 6 in Table~\ref{tab:experiments} indicates the parameters for the 
-non-adaptive simulation method. By design of the nonadaptive TIES workflow in 
-Figure~\ref{fig:ties_esmacs_application} 
-\mtnote{Reference table and exp 
-number}
-\jdnote{addressed in this and previous sentence}, 
-each $\lambda$ window creates a new
-simulation condition that must be replicated. TIES requires 5 replicas per
-$\lambda$, thereby producing $\lambda \times 5$ or simulations. For this 
-experiment we use 13 preassigned and approximated $\lambda$ windows which was 
-chosen based on the reported value in Ref.~\cite{Bhati2017}, to produce 
-65 concurrent simulations for stages $S1$--$S4$.\mtnote{Reference table with S*}
-\jdnote{the ref to Figure~\ref{fig:ties_esmacs_application} already points to 
-the description of S*, no?} 
-\mtnote{Grammar: no
-spaces before and after dashes}
-\jdnote{noted}
-The production simulation stage 
-$S4$ executes each simulation for 4ns. The analysis stage $S5$ assigns 5 analysis
-tasks which aggregate simulation results of $S4$ with respect to each
-replica. The global analysis stage $S6$ contains a single task that
-aggregates the results from $S5$.\jdnote{reworded this paragraph}
-
-
-% \mtnote{Grammar: it is not clear
-% to what this `this' refers to} produces a total of 65 concurrent simulations
-% for stages $S1$--$S4$ \mtnote{Reference table with S*} \mtnote{Grammar: no
-% spaces before and after dashes}\jdnote{noted}. The production simulation stage 
-% $S4$ executes each simulation for 4ns. The analysis stage $S5$ assigns 5 analysis
-% tasks which aggregate simulation results of $S4$ with respect to each
-% replica. The global analysis stage $S6$ contains a single task that
-% aggregates the results from $S5$.
-
-In the adaptive workflow~\ref{fig:adaptive_ties}, we run shorter 1ns MD
-production simulations by separating step $S4$ into multiple sub-steps. We 
-initialize the protocol with 3 $\lambda$ windows, or 15 replicas. We run each 
-simulation sub-step within an iteration for 1ns, for a total of 4 iterations to 
-complete 4ns simulation duration. Each simulation sub-step is followed by the 
-adaptive quadratures analysis
-\mtnote{different from what?}\jdnote{changed}
-which estimates free energy errors with respect to each interval of
-two $\lambda$ values. We evaluate the total number of $\lambda$ windows as 
-determined by the adaptive quadrature results in order to measure the 
-differences in time duration between adaptive and non-adaptive methods as well
-as the differences in accuracy. 
-
-
-% The estimation of the error determines whether
-% \mtnote{Grammar: as already commented in the previous draft, `whether'
-% implies already `or not'.\jdnote{noted} Adding it is redundant.}\jdnote{noted} 
-% to spawn additional $\lambda$ windows. If the error estimate in a certain 
-% interval is higher than the acceptable threshold, a new $\lambda$ window is 
-% assigned halfway between the interval. If the critical threshold is reached, we 
-% have reached convergence and the application stops; else, current simulations 
-% continue executing and new simulations begin executing based on newly generated
-% $\lambda$ windows. 
-
+In the adaptive workflow~\ref{fig:adaptive_ties}, we initialize the TIES
+protocol with 3 $\lambda$ windows, obtaining 15 replicas. We separate stage
+$S4$ of each TIES replica into 4 sub-stages. Each sub-stage runs a 1ns
+simulation, followed by an adaptive quadratures analysis which estimates free
+energy errors with respect to each interval of two $\lambda$ values. We
+evaluate the total number of $\lambda$ windows as determined by the adaptive
+quadrature results in order to measure the differences in time duration
+between adaptive and non-adaptive methods as well as the differences in
+accuracy.\mtnote{I had to simply this paragraph a lot. Please check whether I
+omitted some essential detail or got the algorithm wrong.}
 
 \begin{figure}
   \centering
@@ -385,14 +259,155 @@ as the differences in accuracy.
 \label{fig:adaptive_TIES}
 \end{figure}
 
+For Experiment 6, we assigned the following simulation time-steps: $S1=3000$;
+$S2=50000$; $S3=50000$; and $S4=2000000$. The adaptive simulation method of
+Experiment 7 uses the same simulation time-steps, apart from $S4$ which is
+divided into 4 sub-stages of 500000 time-steps each. \jdnote{should we
+mention relationship between ns and time-steps?}
+
+We performed all the experiments on Blue Waters, a 26868 node Cray XE6/XK6
+SuperComputer with peak performance of 13.3 petaFLOPS managed by NCSA. We
+initiated the experiments from a virtual machine outside NCSA. In this way,
+we did not run any persistent process on the NCSA login node, consistent with
+NCSA usage policies. We used HTBAC 0.1, EnTK 0.6, and RP 0.47 and the same
+versions of the NAMD-MPI MD engine, compiled according to the capabilities of
+each environment and of NAMD itself, and launched via the \texttt{aprun}
+command. For the analysis stages in the TIES protocol we used AmberTools.
+
+NCSA sets a system policy on the maximum number of processes that
+\texttt{aprun} can spawn, limiting the number of concurrent tasks we can
+execute on Blue Waters to approximately 450. During the execution of
+Experiment 2, we observed failing tasks once we scale up to 8 TIES protocol
+instances, which is equivalent to 520 concurrent tasks. In a trial of 10
+repetitions at this scale, we observed an average of 70 failing tasks, with a
+standard deviation of 6.67, and range of 59 to 83 tasks. Given that we only
+ran a small number of trials, more data would be required to properly model
+the distribution type of these results.
+
+NCSA allows to run only one MPI application for each compute node. As a
+consequence, we had to run each MD simulation with 32 cores (i.e., one full
+compute node) even if our performance measurement of NAMD on Blue Waters
+indicated that 16 cores would offer the best trade-off between computing time
+and communication overhead. \jdnote{Should we include the scalability plot of
+a single NAMD task using aprun?}
+
+% \mtnote{The following paragraphs are disconnected from the previous ones.
+% We need a `joining' paragraph starting from something like: ``We designed n
+% experiments\ldots We used m protocols\ldots See Table o\ldots''. Moved a
+% paragraph here as a starting point.}\jdnote{provided ``segway"}
+
+% Experiment 2 measures weak scaling performance of ESMACS at higher scales,
+% using ORNL Titan.
+% \mtnote{Would it be better to describe weak scaling in terms of solution
+% time, number of resources and problem size, as done in the following
+% paragraph?}\jdnote{moved to previous para when first introducing weak
+% scaling}
+
+% of the protocols \mtnote{which protocols? So far we wrote about methods
+% (but we did not specify what type of methods are we referring to)}
+% \jdnote{Does the modified description of the protocol types in the earlier
+% paragraph give enough insight?} \mtnote{required by what/whom? ``keeping
+% the number of pipelines fixed at the number required by \ldots'' or
+% something like that?} \jdnote{I've changed this description of ws, do this
+% sentence and the next suffice?}
+
+% By design of each protocol, an increase in the number of instances means an
+% increase in the number of pipelines. Further, \jdnote{mention the
+% relationship between protocols and pipelines in section IV.}
+
+% \mtnote{property of? I would replace with: ``weak scaling provides
+% insight\ldots''} provides insight
+
+% Next, we measure strong scaling performance of the ESMACS and TIES
+% protocols in experiments 4 and 5, respectively, by fixing the number of
+% protocol instances, but reducing the cores by a factor of 2 in each run.
+
+% \mtnote{which ones?} by fixing the workload i.e. \mtnote{Grammar: please be
+% careful about the use of `i.e.' as explained in my previous set of
+% comments}
+% \mtnote{Why do we need the `i.e.' at all? What does `workload' add?
+% ``\ldots by fixing the number of pipelines of each protocol and reducing
+% \ldots''}
+% \jdnote{also changed this description of ss.}
+
+% the number of cores by a factor of 2 in each run.
+
+% \mtnote{what does `timing' mean in this context? Duration? }
+% \jdnote{will be defined in section IV}\mtnote{we will define
+% `what'?}\jdnote{ignore earlier comment, the correct phrasing is time
+% duration of the workload, but I am not sure if this causes
+% confusion}\jdnote{ also workload will be defined in Section IV}
+
+% \jdnote{expecting linear speedup, and expect fixed overheads}\mtnote{is
+% this comment about text that still needs to be written? If so, I would not
+% mention expectations of results in the design section.}
+
+% \mtnote{of?}\jdnote{addressed}
+
+% Experiments 4 measures the strong scaling performance of ESMACS while
+% experiment 5 repeats the same strong scaling experiment using the TIES
+% protocol.
+
+% \mtnote{This is a placeholder for an actual paragraph: note how the
+% previous paragraphs have a structure based on numbering experiments (and
+% referring them to the table via references that are still missing), while
+% this and the following paragraphs do not use the same structure. Please
+% expand as needed and note that a section is not `ready' until this kind of
+% uniformity is not achieved.}\jdnote{I've added experimental design of
+% adaptive/nonadaptive methods.}
+
+% Keep iterating on the next two paragraphs to get the right description from
+% Kristof
+
+% We perform the experiments for the nonadaptive (experiment 6) and adaptive
+% (experiment 7) simulation methods with the same number of cores and
+% simulation duration (Table~\ref{tab:experiments}). By fixing these
+% parameters, we enable the comparison between the accuracy and time to
+% solution of the two methods.
+
+% By design of the nonadaptive TIES workflow
+% (Figure~\ref{fig:ties_esmacs_application}), each $\lambda$ window creates a
+% new simulation condition that must be replicated. TIES requires 5 replicas
+% per $\lambda$, thereby producing $\lambda \times 5$ or simulations.
+
+% \mtnote{Reference table and exp number}
+% \jdnote{addressed in this and previous sentence}
+% \mtnote{Reference table with S*}
+% \jdnote{the ref to Figure~\ref{fig:ties_esmacs_application} already points
+% to the description of S*, no?}
+% \mtnote{Grammar: no spaces before and after dashes}
+% \jdnote{noted}
+% \jdnote{reworded this paragraph}
+
+% \mtnote{Grammar: it is not clear to what this `this' refers to} produces a
+% total of 65 concurrent simulations for stages $S1$--$S4$ \mtnote{Reference
+% table with S*} \mtnote{Grammar: no spaces before and after
+% dashes}\jdnote{noted}. The production simulation stage $S4$ executes each
+% simulation for 4ns. The analysis stage $S5$ assigns 5 analysis tasks which
+% aggregate simulation results of $S4$ with respect to each replica. The
+% global analysis stage $S6$ contains a single task that aggregates the
+% results from $S5$.
+
+% \mtnote{different from what?}\jdnote{changed}
+
+% The estimation of the error determines whether
+% \mtnote{Grammar: as already commented in the previous draft, `whether'
+% implies already `or not'.\jdnote{noted} Adding it is
+% redundant.}\jdnote{noted} to spawn additional $\lambda$ windows. If the
+% error estimate in a certain interval is higher than the acceptable
+% threshold, a new $\lambda$ window is assigned halfway between the interval.
+% If the critical threshold is reached, we have reached convergence and the
+% application stops; else, current simulations continue executing and new
+% simulations begin executing based on newly generated $\lambda$ windows.
+
 % The estimation computation \mtnote{This is too compressed. In itself,
 % `estimation computation' means little. The reader has to go back to the
 % previous paragraph to understand what those two words refer to. `We compute
 % the free energy errors\ldots'?} is captured \mtnote{`captured' is
 % metaphorical. Metaphors should be avoided when writing science. Also, the
-% sentence is passive and also this should be avoided in scientific writing} as
-% a single stage \mtnote{Does the reader know what a stage is?} containing a
-% single task. By design of the adaptive quadrature algorithm \mtnote{where
+% sentence is passive and also this should be avoided in scientific writing}
+% as a single stage \mtnote{Does the reader know what a stage is?} containing
+% a single task. By design of the adaptive quadrature algorithm \mtnote{where
 % this algorithm is used? Does the reader know about it?}, the number of
 % additional $\lambda$ windows will vary across candidates, which will impact
 % the number of simulation-analysis iterations. \mtnote{And\ldots We are
@@ -401,23 +416,22 @@ as the differences in accuracy.
 % \jdnote{will call this something else}.\jdnote{check with Kristof on the
 % local and global analysis that happen for nonadaptive}
 
-\mtnote{Note: paragraphs like this indicate lack of iteration before
-releasing the manuscript for review. Too much is assumed, too little is
-converted from thoughts to written form. How the academic writing process
-works: Before releasing the manuscript for review, the author goes back and
-forth across the manuscript multiple times. Progressively, each paragraph is
-iterated until it is grammatically correct and it stands on its own
-content-wise. When a manuscript is received for review, the reviewer focus on
-the content of each paragraph and section, assessing their completeness and
-conceptual/formal correctness. Each grammatical error, each inconsistency or
-missing detail distracts the reviewer impeding her work.}\jdnote{I've removed
-the previous paragraph that gave trouble and updated the experimental setup of 
-the adaptive and non-adaptive methods.}
+% \mtnote{Note: paragraphs like this indicate lack of iteration before
+% releasing the manuscript for review. Too much is assumed, too little is
+% converted from thoughts to written form. How the academic writing process
+% works: Before releasing the manuscript for review, the author goes back and
+% forth across the manuscript multiple times. Progressively, each paragraph
+% is iterated until it is grammatically correct and it stands on its own
+% content-wise. When a manuscript is received for review, the reviewer focus
+% on the content of each paragraph and section, assessing their completeness
+% and conceptual/formal correctness. Each grammatical error, each
+% inconsistency or missing detail distracts the reviewer impeding her
+% work.}\jdnote{I've removed the previous paragraph that gave trouble and
+% updated the experimental setup of the adaptive and non-adaptive methods.}
 
 % This procedure is repeated until convergence, at which point all concurrent
 % simulation are terminated. We define convergence as the point in the
 % production-analysis loop at which a desired error threshold is reached.
-
 
 % When one protocol has converged whilst another has not, we can shift
 % computational resources to favor simulations that require additional
@@ -430,47 +444,25 @@ the adaptive and non-adaptive methods.}
 % number of protocols and vary the amount of resources in order to produce
 % generations
 
-% \mtnote{The reader will struggle to
-% understand what `generations' means in this context.} of execution.
+% \mtnote{The reader will struggle to understand what `generations' means in
+% this context.} of execution.
 % \mtnote{Two sizable paragraphs to describe weak scaling, four lines to
 % describe strong scaling? I would expand.}
 
-Due to the NCSA security policies, we performed the experiments from a
-persistent virtual machine \mtnote{This sentence seems to suggest that we run
-our experiments on a virtual machine. I know what you mean but the average
-reader has no idea about the capabilities of our middleware and the policies
-of not executing persistent processes on the head node of Blue Waters.}
-\jdnote{Can we omit this sentence?} 
-% and the Titan ones from an ORNL login node.
-% as Blue Waters does not permit executing applications directly on the login
-% node. The ORNL Titan experiments had instead to be performed from an ORNL
-% login node.
-We use HTBAC 0.1, EnTK 0.6, and RP 0.47 for all the experiments and the same
-versions of the NAMD MD engine, compiled according to the capabilities of
-each environment and of NAMD itself. For all experiments we use
-\texttt{NAMD-MPI}. Additionally, for the analysis stages in the TIES protocol
-we used \texttt{AmberTools}.
+% \mtnote{This sentence seems to suggest that we run our experiments on a
+% virtual machine. I know what you mean but the average reader has no idea
+% about the capabilities of our middleware and the policies of not executing
+% persistent processes on the head node of Blue Waters.}
+% \jdnote{Can we omit this sentence?}
 
-For the experiments that examine nonadaptive simulation methods, we assign the 
-following simulation time-steps: $S1$: 3000; $S2$: 50000; $S3$: 50000; $S4$: 
-2000000. The adaptive simulation method contain the same simulation steps, apart 
-from $S4$ which is divided into 4 sub-steps of 500000 time-steps. 
-\jdnote{should we mention relationship between ns and time-steps?}
+% and the Titan ones from an ORNL login node. as Blue Waters does not permit
+% executing applications directly on the login node. The ORNL Titan
+% experiments had instead to be performed from an ORNL login node.
 
-For weak and strong scaling experiments in Table~\ref{tab:experiments} 
-\mtnote{reference table}
-\jdnote{addressed}, 
-we reduce the number of time-steps and omit the analysis steps $S5$ and $S6$, as 
-the focus of scalability is not based on simulation duration but rather 
-characterization of scalability performance. We assign the following reduced
-time-steps: $S1$: 1000; $S2$: 5000; $S3$: 5000; $S4$: 50000. 
-
-% The minimization tasks of $S1$ to 1000 simulation time steps, while
-% the equilibration tasks in $S2$ and $S3$ are \mtnote{Grammar: inconsistent
-% tense. `Were' or `assign'} assigned 5000. The MD simulation tasks in $S4$ are
-% assigned 50,000 steps.
-
-
+% The minimization tasks of $S1$ to 1000 simulation time steps, while the
+% equilibration tasks in $S2$ and $S3$ are \mtnote{Grammar: inconsistent
+% tense. `Were' or `assign'} assigned 5000. The MD simulation tasks in $S4$
+% are assigned 50,000 steps.
 
 % \mtnote{when/why a simulation task is `production'? I am not sure I
 % understand what that means}\jdnote{removed production for weak/strong.
@@ -481,74 +473,46 @@ time-steps: $S1$: 1000; $S2$: 5000; $S3$: 5000; $S4$: 50000.
 % with CUDA for the ESMACS experiments, and with OpenMP for the for TIES ones
 % as NAMD does not support alchemical perturbations execution on GPU.
 
-We perform \mtnote{Grammar: We used the preterite until now}\jdnote{tense change
-} all Blue Waters
-experiments using the \texttt{aprun} command to launch the MD simulations. 
-Blue Waters is a 26,868 node Cray XE6/XK6 SuperComputer with peak performance 
-of 13.3 petaFLOPS.  
+% application launch method, which is the NCSA Blue Waters designated command
+% for describing the application parameters and resource requirements
+% \mtnote{does the reader know what is a launch method?} \jdnote{better?}
+% \mtnote{Unfortunately not: https://bluewaters.ncsa.illinois.edu/using-aprun
+% . Alternative: `We perform (or performed depending on what tense you will
+% decide to use) all Blue Waters experiments using the \texttt{aprun} command
+% to launch the MD simulations'}.
+% \jdnote{noted and addressed.} During our scalability experiments we found
+% two main limitations.
+% \mtnote{this is too generic. Based on this paragraph, we found two main
+% limitations. This is what we should therefore write.}
 
-% application launch method, which is the
-% NCSA Blue Waters designated command for describing the application parameters
-% and resource requirements 
-\mtnote{does the reader know what is a launch
-method?} \jdnote{better?} \mtnote{Unfortunately not:
-https://bluewaters.ncsa.illinois.edu/using-aprun . Alternative: `We perform
-(or performed depending on what tense you will decide to use) all Blue Waters
-experiments using the \texttt{aprun} command to launch the MD simulations'}.
-\jdnote{noted and addressed.}
-During our scalability experiments we found two main limitations. 
-\mtnote{this is too generic. Based
-on this paragraph, we found two main limitations. This is what we should
-therefore write.} 
+% \jdnote{I've changed this again because the limitation on the max no. of
+% concurrent CUs is a system setting (similar to what we experienced
+% first-hand on Titan), but it's not a technical limitation of APRUN.}
 
-\jdnote{I've changed this again because the limitation on the
-max no. of concurrent CUs is a system setting (similar to what we experienced 
-first-hand on Titan), but it's not a technical limitation of APRUN.}
+% Unfortunately, \texttt{aprun} has several \mtnote{this is too generic.
+% Based on this paragraph, we found two main limitations. This is what we
+% should therefore write.} limitations: First, the number of concurrent tasks
+% execution is limited to \ldots. On average, during our experiments we were
+% not able to execute more than 436 concurrent tasks.
+% \mtnote{how do we know this average?}.
+% \jdnote{would it make sense to show a bell curve of the distribution of
+% failing units? I have 8 data points, but I can run more and include Mark's
+% Cray paper?}
+% \mtnote{Agreed. The comment was about saying that you observed this average
+% while performing experiments. See how I rewrote the paragraph}.
+% \jdnote{added the data for the failing units however including a
+% distribution of this data is not meaningful as the sample size in the
+% number of trials is very small. By looking at some histograms where I vary
+% the bin size, it could be either Gaussian or multimodal distribution. Only
+% more data will tell us for sure what kind of distribution we have.
+% Moreover, Mark's Cray paper shows range of concurrent units using ORTE-LIB,
+% so I will not reference this here.}
 
-
-First, we observe the number of concurrent tasks execution is limited to 
-approximately 450. NCSA sets a system policy on the maximum number 
-of processes that \texttt{aprun} can spawn. During the 
-execution of scalability experiment 2~\ref{tab:experiments}, we observed 
-failing tasks once we scale up to 8 TIES protocol instances, which is
-equivalent to 520 concurrent tasks. In a trial of 10 repetitions at this scale,
-calculated an average of 70 failing tasks, with a standard deviation of 6.67, 
-and range of 59 to 83 tasks. Given that we only ran a small number of trials, 
-more data is required to properly model the distribution type of these results. 
-
-
-
-
-
-% Unfortunately, \texttt{aprun} has several \mtnote{this is too generic. Based
-% on this paragraph, we found two main limitations. This is what we should
-% therefore write.} limitations: First, the number of
-% concurrent tasks execution is limited to \ldots. On average, during our 
-% experiments we were not able to execute more than 436 concurrent tasks. 
-\mtnote{how do we know
-this average?}.
-\jdnote{would it make sense to show a bell curve of the distribution of
-failing units? I have 8 data points, but I can run more and include Mark's
-Cray paper?}\mtnote{Agreed. The comment was about saying that you observed
-this average while performing experiments. See how I rewrote the paragraph}.
-\jdnote{added the data for the failing units however including a distribution
-of this data is not meaningful as the sample size in the number of trials is 
-very small. By looking at some histograms where I vary the bin size, it could 
-be either Gaussian or multimodal distribution. Only more data will tell us for 
-sure what kind of distribution we have. Moreover, Mark's Cray paper shows 
-range of concurrent units using ORTE-LIB, so I will not reference this here.}
-
-Second, NCSA allows only one \texttt{MPI} application to run on a compute node. 
-\mtnote{this is metaphorical. Please change using a factual predicate.}
-\jdnote{changed the phrasing a bit}
-As a consequence, we had to run each MD simulation with 32
-cores (i.e., one full compute node) even if our performance measurement of
-NAMD on Blue Waters indicated that 16 cores would offer the best trade-off
-between computing time and communication overhead.\mtnote{Note: I had to
-rewrite the paragraph because the current version was too unrefined. Please
-see the note above about the need to progressively refine each paragraph.}
-\jdnote{thanks, should we include the scalability plot of a single NAMD 
-task using aprun?}
+% \mtnote{this is metaphorical. Please change using a factual predicate.}
+% \jdnote{changed the phrasing a bit}
+% \mtnote{Note: I had to rewrite the paragraph because the current version
+% was too unrefined. Please see the note above about the need to
+% progressively refine each paragraph.}
 
 % From our own scalability performance measurements of NAMD on Blue Waters,
 % we observe the ideal cores per task to be 16, however Blue Waters does not
