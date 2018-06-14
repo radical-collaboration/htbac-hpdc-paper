@@ -316,10 +316,25 @@ pipeline, which contains stages of simulation and analysis steps. Replicas or
 analysis tasks are bundled as tasks within a stage. We show the
 implementation of two types of protocol types, ESMACS and TIES.\mtnote{The
 previous paragraph seemed to me a mix of two paragraphs. I separated them,
-feel free to revert if I did not get it right.}
+feel free to revert if I did not get it right.}\jdnote{noted}
+
+EnTK uses the runtime system of RADICAL-Pilot to execute ensemble applications 
+via pilots. Pilots provide a multi-stage execution mechanism: Resources are 
+acquired via a placeholder job and subsequently used to execute the 
+application’s tasks~\ref{power-of-many17}. The pilot abstraction supports the 
+requirements of task-level parallelism and high-throughput as needed by the use 
+cases. A pilot abstraction uses a placeholder job without any tasks assigned to 
+it. It acquires resources from the CI by submitting a (container) job and waits 
+in the queue until the CI's scheduler bootstraps the job to the compute nodes. 
+Once the pilot is scheduled, it can pull computational tasks for execution. 
+This enables the tasks to be executed directly on the resources, without being 
+queued via the local resource management system or without circumventing the 
+queue policies of HPC resources~\ref{dakka2017}. 
+
 
 \mtnote{What about RP? We write that the two relevant RCT libs are EnTK and
 RP but we then introduce only EnTK explaining how HTBAC uses it.}
+\jdnote{Added background, but in general how much of RP's details should go in?}
 
 % ---------------------------------------------------------------------------
 \subsection{ESMACS and TIES}
