@@ -6,7 +6,7 @@ embarking on a drug campaign that will utilize 150 million core hours on NCSA
 Blue Waters, we perform experiments to characterize the weak and strong
 scaling performance of HTBAC and its overheads on Blue Waters. We validate
 the results of the free energy calculations produced using HTBAC by comparing
-them to results that are already available in the chemistry literature.
+them to results that are already available in referenced literature.
 
 Given that protocols like TIES are more computationally demanding than
 protocols like ESMACS, it is paramount to use resource efficiently,
@@ -608,64 +608,127 @@ a single NAMD task using aprun?}
 % single average across all replicas.
 
 %----------------------------------------------------------------------------
+
+\subsection{Characterization of Scalability Experiments}
+
+We perform 5 experiments to characterize the overheads of HTBAC, EnTK and the 
+runtime system, and \texttt{aprun} as a function of weak and strong scaling 
+properties. The durations we measure are defined as:
+
+\begin{itemize}
+    \item Task Execution Time: Time taken by the task executables to run on the 
+    CI. 
+    \item HTBAC Overhead: Time taken to process the application, instantiate the 
+    components and subcomponents, translate protocols into pipelines for EnTK, 
+    and validate resource descriptions. 
+    \item EnTK and RP Overhead: Time taken by EnTK and the runtime system to 
+    submit and manage the execution of tasks. 
+    \item \texttt{aprun} Overhead: Time taken by \texttt{aprun} to schedule
+    tasks on a set of compute nodes. 
+\end{itemize} 
+
+% \jdnote{So the TTX here is measured with events measuring the duration 
+% between cu exec start and cu exec stop, since we use APRUN we cannot look at 
+% events like app_start until app_stop, we use the term TTX internally, but maybe 
+% for this paper we should call it task execution duration}
+
+% We characterize the execution time of all three applications \mtnote{which one?},
+% \jdnote{given that I mention what each experiment entails earlier, can I keep 
+% the application general and say all 3?} and overheads of HTBAC, EnTK, RP and 
+% \texttt{aprun}. 
+
+% \jdnote{Since we are showing overhead component separate, can we remove the
+% total overhead calculation?}
+
+% The total time to completion (TTC) of each application \mtnote{of what?} 
+% \jdnote{per application} \mtnote{you see the difference produced by my 
+% editing?} can be expressed as $TTC = TTX + T_{O}$ where Total Time to Execution 
+% \(TTX\) measures only the aggregated execution time of all tasks' executables. 
+% \mtnote{TTX should measure only the aggregated time spent executing the
+% tasks' executables. All the rest should be part of RP overhead}\jdnote{for
+% discussion with Matteo 06/04}\mtnote{I am afraid I do not understand this
+% comment} 
+
+
+
+% % $T_{O}$ equates to the total overheads produced by HTBAC, EnTK, and
+% % RP: $$T_{O} = T_{O}\textsuperscript{HTBAC} + T_{O}\textsuperscript{EnTK} +
+% % T_{O}\textsuperscript{RP}$$ 
+
+Once the runtime system relinquishes control to \texttt{aprun}, the precise 
+time duration of when \texttt{aprun} schedules the task on the compute
+nodes and MD kernel beginning execution is unknown. Therefore, we make an 
+approximation. We obtain the \texttt{aprun} overhead by measuring the 
+difference between TTX and the time duration produced by the \texttt{NAMD} logs. 
+
+
+% \mtnote{As defined, this formula seems to add
+% twice part of the RP overheads.}
+% \jdnote{I think I'm missing something: The RP
+% overhead is what I get from the pilot duration logs. Not sure where I'm
+% duplicating}
+% % \mtnote{If TTX is more than just the aggregated execution time of
+% % all the tasks' executable, then TTX and $T_{O}$ both contain part of RP
+% % overhead.}
+
 \subsection{Weak Scaling and Performance Characterization}
 
 % \mtnote{Is this meant to be a subsubsection?}\jdnote{changed weak, strong
 % and adaptive experiments \& results to subsections}
 
 We investigate the weak scaling of HTBAC using three
-applications\mtnote{which ones?}: \ldots, \ldots and \ldots. Each application
-uses a different protocol configuration with a number of instances determined
-by the number of concurrent executions supported by \texttt{aprun}. In each
-experiment, we increase the number of instances of the TIES protocol,
+applications \mtnote{which ones?}\jdnote{addressed}: Experiment 
+1 using TIES-only, Experiment 2 using ESMACS-only, and Experiment 3 using
+both TIES and ESMACS configurations. Each application uses a different protocol 
+configuration with a number of instances determined by the 
+number of concurrent executions supported by \texttt{aprun}. In each experiment, 
+we increase the number of instances of the protocol configuration, 
 proportionally to the amount of requested resources. 
 
-Experiment 1 measures the weak scalability of HTBAC with the TIES protocol.
-Each instance of the TIES protocol contains a single pipeline with 4 stages
-and 65 concurrent tasks. We increase the number of instances linearly,
-between 2 and 8. Experiment 2 measures weak scalability with the ESMACS
-protocol. Each ESMACS protocol contains 1 pipeline with 4 stages and 25
+Experiment 1 in Figure~\ref{fig:ws} (a) measures the weak scalability of HTBAC 
+with the TIES protocol. Each instance of the TIES protocol contains a single 
+pipeline with 4 stages and 65 concurrent tasks. We increase the number of 
+instances linearly, between 2 and 8. When scaling to 8 protocol instances, we 
+execute beyond the average limit of 450 concurrent tasks. Nevertheless, we 
+include results at this scale to show HTBAC's performance capabilities in 
+supporting higher orders of concurrent simulations. 
+
+Experiment 2 in Figure~\ref{fig:ws} (b) measures weak scalability with the ESMACS
+protocol. We increase the number of instances linearly, between 2 and 16. 
+Each ESMACS protocol contains 1 pipeline with 4 stages and 25
 concurrent tasks \mtnote{Do we `increase the number of instances linearly,
 between 2 and 8' also in experiment 2? If so, we should say that only once
-for Experiment 1--3. If not, why?}. Experiment 3 measures weak scalability
+for Experiment 1--3. If not, why?}\jdnote{addressed the scaling ranges, and 
+explained why}. 
+
+Experiment 3 in Figure~\ref{fig:ws} (c) measures weak scalability
 with instances of both TIES and ESMACS protocols. Also in this case, we scale
-the instances of both protocols linearly, between 2 and 8. For all weak
-scaling experiments we used \mtnote{Grammar: conjugation} physical systems
-from the \texttt{BRD4-GSK} library with the same number of atoms and similar
-chemical properties. \jdnote{this is to say that the fluctuations in
+the instances of both protocols linearly, between 2 and 8. Experiments 2 and 3 
+show scalability ranges within the limit of the maximum number of concurrent 
+tasks we can successfully execute on Blue Waters. For all weak
+scaling experiments we use \mtnote{Grammar: conjugation}\jdnote{back to the 
+present} physical systems from the \texttt{BRD4-GSK} library with the same 
+number of atoms and similar chemical properties. The uniformity of these 
+physical systems ensures a consistent workload that is insignificant to any 
+variability in performance characterization. 
+\jdnote{this is to say that the fluctuations in
 execution times between data points are invariant to the physical
 systems}\mtnote{Nice comment, I would edit it and put it in the text!}.
+\jdnote{addressed}
 
 % \mtnote{does the reader know what a task is in this context?} \jdnote{will
 % be defined in Section IV}
 
-We characterize the execution time of the application \mtnote{which one?},
-and overheads of HTBAC, EnTK, RP and \texttt{aprun}.  The total time to
-completion (TTC) of each application \mtnote{of what?} \jdnote{per
-application} \mtnote{you see the difference produced by my editing?} can be
-expressed as $TTC = TTX + T_{O}$ where \(TTX\) measures the aggregated
-duration of all task of an application.
-\mtnote{TTX should measure only the aggregated time spent executing the
-tasks' executables. All the rest should be part of RP overhead}\jdnote{for
-discussion with Matteo 06/04}\mtnote{I am afraid I do not understand this
-comment} $T_{O}$ equates to the total overheads produced by HTBAC, EnTK, and
-RP: $$T_{O} = T_{O}\textsuperscript{HTBAC} + T_{O}\textsuperscript{EnTK} +
-T_{O}\textsuperscript{RP}$$ \mtnote{As defined, this formula seems to add
-twice part of the RP overheads.}\jdnote{I think I'm missing something: The RP
-overhead is what I get from the pilot duration logs. Not sure where I'm
-duplicating}\mtnote{If TTX is more than just the aggregated execution time of
-all the tasks' executable, then TTX and $T_{O}$ both contain part of RP
-overhead.}
+
 
 % \mtnote{grammar: I do not understand the sentence after the `;'} given by
 % the sum of the constituent overheads: $$T_{O} =
 % T_{O}\textsuperscript{HTBAC} + T_{O}\textsuperscript{EnTK} +
 % T_{O}\textsuperscript{RP}$$.
 
-In all weak scaling experiments (Figures~\ref{fig:weak_scaling_TIES},
-~\ref{fig:weak_scaling_ESMACS} and~\ref{fig:weak_scaling_ESMACS_TIES}) we
-observe TTX (right axis) to be within error margin and showing ideal weak
-scaling behavior \mtnote{Please refine the previous sentence as it might not
+In all weak scaling experiments (Figure~\ref{fig:ws}) we
+observe TEX showing ideal weak scaling behavior 
+\mtnote{Please refine the previous sentence as it might not
 say what I think you want to say: What does it mean that TTX is `within error
 margin'? And how this relates to `ideal weak scaling behavior'? Maybe the
 former applies to the latter instead of TTX?}. The error bars are calculated
@@ -677,41 +740,18 @@ applies to which measurement. Also the legend should be inside the plots.}
 
 \begin{figure}
   \centering
-    \includegraphics[width=\columnwidth]{figures/new_ws_ties.pdf}
-    \caption{Weak scaling properties of HTBAC using TIES protocol. We
+    \includegraphics[width=\columnwidth]{figures/ws_all.pdf}
+    \caption{Weak scaling properties of HTBAC. We
     investigate the weak scaling of HTBAC as the ratio of the number of
     protocol instances to resources is kept constant. Overheads of HTBAC
     (right), and runtime overhead (left) and \(TTX\) (left) for experimental
     configurations investigating the weak scaling of TIES. We ran 3 trials
     for each protocol instance configuration.} 
-\label{fig:weak_scaling_TIES}
+\label{fig:ws}
 \end{figure}
 
-\begin{figure}
-  \centering
-    \includegraphics[width=\columnwidth]{figures/new_ws_esmacs.pdf}
-    \caption{Weak scaling properties of HTBAC using ESMACS. We investigate
-    the weak scaling of HTBAC as the ratio of the number of protocol
-    instances to resources is kept constant. Overheads of HTBAC (right), and
-    runtime overhead (left) and \(TTX\) (left) for experimental
-    configurations investigating the weak scaling of TIES. We ran 2 trials
-    for each protocol instance configuration.}
-\label{fig:weak_scaling_ESMACS}
-\end{figure}
-
-\begin{figure}
-  \centering
-    \includegraphics[width=\columnwidth]{figures/new_ws_esmacs_ties.pdf}
-    \caption{Weak scaling properties of HTBAC using ESMACS and TIES. We
-    investigate the weak scaling of HTBAC as the ratio of the number of
-    protocol instances to resources is kept constant. Overheads of HTBAC
-    (right), and runtime overhead (left) and \(TTX\) (left) for experimental
-    configurations investigating the weak scaling of TIES. We ran 2 trials
-    for each protocol instance configuration.}
-\label{fig:weak_scaling_ESMACS_TIES}
-\end{figure}
-
-\jdnote{Maybe combine captions into 1?}\mtnote{Agreed.}
+\jdnote{Maybe combine captions into 1?}\mtnote{Agreed.}\jdnote{One figure, 3 
+subplots, 1 caption is cleaner}
 
 The HTBAC overhead depends mostly on the number of protocol instances that
 need to be generated for an application. This overhead shows a super linear
@@ -731,7 +771,8 @@ a previous paper we wrote: does the reader know what a CU is?}
 just use task as you do in the following sentence. IMHO, using CU adds yet
 another pseudo-technical term as a synonym of a term we are already using,
 i.e., task}. As such, those overheads are expected to grow proportionally to
-the number of tasks as observed in Figure\ldots, bar in \ldots color, \ldots.\mtnote{Please add reference to the relevant figure(s) and details.} 
+the number of tasks as observed in Figure\ldots, bar in \ldots color, \ldots.
+\mtnote{Please add reference to the relevant figure(s) and details.} 
 
 \mtnote{I commented all the following. IMHO, it does not contribute to
 understand the current analysis of the results. Do we need to expand the
@@ -848,7 +889,7 @@ impact on TTX/TTC/Resource utilization.}
 % before rewriting a new paragraph if needed.}
 
 % ---------------------------------------------------------------------------
-\subsubsection{Strong Scaling and Performance Characterization}
+\subsection{Strong Scaling and Performance Characterization}
 
 \mtnote{Should we have also a `Weak Scaling Experiments' header? Or maybe we
 should change this one?}
