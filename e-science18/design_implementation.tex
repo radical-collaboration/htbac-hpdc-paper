@@ -30,20 +30,24 @@ protocol runs.
 % enable efficient protocols and effective resource sharing across and within
 % protocols. without explicit resource management requirements.
 
-Based on the requirements of computational drug campaigns which require the
-ability to run concurrent protocols to scale the number of drug candidates or
-protein ligand systems, this poses several computational challenges
+Based on the necessities of computational drug campaigns which require the
+ability to run scalable protocols that different in computational requirements, 
+this poses several computational challenges. 
 \mtnote{Grammar: the sentence as it is is incorrect. For example, note the
-use of `this' after a `,', the repetition of requirements/require.}. First,
-ensemble-based protocols that differ in computational requirements require
-execution coordination and resource management. Second, the setup of
-execution environments and data management should preserve efficient resource
-utilization. This poses many challenges that need to be addressed by HTBAC as
-well as the underlying management and runtime system.
-\jdnote{reworded this paragraph and hesitant to say workload management
+use of `this' after a `,', the repetition of requirements/require.}.
+\jdnote{re-phrased}
+
+First, ensemble-based protocols require execution coordination and resource 
+management between ensemble members within protocols as well as across 
+protocols. Second, the setup of execution environments and data management 
+should preserve efficient resource utilization. These challenges need to be 
+addressed by HTBAC as well as the underlying ensemble management and runtime 
+system. \jdnote{reworded this paragraph and hesitant to say workload management
 system.}\mtnote{avoiding WMS is fine by me. Unfortunately, the paragraph
 still does not read well. I would have another go at it but please let me
 know whether you want me to suggest an alternative version.}
+\jdnote{I changed the first sentence but I'm not sure what you doesn't read 
+well}
 
 % \mtnote{which one?}\jdnote{keeping it general to campaigns}
 
@@ -62,16 +66,22 @@ know whether you want me to suggest an alternative version.}
 % data management while preserving efficient resource utilization and minimal
 % overhead.\mtnote{Why this is relevant for HTBAC?}
 
-Based on intermediate results during runtime, the control logic of the
-algorithm \mtnote{which algorithm? This paragraph seems disconnected
-from the previous one.} may decide to invest additional compute resources in 
-simulations that can yield lower error averages, while
-reducing resources for simulations that have already met an error threshold.
-HTBAC thereby requires % an adaptive execution strategy \mtnote{system}
+Another requirement is the ability to support adaptive algorithm which can 
+change control logic based upon intermediately generated data. 
+HTBAC thereby requires the ability to redistribute resources according to the 
+logic provided by the adaptive algorithms to maximize computational efficiency.
+\mtnote{which algorithm? This paragraph seems disconnected
+from the previous one.} \jdnote{changed}
+
+% may decide to invest additional compute resources in 
+% simulations that can yield lower error averages, while reducing resources for 
+% simulations that have already met an error threshold. HTBAC thereby requires 
+% % an adaptive execution strategy \mtnote{system}
 \jdnote{changed from adaptive RTS to adaptive execution strategy}
 \mtnote{`execution strategy' is also undefined here. I simplified, please
-revert if incorrect.} % that enables 
-adaptive algorithms to maximize computational efficiency.
+revert if incorrect.}\jdnote{kept the previous writing of this idea commented}
+ % that enables 
+% adaptive algorithms to maximize computational efficiency.
 
 % \mtnote{Seeing that we are speaking about requirements, does it make sense
 % here to mention a RTS? RTS are an implementation detail: for example, we
@@ -84,13 +94,17 @@ adaptive algorithms to maximize computational efficiency.
 Usability plays an important role in the development of HTBAC, in order to
 provide a flexible interface which enables users to easily scale the number
 of drug candidates and quickly prototype existing and novel free energy
-protocols. Included in usability is the abstraction of adaptive features, to
-enable users to design protocols that utilize adaptive functionality to
-leverage intermediate results.\mtnote{The second sentence of the paragraph
+protocols. 
+% Included in usability is the abstraction of adaptive features, to
+% enable users to design protocols that utilize adaptive functionality to
+% leverage intermediate results.
+\mtnote{The second sentence of the paragraph
 might be a repetition of what already wrote in the previous paragraph.}
+\jdnote{I can see that, but wanted to explicitly highlight the adaptive features 
+as part of usability.}
 
 % ---------------------------------------------------------------------------
-\subsection{Architecture}
+\subsection{Design}
 
 % \subsubsection{Application Model}
 
@@ -115,8 +129,12 @@ The \textbf{Protocol} construct enables multiple instantiations of protocol
 types while the \textbf{Simulation} construct specifies simulation parameters
 that shape each protocol. The \textbf{Runner} construct provides the
 functionality to specify the resource requirements and the amount of time
-these resources should be available to execute the application \mtnote{what
-is the relation among protocol, simulation and application?}.
+these resources should be available to execute the application, where an 
+application consists of protocols, simulation conditions, and resource 
+requirements. 
+\mtnote{what
+is the relation among protocol, simulation and application?}. 
+\jdnote{changed sentence.}
 
 % \mtnote{we used `construct' before, as a synonym of abstraction}\mtnote{we
 % used `construct' before, as a synonym of abstraction}\jdnote{I've removed
@@ -132,6 +150,81 @@ the global state of the application, submits protocols and communicates with
 the ensemble management system that handles the dependencies of the
 protocols, and acquires resources via a runtime system.\mtnote{The runner
 here seems to be a component: it initializes, holds, submits, etc.}
+\jdnote{Given that this section is Design, I referred to Runner as a construct. 
+But maybe this sentence belongs more in Architecture?}
+
+\mtnote{The following is part of design. I would move it up and collate. See
+my comment in the previous subsection asking for the relation between
+protocol and application. I did not understand that relation until I read the
+following.} \jdnote{moved to Design}
+
+An application of HTBAC consists of one or more protocol
+instance(s). Each protocol models a unique protein ligand physical system
+\mtnote{see the previous comment about using `i.e.'}\jdnote{removed i.e.}.
+Each protocol follows a sequence of simulation and analysis steps and assigns
+ensemble members to execute independent simulations or analysis. An ensemble
+member that executes an independent simulation within a simulation step is
+referred to as a \textbf{replica}. Each replica simulation is assigned a
+different initial velocity, which enables simulations to begin in different
+parts of the ligand's phase space.
+
+We define an individual simulation or analysis as a computational
+\textbf{task}, which has a defined input, output, termination criteria and
+dedicated resources~\cite{power-of-many17}. Aggregates of tasks with
+dependencies that determine the order of their execution describe
+\textbf{workflows}. A workflow is comprised of $N_P$ instances of the
+P$^{th}$ protocol. An application consists of a workflow that encodes the 
+description of the scientific problem in terms of computational tasks. 
+
+\jdnote{does this confuse the term application with
+workflow?}\mtnote{It doesn't but it is on us to define the relation between
+an application and a workflow.}
+\jdnote{Looked at EnTK to understand the relations}
+
+% Workload: A set of tasks, possibly related by a set of arbitrarily complex 
+% relations. For example, relations may involve tasks, data, or runtime 
+% communication requirements 
+
+
+\mtnote{End of part to move up to design.}
+
+
+\subsubsection{Architecture}
+
+\jdnote{started an Architecture section but need input on how to describe 
+the API, and application management layer, given that all the components are 
+mixed between both. The runner is the main component of the application 
+management layer because it is the driver that collects the protocols and 
+submits them to EnTK. Would it make sense to show 3 layers then? API, 
+application management and protocol generation?} 
+
+HTBAC abstracts the resource management and execution management from the user. 
+Figure~\ref{fig:components} shows the components and subcomponents of the 
+HTBAC. All three components enable the user to codify an application 
+description of HTBAC. The runner serves as the application management system,
+by initializing the state of the application and communicating with the 
+ensemble management system. 
+
+Figure~\ref{} shows a visual block diagram representation \mtnote{`visual
+block diagram representation' seems unclear to me. Should we just have an
+architecture diagram here?} of HTBAC and the underlying building
+blocks.\jdnote{adding architecture diagram -- in draft
+currently}\mtnote{Note: architecture diagrams are static. They can be
+`augmented' with numbers (and often arrows) to support the description of an
+execution model. Please review a couple of papers the group wrote with this
+type of diagram.} \jdnote{working on architecture with execution model 
+diagram. For now I'm referencing component and subcomponent diagram}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\columnwidth]{figures/Component_Subcomponent_Diagram.pdf}
+  \caption{Components and subcomponents of HTBAC. The protocol, simulation and 
+  runner are the main components. The protocol and simulation components 
+  describe the protocols and their simulation conditions. The runner component 
+  serves as the application manager by interfacing with the ensemble management 
+  system.}
+\label{fig:components}
+\end{figure}
 
 % ---------------------------------------------------------------------------
 % Protocols differ only by their individual analysis step which typically
@@ -199,38 +292,11 @@ application model}
 % The \textbf{Protocol} construct is the main abstraction of HTBAC. 
 
 HTBAC is a domain specific library implemented in Python. All components of
-HTBAC are implemented as objects. 
-
-\mtnote{The following is part of design. I would move it up and collate. See
-my comment in the previous subsection asking for the relation between
-protocol and application. I did not understand that relation until I read the
-following.} 
-
-An application of HTBAC consists of one or more protocol
-instance(s). Each protocol models a unique protein ligand physical system
-\mtnote{see the previous comment about using `i.e.'}\jdnote{removed i.e.}.
-Each protocol follows a sequence of simulation and analysis steps and assigns
-ensemble members to execute independent simulations or analysis. An ensemble
-member that executes an independent simulation within a simulation step is
-referred to as a \textbf{replica}. Each replica simulation is assigned a
-different initial velocity, which enables simulations to begin in different
-parts of the ligand's phase space.
-
-We define an individual simulation or analysis as a computational
-\textbf{task}, which has a defined input, output, termination criteria and
-dedicated resources~\cite{power-of-many17}. Aggregates of tasks with
-dependencies that determine the order of their execution describe
-\textbf{workflows}. A workflow is comprised of $N_P$ instances of the
-P$^{th}$ protocol.\jdnote{does this confuse the term application with
-workflow?}\mtnote{It doesn't but it is on us to define the relation between
-an application and a workflow.}
-
-\mtnote{End of part to move up to design.}
-
-HTBAC uses the RADICAL-Cybertools (RCTs) as building
-blocks~\cite{review_bb_2016} to support HTBAC's workflow execution across
-diverse computing platforms~\cite{turilli2017comprehensive}. HTBAC rests on
-two primary RCT libraries: Ensemble Toolkit (EnTK) and RADICAL-Pilot (RP).
+HTBAC are implemented as objects. Communication in HTBAC occurs by function
+calls, either by value or reference. HTBAC uses the RADICAL-Cybertools (RCTs) as 
+building blocks~\cite{review_bb_2016} to support HTBAC's workflow execution 
+across diverse computing platforms~\cite{turilli2017comprehensive}. HTBAC rests 
+on two primary RCT libraries: Ensemble Toolkit (EnTK) and RADICAL-Pilot (RP).
 
 EnTK provides an application model that simplifies both the encoding and
 execution of scalable and adaptive free energy protocols that differ in
@@ -388,15 +454,6 @@ script that is submitted to a suitable HPC machine. Once the pilot becomes
 active, it pulls the tasks made available by EnTK in bulk, executing them on
 the pilot resources~\cite{merzky2015radical}.
 
-Figure~\ref{} shows a visual block diagram representation \mtnote{`visual
-block diagram representation' seems unclear to me. Should we just have an
-architecture diagram here?} of HTBAC and the underlying building
-blocks.\jdnote{adding architecture diagram -- in draft
-currently}\mtnote{Note: architecture diagrams are static. They can be
-`augmented' with numbers (and often arrows) to support the description of an
-execution model. Please review a couple of papers the group wrote with this
-type of diagram.}
-
 % ---------------------------------------------------------------------------
 \subsection{Adaptive Execution Model}
 
@@ -456,11 +513,6 @@ fix a bit the paragraph but it still difficult to read and understand.}
 % Spawning of new task contribute to task count adaptivity and task attribute
 % adaptivity. Using EnTK, HTBAC creates the necessary set of new tasks.
 
-
-
-
-
-
 % In section~\ref{sec:science-drivers}, we described a particular type of
 % adaptivity within TIES that would enable the simulation \mtnote{which one? Or
 % should this be `a simulation' or `simulations'?} to reach convergence
@@ -486,7 +538,6 @@ fix a bit the paragraph but it still difficult to read and understand.}
 % tasks. 
 
 
-
 % For users to design an 
 % adaptive workflow requires the flexibility and granularity to enhance specific 
 % parts of the workflow to act upon runtime decisions. 
@@ -495,7 +546,6 @@ fix a bit the paragraph but it still difficult to read and understand.}
 % be a case for hybrid workflows. Certain steps in the protocol may be completely 
 % specified while others require stopping the simulations to perform an 
 % evaluation that aids in deciding the continued set of requirements. 
-
 
 % In HTBAC, the protocol component allows the user to decompose a single
 % protocol instance into multiple protocols that execute shorter simulations.
@@ -507,7 +557,6 @@ fix a bit the paragraph but it still difficult to read and understand.}
 % In HTBAC, the application terminates once the control logic returns to the user
 % after executing all protocols. The segmented sub-protocols allow for more 
 % control between executions. 
-
 
 
 % TIES 
