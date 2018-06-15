@@ -11,41 +11,52 @@
 \end{itemize}
 
 Free-energy calculations using molecular dynamics simulations are now used in 
-a wide range of research spanning thermodynamics, protein folding, etc. 
+a wide range of research including protein folding and interactions as well as
+the assement of small molecule binding. 
 Free-energy calculation require 3 main components, a suitable model Hamiltonian,
-sampling protocol and estimator for free energy. Several approaches in 
-free-energy binding exist, amongst which relative binding affinity calculations 
-are generating accurate predictions delivering considerable promising for
-hit-to-lead optimization\jdnote{something like this to get the ball rolling}. 
+sampling protocol and estimator for free energy. 
+Several approaches to computing binding free-energies exist, amongst which relative 
+binding free energy (or binding affinity) calculations are generating accurate 
+predictions delivering considerable promising for hit-to-lead optimization. 
+In this approach the Hamiltonion used in the calculation is gradually transformed 
+from a description of an intial compound into that of a second molecule and the 
+difference in binding strength between the two computed.
 
-The improvements in hardware, namely GPGPUs, are leveraging more rapid 
-simulations, however to deliver clinical insight for drug screening campaigns 
-requires more rapid timescales and better binding precision...
-\jdnote{EnTK paper mentions D.E. Shaw paper on specialized hardware and 
-running single long simulation}
+%The improvements in hardware, namely GPGPUs, are leveraging more rapid 
+%simulations, however to deliver clinical insight for drug screening campaigns 
+%requires more rapid timescales and better binding precision...
+%\jdnote{EnTK paper mentions D.E. Shaw paper on specialized hardware and 
+%running single long simulation}
 
-Ensemble-based simulations, which utilize shorter can deliver at the timescales
-and precision necessary to meet the requirements of drug campaings...
-
-In bio-simulations, several classes of ensemble-based algorithms exist to 
-compute binding free energy. Each exist to tackle different problem spaces. 
+Ensemble-based simulations, have been shown to reduce the sampling time required to 
+to deliver the precision necessary to meet the requirements of drug design campaigns.
+In biomolecular simulation, several classes of ensemble-based algorithms are widely used 
+in the computation of binding free energies. 
+Each exist to tackle different problem spaces. 
 For example, an increasingly popular approach is to
-used Markov state models (MSM)to learn a simplified representation of the
+used Markov state models (MSM) to learn a simplified representation of the
 phase space explored by simulations and use this to inform which regions are
-further sampled in future simulations.
-
+further sampled in future simulations \cite{Bowman2010}.
 Other adaptive methods such as replica exchange and well-known variations of
 replica exchange i.e. replica exchange with solute tempering (REST) use the
 Metropolis-Hastings criteria to make periodic decisions that impact which
-regions of the phase space are being sampled\jdnote{@dww which citation goes
-well with this? the wang2015 paper?}.
+regions of the phase space are being sampled \cite{Earl2005, Hritz2008, Kim2012}.
+In expanded ensemble simulations, thermodynamic states are explored via a biased 
+random walk in state space \cite{Lyubartsev1992}.
+Approaches such as these that learn by exchanging information have been found to
+improve sampling results, and always decorrelating as fast or faster than standard 
+simulations.
 
-Individual simulations that learn by exchanging information have shown better 
-sampling results. Adding additional simulations in regions where the curve is 
-changing most rapidly reduces errors on the predicated binding affinity. 
+Generally in relative binding free energy calculations sampling is performed at 
+discrete regions along the transformation between the two compounds.
+Consequently, the choice of where exactly this sampling occurs is a key determinant 
+of the uncertainty in and accuray of the calculations \cite{Ruiter2013}.
+Increasing simulation in regions of most rapid change reduces errors on the 
+predicated binding affinity. 
 
 Executing simulations directly on HPCs using ensemble-based methods presents 
-several challenges. Most users rely on using MD kernels directly with 
+several challenges. 
+Most users rely on using MD kernels directly with 
 execution models such as MPI to run simulations. 
 
 Why is running adaptive ensemble-based simulations on clouds a big faux-pas?
