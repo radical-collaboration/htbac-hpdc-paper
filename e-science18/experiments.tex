@@ -618,6 +618,9 @@ and communication overhead.
 
 \subsection{Characterization of Scalability Experiments}
 
+\mtnote{I would create a subsection with overheads, discussing their behavior
+and nature while referencing both weak and strong scaling experiments.}
+
 We perform 5 experiments to characterize the overheads of HTBAC, EnTK and the 
 runtime system, and \texttt{aprun} as a function of weak and strong scaling 
 properties. We compare these overheads to the total execution time of all the 
@@ -725,7 +728,9 @@ explained why}.
 
 Experiment 3 in Figure~\ref{fig:ws} (c) measures weak scalability
 with instances of both TIES and ESMACS protocols. Also in this case, we scale
-the instances of both protocols linearly, between 2 and 8. Experiments 2 and 3 
+the instances of both protocols linearly, between 2 and 8. The first 
+configuration shows 1 ESMACS and 1 TIES protocol, and with each increase in 
+scale we double the number of protocols. Experiments 2 and 3 
 show scalability ranges within the limit of the maximum number of concurrent 
 tasks we can successfully execute on Blue Waters. For all weak
 scaling experiments we use \mtnote{Grammar: conjugation}\jdnote{back to the 
@@ -748,18 +753,11 @@ systems}\mtnote{Nice comment, I would edit it and put it in the text!}.
 % T_{O}\textsuperscript{HTBAC} + T_{O}\textsuperscript{EnTK} +
 % T_{O}\textsuperscript{RP}$$.
 
-In all weak scaling experiments (Figure~\ref{fig:ws}) we
-observe TTX showing ideal weak scaling behavior 
-
-\mtnote{Please refine the previous sentence as it might not
-say what I think you want to say: What does it mean that TTX is `within error
-margin'? And how this relates to `ideal weak scaling behavior'? Maybe the
-former applies to the latter instead of TTX?}. The error bars are calculated
-using 3 trials per protocol instance measure.\mtnote{This might be consider
-little without further explanation}
 
 \dwwnote{The figure captions and legends don't appear to agree which axis 
 applies to which measurement. Also the legend should be inside the plots.}
+\jdnote{addressed, except with subplots I figured it would look cleaner with the
+legend at the bottom.}
 
 \begin{figure}
   \centering
@@ -767,34 +765,48 @@ applies to which measurement. Also the legend should be inside the plots.}
     \caption{Weak scaling properties of HTBAC. We
     investigate the weak scaling of HTBAC as the ratio of the number of
     protocol instances to resources is kept constant. Overheads of HTBAC, 
-    EnTK + RP, and \texttt{aprun}, and \(TTX\) for experimental
-    configurations investigating the weak scaling of TIES. We ran 3 trials
-    for each protocol instance configuration.} 
+    EnTK + RP, and \texttt{aprun}, and Task Execution Time as a function of (a)
+    TIES protocol (Experiment 1), (b) ESMACS protocol (Experiment 2) , and (c) 
+    TIES and ESMACS protocols (Experiment 3). We ran 3 trials for each 
+    experiment.} 
 \label{fig:ws}
 \end{figure}
 
 \jdnote{Maybe combine captions into 1?}\mtnote{Agreed.}\jdnote{One figure, 3 
 subplots, 1 caption is cleaner}
 
+In all weak scaling experiments (Figure~\ref{fig:ws}) we
+observe Task Execution Time to be fixed as the number of protocol increases, 
+thereby showing ideal weak scaling behavior. \mtnote{Please refine the previous 
+sentence as it might not say what I think you want to say: What does it mean 
+that TTX is `within error margin'? And how this relates to `ideal weak scaling 
+behavior'? Maybe the former applies to the latter instead of TTX?}.
+\jdnote{does this read better?} The error bars are calculated
+using 3 trials per protocol instance measure. While it is highly desirable to use 
+larger trials to determine the precision of our observations, our current data
+already suggests a trend of reproducibility. \mtnote{This might be consider
+little without further explanation}\jdnote{how is this?}
+
 The HTBAC overhead depends mostly on the number of protocol instances that
 need to be generated for an application. This overhead shows a super linear
 increase as we grow the number of protocol instances, but its duration is
-negligible when compared to \(TTX\).
+negligible when compared to Task Execution Time.
+
 % HTBAC enables concurrent execution of multiple protocol \mtnote{what type
 % of protocols?} instances.
 
-\mtnote{I would create a subsection with overheads, discussing their behavior
-and nature while referencing both weak and strong scaling experiments.}
-
 The runtime overheads, mainly EnTK and RP, mostly depend on the number of
-tasks that need to be translated in-memory from a Python object to a compute
-unit (CU) description~\cite{dakka2017}. \mtnote{This sentence is copied from
+tasks that need to be translated in-memory from a Python object to a
+task description~\cite{dakka2017}. For RP this is confirmed in 
+Ref.~\cite{merzky2018} 
+\mtnote{This sentence is copied from
 a previous paper we wrote: does the reader know what a CU is?}
 \jdnote{I will add in a brief mention of CU in Section IV}\mtnote{I would
 just use task as you do in the following sentence. IMHO, using CU adds yet
 another pseudo-technical term as a synonym of a term we are already using,
-i.e., task}. As such, those overheads are expected to grow proportionally to
-the number of tasks as observed in Figure\ldots, bar in \ldots color, \ldots.
+i.e., task}\jdnote{noted and added reference for RP as well}.
+As such, those overheads are expected to grow proportionally to
+the number of tasks as observed in Figure~\ref{fig:ws}, bar in blue color, \ldots.
 \mtnote{Please add reference to the relevant figure(s) and details.} 
 
 \mtnote{I commented all the following. IMHO, it does not contribute to
@@ -843,11 +855,11 @@ allocation/resources spent in overheads?}
 Furthermore, an additional overhead, driven by the \texttt{aprun} launch
 method increases as we approach a system limit on the number of concurrent
 \texttt{aprun} processes. For example, when scaling to 8 TIES protocol
-instances as shown in Figure~\ref{fig:weak_scaling_TIES}, the application
+instances as shown in Figure~\ref{fig:ws} (a), the application
 requires 520 concurrent tasks. Considering that we observe \texttt{aprun}
-failures at approximately 436 concurrent processes, this accounts for
-additional time that is factored into \(TTX\). \jdnote{add in the aprun
-graph} \mtnote{We need to explain why TTX is affected. Are tasks restarted?
+failures at approximately  concurrent processes, this accounts for
+additional time that is factored into Task Execution Time. 
+\mtnote{We need to explain why TTX is affected. Are tasks restarted?
 Also, does this overhead matter? See previous comment about RP overhead
 impact on TTX/TTC/Resource utilization.}
 
