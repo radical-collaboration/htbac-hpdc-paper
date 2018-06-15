@@ -214,11 +214,10 @@ of 2.
 Weak scaling experiments provide insight into the size of the workload that
 can be executed in a given amount of time, while strong scaling experiments
 show how the time duration of the workload scales when adding resources. For
-all the weak and strong scaling experiments we also characterize the
-overheads of HTBAC, EnTK and RP. We also show an approximation of the time taken
-by the resources to become available for each application. This offers insight 
-about the impact of HTBAC and its middleware on the time to completion of each 
-workload.
+all the weak and strong scaling experiments we characterize the overheads of
+HTBAC, EnTK and RP, and we show an approximation of the time taken by the
+resources to become available. This offers insight about the impact of HTBAC
+and its middleware on the time to completion of each workload.
 
 For weak and strong scaling experiments, we reduced the number of time-steps
 of the protocols and omitted the analysis steps $S5$ and $S6$ of their
@@ -232,10 +231,11 @@ nonadaptive and adaptive simulation methods. For the nonadaptive simulation
 method of Experiment 6 we use 13 preassigned and approximated $\lambda$
 windows, consistent with the value reported in Ref.~\cite{Bhati2017}. In this
 way, we produce 65 concurrent simulations for stages $S1$--$S4$ of the TIES
-workflow (Figure~\ref{fig:ties_esmacs_application}). The production simulation 
-stage $S4$ executes each simulation for 4ns. Stage $S5$ consists of 5 analysis 
-tasks which aggregate the simulation results of $S4$. The global analysis stage 
-$S6$ contains a single task that aggregates the results from $S5$.
+workflow (Figure~\ref{fig:ties_esmacs_application}). The production
+simulation stage $S4$ executes each simulation for 4ns. Stage $S5$ consists
+of 5 analysis tasks which aggregate the simulation results of $S4$. The
+global analysis stage $S6$ contains a single task that aggregates the results
+from $S5$.
 
 In the adaptive workflow~\ref{fig:adaptive_ties}, we initialize the TIES
 protocol with 3 $\lambda$ windows, obtaining 15 replicas. We separate stage
@@ -252,14 +252,16 @@ omitted some essential detail or got the algorithm wrong.}
 \begin{figure}
   \centering
   \includegraphics[width=\columnwidth]{figures/Adaptive_TIES.pdf}
-  \caption{\mtnote{For quality reasons, it would be better to use 
-  figures in pdf format.}\jdnote{addressed}. Illustrating the adaptive workflow. 
-  After the 3 initial lambda windows are equilibrated, the first production stage 
-  starts. This is followed by analysis at every lambda interval, to decide 
-  whether to add a new window in the middle. The production-analysis is repeated 
-  for 4 production steps in our implementation, not shown here.}
+  \caption{Adaptive workflow for TIES. After equilibrating 3 initial
+  $\lambda$, the first production stage starts. This is followed by analysis
+  at every $\lambda$ interval, to decide whether to add a new window in
+  between. In our implementation, the production-analysis cycle is repeated
+  for 4 production steps, not shown here.}
 \label{fig:adaptive_TIES}
 \end{figure}
+
+% \mtnote{For quality reasons, it would be better to use figures in pdf
+%   format.}\jdnote{addressed}.
 
 For Experiment 6, we assigned the following simulation time-steps: $S1=3000$;
 $S2=50000$; $S3=50000$; and $S4=2000000$. The adaptive simulation method of
@@ -274,10 +276,10 @@ SuperComputer with peak performance of 13.3 petaFLOPS managed by NCSA. We
 initiated the experiments from a virtual machine outside NCSA. In this way,
 we did not run any persistent process on the NCSA login node, consistent with
 NCSA usage policies. We used HTBAC 0.1, EnTK 0.6, and RP 0.47 and the same
-versions of the \texttt{NAMD-MPI} MD kernel, compiled according to the 
-capabilities of each environment and of \texttt{NAMD} itself, and launched via 
-the \texttt{aprun} command. For the analysis stages in the TIES protocol we used 
-\texttt{AmberTools}.
+versions of the \texttt{NAMD-MPI} MD kernel, compiled according to the
+capabilities of each environment and of \texttt{NAMD} itself, and launched
+via the \texttt{aprun} command. For the analysis stages in the TIES protocol
+we used \texttt{AmberTools}.
 
 NCSA sets a system policy on the maximum number of processes that
 \texttt{aprun} can spawn, limiting the number of concurrent tasks we can
@@ -291,9 +293,9 @@ the distribution type of these results.
 
 NCSA allows to run only one MPI application for each compute node. As a
 consequence, we had to run each MD simulation with 32 cores (i.e., one full
-compute node) even if our performance measurement of \texttt{NAMD} on Blue Waters
-indicated that 16 cores would offer the best trade-off between computing time
-and communication overhead. 
+compute node) even if our performance measurement of \texttt{NAMD} on Blue
+Waters indicated that 16 cores would offer the best trade-off between
+computing time and communication overhead.
 
 % \jdnote{Should we include the scalability plot of
 % a single NAMD task using aprun?}
