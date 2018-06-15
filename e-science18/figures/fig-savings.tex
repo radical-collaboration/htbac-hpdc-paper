@@ -18,9 +18,9 @@
   legend cell align=left,
   ]
   
-\addplot+[color=BrBG-A, draw=BrBG-B, fill=BrBG-D, line width=0.75pt] table [x=System, y=Non-adaptive error, col sep=comma] {figures/savings.csv};
+\addplot+[draw=DarkOrchid, fill=Orchid, line width=0.75pt] table [x=System, y=Non-adaptive error, col sep=comma] {figures/savings.csv};
 
-\addplot+[color=BrBG-O, draw=BrBG-N, fill=BrBG-K, line width=0.75pt] table [x=System, y=Adaptive error, col sep=comma] {figures/savings.csv};
+\addplot+[draw=OliveGreen, fill=YellowGreen, line width=0.75pt] table [x=System, y=Adaptive error, col sep=comma] {figures/savings.csv};
 
 \coordinate (A) at (axis cs:PTP1B L1-L2,0.2);
 \coordinate (O1) at (rel axis cs:0,0);
@@ -44,9 +44,9 @@
   yscale=0.45,
   ]
   
-\addplot+[color=BrBG-A, draw=BrBG-B, fill=BrBG-D, line width=0.75pt] table [x=System, y=Non-adaptive cpuh, col sep=comma] {figures/savings.csv};
+\addplot+[draw=DarkOrchid, fill=Orchid, line width=0.75pt] table [x=System, y=Non-adaptive cpuh, col sep=comma] {figures/savings.csv};
 
-\addplot+[color=BrBG-O, draw=BrBG-N, fill=BrBG-K, line width=0.75pt] table [x=System, y=Adaptive cpuh, col sep=comma] {figures/savings.csv};
+\addplot+[draw=OliveGreen, fill=YellowGreen, line width=0.75pt] table [x=System, y=Adaptive cpuh, col sep=comma] {figures/savings.csv};
 
 
 % \legend{Non-adaptive,Adaptive}
