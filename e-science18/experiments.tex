@@ -1186,15 +1186,20 @@ focusing on the separation between methodology and results.}.
 % ---------------------------------------------------------------------------
 \subsection{Adaptive Experiments}
 
-\mtnote{Should this be Results as a whole? Or are we missing the results for all
-the others?} \kfnote{I think results and experiments are one section. This
-subsubsection is for the adaptive quadrature. There is a separate one for
-adaptive termination.}\mtnote{I agree and both approaches would work for me. We
-may want to be consistent across all experiments though: either we use a single
-subsection illustrating the results of all the experiment or we discuss the
-result of each experiment as we introduce it.} \kfnote{Okay. We are going
-with the second approach. Describe experiment then results in the same
-subsection.}
+The lack of adaptivity in most workflows usually comes down to the way
+simulation engines (like NAMD, Gromacs, Amber and others) work. The user hand
+writes a configuration file, and together with the system description (topology,
+PDB) it passes these files to a binary executable and waits for the simulation
+to be over to analyze the results. There is a disconnect between the simulation
+run and the analysis, i.e. the intermediate results can have no influence over
+the simulation \emph{after} it has been started. Therefore, certain decisions,
+like number of time steps to run for have to be made \emph{a priori}, and the
+continuous accumulation of results can, by definition, have no effect of these
+parameters.
+
+Having the mobility and dynamism that HTBAC offers, we are able to alter our
+current protocols to enhance them using adaptive schemes. Utilizing adaptivity
+results in faster convergence rate, and more accurate results.
 
 The aim of introducing adaptive quadrature to alchemical free energy
 calculation protocols (e.g. TIES) is to reduce time to completion while
@@ -1285,20 +1290,18 @@ the windows, the accuracy of the free energy still increased by
   \end{tabular}
 \end{table*}
 
-Figure~\ref{fig:adapconv} \mtnote{missing figure? There is a table with the
-label `adapquad' but not a figure.} \kfnote{Fixed} shows progression of the
-algorithm, starting from 3 initial lambda windows, and at each iteration
-bisecting the interval where the error is above the set threshold. For system X,
-we can see as how the parts of the function that change less have relatively
-fewer windows, while parts of greater change (usually, though not always around
-the $\lambda=0.5$ mark) have more $\lambda$ windows to represent the shape of
-the function more closely.
+Figure~\ref{fig:adapconv} shows progression of the algorithm, starting from 3
+initial lambda windows, and at each iteration bisecting the interval where the
+error is above the set threshold. For system X, we can see as how the parts of
+the function that change less have relatively fewer windows, while parts of
+greater change (usually, though not always around the $\lambda=0.5$ mark) have
+more $\lambda$ windows to represent the shape of the function more closely.
 
-\kfnote{Move this to algorithm description} In previous studies \cite{} the
-error estimation during the adaptive algorithm is done by calculating the
-integral estimate using two methods, one lower and one higher in complexity,
-then the difference between the two can constitute as a rough estimate of the
-error on that interval.
+% \kfnote{Move this to algorithm description} In previous studies \cite{} the
+% error estimation during the adaptive algorithm is done by calculating the
+% integral estimate using two methods, one lower and one higher in complexity,
+% then the difference between the two can constitute as a rough estimate of the
+% error on that interval.
 
 \begin{figure}
   \input{figures/fig-adapt.tex}
@@ -1322,3 +1325,32 @@ error on that interval.
   error threshold required more $\lambda$ windows to fulfill.}
   \label{fig:savings}
 \end{figure}
+
+Adaptive quadrature is specific to alchemical free energy calculations.
+\emph{Adaptive termination}, the second adaptive protocol implemented in HTBAC,
+offers dynamic termination for any simulation protocol that has as its aim the
+prediction of an observable value. The protocol monitors the convergence of the
+observable as the simulation progresses, and stops the execution when a
+criterion has been met. Non-adaptive protocols usually have a predefined
+simulation time, set based on the assumption that the simulation will converge
+by that time. This means that in practical examples the simulation might have
+converged before the predefined time interval. 
+
+In the original TIES protocol the simulation has to be run for
+\SI{4}{\nano\second} and the results are analyzed thereafter. This pre assumes
+that all systems need this time interval for the results to converge. In reality
+certain could systems converge faster, and terminating the simulation before the
+statice 4 ns end, could lead to faster time to insight and less compute
+resources consumed. Adaptive termination was implemented in HTBAC by having a
+checkpoint every $\tau = \SI{0.5}{\nano\second}$ in the simulation. Results show
+that the adaptively terminated TIES protocol saves compute resources and reduced
+time to insight on average by \SI{16}{\percent} for the physical systems we
+tested.
+
+\begin{figure}
+  \input{figures/fig-term.tex}
+  \caption{Adding caption soon!}
+  \label{fig:termination}
+\end{figure}
+
+
