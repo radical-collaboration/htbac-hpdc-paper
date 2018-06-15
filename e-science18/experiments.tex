@@ -206,7 +206,7 @@ In each weak scaling experiment (1--3), we keep the ratio between resources
 allocated and protocol instances constant. Consistently, for each experiment
 we progressively increase both the number of cores (i.e., measure of
 resource) and the number of protocol instances by a factor of 2. In each
-strong scaling experiment (4--5), we change the ration between resources
+strong scaling experiment (4--5), we change the ratio between resources
 allocated and the number of protocol instances. For each experiment, we fix
 the number of protocol instances and reduce the number of cores by a factor
 of 2.
@@ -215,8 +215,10 @@ Weak scaling experiments provide insight into the size of the workload that
 can be executed in a given amount of time, while strong scaling experiments
 show how the time duration of the workload scales when adding resources. For
 all the weak and strong scaling experiments we also characterize the
-overheads of HTBAC, EnTK and RP. This offers insight about the impact of
-HTBAC and its middleware on the time to completion of each workload.
+overheads of HTBAC, EnTK and RP. We also show an approximation of the time taken
+by the resources to become available for each application. This offers insight 
+about the impact of HTBAC and its middleware on the time to completion of each 
+workload.
 
 For weak and strong scaling experiments, we reduced the number of time-steps
 of the protocols and omitted the analysis steps $S5$ and $S6$ of their
@@ -230,11 +232,10 @@ nonadaptive and adaptive simulation methods. For the nonadaptive simulation
 method of Experiment 6 we use 13 preassigned and approximated $\lambda$
 windows, consistent with the value reported in Ref.~\cite{Bhati2017}. In this
 way, we produce 65 concurrent simulations for stages $S1$--$S4$ of the TIES
-workflow (Figure~\ref{fig:ties_esmacs_application}). The production
-simulation stage $S4$ executes each simulation for 4ns, while stage $S5$
-consists of 5 analysis tasks which aggregate the simulation results of $S4$.
-The global analysis stage $S6$ contains a single task that aggregates the
-results from $S5$.
+workflow (Figure~\ref{fig:ties_esmacs_application}). The production simulation 
+stage $S4$ executes each simulation for 4ns. Stage $S5$ consists of 5 analysis 
+tasks which aggregate the simulation results of $S4$. The global analysis stage 
+$S6$ contains a single task that aggregates the results from $S5$.
 
 In the adaptive workflow~\ref{fig:adaptive_ties}, we initialize the TIES
 protocol with 3 $\lambda$ windows, obtaining 15 replicas. We separate stage
@@ -246,33 +247,37 @@ quadrature results in order to measure the differences in time duration
 between adaptive and non-adaptive methods as well as the differences in
 accuracy.\mtnote{I had to simply this paragraph a lot. Please check whether I
 omitted some essential detail or got the algorithm wrong.}
+\jdnote{it works}
 
 \begin{figure}
   \centering
-  \includegraphics[width=\columnwidth]{figures/Adaptive_TIES_1.png}
+  \includegraphics[width=\columnwidth]{figures/Adaptive_TIES.pdf}
   \caption{\mtnote{For quality reasons, it would be better to use 
-  figures in pdf format.}Illustrating the adaptive workflow. After the 3
-  initial lambda windows are equilibrated, the first production stage starts.
-  This is followed by analysis at every lambda interval, to decide whether to
-  add a new window in the middle. The production-analysis is repeated for 4
-  production steps in our implementation, not shown here.}
+  figures in pdf format.}\jdnote{addressed}. Illustrating the adaptive workflow. 
+  After the 3 initial lambda windows are equilibrated, the first production stage 
+  starts. This is followed by analysis at every lambda interval, to decide 
+  whether to add a new window in the middle. The production-analysis is repeated 
+  for 4 production steps in our implementation, not shown here.}
 \label{fig:adaptive_TIES}
 \end{figure}
 
 For Experiment 6, we assigned the following simulation time-steps: $S1=3000$;
 $S2=50000$; $S3=50000$; and $S4=2000000$. The adaptive simulation method of
 Experiment 7 uses the same simulation time-steps, apart from $S4$ which is
-divided into 4 sub-stages of 500000 time-steps each. \jdnote{should we
-mention relationship between ns and time-steps?}
+divided into 4 sub-stages of 500000 time-steps each. 
+
+% \jdnote{should we
+% mention relationship between ns and time-steps?}
 
 We performed all the experiments on Blue Waters, a 26868 node Cray XE6/XK6
 SuperComputer with peak performance of 13.3 petaFLOPS managed by NCSA. We
 initiated the experiments from a virtual machine outside NCSA. In this way,
 we did not run any persistent process on the NCSA login node, consistent with
 NCSA usage policies. We used HTBAC 0.1, EnTK 0.6, and RP 0.47 and the same
-versions of the NAMD-MPI MD engine, compiled according to the capabilities of
-each environment and of NAMD itself, and launched via the \texttt{aprun}
-command. For the analysis stages in the TIES protocol we used AmberTools.
+versions of the \texttt{NAMD-MPI} MD kernel, compiled according to the 
+capabilities of each environment and of \texttt{NAMD} itself, and launched via 
+the \texttt{aprun} command. For the analysis stages in the TIES protocol we used 
+\texttt{AmberTools}.
 
 NCSA sets a system policy on the maximum number of processes that
 \texttt{aprun} can spawn, limiting the number of concurrent tasks we can
@@ -286,10 +291,12 @@ the distribution type of these results.
 
 NCSA allows to run only one MPI application for each compute node. As a
 consequence, we had to run each MD simulation with 32 cores (i.e., one full
-compute node) even if our performance measurement of NAMD on Blue Waters
+compute node) even if our performance measurement of \texttt{NAMD} on Blue Waters
 indicated that 16 cores would offer the best trade-off between computing time
-and communication overhead. \jdnote{Should we include the scalability plot of
-a single NAMD task using aprun?}
+and communication overhead. 
+
+% \jdnote{Should we include the scalability plot of
+% a single NAMD task using aprun?}
 
 % \mtnote{The following paragraphs are disconnected from the previous ones.
 % We need a `joining' paragraph starting from something like: ``We designed n
@@ -613,7 +620,9 @@ a single NAMD task using aprun?}
 
 We perform 5 experiments to characterize the overheads of HTBAC, EnTK and the 
 runtime system, and \texttt{aprun} as a function of weak and strong scaling 
-properties. The durations we measure are defined as:
+properties. We compare these overheads to the total execution time of all the 
+tasks to assess their overall impact on the application duration. 
+The durations we measure are defined as:
 
 \begin{itemize}
     \item Task Execution Time: Time taken by the task executables to run on the 
@@ -621,16 +630,32 @@ properties. The durations we measure are defined as:
     \item HTBAC Overhead: Time taken to process the application, instantiate the 
     components and subcomponents, translate protocols into pipelines for EnTK, 
     and validate resource descriptions. 
-    \item EnTK and RP Overhead: Time taken by EnTK and the runtime system to 
-    submit and manage the execution of tasks. 
+    \item EnTK and RP Overhead: Time taken by ensemble management system and the 
+    runtime system to submit and manage the execution of tasks. 
     \item \texttt{aprun} Overhead: Time taken by \texttt{aprun} to schedule
     tasks on a set of compute nodes. 
 \end{itemize} 
 
-% \jdnote{So the TTX here is measured with events measuring the duration 
-% between cu exec start and cu exec stop, since we use APRUN we cannot look at 
-% events like app_start until app_stop, we use the term TTX internally, but maybe 
-% for this paper we should call it task execution duration}
+Total Time to Execution \(TTX\) measures only the aggregated execution time of 
+all tasks' executables. 
+\mtnote{TTX should measure only the aggregated time spent executing the
+tasks' executables. All the rest should be part of RP overhead} 
+\jdnote{
+This sentence doesn't need to go in but I wanted to clarify a point: I would 
+like to know if we should use TTX as TTX or something else like Task Execution Time. 
+We have TTX measured by events: \texttt{cu-exec-start} and \texttt{cu-exec-stop}
+, since \texttt{aprun} doesn't allow further scrutiny using events like 
+\texttt{app-start} until \texttt{app-stop}. 
+We use the term TTX internally, but maybe for this paper we should call it task 
+execution time. TTX sounds like time to execution which could interpret the 
+entire application, no?}
+
+Once the runtime system relinquishes control flow to \texttt{aprun}, the 
+precise times of when \texttt{aprun} schedules the task on the compute
+nodes and when the MD kernel begins execution cannot be measured. Instead we 
+approximate the \texttt{aprun} overhead by measuring the difference between 
+TTX/Task Execution Duration and the total \texttt{NAMD} execution time, provided
+by the \texttt{NAMD} output logs. 
 
 % We characterize the execution time of all three applications \mtnote{which one?},
 % \jdnote{given that I mention what each experiment entails earlier, can I keep 
@@ -651,15 +676,12 @@ properties. The durations we measure are defined as:
 
 
 
+
 % % $T_{O}$ equates to the total overheads produced by HTBAC, EnTK, and
 % % RP: $$T_{O} = T_{O}\textsuperscript{HTBAC} + T_{O}\textsuperscript{EnTK} +
 % % T_{O}\textsuperscript{RP}$$ 
 
-Once the runtime system relinquishes control to \texttt{aprun}, the precise 
-time duration of when \texttt{aprun} schedules the task on the compute
-nodes and MD kernel beginning execution is unknown. Therefore, we make an 
-approximation. We obtain the \texttt{aprun} overhead by measuring the 
-difference between TTX and the time duration produced by the \texttt{NAMD} logs. 
+
 
 
 % \mtnote{As defined, this formula seems to add
@@ -689,12 +711,12 @@ Experiment 1 in Figure~\ref{fig:ws} (a) measures the weak scalability of HTBAC
 with the TIES protocol. Each instance of the TIES protocol contains a single 
 pipeline with 4 stages and 65 concurrent tasks. We increase the number of 
 instances linearly, between 2 and 8. When scaling to 8 protocol instances, we 
-execute beyond the average limit of 450 concurrent tasks. Nevertheless, we 
-include results at this scale to show HTBAC's performance capabilities in 
-supporting higher orders of concurrent simulations. 
+execute beyond the average limit of 450 concurrent tasks. 
+Nevertheless, we include results at this scale to show HTBAC's performance 
+capabilities in supporting higher orders of concurrent simulations. 
 
-Experiment 2 in Figure~\ref{fig:ws} (b) measures weak scalability with the ESMACS
-protocol. We increase the number of instances linearly, between 2 and 16. 
+Experiment 2 in Figure~\ref{fig:ws} (b) measures weak scalability with the 
+ESMACS protocol. We increase the number of instances linearly, between 2 and 16. 
 Each ESMACS protocol contains 1 pipeline with 4 stages and 25
 concurrent tasks \mtnote{Do we `increase the number of instances linearly,
 between 2 and 8' also in experiment 2? If so, we should say that only once
@@ -727,7 +749,8 @@ systems}\mtnote{Nice comment, I would edit it and put it in the text!}.
 % T_{O}\textsuperscript{RP}$$.
 
 In all weak scaling experiments (Figure~\ref{fig:ws}) we
-observe TEX showing ideal weak scaling behavior 
+observe TTX showing ideal weak scaling behavior 
+
 \mtnote{Please refine the previous sentence as it might not
 say what I think you want to say: What does it mean that TTX is `within error
 margin'? And how this relates to `ideal weak scaling behavior'? Maybe the
@@ -743,8 +766,8 @@ applies to which measurement. Also the legend should be inside the plots.}
     \includegraphics[width=\columnwidth]{figures/ws_all.pdf}
     \caption{Weak scaling properties of HTBAC. We
     investigate the weak scaling of HTBAC as the ratio of the number of
-    protocol instances to resources is kept constant. Overheads of HTBAC
-    (right), and runtime overhead (left) and \(TTX\) (left) for experimental
+    protocol instances to resources is kept constant. Overheads of HTBAC, 
+    EnTK + RP, and \texttt{aprun}, and \(TTX\) for experimental
     configurations investigating the weak scaling of TIES. We ran 3 trials
     for each protocol instance configuration.} 
 \label{fig:ws}
