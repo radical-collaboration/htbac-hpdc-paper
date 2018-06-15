@@ -968,37 +968,73 @@ Ref.~\cite{latest_rp_paper}.
 
 \mtnote{Should we have also a `Weak Scaling Experiments' header? Or maybe we
 should change this one?}
+\jdnote{I changed this subheader to match the subheader
++or weak scaling \& performance characterization}
 
-To investigate strong scaling, we run two applications on Blue Waters: \ldots
-and \ldots \mtnote{Please add name of the applications}. We investigate the
-strong scaling behavior considering only homogeneous protocols. The
-investigation of heterogeneous protocols is of interest but not at the risk
-of cluttering the paper \mtnote{I am afraid we will need a better explanation
-for this omission}. Both applications use the \texttt{BRD4-GSK} physical
+To investigate strong scaling, we run two applications on Blue Waters: strong 
+scaling of TIES (experiment 4) and strong scaling of ESMACS 
+(experiment 5). \mtnote{Please add name of the applications}.
+\jdnote{addresed} 
+
+We investigate the
+strong scaling behavior considering only homogeneous protocols. We base this 
+consideration on supporting the experiments of adaptivity in which we  
+show adaptive methodology only for TIES. Experiments of strong scaling
+show how the time-to-solution varies when consistently increasing the number of 
+resources for a fixed problem size. We leverage strong scaling to support the 
+objective in this work, which is to characterize (a) the time-to-solution 
+differences between adaptive and nonadaptive methods (b) the increase in the 
+number of resources as required by the nonadaptive method to reach the 
+required accuracy threshold. 
+\mtnote{I am afraid we will need a better explanation for this omission}.
+\jdnote{
+    Added context. Note about this paragraph: I think the argument about strong 
+    scaling only homogeneous protocols can be reduced to the fact that we only 
+    show TIES adaptivity. But for the rest of the paragraph, is there merit to 
+    put some of these ideas into experiment design?}
+
+
+Both applications use the \texttt{BRD4-GSK} physical
 systems \mtnote{Should this detail go in experiment design? This would apply
 also to the weak scaling in the previous section}.
+\jdnote{It's already mentioned in design so we can omit}
 
-The first application \mtnote{name?} shows the strong scaling behavior of
-TIES alone \mtnote{Are you sure this should not be the `nth experiment shows'
-instead of the `first application shows'?}, using \texttt{NAMD-MPI} with 32
+
+% The objective of strong scaling enables us to examine the properties of 
+% adaptive methods. 
+
+% Given the adaptive and nonadaptive methods: if we run the adaptive method 
+% we achieve time to solution X. With the nonadaptive method, we achieve time to 
+% solution Y 
+
+% We provide the adaptive and nonadaptive methods a fixed amount of resources: 
+
+% The nonadaptive method runs in time Y with Z accuracy 
+% The adaptive method runs in time X with N accuracy
+
+Experiment 4 \mtnote{name?}\jdnote{addressed} shows the strong scaling behavior 
+of TIES alone \mtnote{Are you sure this should not be the `nth experiment shows'}
+, using \texttt{NAMD-MPI} with 32
 cores per task. We fix the number of instances of the TIES protocol to 8 due
 to the described \texttt{aprun} limitations. We vary the amount of resources
 between 4160, 8320 and 16640 cores. Given 4160 cores, we can execute 4
 generations of 130 concurrent tasks; with 8320 cores, we can execute 2
-generations of 260 concurrent tasks. The second application shows the strong
-scaling behavior of the ESMACS protocol \mtnote{See previous comment about
-application/experiment}. We fix the number of instances of the ESMACS
-protocol to 16 and vary the amount of resources between 3200, 6400 and 12800
-cores. This produces the same number of generations of execution \mtnote{add
-reference to the subsection where generation is defined} as the first
-application. \jdnote{will add the plot for ESMACS ss once I receive 2 full
-trials}. As we increase the number of parallel resources,
-Figure~\ref{fig:strong_scaling_TIES} shows linear speedup in \(TTX\) while
-maintaining fixed $T_{O}$. The fixed $T_{O}$ suggests that the overheads are
-mainly driven by the scheduling in the number of protocols and thereby the
-number of tasks, not by the amount of resources. This is confirmed for RP in
-Ref.~\cite{merzky2018}.\jdnote{I need to investigate this but I also presume
-that aprun limits are also a factor of overhead.}
+generations of 260 concurrent tasks. Experiment 5 shows the strong scaling 
+behavior of the ESMACS protocol \mtnote{See previous comment about
+application/experiment}\jdnote{fixed}. We fix the number of instances of the 
+ESMACS protocols to 16 and vary the amount of resources between 3200, 6400 and 
+12800 cores. This produces the same number of generations of execution 
+\mtnote{add reference to the subsection where generation is defined} as shown in 
+experiment 4. We define generations of execution in Section~\ref{ssec:exp_design}. 
+
+In Figure~\ref{fig:ss}, we observe linear speedup in Task Execution Time for
+both experiments with increase in number of cores. The availability of more 
+resources for a fixed number of protocols explains this behavior. All overheads 
+remain constant for both experiments when increasing the number 
+of cores. The scheduling the number of tasks as opposed to the amount of 
+resources, is the main driver of the fixed runtime overheads, namely EnTK and 
+RP. This is confirmed for RP in Ref.~\cite{merzky2018}.
+
 
 % The comparison between weak and strong scalability shows the overhead
 % introduced by load balancing and scheduling tasks in multiple generations.
@@ -1033,14 +1069,13 @@ contributions of overheads and trends observed in TTX.}
 
 \begin{figure}
   \centering
-   \includegraphics[width=\columnwidth]{figures/new_ss_ties.pdf}
-    \caption{Strong scaling properties of HTBAC using TIES protocol. We
-    investigate the strong scaling of HTBAC with a fixed number of protocol
-    instances while varying the amount resources. Overheads of HTBAC and
-    runtime overhead (left) and \(TTX\) (right) for experimental
-    configurations investigating the strong scaling of TIES. We ran 3 trials
-    for each configuration.}
-\label{fig:strong_scaling_TIES}
+   \includegraphics[width=\columnwidth]{figures/ss_all.pdf} 
+   \caption{Strong scaling properties of HTBAC. We investigate the strong 
+    scaling of HTBAC by fixing the number of protocol instance and increasing 
+    the number of cores. Overheads of HTBAC, EnTK + RP and \texttt{aprun}, and
+    Task Execution Time as a function of (a) TIES protocol (Experiment 4) and
+    ESMACS protocol (Experiment 5). We ran 3 trials for each experiment.}
+\label{fig:ss}
 \end{figure}
 
 
