@@ -624,6 +624,7 @@ computing time and communication overhead.
 
 \mtnote{I would create a subsection with overheads, discussing their behavior
 and nature while referencing both weak and strong scaling experiments.}
+\jdnote{placing this here...}
 
 We perform 5 experiments to characterize the overheads of HTBAC, EnTK and the 
 runtime system, and \texttt{aprun} as a function of weak and strong scaling 
@@ -796,6 +797,18 @@ need to be generated for an application. This overhead shows a super linear
 increase as we grow the number of protocol instances, but its duration is
 negligible when compared to Task Execution Time.
 
+Furthermore, an additional overhead, driven by the \texttt{aprun} launch
+method increases as we approach a system limit on the number of concurrent
+\texttt{aprun} processes. For example, when scaling to 8 TIES protocol
+instances as shown in Figure~\ref{fig:ws} (a), we account for
+additional time that is factored into Task Execution Time. The increase in 
+\texttt{aprun} overhead occurs when tasks show failure which introduces 
+additional communication between the nodes that run the job (i.e. MOM Nodes) and 
+an attempt to relaunch failed tasks.  
+\mtnote{We need to explain why TTX is affected. Are tasks restarted?
+Also, does this overhead matter? See previous comment about RP overhead
+impact on TTX/TTC/Resource utilization.}\jdnote{added a technical detail}
+
 % HTBAC enables concurrent execution of multiple protocol \mtnote{what type
 % of protocols?} instances.
 
@@ -810,12 +823,23 @@ just use task as you do in the following sentence. IMHO, using CU adds yet
 another pseudo-technical term as a synonym of a term we are already using,
 i.e., task}\jdnote{noted and added reference for RP as well}.
 As such, those overheads are expected to grow proportionally to
-the number of tasks as observed in Figure~\ref{fig:ws}, bar in blue color, \ldots.
+the number of tasks as observed in Figure~\ref{fig:ws} (a)--(c), bars in 
+blue color.
 \mtnote{Please add reference to the relevant figure(s) and details.} 
+\jdnote{addressed}
+The RP overhead is calculated measuring and aggregating the execution time
+(i.e., duration) of the RP components that manage and coordinate the
+execution of the application. Among these components, the task scheduler of
+RP introduces the largest overhead. The task scheduling overhead scales
+linearly with the number of tasks because the time taken to schedule a task
+depends on the total number of tasks that need to be scheduled. 
 
 \mtnote{I commented all the following. IMHO, it does not contribute to
 understand the current analysis of the results. Do we need to expand the
-analysis?}
+analysis?}\jdnote{It can be left out, I was just trying to explain the barriers
+in EnTK between stages that may incur on the overheads, given that all 
+simulations need to finish before moving on to next stage. With protocols that
+have more tasks/stage, I thought this should be mentioned as a contribution.}
 % ------------------------- COMMENTED BY MT -------------------------
 % EnTK submits CU descriptions to a database that is then pulled by
 % RP.\mtnote{I am not sure this is accurate}\jdnote{took out "same" database}
@@ -832,22 +856,29 @@ analysis?}
 % This pull operation occurs over a wide area networks, which introduces
 % varying amounts of latency.
 
-The RP overhead is calculated measuring and aggregating the execution time
-(i.e., duration) of the RP components that manage and coordinate the
-execution of the application. Among these components, the task scheduler of
-RP introduces the largest overhead. The task scheduling overhead scales
-linearly with the number of tasks because the time taken to schedule a task
-depends on the total number of tasks that need to be scheduled. 
-% The main contributor to the increase in overhead in RP is based on the the
-% time of resources inactivity while RP schedules new tasks. As such, the
-% overhead is expected to grow proportionally to the number of concurrent
-% tasks~\cite{dakka2017}.
-\mtnote{I am afraid this whole paragraph needed to be
+
+In comparison to Task Execution Time, the EnTK and RP overheads are 
+an order of magnitude shorter, yet contribute directly to the total duration of 
+the application. Ultimately, in a computational drug campaign, the use of 
+runtime systems results in additional allocation of resources. In situations where
+campaigns are limited by a computational budget, we approximate those overheads 
+would contribute to $\approx15\%$, based on the data in Figure~\ref{fig:ws}.
+For such campaigns, efficient utilization of resources is most crucial 
+consideration. In the scope of this work, we leverage the efficiency of 
+resources as provided by the runtime system, in order to focus on scalable 
+execution of adaptive methods that can improve accuracy and reduce time to 
+solution. \mtnote{I am afraid this whole paragraph needed to be
 rewritten. I tried to fix it but we are missing a comparative evaluation of
 this overhead. For example, does this overhead matter when compared to TTX or
 TTC? Given a computation campaign with TIES and ESMACS, how much allocation
 time would be spent on this overhead? What would be the total percentage of
-allocation/resources spent in overheads?}
+allocation/resources spent in overheads?}\jdnote{added context}
+
+% The main contributor to the increase in overhead in RP is based on the the
+% time of resources inactivity while RP schedules new tasks. As such, the
+% overhead is expected to grow proportionally to the number of concurrent
+% tasks~\cite{dakka2017}.
+
 
 % Among these durations, the pilot duration contains the time to bootstrap
 % and terminate the pilot. The task overheads contain the executor's spawning
@@ -856,16 +887,7 @@ allocation/resources spent in overheads?}
 % in this context.} \jdnote{need to discuss on 06/04, should we keep these
 % details or keep the focus on the paragraph just above this one?}
 
-Furthermore, an additional overhead, driven by the \texttt{aprun} launch
-method increases as we approach a system limit on the number of concurrent
-\texttt{aprun} processes. For example, when scaling to 8 TIES protocol
-instances as shown in Figure~\ref{fig:ws} (a), the application
-requires 520 concurrent tasks. Considering that we observe \texttt{aprun}
-failures at approximately  concurrent processes, this accounts for
-additional time that is factored into Task Execution Time. 
-\mtnote{We need to explain why TTX is affected. Are tasks restarted?
-Also, does this overhead matter? See previous comment about RP overhead
-impact on TTX/TTC/Resource utilization.}
+
 
 % \mtnote{this sentence does not read well. I would refine it}
 % \mtnote{this needs further explanation}
