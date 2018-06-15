@@ -1,0 +1,35 @@
+\begin{tikzpicture}
+\begin{axis}[
+  title style={align=center},
+  title={Adaptive termination},
+  no markers,
+  every axis plot/.append style={ultra thick},
+  xlabel=Resource consumption (CPU-hours),
+  ylabel=$\Delta$G (kcal/mol),
+  % scaled ticks=false,
+  % yticklabel style={
+  % /pgf/number format/precision=3,
+  % /pgf/number format/fixed},
+  % scale=0.85,
+  ]
+  
+  
+\addplot+[color=Orchid, smooth, error bars/.cd, y dir=both,y explicit, error mark=none, error bar style={draw=gray}] table [x=Resource consumption, y=dG, col sep=comma] {figures/adaptive-termination.csv};
+
+\legend{Observable}
+
+% \draw[densely dotted, color=gray] (10586.058921984,0.049299384672436553) -- (12000,0.049299384672436553);
+% \draw[densely dotted, color=gray] (8143.1222476800012,0.0015858767437348931) -- (12000,0.0015858767437348931);
+% 
+% \draw[densely dotted, color=gray] (10586.058921984,0.08) -- (10586.058921984,-0.025);
+% \draw[densely dotted, color=gray] (8143.1222476800012,0.08) -- (8143.1222476800012,-0.025);
+% \draw[->] (10586.058921984,0.075) -- (8143.1222476800012,0.075) ;
+% \node[align = right] at (8700, 0.115) {Resource\\consumption\\decrease};
+% 
+% \node at (9200, 0.025) {\contour{white}{Error decrease}};
+% \draw[->] (11500,0.049299384672436553) -- (11500,0.0015858767437348931) ;
+% 
+
+  
+\end{axis}
+\end{tikzpicture}
