@@ -2,37 +2,54 @@
 \begin{axis}[
   ybar,
   ymin=0,
-  ylabel=Error (kcal/mol),
+  ymax=0.8,
+  ylabel={Error (kcal/mol)\\},
+  ylabel style={align=center},
   x tick label style  = {text width=1.5cm,align=center},
-  symbolic x coords={PTP1B L1-L2,PTP1B L10-L12,TYK2 L7-L8,TYK2 L4-L9,MCL1 L32-L38}
+  xtick = \empty,
+  symbolic x coords={PTP1B L1-L2,PTP1B L10-L12,TYK2 L7-L8,TYK2 L4-L9,MCL1 L32-L38},
+  % nodes near coords,
+  % nodes near coords align={west},
+  % nodes near coords style={/pgf/number format/.cd,fixed,precision=3},
+  scaled ticks = false,
+  yscale=0.45,
+  ytick distance=0.2,
+%  legend pos = outer north,
+  legend cell align=left,
   ]
   
-\addplot+[color=Orchid] table [x=System, y=Non-adaptive error, col sep=comma] {figures/savings.csv};
+\addplot+[color=BrBG-A, draw=BrBG-B, fill=BrBG-D, line width=0.75pt] table [x=System, y=Non-adaptive error, col sep=comma] {figures/savings.csv};
 
-\addplot+[color=YellowGreen] table [x=System, y=Adaptive error, col sep=comma] {figures/savings.csv};
+\addplot+[color=BrBG-O, draw=BrBG-N, fill=BrBG-K, line width=0.75pt] table [x=System, y=Adaptive error, col sep=comma] {figures/savings.csv};
 
+\coordinate (A) at (axis cs:PTP1B L1-L2,0.2);
+\coordinate (O1) at (rel axis cs:0,0);
+\coordinate (O2) at (rel axis cs:1,0);
 
-\legend{Non-adaptive,Adaptive}
+\draw [red,sharp plot] (A -| O1) -- (A -| O2);
+
+\legend{Non-adaptive,Adaptive} 
   
 \end{axis}
-\end{tikzpicture}%
-%
-%
+\end{tikzpicture}
+
 \begin{tikzpicture}
 \begin{axis}[
   ybar,
   ymin=0,
-  ylabel=Resource consumption (CPU-hours),
+  ylabel={Consumption\\(1K CPU-hours)},
+  ylabel style={align=center},
   x tick label style  = {text width=1.5cm,align=center},
-  symbolic x coords={PTP1B L1-L2,PTP1B L10-L12,TYK2 L7-L8,TYK2 L4-L9,MCL1 L32-L38}
+  symbolic x coords={PTP1B L1-L2,PTP1B L10-L12,TYK2 L7-L8,TYK2 L4-L9,MCL1 L32-L38},
+  yscale=0.45,
   ]
   
-\addplot+[color=Orchid] table [x=System, y=Non-adaptive cpuh, col sep=comma] {figures/savings.csv};
+\addplot+[color=BrBG-A, draw=BrBG-B, fill=BrBG-D, line width=0.75pt] table [x=System, y=Non-adaptive cpuh, col sep=comma] {figures/savings.csv};
 
-\addplot+[color=YellowGreen] table [x=System, y=Adaptive cpuh, col sep=comma] {figures/savings.csv};
+\addplot+[color=BrBG-O, draw=BrBG-N, fill=BrBG-K, line width=0.75pt] table [x=System, y=Adaptive cpuh, col sep=comma] {figures/savings.csv};
 
 
-\legend{Non-adaptive,Adaptive}
+% \legend{Non-adaptive,Adaptive}
   
 \end{axis}
 \end{tikzpicture}

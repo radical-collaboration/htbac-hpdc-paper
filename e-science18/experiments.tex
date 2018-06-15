@@ -1287,12 +1287,23 @@ error on that interval.
 
 \begin{figure}
   \input{figures/fig-adapt.tex}
-  \caption{\sout{This is a good plot!} Please provide a meaningful caption}
+  \caption{Plot of the error estimate as a function of the resource consumption
+  comparing the adaptive and nonadaptive simulations. While the error estimate
+  converges for both simulations, the adaptive simulation places the lambda
+  windows in such a way that the error is considerably lowered. This is a plot
+  for one of the systems.}
   \label{fig:adapconv}
 \end{figure}
 
-\begin{figure*}
+\begin{figure}
   \input{figures/fig-savings.tex}
-\caption{\sout{This is a good plot!} Please provide a meaningful caption}
+  \caption{Quantifying the benefits of the adaptive quadrature simulations. (a)
+  The error of the adaptive run is reduced for all 5 test systems sometimes by a
+  s significant amount. Recently \cite{} it has been shown that reproducibility
+  of free energy calculations can be achieved up to 0.2 kcal/mol. The adaptive
+  algorithm brings down the error of the non-adaptive simulations below this
+  threshold, ensuring that results and also reproducible. (b) Resource
+  consumption is also reduced, except for one of the systems, where the low
+  error threshold required more $\lambda$ windows to fulfill.}
   \label{fig:savings}
-\end{figure*}
+\end{figure}
