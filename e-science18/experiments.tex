@@ -288,8 +288,8 @@ NCSA sets a system policy on the maximum number of processes that
 execute on Blue Waters to approximately 450. During the execution of
 Experiment 2, we observed failing tasks once we scale up to 8 TIES protocol
 instances, which is equivalent to 520 concurrent tasks. In a trial of 10
-repetitions at this scale, we observed an average of 70 failing tasks, with a
-standard deviation of 6.67, and range of 59 to 83 tasks. Given that we only
+repetitions at this scale, we observed an average failing tasks of $70 \pm6.67$, 
+and range of $59-83$ tasks. Given that we only
 ran a small number of trials, more data would be required to properly model
 the distribution type of these results.
 
@@ -634,20 +634,21 @@ tasks, assessing the overall impact of these overheads on the application
 time to completion. We measure the following durations:
 
 \begin{itemize}
-    \item \textbf{Task Execution Time}: Time taken by the task executables to
-    run on the computing infrastructure (CI).
+    \item \textbf{Total Task Execution Time}: Time taken by the aggregate of
+    task executables to run on the computing infrastructure (CI).
     \item \textbf{HTBAC Overhead}: Time taken to process the application,
     instantiate HTBAC's components and subcomponents, translate protocols
     into pipelines for EnTK, and validate resource descriptions.
     \item \textbf{EnTK and RP Overhead}: Time taken by EnTK and its runtime
     system (RADICAL-Pilot) to submit and manage the execution of tasks.
-    \item \textbf{\texttt{aprun} Overhead}: Time taken by \texttt{aprun} to
-    schedule tasks on a set of compute nodes.\mtnote{Are we sure aprun
-    `schedules' tasks? Maybe launch as we call `aprun' a launch method?}
+    \item \textbf{\texttt{aprun} Overhead}: Approximated time taken by 
+    \texttt{aprun} to launch tasks on a set of compute nodes.
+    \mtnote{Are we sure aprun `schedules' tasks? Maybe launch as we call `aprun' 
+    a launch method?} \jdnote{addressed, as referenced by cray documentation}
 \end{itemize}
 
-Total Time to Execution \(TTX\) measures only the aggregated execution time
-of all tasks' executables.
+% Total Time to Execution \(TTX\) measures only the aggregated execution time
+% of all tasks' executables.
 \mtnote{TTX should measure only the aggregated time spent executing the
 tasks' executables. All the rest should be part of RP overhead}
 \jdnote{ This sentence doesn't need to go in but I wanted to clarify a point:
@@ -663,7 +664,7 @@ paper. I would use `tasks execution time' or, probably better, `total task
 execution time'. We want to indicate an AGGREGATED measure of a duration,
 not a measure of the time taken by a SINGLE task to execute. Note: this is a
 duration. As such, it should be an item of the list above, not a separate
-paragraph.}
+paragraph.}\jdnote{I've modified the descriptions}
 
 Once the runtime system relinquishes the control flow to \texttt{aprun}, the
 precise times of when \texttt{aprun} schedules the task on the compute nodes
@@ -717,8 +718,11 @@ protocol. Each instance of the TIES protocol
 contains a single pipeline with 4 stages and 65 concurrent tasks. We increase
 the number of instances linearly, between 2 and 8. When scaling to 8 protocol
 instances, we execute more than 450 concurrent tasks, the average limit
-supported by \texttt{aprun} (\mtnote{reference the subsection of the paper
-where this limit is described}). Nevertheless, we include results at this
+supported by \texttt{aprun} described in Section~\ref{ssec:exp_design}. 
+
+ (\mtnote{reference the subsection of the paper
+where this limit is described})\jdnote{addressed} 
+Nevertheless, we include results at this
 scale to show HTBAC's performance when supporting higher orders of concurrent
 simulations.
 
@@ -730,8 +734,7 @@ simulations.
     resources is kept constant. Overheads of HTBAC, EnTK + RP, and
     \texttt{aprun}, and Task Execution Time as a function of (a) TIES
     protocol (Experiment 1), (b) ESMACS protocol (Experiment 2) , and (c)
-    TIES and ESMACS protocols (Experiment 3). We ran 3 trials for each
-    experiment.}
+    TIES and ESMACS protocols (Experiment 3).}
 \label{fig:ws}
 \end{figure}
 
@@ -764,7 +767,8 @@ subplots, 1 caption is cleaner}
 
 In all weak scaling experiments (Figure~\ref{fig:ws}) we observe
 \mtnote{total? See my previous comment about this being and AGGREGATED
-duration.} Task Execution Time to be fixed as the number of protocol
+duration.}\jdnote{aggregate} 
+Total Task Execution Time to be fixed as the number of protocol
 increases, thereby showing ideal weak scaling behavior. 
 % The error bars are calculated using 3 trials per protocol instance measure,
 % already suggesting but While it is highly desirable to use larger trials to
@@ -774,12 +778,13 @@ increases, thereby showing ideal weak scaling behavior.
 explanation}\jdnote{how is this?}\mtnote{I commented it out. I believe we
 should avoid to mention how many repetitions we did altogether as we did so a
 few. Happy for this to be reverted by anyone with a more solid background in
-statistics than mine.}
+statistics than mine.}\jdnote{OK}
 
 The HTBAC overhead depends mostly on the number of protocol instances that
 need to be generated for an application. This overhead shows a super linear
 increase as we grow the number of protocol instances, but the duration of the
-overhead is negligible when compared to \mtnote{total?} Task Execution Time.
+overhead is negligible when compared to \mtnote{total?}\jdnote{addressed} 
+Total Task Execution Time.
 
 The \texttt{aprun} overhead increases as we approach the limit of concurrent
 \texttt{aprun} processes that can be executed on Blue Waters. For example,
@@ -798,13 +803,14 @@ Figure~\ref{fig:ws}, blue bars.
 
 The RP overhead is calculated by measuring and aggregating the execution time
 of the RP components that manage and coordinate the execution of the
-application \mtnote{protocol?}. Among these components, the task scheduler of
-RP introduces the largest overhead. The task scheduling overhead scales
-linearly with the number of tasks because the time taken to schedule a task
-depends on the total number of tasks that need to be scheduled.\mtnote{Are we
+protocol instances \mtnote{protocol?}\jdnote{addressed}. Among these components, 
+the task scheduler of RP introduces the largest overhead. The task scheduling 
+overhead scales linearly with the number of tasks because the time taken to 
+schedule a task depends on the total number of tasks that need to be scheduled.
+\mtnote{Are we
 sure? In the latest RP paper I thought we wrote that the performance of the
 RP CU scheduler depends on the size of the pilot? Would you mind double
-checking?}
+checking?}\jdnote{sent you note on slack about discrepancy in papers.}
 
 In comparison to \mtnote{total?} Task Execution Time, the EnTK and RP
 overheads are an order of magnitude shorter, yet they directly contribute to
@@ -812,7 +818,7 @@ the total duration of the application. Based on Figure~\ref{fig:ws}, we
 approximate the use of our runtime systems will results in $\approx15\%$
 additional usage of resource allocation. This overhead can be reduced by
 using a special-purpose scheduler for the RP runtime system as illustrated in
-Ref.~\cite{latest_rp_paper}.
+Ref.~\cite{merzky2018}.
 
 % For computational drug campaigns, efficient utilization of resources is
 % most crucial consideration. In the scope of this work, we leverage the
