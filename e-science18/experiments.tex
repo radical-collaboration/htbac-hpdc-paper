@@ -94,7 +94,7 @@ efficiency with non-adaptive simulation methods.
 % previous version was compressed and ``left too much in the authors'
 % pens''.}
 
-% ---------------------------------------------------------------------------
+% A -------------------------------------------------------------------------
 \subsection{Experiment Setup}\label{ssec:exp_design}
 
 Table~\ref{tab:experiments} shows 7 experiments we designed to characterize
@@ -617,9 +617,21 @@ computing time and communication overhead.
 % consists of one task that aggregates the previous results and computes a
 % single average across all replicas.
 
-%----------------------------------------------------------------------------
-
+% B -------------------------------------------------------------------------
 \subsection{Overhead Characterization}
+
+\mtnote{I would create a subsection with overheads, discussing their
+behavior and nature while referencing both weak and strong scaling
+experiments.}
+\jdnote{placing this here...}
+\mtnote{This does not work as most of the overheads are still discussed in
+the next subsection. It is getting late to keep altering the structure of
+this section. It seems to me, we are measuring: weak scaling, strong scaling
+and overheads. Do we measure and discuss overheads in both weak and strong
+scaling? If so, I would not have a separate subsection for overheads at this
+point in time from the deadline. If we are discussing them only in the
+context of the weak scaling, then we may have a problem and we need to
+discuss it.}
 
 We perform 5 experiments to characterize the overheads of HTBAC, EnTK, 
 runtime system, and \texttt{aprun} as a function of weak and strong scaling
@@ -648,11 +660,6 @@ logs. In this way, we approximate the portion of the TAsk Execution Time
 taken by \texttt{aprun} to launch the task. Once aggregated, these measures
 constitute what we defined as \texttt{aprun} Overhead.\mtnote{Am I right to
 assume that: $Task Execution Time = NAMD execution time$?}
-
-% \mtnote{I would create a subsection with overheads, discussing their
-% behavior and nature while referencing both weak and strong scaling
-% experiments.}
-% \jdnote{placing this here...}
 
 % \mtnote{Are we sure aprun `schedules' tasks? Maybe launch as we call
 % `aprun' a launch method?} \jdnote{addressed, as referenced by cray
@@ -707,17 +714,17 @@ assume that: $Task Execution Time = NAMD execution time$?}
 % tasks' executable, then TTX and $T_{O}$ both contain part of RP %
 % overhead.}
 
-% ---------------------------------------------------------------------------
+% C -------------------------------------------------------------------------
 \subsection{Weak Scaling and Performance Characterization}
 
 We investigate the weak scaling of HTBAC with three experiments: Experiment 1
-that uses only the TIES protocol; Experiment 2 that uses only the ESMACS
-protocol; and Experiment 3 that uses both TIES and ESMACS. Each experiment
-uses a different protocol configuration, with a number of instances
-determined by the number of concurrent executions supported by
-\texttt{aprun}. In each experiment, we increase the number of instances of
-the protocol configuration, proportionally to the amount of requested
-resources.
+that executes only the TIES protocol; Experiment 2 that executes only the
+ESMACS protocol; and Experiment 3 that executes both TIES and ESMACS
+together. Each experiment uses a different protocol configuration, with a
+number of instances determined by the number of concurrent executions
+supported by \texttt{aprun} on Blue Waters. In each experiment, we increase
+the number of instances of the protocol configuration, proportionally to the
+amount of requested resources.
 
 Figure~\ref{fig:ws}(a) shows the weak scalability of HTBAC with the TIES
 protocol. Each instance of the TIES protocol contains a single pipeline with
@@ -764,29 +771,15 @@ applies to which measurement. Also the legend should be inside the plots.}
 \jdnote{addressed, except with subplots I figured it would look cleaner with
 the legend at the bottom.}
 
-% \jdnote{Maybe combine captions into 1?}\mtnote{Agreed.}\jdnote{One figure,
-% 3 subplots, 1 caption is cleaner}
-
 In all weak scaling experiments (Figure~\ref{fig:ws}) we observe
-\mtnote{total? See my previous comment about this being and AGGREGATED
-duration.}\jdnote{aggregate}\mtnote{Does your comment mean that you prefer aggregated to total?}
 Total Task Execution Time to be fixed as the number of protocol
 increases, thereby showing ideal weak scaling behavior. 
-% The error bars are calculated using 3 trials per protocol instance measure,
-% already suggesting but While it is highly desirable to use larger trials to
-% determine the precision of our observations, our current data already
-% suggests a trend of reproducibility.
-\mtnote{This might be considered too little without further
-explanation}\jdnote{how is this?}\mtnote{I commented it out. I believe we
-should avoid to mention how many repetitions we did altogether as we did so a
-few. Happy for this to be reverted by anyone with a more solid background in
-statistics than mine.}\jdnote{OK}
 
 The HTBAC overhead depends mostly on the number of protocol instances that
 need to be generated for an application. This overhead shows a super linear
 increase as we grow the number of protocol instances, but the duration of the
-overhead is negligible when compared to \mtnote{total?}\jdnote{addressed} 
-Total Task Execution Time.
+overhead is negligible when compared to Total Task Execution
+Time.
 
 The \texttt{aprun} overhead increases as we approach the limit of concurrent
 \texttt{aprun} processes that can be executed on Blue Waters. For example,
@@ -804,23 +797,40 @@ expected to grow proportionally to the number of tasks, as observed in
 Figure~\ref{fig:ws}, blue bars.
 
 The RP overhead is calculated by measuring and aggregating the execution time
-of the RP components that manage and coordinate the execution of the
-protocol instances \mtnote{protocol?}\jdnote{addressed}. Among these components, 
-the task scheduler of RP introduces the largest overhead. The task scheduling 
-overhead scales linearly with the number of tasks because the time taken to 
-schedule a task depends on the total number of tasks that need to be scheduled.
-\mtnote{Are we
-sure? In the latest RP paper I thought we wrote that the performance of the
-RP CU scheduler depends on the size of the pilot? Would you mind double
-checking?}\jdnote{sent you note on slack about discrepancy in papers.}
+of the RP components that manage and coordinate the execution of the protocol
+instances \mtnote{protocol?}\jdnote{addressed}. Among these components, the
+task scheduler of RP introduces the largest overhead. The task scheduling
+overhead scales linearly with the number of tasks because the time taken to
+schedule a task depends on the total number of tasks that need to be
+scheduled.
+\mtnote{Are we sure? In the latest RP paper I thought we wrote that the
+performance of the RP CU scheduler depends on the size of the pilot? Would
+you mind double checking?}\jdnote{sent you note on slack about discrepancy in
+papers.}\mtnote{Answered there.}
 
-In comparison to \mtnote{total?} Task Execution Time, the EnTK and RP
-overheads are an order of magnitude shorter, yet they directly contribute to
-the total duration of the application. Based on Figure~\ref{fig:ws}, we
-approximate the use of our runtime systems will results in $\approx15\%$
-additional usage of resource allocation. This overhead can be reduced by
-using a special-purpose scheduler for the RP runtime system as illustrated in
-Ref.~\cite{merzky2018}.
+In comparison to Total Task Execution Time, the EnTK and RP overheads are an
+order of magnitude shorter, yet they directly contribute to the total
+duration of the application. Based on Figure~\ref{fig:ws}, we approximate the
+use of our runtime systems will results in $\approx15\%$ additional usage of
+resource allocation. This overhead can be reduced by using a special-purpose
+scheduler for the RP runtime system as illustrated in Ref.~\cite{merzky2018}.
+
+% \jdnote{Maybe combine captions into 1?}\mtnote{Agreed.}\jdnote{One figure,
+% 3 subplots, 1 caption is cleaner}
+
+% The error bars are calculated using 3 trials per protocol instance measure,
+% already suggesting but While it is highly desirable to use larger trials to
+% determine the precision of our observations, our current data already
+% suggests a trend of reproducibility.
+
+% \mtnote{This might be considered too little without further
+% explanation}\jdnote{how is this?}\mtnote{I commented it out. I believe we
+% should avoid to mention how many repetitions we did altogether as we did so
+% a few. Happy for this to be reverted by anyone with a more solid background
+% in statistics than mine.}\jdnote{OK}
+
+% \mtnote{total? See my previous comment about this being and AGGREGATED
+% duration.}\jdnote{aggregate}
 
 % For computational drug campaigns, efficient utilization of resources is
 % most crucial consideration. In the scope of this work, we leverage the
@@ -971,41 +981,83 @@ Ref.~\cite{merzky2018}.
 % a previous paragraph. See comments and iterations of the previous paragraph
 % before rewriting a new paragraph if needed.}
 
-% ---------------------------------------------------------------------------
+% D -------------------------------------------------------------------------
 \subsection{Strong Scaling and Performance Characterization}
 
-\mtnote{Should we have also a `Weak Scaling Experiments' header? Or maybe we
-should change this one?}
-\jdnote{I changed this subheader to match the subheader
-+or weak scaling \& performance characterization}
+We investigate the strong scaling of HTBAC on Blue Waters with two
+experiments: Experiment 4 that executes the TIES protocol and Experiment 5
+that executes the ESMACS protocol.  These Experiments show how the
+time-to-solution varies when consistently increasing the number of resources
+for a fixed problem size. We leverage strong scaling to support the objective
+in this work, which is to characterize: (a) the time-to-solution differences
+between adaptive and nonadaptive methods; (b) the increase in the number of
+resources as required by the nonadaptive method to reach an acceptable
+accuracy threshold. As such, we do not run an experiment about strong scaling
+with both the TIES and ESMACS protocols.
 
-To investigate strong scaling, we run two applications on Blue Waters: strong 
-scaling of TIES (experiment 4) and strong scaling of ESMACS 
-(experiment 5). \mtnote{Please add name of the applications}.
-\jdnote{addresed} 
+In Experiment 4 we fix the number of instances of the TIES protocol to 8 due
+to the described \texttt{aprun} limitations. We vary the amount of resources
+between 4160, 8320 and 16640 cores. Given 4160 cores, we can execute 4
+generations (defined in Section~\ref{ssec:exp_design}) of 130 concurrent
+tasks; with 8320 cores, we can execute 2 generations of 260 concurrent tasks;
+with 16640 cores we can execute \ldots\mtnote{please complete}
 
-We investigate the
-strong scaling behavior considering only homogeneous protocols. We base this 
-consideration on supporting the experiments of adaptivity focus only on TIES. 
-Experiments of strong scaling show how the time-to-solution varies when 
-consistently increasing the number of resources for a fixed problem size. We 
-leverage strong scaling to support the objective in this work, which is to 
-characterize (a) the time-to-solution differences between adaptive and 
-nonadaptive methods (b) the increase in the number of resources as required by 
-the nonadaptive method to reach an acceptable accuracy threshold. 
-\mtnote{I am afraid we will need a better explanation for this omission}.
-\jdnote{
-    Added context. Note about this paragraph: I think the argument about strong 
-    scaling only homogeneous protocols can be reduced to the fact that we only 
-    show TIES adaptivity. But for the rest of the paragraph, is there merit to 
-    put some of these ideas into experiment design?}
+In Experiment 5 we fix the number of instances of the ESMACS protocols to 16
+and vary the amount of resources between 3200, 6400 and 12800 cores. In this
+way, we obtain the same number of generations of execution as in experiment
+4. 
 
+Figure~\ref{fig:ss} shows a linear speedup in Total Task Execution Time for
+both experiments, proportional to the increase in the number of cores. The
+availability of more resources for a fixed number of protocols explains this
+behavior. All overheads remain constant for both experiments when increasing
+the number of cores. The scheduling of the number of tasks as opposed to the
+amount of resources, is the main driver of the fixed runtime overheads,
+namely EnTK and RP. This is confirmed for RP in Ref.~\cite{merzky2018}.
+\jdnote{this statement is now inconsistent with the performance
+characterization of Ref~\cite{merzky2018} but in Ref.~\cite{power-of-many17},
+(Power of Many) cites `` EnTK and RP overheads mostly depend on the number of
+managed tasks, not on the size of the pilot on which they are executed. This
+is confirmed for RP in Ref.~\cite{merzky2018}." Given that I see the same
+behavior as what is reported in Ref.~\cite{power-of-many17} I used the same
+reference.}\mtnote{Please see discussion on Slack}
 
-Both applications use the \texttt{BRD4-GSK} physical
-systems \mtnote{Should this detail go in experiment design? This would apply
-also to the weak scaling in the previous section}.
-\jdnote{It's already mentioned in design so we can omit}
+\begin{figure}
+  \centering
+   \includegraphics[width=\columnwidth]{figures/ss_all.pdf} 
+   \caption{Strong scaling properties of HTBAC. We investigate the strong
+    scaling of HTBAC by fixing the number of protocol instance and increasing
+    the number of cores. Overheads of HTBAC, EnTK + RP and \texttt{aprun},
+    and Task Execution Time as a function of (a) TIES protocol (Experiment 4)
+    and ESMACS protocol (Experiment 5). We ran 3 trials for each experiment.}
+\label{fig:ss}
+\end{figure}
 
+% \mtnote{name?}\jdnote{addressed} 
+% \mtnote{Are you sure this should not be the `nth experiment
+% shows'}\jdnote{addressed}
+% \mtnote{See previous comment about application/experiment}\jdnote{fixed}
+% \mtnote{add reference to the subsection where generation is defined}
+
+% \mtnote{I am afraid we will need a better explanation for this omission}.
+% \jdnote{ Added context. Note about this paragraph: I think the argument
+%     about strong scaling only homogeneous protocols can be reduced to the
+%     fact that we only show TIES adaptivity. But for the rest of the
+%     paragraph, is there merit to put some of these ideas into experiment
+%     design?}
+
+% Both applications use the \texttt{BRD4-GSK} physical systems \mtnote{Should
+% this detail go in experiment design? This would apply also to the weak
+% scaling in the previous section}.
+% \jdnote{It's already mentioned in design so we can omit}
+
+% \mtnote{Should we have also a `Weak Scaling Experiments' header? Or maybe
+% we should change this one?}
+% \jdnote{I changed this subheader to match the subheader +or weak scaling \&
+% performance characterization}
+
+% \mtnote{Please add name of the applications}.
+% \jdnote{addresed} 
 
 % The objective of strong scaling enables us to examine the properties of 
 % adaptive methods. 
@@ -1018,38 +1070,6 @@ also to the weak scaling in the previous section}.
 
 % The nonadaptive method runs in time Y with Z accuracy 
 % The adaptive method runs in time X with N accuracy
-
-Experiment 4 \mtnote{name?}\jdnote{addressed} shows the strong scaling behavior 
-of TIES alone \mtnote{Are you sure this should not be the `nth experiment shows'}
-\jdnote{addressed}, using \texttt{NAMD-MPI} with 32 cores per task. We fix the 
-number of instances of the TIES protocol to 8 due to the described 
-\texttt{aprun} limitations. We 
-vary the amount of resources between 4160, 8320 and 16640 cores. Given 4160 
-cores, we can execute 4 generations of 130 concurrent tasks; with 8320 cores, we 
-can execute 2 generations of 260 concurrent tasks. Experiment 5 shows the strong 
-scaling behavior of the ESMACS protocol \mtnote{See previous comment about
-application/experiment}\jdnote{fixed}. We fix the number of instances of the 
-ESMACS protocols to 16 and vary the amount of resources between 3200, 6400 and 
-12800 cores. This produces the same number of generations of execution 
-\mtnote{add reference to the subsection where generation is defined} as shown in 
-experiment 4. We define generations of execution in 
-Section~\ref{ssec:exp_design}. 
-
-In Figure~\ref{fig:ss}, we observe linear speedup in Total Task Execution Time 
-for both experiments with increase in number of cores. The availability of more 
-resources for a fixed number of protocols explains this behavior. All overheads 
-remain constant for both experiments when increasing the number 
-of cores. The scheduling of the number of tasks as opposed to the amount of 
-resources, is the main driver of the fixed runtime overheads, namely EnTK and 
-RP. This is confirmed for RP in Ref.~\cite{merzky2018}. \jdnote{this statement
-is now inconsistent with the performance characterization of 
-Ref~\cite{merzky2018} but in Ref.~\cite{power-of-many17}, (Power of Many) cites 
-`` EnTK and RP overheads mostly depend on the number of 
-managed tasks, not on the size of the pilot on which they are executed. This
-is confirmed for RP in Ref.~\cite{merzky2018}." Given that I see the same 
-behavior as what is reported in Ref.~\cite{power-of-many17} I used the same 
-reference.}
-
 
 % The comparison between weak and strong scalability shows the overhead
 % introduced by load balancing and scheduling tasks in multiple generations.
@@ -1066,34 +1086,22 @@ reference.}
 % allocated by the pilot \mtnote{this should be explained in the experiment
 % setup and design}.
 
-\mtnote{General note. Experiments about weak and strong scaling show the
-behavior of our software stack with one or more workflows/workloads. The
-question these experiments answer to is: Given a workload/workflow, does this
-software stack scale weakly and/or strongly? This is why, in the analysis of
-our data, we look at the linearity (or lack of thereof) of our plots. The
-analysis of the overhead(s) answer to a different question: What part of a
-measure---e.g., time to completion---depends on the properties of an element
-used to produce that measure---e.g., a component of our software stack?
-Usually, the analysis of the overheads is used to explain why we observe lack
-of scalability (weak or strong) as represented by a superlinearity in our
-plots. The discussion of our experimental results should clearly distinguish
-these questions and properly relate the study of scalability to that of
-overheads. At the moment, our discussion does not do all this.}\jdnote{I
-reduced the discussion of scalability down to the properties that relate to
-contributions of overheads and trends observed in TTX.}
-
-\begin{figure}
-  \centering
-   \includegraphics[width=\columnwidth]{figures/ss_all.pdf} 
-   \caption{Strong scaling properties of HTBAC. We investigate the strong 
-    scaling of HTBAC by fixing the number of protocol instance and increasing 
-    the number of cores. Overheads of HTBAC, EnTK + RP and \texttt{aprun}, and
-    Task Execution Time as a function of (a) TIES protocol (Experiment 4) and
-    ESMACS protocol (Experiment 5). We ran 3 trials for each experiment.}
-\label{fig:ss}
-\end{figure}
-
-
+% \mtnote{General note. Experiments about weak and strong scaling show the
+% behavior of our software stack with one or more workflows/workloads. The
+% question these experiments answer to is: Given a workload/workflow, does
+% this software stack scale weakly and/or strongly? This is why, in the
+% analysis of our data, we look at the linearity (or lack of thereof) of our
+% plots. The analysis of the overhead(s) answer to a different question: What
+% part of a measure---e.g., time to completion---depends on the properties of
+% an element used to produce that measure---e.g., a component of our software
+% stack? Usually, the analysis of the overheads is used to explain why we
+% observe lack of scalability (weak or strong) as represented by a
+% superlinearity in our plots. The discussion of our experimental results
+% should clearly distinguish these questions and properly relate the study of
+% scalability to that of overheads. At the moment, our discussion does not do
+% all this.}\jdnote{I reduced the discussion of scalability down to the
+% properties that relate to contributions of overheads and trends observed in
+% TTX.}
 
 %----------------------------------------------------------------------------
 \subsection{Experiments Validation}
