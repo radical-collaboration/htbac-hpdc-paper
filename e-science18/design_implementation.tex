@@ -119,26 +119,21 @@ free energy protocols in terms of ensemble applications:
 \begin{itemize}
   \item \textbf{Protocol:} A generic abstraction of a free energy protocol
   such as ESMACS or TIES.
-  \item \textbf{Simulation:} Simulation parameters that supply additional
-  information for each protocol instance.
+  \item \textbf{Simulation:} Simulation parameters that supply 
+  additional information for each protocol instance.
+  \item \textbf{Analysis:} Analysis parameters that supply additional 
+  information for each protocol instance. 
   \item \textbf{Runner:} A generic abstraction to describe resources needed
   by the application.
 \end{itemize}
 
 The \textbf{Protocol} construct enables multiple instantiations of protocol
-types, while the \textbf{Simulation} construct specifies simulation
-parameters that shape each protocol. The \textbf{Runner} construct provides
-the functionality to specify the resource requirements and the amount of time
-these resources should be available to execute the application. Thus, in
-HTBAC an application consists of protocols, simulation conditions, and
-resource requirements.
-
-\mtnote{The following is about architecture and execution model: ``HTBAC rests between the domain scientist and the cyber-infrastructure,
-abstracting the complexity of encoding end-to-end protocols, resource
-acquisition and execution management. The Runner initializes HTBAC and holds
-the global state of the application, submits protocols and communicates with
-the ensemble management system that handles the dependencies of the
-protocols, and acquires resources via a runtime system.''}
+types, while the \textbf{Simulation} and \textbf{Analysis} construct specifies 
+simulation or analysis parameters that shape each protocol. The \textbf{Runner} 
+construct provides the functionality to specify the resource requirements and 
+the amount of time these resources should be available to execute the 
+application. Thus, in HTBAC an application consists of protocols, simulation 
+and analysis conditions, and resource requirements.
 
 In HTBAC, an application can have one or more protocol instance(s). Each
 protocol models a unique protein ligand physical system. Each protocol
@@ -200,41 +195,53 @@ terms of computational tasks.
 
 % ---------------------------------------------------------------------------
 \subsubsection{Architecture}
+\jdnote{should this stay as a subsubsection? Or maybe we can merge Design and 
+Architecture into one subsections?}
 
-\jdnote{started an Architecture section but need input on how to describe 
-the API, and application management layer, given that all the components are 
-mixed between both. The runner is the main component of the application 
-management layer because it is the driver that collects the protocols and 
-submits them to EnTK. Would it make sense to show 3 layers then? API, 
-application management and protocol generation?} 
+\mtnote{The following is about architecture and execution model: ``HTBAC rests 
+between the domain scientist and the cyber-infrastructure,
+abstracting the complexity of encoding end-to-end protocols, resource
+acquisition and execution management. The Runner initializes HTBAC and holds
+the global state of the application, submits protocols and communicates with
+the ensemble management system that handles the dependencies of the
+protocols, and acquires resources via a runtime system.''}\jdnote{incorporated
+this description into the main paragraph}
 
-HTBAC abstracts the resource management and execution management from the user. 
-Figure~\ref{fig:components} shows the components and subcomponents of the 
-HTBAC. All three components enable the user to codify an application 
-description of HTBAC. The runner serves as the application management system,
-by initializing the state of the application and communicating with the 
-ensemble management system. 
+HTBAC rests between the domain scientist and the cyber-infrastructure. HTBAC 
+abstracts the protocol coordination, resource management and execution 
+management from the user. Fig. \jdnote{will be added once we have a complete
+diagram} shows the components (orange) and subcomponents 
+(green) of HTBAC, organized in two layers: API and application management layer. 
 
-Figure~\ref{} shows a visual block diagram representation \mtnote{`visual
-block diagram representation' seems unclear to me. Should we just have an
-architecture diagram here?} of HTBAC and the underlying building
-blocks.\jdnote{adding architecture diagram -- in draft
-currently}\mtnote{Note: architecture diagrams are static. They can be
+All components are stateless as they do not require different processes. The API 
+enables users to codify protocol descriptions. The  application management layer 
+retrieves the application description, aggregates and coordinates protocols and 
+communicates with the ensemble management system. The ensemble management system 
+handles the dependencies of the protocols, and acquires resources via a runtime 
+system. The Application Generator contains three subcomponents, Protocol Manager, 
+Step Manager, and Ensemble-Member Manager, which synchronize and coordinate the 
+ensemble members and simulation or analysis steps within each protocol.
+
+\mtnote{`visual block diagram representation' seems unclear to me. Should we 
+just have an architecture diagram here?} 
+\mtnote{Note: architecture diagrams are static. They can be
 `augmented' with numbers (and often arrows) to support the description of an
 execution model. Please review a couple of papers the group wrote with this
-type of diagram.} \jdnote{working on architecture with execution model 
-diagram. For now I'm referencing component and subcomponent diagram}
+type of diagram.} 
+\jdnote{I've changed the description of the architecture, the actual diagram
+(which is a continuous iteration is: 
+\href{https://docs.google.com/drawings/d/1a5qgu6IyhRfajk1X33NRgrAw9heMUHIx67MOxR9DMiU/edit?usp=sharing}{here}}
 
-\begin{figure}
-  \centering
-  \includegraphics[width=\columnwidth]{figures/Component_Subcomponent_Diagram.pdf}
-  \caption{Components and subcomponents of HTBAC. The protocol, simulation and 
-  runner are the main components. The protocol and simulation components 
-  describe the protocols and their simulation conditions. The runner component 
-  serves as the application manager by interfacing with the ensemble management 
-  system.}
-\label{fig:components}
-\end{figure}
+% \begin{figure}
+%   \centering
+%   \includegraphics[width=\columnwidth]{figures/Component_Subcomponent_Diagram.pdf}
+%   \caption{Components and subcomponents of HTBAC. The protocol, simulation and 
+%   runner are the main components. The protocol and simulation components 
+%   describe the protocols and their simulation conditions. The runner component 
+%   serves as the application manager by interfacing with the ensemble management 
+%   system.}
+% \label{fig:components}
+% \end{figure}
 
 % ---------------------------------------------------------------------------
 % Protocols differ only by their individual analysis step which typically
@@ -457,7 +464,21 @@ defined by the user is reached, determining termination.
 
 Once an adaptive or nonadaptive workflow is described in HTBAC, the Runner
 component tags each protocol instance with a unique ID and converts protocols
-into EnTK pipelines or stages of tasks. Pipelines are submitted to EnTK's
+into EnTK pipelines or stages of tasks. 
+
+The Runner aggregates the  
+the application description which includes protocols and their simulation 
+conditions as well as CI information. 
+
+The application generator passes the protocol description to the 
+Protocol Manager which communicates with the Simulation-Step Manager and the 
+Ensemble-Member Manager to generate the protocol with the appropriate 
+simulation conditions. The application generator aggregates all protocols 
+and passes the protocols as well as the application's resource configuration 
+to the ensemble management system.  
+
+
+Pipelines are submitted to EnTK's
 Application Manager component which sets up multiple processes, threads and a
 message queue for communication. EnTK identifies tasks which have satisfied
 dependencies and can be executed concurrently. EnTK's Execution Manager
@@ -470,13 +491,13 @@ pipelines on specific target resources.
 % workflow was explicitly established}\jdnote{provided earlier definition of
 % workflows},
 
-The Runner component of HTBAC also describes the computational requirements
-of the workflow including walltime, cores, queue, and user credentials. EnTK
-uses these requirements to derive a resource request that is then converted
-into a pilot description for RP. RP converts this pilot requests into a batch
-script that is submitted to a suitable HPC machine. Once the pilot becomes
-active, it pulls the tasks made available by EnTK in bulk, executing them on
-the pilot resources~\cite{merzky2015radical}.
+The workflow generator component of HTBAC also describes the computational 
+requirements of the workflow including walltime, cores, queue, and user 
+credentials. EnTK uses these requirements to derive a resource request that is 
+then converted into a pilot description for RP. RP converts this pilot requests 
+into a batch script that is submitted to a suitable HPC machine. Once the pilot 
+becomes active, it pulls the tasks made available by EnTK in bulk, executing 
+them on the pilot resources~\cite{merzky2015radical}.
 
 % ---------------------------------------------------------------------------
 \subsection{Adaptive Execution Model}
@@ -502,9 +523,9 @@ runtime decisions.
 % the protocol component enables granularity in creating multiple ``shorter" 
 % protocols. 
 
-The runner maintains the state of the submitted protocol by tagging each 
-protocol instance with a unique ID. This enables the runner to keep track of
-protocol instances that require additional simulations. 
+The workflow generator maintains the state of the submitted protocol by tagging 
+each protocol instance with a unique ID. This enables the runner to keep track 
+of protocol instances that require additional simulations. 
 % The protocol component 
 % contains a post-execution property that invokes the application once the protocol 
 % terminates. In HTBAC, the 
