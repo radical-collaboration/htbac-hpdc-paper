@@ -1,6 +1,8 @@
+\begin{flushleft}
 \begin{tikzpicture}
 \begin{axis}[
   ybar,
+  area legend,
   ymin=0,
   ymax=0.8,
   ylabel={Error (kcal/mol)\\},
@@ -17,6 +19,7 @@
 % ytick distance=0.2,
 %  legend pos = outer north,
   legend cell align=left,
+  legend style={at={(0.985,2.15)},anchor=north east}
   ]
   
 \addplot+[draw=DarkOrchid, fill=Orchid, line width=0.75pt] table [x=System, y=Non-adaptive error, col sep=comma] {figures/savings.csv};
@@ -53,3 +56,4 @@
   
 \end{axis}
 \end{tikzpicture}
+\end{flushleft}

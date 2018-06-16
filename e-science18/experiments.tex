@@ -1293,14 +1293,14 @@ the windows, the accuracy of the free energy still increased by
 \begin{table*}
   \caption{Comparing results of adaptive, non-adaptive and reference runs}
   \label{tab:adapquad}
-  \begin{tabular}{lSSSSSS}
+  \begin{tabular}{lSSSSS[table-format=5.1]S[table-format=5.1]}
     \toprule
     {System}                               & 
     {Ref $\Delta \Delta$G}                 &
     {Non-adaptive $\Delta \Delta$G}        &
     {Adaptive $\Delta \Delta$G}            &
     {Num. of $\lambda$ windows}            &
-    {Decrease in time to completion}       &
+    {Decrease in TTX}       &
     {Increase in accuracy}                 \\
     \midrule
     {PTP1B L1-L2}   & 
@@ -1308,40 +1308,40 @@ the windows, the accuracy of the free energy still increased by
     -57.87(64) & 
     -58.60(9) & 
     10 & 
-    \SI{23}{\percent} & 
-    \SI{86}{\percent} \\
+    23\si{\percent} & 
+    86\si{\percent} \\
     %
     {PTP1B L10-L12} & 
     1.83   & 
     2.05(22) & 
     1.94(7)  & 
     6  & 
-    \SI{54}{\percent} &
-    \SI{68}{\percent} \\
+    54\si{\percent} &
+    68\si{\percent} \\
     %
     {MCL1  L32-L38} & 
     2.13   & 
     2.33(20) & 
     2.14(1)      & 
     7  & 
-    \SI{46}{\percent} & 
-    \SI{95}{\percent} \\
+    46\si{\percent} & 
+    95\si{\percent} \\
     %
     {TYK2  L4-L9}   &
     -28.69 & 
     -28.25(44) & 
     -28.67(1)  & 
     7  & 
-    \SI{46}{\percent} & 
-    \SI{98}{\percent} \\
+    46\si{\percent} & 
+    98\si{\percent} \\
     %
     {TYK2  L7-L8}   & 
     4.97   & 
     4.92(5) & 
     5.00(3)      & 
     14 &  
-    \SI{-8}{\percent} & 
-    \SI{40}{\percent} \\
+    -8\si{\percent} & 
+    40\si{\percent} \\
     \bottomrule 
     
   \end{tabular}
@@ -1406,8 +1406,37 @@ tested.
 
 \begin{figure}
   \input{figures/fig-term.tex}
-  \caption{Adding caption soon!}
+  \caption{Plot of the free energy as a function of the resources consumed (hence simulation time). The adaptive termination algorithm checks the convergence of the observable every $\tau = \SI{0.5}{\nano\second}$ and if the threshold (\num{0.01} kcal/mol) has been met, terminates the simulation.}
   \label{fig:termination}
 \end{figure}
 
+\begin{table}
+  \caption{Simulation time of non-adaptive and adaptively terminated runs for a given convergence criterion}
+  \label{tab:adapterm}
+  \centering
+  \begin{tabular}{lSSS[table-format=5.1, table-column-width=2cm]}
+    \toprule
+    {System}                               & 
+    {Non-adaptive}      &
+    {Adaptive}          &
+    {Decrease in TTX}       \\
+    \midrule
+    {PTP1B L10-L12} & 
+    6.0\si{\nano\second}   & 
+    5.0\si{\nano\second}   & 
+    16.7\si{\percent} \\
+    %
+    {TYK2 L4-L9}   &
+    6.0\si{\nano\second} & 
+    5.5\si{\nano\second} & 
+     8.3\si{\percent} \\
+    %
+    {TYK2 L7-L8}   & 
+    6.0\si{\nano\second}  & 
+    4.5\si{\nano\second} & 
+    25.0\si{\percent} \\
+    \bottomrule 
+    
+  \end{tabular}
+\end{table}
 

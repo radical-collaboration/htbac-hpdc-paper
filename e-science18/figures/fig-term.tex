@@ -1,35 +1,45 @@
 \begin{tikzpicture}
 \begin{axis}[
-  title style={align=center},
-  title={Adaptive termination},
-  no markers,
+  height=5cm,
+  width=\columnwidth,
   every axis plot/.append style={ultra thick},
   xlabel=Resource consumption (CPU-hours),
   ylabel=$\Delta$G (kcal/mol),
-  % scaled ticks=false,
-  % yticklabel style={
-  % /pgf/number format/precision=3,
-  % /pgf/number format/fixed},
-  % scale=0.85,
+  scaled ticks=false,
+  yticklabel style={
+  /pgf/number format/precision=3,
+  /pgf/number format/fixed},
+  xmin=3533.3975040000005,
+  xmax=12000,
+  ymax=4.85,
   ]
   
   
-\addplot+[color=Orchid, smooth, error bars/.cd, y dir=both,y explicit, error mark=none, error bar style={draw=gray}] table [x=Resource consumption, y=dG, col sep=comma] {figures/adaptive-termination.csv};
+\addplot+[no markers, color=Orchid, smooth, error bars/.cd, y dir=both,y explicit, error mark=none, error bar style={draw=gray}] table [x=Resource consumption, y=dG, col sep=comma] {figures/adaptive-termination-begin.csv};
 
-\legend{Observable}
+\addplot [only marks, mark=|, mark options={color = OliveGreen, mark size = 5pt, thick}] coordinates {(4416.746880000001,4.451008938594887) (5300.096256000001,4.490752904442608) (6183.445632000001,4.543730747316334) (7066.795008000001,4.5784909284966355) (7950.144384000001,4.586120549368642) (8833.493760000001,4.5843340530391075) (9716.843136000001,4.577994475375011) (10600.192512000001,4.571614686607193) };
+
+\addplot+[densely dashed, semithick, no markers, color=Orchid, smooth, error bars/.cd, y dir=both,y explicit, error mark=none, error bar style={draw=gray}] table [x=Resource consumption, y=dG, col sep=comma] {figures/adaptive-termination-end.csv};
+
+\legend{Observable, Checkpoint}
 
 % \draw[densely dotted, color=gray] (10586.058921984,0.049299384672436553) -- (12000,0.049299384672436553);
 % \draw[densely dotted, color=gray] (8143.1222476800012,0.0015858767437348931) -- (12000,0.0015858767437348931);
 % 
-% \draw[densely dotted, color=gray] (10586.058921984,0.08) -- (10586.058921984,-0.025);
+\draw[densely dotted, color=gray] (7950.144384000001,4.8) -- (7950.144384000001,4.4);
 % \draw[densely dotted, color=gray] (8143.1222476800012,0.08) -- (8143.1222476800012,-0.025);
 % \draw[->] (10586.058921984,0.075) -- (8143.1222476800012,0.075) ;
 % \node[align = right] at (8700, 0.115) {Resource\\consumption\\decrease};
 % 
-% \node at (9200, 0.025) {\contour{white}{Error decrease}};
+\node[align = right] at (6800, 4.7) {Adaptively\\terminated};
+
+\draw[densely dotted, color=gray] (10600.192512000001,4.8) -- (10600.192512000001,4.4);
+
+\node[align = right] at (9300, 4.5) {Non-adaptive\\protocol end};
+
+
 % \draw[->] (11500,0.049299384672436553) -- (11500,0.0015858767437348931) ;
 % 
-
   
 \end{axis}
 \end{tikzpicture}
