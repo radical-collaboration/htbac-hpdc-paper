@@ -247,10 +247,6 @@ quadrature results in order to measure the differences in time duration
 between adaptive and non-adaptive methods as well as the differences in
 accuracy.
 
-% \mtnote{I had to simply this paragraph a lot. Please check whether I
-% omitted some essential detail or got the algorithm wrong.}
-% \jdnote{it works}
-
 \begin{figure}
   \centering
   \includegraphics[width=\columnwidth]{figures/Adaptive_TIES.pdf}
@@ -262,16 +258,10 @@ accuracy.
 \label{fig:adaptive_TIES}
 \end{figure}
 
-% \mtnote{For quality reasons, it would be better to use figures in pdf
-%   format.}\jdnote{addressed}.
-
 For Experiment 6, we assigned the following simulation time-steps: $S1=3000$;
 $S2=50000$; $S3=50000$; and $S4=2000000$. The adaptive simulation method of
 Experiment 7 uses the same simulation time-steps, apart from $S4$ which is
 divided into 4 sub-stages of 500000 time-steps each. 
-
-% \jdnote{should we
-% mention relationship between ns and time-steps?}
 
 We performed all the experiments on Blue Waters, a 26868 node Cray XE6/XK6
 SuperComputer with peak performance of 13.3 petaFLOPS managed by NCSA. We
@@ -288,16 +278,25 @@ NCSA sets a system policy on the maximum number of processes that
 execute on Blue Waters to approximately 450. During the execution of
 Experiment 2, we observed failing tasks once we scale up to 8 TIES protocol
 instances, which is equivalent to 520 concurrent tasks. In a trial of 10
-repetitions at this scale, we observed an average failing tasks of $70 \pm6.67$, 
-and range of $59-83$ tasks. Given that we only
-ran a small number of trials, more data would be required to properly model
-the distribution type of these results.
+repetitions at this scale, we observed an average failing tasks of $70
+\pm6.67$, and range of $59-83$ tasks. Given that we only ran a small number
+of trials, more data would be required to properly model the distribution
+type of these results.
 
 NCSA allows to run only one MPI application for each compute node. As a
 consequence, we had to run each MD simulation with 32 cores (i.e., one full
 compute node) even if our performance measurement of \texttt{NAMD} on Blue
 Waters indicated that 16 cores would offer the best trade-off between
 computing time and communication overhead.
+
+% \mtnote{I had to simply this paragraph a lot. Please check whether I
+% omitted some essential detail or got the algorithm wrong.}
+% \jdnote{it works}
+
+% \mtnote{For quality reasons, it would be better to use figures in pdf
+%   format.}\jdnote{addressed}.
+
+% \jdnote{should we mention relationship between ns and time-steps?}
 
 % \jdnote{Should we include the scalability plot of
 % a single NAMD task using aprun?}
@@ -620,14 +619,9 @@ computing time and communication overhead.
 
 %----------------------------------------------------------------------------
 
-\subsection{Characterization of Scalability Experiments}
+\subsection{Overhead Characterization}
 
-% \mtnote{I would create a subsection with overheads, discussing their
-% behavior and nature while referencing both weak and strong scaling
-% experiments.}
-% \jdnote{placing this here...}
-
-We perform 5 experiments to characterize the overheads of HTBAC, EnTK, the
+We perform 5 experiments to characterize the overheads of HTBAC, EnTK, 
 runtime system, and \texttt{aprun} as a function of weak and strong scaling
 properties. We compare these overheads to the total execution time of all the
 tasks, assessing the overall impact of these overheads on the application
@@ -640,38 +634,50 @@ time to completion. We measure the following durations:
     instantiate HTBAC's components and subcomponents, translate protocols
     into pipelines for EnTK, and validate resource descriptions.
     \item \textbf{EnTK and RP Overhead}: Time taken by EnTK and its runtime
-    system (RADICAL-Pilot) to submit and manage the execution of tasks.
+    system (RP) to submit and manage the execution of tasks.
     \item \textbf{\texttt{aprun} Overhead}: Approximated time taken by 
     \texttt{aprun} to launch tasks on a set of compute nodes.
-    \mtnote{Are we sure aprun `schedules' tasks? Maybe launch as we call `aprun' 
-    a launch method?} \jdnote{addressed, as referenced by cray documentation}
 \end{itemize}
+
+Once the runtime system relinquishes the control flow to \texttt{aprun}, the
+precise time at which \texttt{aprun} schedules each task on a compute node
+and the MD kernel of each task begins execution cannot be measured. Instead,
+for each task, we measure the difference between Task Execution Time and its
+\texttt{NAMD} kernel execution time, provided by the \texttt{NAMD} output
+logs. In this way, we approximate the portion of the TAsk Execution Time
+taken by \texttt{aprun} to launch the task. Once aggregated, these measures
+constitute what we defined as \texttt{aprun} Overhead.\mtnote{Am I right to
+assume that: $Task Execution Time = NAMD execution time$?}
+
+% \mtnote{I would create a subsection with overheads, discussing their
+% behavior and nature while referencing both weak and strong scaling
+% experiments.}
+% \jdnote{placing this here...}
+
+% \mtnote{Are we sure aprun `schedules' tasks? Maybe launch as we call
+% `aprun' a launch method?} \jdnote{addressed, as referenced by cray
+% documentation}
 
 % Total Time to Execution \(TTX\) measures only the aggregated execution time
 % of all tasks' executables.
-\mtnote{TTX should measure only the aggregated time spent executing the
-tasks' executables. All the rest should be part of RP overhead}
-\jdnote{ This sentence doesn't need to go in but I wanted to clarify a point:
-I would like to know if we should use TTX as TTX or something else like Task
-Execution Time. We have TTX measured by events: \texttt{cu-exec-start} and
-\texttt{cu-exec-stop} , since \texttt{aprun} doesn't allow further scrutiny
-using events like \texttt{app-start} until \texttt{app-stop}. We use the term
-TTX internally, but maybe for this paper we should call it task execution
-time. TTX sounds like time to execution which could interpret the entire
-application, no?}\mtnote{I think the meaning of TTX depends on how it is
-defined. Said that, I agree we should avoid using the term `TTX' in this
-paper. I would use `tasks execution time' or, probably better, `total task
-execution time'. We want to indicate an AGGREGATED measure of a duration,
-not a measure of the time taken by a SINGLE task to execute. Note: this is a
-duration. As such, it should be an item of the list above, not a separate
-paragraph.}\jdnote{I've modified the descriptions}
 
-Once the runtime system relinquishes the control flow to \texttt{aprun}, the
-precise times of when \texttt{aprun} schedules the task on the compute nodes
-and when the MD kernel begins execution cannot be measured. Instead, we
-approximate the \texttt{aprun} overhead by measuring the difference between
-TTX/Task Execution Duration and the total \texttt{NAMD} execution time,
-provided by the \texttt{NAMD} output logs.
+% \mtnote{TTX should measure only the aggregated time spent executing the
+% tasks' executables. All the rest should be part of RP overhead}
+% \jdnote{ This sentence doesn't need to go in but I wanted to clarify a
+% point: I would like to know if we should use TTX as TTX or something else
+% like Task Execution Time. We have TTX measured by events:
+% \texttt{cu-exec-start} and \texttt{cu-exec-stop} , since \texttt{aprun}
+% doesn't allow further scrutiny using events like \texttt{app-start} until
+% \texttt{app-stop}. We use the term TTX internally, but maybe for this paper
+% we should call it task execution time. TTX sounds like time to execution
+% which could interpret the entire application, no?}\mtnote{I think the
+% meaning of TTX depends on how it is defined. Said that, I agree we should
+% avoid using the term `TTX' in this paper. I would use `tasks execution
+% time' or, probably better, `total task execution time'. We want to indicate
+% an AGGREGATED measure of a duration, not a measure of the time taken by a
+% SINGLE task to execute. Note: this is a duration. As such, it should be an
+% item of the list above, not a separate paragraph.}\jdnote{I've modified the
+% descriptions}
 
 % We characterize the execution time of all three applications \mtnote{which
 % one?}, \jdnote{given that I mention what each experiment entails earlier,
@@ -714,17 +720,13 @@ the protocol configuration, proportionally to the amount of requested
 resources.
 
 Figure~\ref{fig:ws}(a) shows the weak scalability of HTBAC with the TIES
-protocol. Each instance of the TIES protocol
-contains a single pipeline with 4 stages and 65 concurrent tasks. We increase
-the number of instances linearly, between 2 and 8. When scaling to 8 protocol
-instances, we execute more than 450 concurrent tasks, the average limit
-supported by \texttt{aprun} described in Section~\ref{ssec:exp_design}. 
-
- (\mtnote{reference the subsection of the paper
-where this limit is described})\jdnote{addressed} 
-Nevertheless, we include results at this
-scale to show HTBAC's performance when supporting higher orders of concurrent
-simulations.
+protocol. Each instance of the TIES protocol contains a single pipeline with
+4 stages and 65 concurrent tasks. We increase the number of instances
+linearly, between 2 and 8. When scaling to 8 protocol instances, we execute
+more than 450 concurrent tasks, the average limit supported by \texttt{aprun}
+described in Section~\ref{ssec:exp_design}. Nevertheless, we include results
+at this scale to show HTBAC's performance when supporting higher orders of
+concurrent simulations.
 
 \begin{figure}
   \centering
@@ -762,12 +764,12 @@ applies to which measurement. Also the legend should be inside the plots.}
 \jdnote{addressed, except with subplots I figured it would look cleaner with
 the legend at the bottom.}
 
-\jdnote{Maybe combine captions into 1?}\mtnote{Agreed.}\jdnote{One figure, 3
-subplots, 1 caption is cleaner}
+% \jdnote{Maybe combine captions into 1?}\mtnote{Agreed.}\jdnote{One figure,
+% 3 subplots, 1 caption is cleaner}
 
 In all weak scaling experiments (Figure~\ref{fig:ws}) we observe
 \mtnote{total? See my previous comment about this being and AGGREGATED
-duration.}\jdnote{aggregate} 
+duration.}\jdnote{aggregate}\mtnote{Does your comment mean that you prefer aggregated to total?}
 Total Task Execution Time to be fixed as the number of protocol
 increases, thereby showing ideal weak scaling behavior. 
 % The error bars are calculated using 3 trials per protocol instance measure,
