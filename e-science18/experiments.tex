@@ -978,14 +978,13 @@ scaling of TIES (experiment 4) and strong scaling of ESMACS
 
 We investigate the
 strong scaling behavior considering only homogeneous protocols. We base this 
-consideration on supporting the experiments of adaptivity in which we  
-show adaptive methodology only for TIES. Experiments of strong scaling
-show how the time-to-solution varies when consistently increasing the number of 
-resources for a fixed problem size. We leverage strong scaling to support the 
-objective in this work, which is to characterize (a) the time-to-solution 
-differences between adaptive and nonadaptive methods (b) the increase in the 
-number of resources as required by the nonadaptive method to reach the 
-required accuracy threshold. 
+consideration on supporting the experiments of adaptivity focus only on TIES. 
+Experiments of strong scaling show how the time-to-solution varies when 
+consistently increasing the number of resources for a fixed problem size. We 
+leverage strong scaling to support the objective in this work, which is to 
+characterize (a) the time-to-solution differences between adaptive and 
+nonadaptive methods (b) the increase in the number of resources as required by 
+the nonadaptive method to reach an acceptable accuracy threshold. 
 \mtnote{I am afraid we will need a better explanation for this omission}.
 \jdnote{
     Added context. Note about this paragraph: I think the argument about strong 
@@ -1014,26 +1013,34 @@ also to the weak scaling in the previous section}.
 
 Experiment 4 \mtnote{name?}\jdnote{addressed} shows the strong scaling behavior 
 of TIES alone \mtnote{Are you sure this should not be the `nth experiment shows'}
-, using \texttt{NAMD-MPI} with 32
-cores per task. We fix the number of instances of the TIES protocol to 8 due
-to the described \texttt{aprun} limitations. We vary the amount of resources
-between 4160, 8320 and 16640 cores. Given 4160 cores, we can execute 4
-generations of 130 concurrent tasks; with 8320 cores, we can execute 2
-generations of 260 concurrent tasks. Experiment 5 shows the strong scaling 
-behavior of the ESMACS protocol \mtnote{See previous comment about
+\jdnote{addressed}, using \texttt{NAMD-MPI} with 32 cores per task. We fix the 
+number of instances of the TIES protocol to 8 due to the described 
+\texttt{aprun} limitations. We 
+vary the amount of resources between 4160, 8320 and 16640 cores. Given 4160 
+cores, we can execute 4 generations of 130 concurrent tasks; with 8320 cores, we 
+can execute 2 generations of 260 concurrent tasks. Experiment 5 shows the strong 
+scaling behavior of the ESMACS protocol \mtnote{See previous comment about
 application/experiment}\jdnote{fixed}. We fix the number of instances of the 
 ESMACS protocols to 16 and vary the amount of resources between 3200, 6400 and 
 12800 cores. This produces the same number of generations of execution 
 \mtnote{add reference to the subsection where generation is defined} as shown in 
-experiment 4. We define generations of execution in Section~\ref{ssec:exp_design}. 
+experiment 4. We define generations of execution in 
+Section~\ref{ssec:exp_design}. 
 
-In Figure~\ref{fig:ss}, we observe linear speedup in Task Execution Time for
-both experiments with increase in number of cores. The availability of more 
+In Figure~\ref{fig:ss}, we observe linear speedup in Total Task Execution Time 
+for both experiments with increase in number of cores. The availability of more 
 resources for a fixed number of protocols explains this behavior. All overheads 
 remain constant for both experiments when increasing the number 
-of cores. The scheduling the number of tasks as opposed to the amount of 
+of cores. The scheduling of the number of tasks as opposed to the amount of 
 resources, is the main driver of the fixed runtime overheads, namely EnTK and 
-RP. This is confirmed for RP in Ref.~\cite{merzky2018}.
+RP. This is confirmed for RP in Ref.~\cite{merzky2018}. \jdnote{this statement
+is now inconsistent with the performance characterization of 
+Ref~\cite{merzky2018} but in Ref.~\cite{power-of-many17}, (Power of Many) cites 
+`` EnTK and RP overheads mostly depend on the number of 
+managed tasks, not on the size of the pilot on which they are executed. This
+is confirmed for RP in Ref.~\cite{merzky2018}." Given that I see the same 
+behavior as what is reported in Ref.~\cite{power-of-many17} I used the same 
+reference.}
 
 
 % The comparison between weak and strong scalability shows the overhead
