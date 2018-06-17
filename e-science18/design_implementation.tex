@@ -1,5 +1,10 @@
 HTBAC serves as a software tool to enable ensemble-based free energy
-protocols to run adaptively and at scale.
+protocols to run adaptively and at scale on HPC resources. Currently, HTBAC
+supports protocols composed of an arbitrary number of analysis and simulation
+steps. Further, HTBAC relies on the ensemble management system and runtime
+system provided the RADICAL-Cybertools (RCT). HTBAC is designed to be
+progressively extended to support more types of free energy protocols and
+alternative runtime middleware.
 
 % \mtnote{protocols?}\jdnote{addressed}.
 
@@ -118,39 +123,37 @@ free energy protocols in terms of ensemble applications:
 
 \begin{itemize}
   \item \textbf{Protocol:} A generic abstraction of a free energy protocol
-  such as ESMACS or TIES.
-  \item \textbf{Simulation:} Simulation parameters that supply 
-  additional information for each protocol instance.
-  \item \textbf{Analysis:} Analysis parameters that supply additional 
-  information for each protocol instance. 
+  (e.g., ESMACS or TIES).
+  \item \textbf{Simulation:} Simulation parameters for each protocol
+  instance.
+  \item \textbf{Analysis:} Analysis parameters for each protocol instance.
   \item \textbf{Runner:} A generic abstraction to describe resources needed
   by the application.
 \end{itemize}
 
-The \textbf{Protocol} construct enables multiple instantiations of protocol
-types, while the \textbf{Simulation} and \textbf{Analysis} construct specifies 
-simulation or analysis parameters that shape each protocol. The \textbf{Runner} 
-construct provides the functionality to specify the resource requirements and 
-the amount of time these resources should be available to execute the 
-application. Thus, in HTBAC an application consists of protocols, simulation 
-and analysis conditions, and resource requirements.
+\textbf{Protocol} enables multiple instantiations of protocol types, while
+\textbf{Simulation} and \textbf{Analysis} specify simulation and analysis
+parameters that shape each protocol. \textbf{Runner} provides functionalities
+to specify the amount of resources needed to execute a protocol and the
+amount of time these resources should be available for. Thus, in HTBAC an
+application consists of protocol instances, simulation and analysis
+parameters, and resource requirements.
 
-In HTBAC, an application can have one or more protocol instance(s). Each
-protocol models a unique protein ligand physical system. Each protocol
-follows a sequence of simulation and analysis steps and assigns ensemble
-members to execute independent simulations or analysis. An ensemble member
-that executes an independent simulation within a simulation step is referred
-to as a \textbf{replica}. Each replica simulation is assigned a different
+In HTBAC, each protocol models a unique protein ligand physical system. Each
+protocol follows a sequence of simulation and analysis steps, assigning
+ensemble members to execute independent simulations or analysis. An ensemble
+member that executes an independent simulation within a simulation step is
+referred to as a \textbf{replica}. Each simulation is assigned a different
 initial velocity, which enables simulations to begin in different parts of
 the ligand's phase space.
 
-An individual simulation or analysis is a computational \textbf{task}, with
-well-defined input, output, termination criteria and dedicated
-resources~\cite{power-of-many17}. Aggregates of tasks with dependencies that
-determine the order of their execution describe \textbf{workflows}. A
-workflow is comprised of $N_P$ instances of the P$^{th}$ protocol. In this
-way, workflows in HTBAC encode the description of the scientific problem in
-terms of computational tasks.
+An individual simulation or analysis is designed as a computational
+\textbf{task}, with well-defined input, output, termination criteria and
+dedicated resources~\cite{power-of-many17}. Aggregates of tasks with
+dependencies that determine the order of their execution describe a
+\textbf{workflow}. A workflow is comprised of $N_P$ instances of the P$^{th}$
+protocol. In this way, workflows in HTBAC encode the description of the
+scientific problem in terms of computational tasks.
 
 % \subsubsection{Application Model}
 
@@ -195,51 +198,56 @@ terms of computational tasks.
 
 % ---------------------------------------------------------------------------
 \subsubsection{Architecture}
-\jdnote{should this stay as a subsubsection? Or maybe we can merge Design and 
-Architecture into one subsections?}
 
-\mtnote{The following is about architecture and execution model: ``HTBAC rests 
-between the domain scientist and the cyber-infrastructure,
-abstracting the complexity of encoding end-to-end protocols, resource
-acquisition and execution management. The Runner initializes HTBAC and holds
-the global state of the application, submits protocols and communicates with
-the ensemble management system that handles the dependencies of the
-protocols, and acquires resources on a cyber-infrastructure (CI) via a runtime 
-system.''}\jdnote{incorporated this description into the main paragraph}
+% \jdnote{should this stay as a subsubsection? Or maybe we can merge Design
+% and Architecture into one subsections?}
 
-HTBAC rests between the domain scientist and the CI. HTBAC 
-abstracts the protocol coordination, resource management and execution 
+% \mtnote{The following is about architecture and execution model: ``HTBAC
+% rests between the domain scientist and the cyber-infrastructure,
+% abstracting the complexity of encoding end-to-end protocols, resource
+% acquisition and execution management. The Runner initializes HTBAC and
+% holds the global state of the application, submits protocols and
+% communicates with the ensemble management system that handles the
+% dependencies of the protocols, and acquires resources on a
+% cyber-infrastructure (CI) via a runtime system.''}\jdnote{incorporated this
+% description into the main paragraph}
+
+HTBAC rests between the domain scientist and the computing infrastructure.
+HTBAC abstracts the protocol coordination, resource management and execution
 management from the user. Fig. \jdnote{will be added once we have a complete
-diagram} shows the components (orange) and subcomponents 
-(green) of HTBAC, organized in two layers: API and application management layer. 
+diagram} shows the components (orange) and subcomponents (green) of HTBAC,
+organized in two layers: API and application management layer.
 
-All components are stateless as they do not require different processes. The API 
-enables users to codify protocol descriptions. The  application management layer 
-retrieves the application description, aggregates and coordinates protocols and 
-communicates with the ensemble management system. The ensemble management system 
-handles the dependencies of the protocols, and acquires resources via a runtime 
-system. The Application Generator contains three subcomponents, Protocol Manager, 
-Step Manager, and Ensemble-Member Manager, which synchronize and coordinate the 
-ensemble members and simulation or analysis steps within each protocol.
+All components are stateless as they do not require different processes. The
+API enables users to codify protocol descriptions. The  application
+management layer retrieves the application description, aggregates and
+coordinates protocols and communicates with the ensemble management system.
+The ensemble management system handles the dependencies of the protocols, and
+acquires resources via a runtime system. The Application Generator contains
+three subcomponents, Protocol Manager, Step Manager, and Ensemble-Member
+Manager, which synchronize and coordinate the ensemble members and simulation
+or analysis steps within each protocol.
 
-\mtnote{`visual block diagram representation' seems unclear to me. Should we 
-just have an architecture diagram here?} 
-\mtnote{Note: architecture diagrams are static. They can be
-`augmented' with numbers (and often arrows) to support the description of an
-execution model. Please review a couple of papers the group wrote with this
-type of diagram.} 
 \jdnote{I've changed the description of the architecture, the actual diagram
-(which is a continuous iteration is: 
-\href{https://docs.google.com/drawings/d/1a5qgu6IyhRfajk1X33NRgrAw9heMUHIx67MOxR9DMiU/edit?usp=sharing}{here}}
+(which is a continuous iteration is: \href{https://docs.google.com/drawings/d
+/1a5qgu6IyhRfajk1X33NRgrAw9heMUHIx67MOxR9DMiU/edit?usp=sharing}{here}}
+
+% \mtnote{`visual block diagram representation' seems unclear to me. Should
+% we just have an architecture diagram here?}
+% \mtnote{Note: architecture diagrams are static. They can be `augmented'
+% with numbers (and often arrows) to support the description of an execution
+% model. Please review a couple of papers the group wrote with this type of
+% diagram.}
 
 % \begin{figure}
 %   \centering
-%   \includegraphics[width=\columnwidth]{figures/Component_Subcomponent_Diagram.pdf}
-%   \caption{Components and subcomponents of HTBAC. The protocol, simulation and 
-%   runner are the main components. The protocol and simulation components 
-%   describe the protocols and their simulation conditions. The runner component 
-%   serves as the application manager by interfacing with the ensemble management 
-%   system.}
+%   \includegraphics[width=\columnwidth]{figures/Component_Subcomponent_Diagr
+%   am.pdf}
+%   \caption{Components and subcomponents of HTBAC. The protocol, simulation
+%   and runner are the main components. The protocol and simulation
+%   components describe the protocols and their simulation conditions. The
+%   runner component serves as the application manager by interfacing with
+%   the ensemble management system.}
 % \label{fig:components}
 % \end{figure}
 
@@ -273,25 +281,26 @@ type of diagram.}
 % architecture?}
 % ---------------------------------------------------------------------------
 
-\mtnote{General note. It may be useful to recall the difference between
-software architecture and software design. Software architecture is about the
-structure of the software system, with a particular focus on modularity and
-how it is rendered by components and interfaces (e.g., communication and
-coordination protocols). Software design is about defining the
-functionalities of each module, \textbf{showing} (i.e., arguing for) how
-these functionalities address the requirements. In this context, the notion
-of `class' and `method' are often regarded as implementation details, even if
-object-oriented design is indeed one of the many ways to approach software
-design. More in general, both architecture and design can be expressed with a
-varying degree of formality and many different patterns and languages have
-been and are still being developed. In this paper, we just use plain English,
-informal diagrams, and a very high level overview. This approach should not
-be confused with lack of precision or of scientific rigor: the goal of this
-paper is to show how HTBAC architecture and design support better science in
-a very specific domain, not to argue for their rigorous nature.}
-\jdnote{I've modified the design to be more consistent in showing
-functionality of constructs and separated architecture design from
-application model}
+% \mtnote{General note. It may be useful to recall the difference between
+% software architecture and software design. Software architecture is about
+% the structure of the software system, with a particular focus on modularity
+% and how it is rendered by components and interfaces (e.g., communication
+% and coordination protocols). Software design is about defining the
+% functionalities of each module, \textbf{showing} (i.e., arguing for) how
+% these functionalities address the requirements. In this context, the notion
+% of `class' and `method' are often regarded as implementation details, even
+% if object-oriented design is indeed one of the many ways to approach
+% software design. More in general, both architecture and design can be
+% expressed with a varying degree of formality and many different patterns
+% and languages have been and are still being developed. In this paper, we
+% just use plain English, informal diagrams, and a very high level overview.
+% This approach should not be confused with lack of precision or of
+% scientific rigor: the goal of this paper is to show how HTBAC architecture
+% and design support better science in a very specific domain, not to argue
+% for their rigorous nature.}
+% \jdnote{I've modified the design to be more consistent in showing
+% functionality of constructs and separated architecture design from
+% application model}
 
 % Each replica follows the same sequence of simulation steps including
 % minimization, equilibration and production simulation.\mtnote{see the
@@ -306,89 +315,95 @@ application model}
 % ---------------------------------------------------------------------------
 \subsection{Implementation}
 
-% The \textbf{Protocol} construct is the main abstraction of HTBAC. 
-
-HTBAC is a domain specific library implemented in Python. All components of
-HTBAC are implemented as objects. Communication in HTBAC occurs by function
-calls, either by value or reference. HTBAC uses the RADICAL-Cybertools (RCTs) as 
-building blocks~\cite{review_bb_2016} to support HTBAC's workflow execution 
-across diverse computing platforms~\cite{turilli2017comprehensive}. HTBAC rests 
-on two primary RCT libraries: Ensemble Toolkit (EnTK) and RADICAL-Pilot (RP).
+HTBAC is implemented in Python as a domain specific library. All components
+of HTBAC are implemented as objects and communication among components occurs
+via function calls. HTBAC uses the RCT as building
+blocks~\cite{review_bb_2016} to support HTBAC's workflow execution across
+diverse computing platforms~\cite{turilli2017comprehensive}. HTBAC rests on
+two primary RCT: Ensemble Toolkit (EnTK) and RADICAL-Pilot (RP).
 
 EnTK provides an application model that simplifies both the encoding and
-execution of scalable and adaptive free energy protocols that differ in
-computational requirements. EnTK exposes 3 user-facing constructs:
-\textbf{Task}, \textbf{Stage} and \textbf{Pipeline}~\cite{power-of-many17}.
-Tasks contain information regarding an executable, its software environment
-and its data dependencies. Stages are sets of tasks without mutual
-dependencies and that can be executed concurrently. Pipeline are lists of
-stages where any stage $i$ can only be executed after that stage $i - 1$ has
-been executed. Each pipeline can execute independently.
+execution of scalable and adaptive free energy protocols. EnTK exposes 3
+user-facing constructs: \textbf{Task}, \textbf{Stage} and
+\textbf{Pipeline}~\cite{power-of-many17}. Tasks contain information regarding
+an executable, its software environment and its data dependencies. Stages are
+sets of tasks without mutual dependencies and that can therefore be executed
+concurrently. Pipeline are lists of stages, where stages can execute only
+sequentially and each pipeline can execute independently.
 
 EnTK serves HTBAC as the ensemble management system that provides specific
 interfaces and execution models for ensemble-based
 applications~\cite{power-of-many17}. HTBAC uses the programming model of EnTK
 to construct workflows. In HTBAC, a protocol instance is encoded as a single
-pipeline, which contains stages of simulation and analysis steps. Replicas or
-analysis tasks are bundled as tasks within a stage. We show the
-implementation of two types of protocol types, ESMACS and TIES.\mtnote{The
-previous paragraph seemed to me a mix of two paragraphs. I separated them,
-feel free to revert if I did not get it right.}\jdnote{noted}
+pipeline, which contains stages of simulation and analysis steps. HTBAC
+bundles individual simulations and analyses as tasks within a stage. In this
+paper, we study the implementation of two protocols via HTBAC: ESMACS and
+TIES.
 
-EnTK uses the runtime system of RADICAL-Pilot to execute ensemble applications 
-via pilots. Pilots provide a multi-stage execution mechanism: Resources are 
-acquired via a placeholder job and subsequently used to execute the 
-application’s tasks~\ref{power-of-many17}. The pilot abstraction supports the 
-requirements of task-level parallelism and high-throughput as needed by the use 
-cases. A pilot abstraction uses a placeholder job without any tasks assigned to 
-it. It acquires resources from the CI by submitting a (container) job and waits 
-in the queue until the CI's scheduler bootstraps the job to the compute nodes. 
-Once the pilot is scheduled, it can pull computational tasks for execution. 
-This enables the tasks to be executed directly on the resources, without being 
-queued via the local resource management system or without circumventing the 
-queue policies of HPC resources~\ref{dakka2017}. 
+EnTK uses the runtime system of RADICAL-Pilot to execute ensemble
+applications via pilots. The pilot abstraction supports the requirements of
+task-level parallelism and high-throughput as needed by the use cases. Pilot
+systems acquires resources from a computing infrastructure by submitting a
+pilot job and waiting in the queue until the infrastructure's scheduler
+bootstraps the job. Once the pilot is bootstrapped, it can pull tasks for
+execution. This enables tasks to be executed directly on the resources,
+without being queued on the infrastructure's scheduler and without
+circumventing the queue policies of computing infrastructure.
 
+% Pilots provide a multi-stage execution mechanism: Resources are acquired
+% via a placeholder job and subsequently used to execute the application’s
+% tasks~\ref{power-of-many17}.
 
-\mtnote{What about RP? We write that the two relevant RCT libs are EnTK and
-RP but we then introduce only EnTK explaining how HTBAC uses it.}
-\jdnote{Added background, but in general how much of RP's details should go in?}
+% The \textbf{Protocol} construct is the main abstraction of HTBAC. 
+
+% \mtnote{The previous paragraph seemed to me a mix of two paragraphs. I
+% separated them, feel free to revert if I did not get it
+% right.}\jdnote{noted}
+
+% \mtnote{What about RP? We write that the two relevant RCT libs are EnTK and
+% RP but we then introduce only EnTK explaining how HTBAC uses it.}
+% \jdnote{Added background, but in general how much of RP's details should go
+% in?}
 
 % ---------------------------------------------------------------------------
 \subsection{ESMACS and TIES} 
 
-\jhanote{As written, this sub-section has nothing about HTBAC and would be better
-placed/merged in Science Driver.  What would be useful is pseudo-code or code 
-listing to show how ESMACS and TIES are encoded in HTBAC}\jdnote{added context}
+\jhanote{As written, this sub-section has nothing about HTBAC and would be
+better placed/merged in Science Driver.  What would be useful is pseudo-code
+or code listing to show how ESMACS and TIES are encoded in
+HTBAC}\jdnote{added context}
 
-In Section~\ref{ssec:esm_ties} we define the requirements of the ESMACS and 
-TIES protocols. While ESMACS and TIES protocols compute binding affinity 
-calculations for different systems and purposes, their implementation in HTBAC 
-have the same underlying pattern, consisting of simulations steps, followed by 
-one or more analysis step(s). 
+In Section~\ref{ssec:esm_ties} we define the requirements of the ESMACS and
+TIES protocols. While ESMACS and TIES protocols compute binding affinity
+calculations for different systems and purposes, their implementation in
+HTBAC have the same underlying pattern, consisting of simulations steps,
+followed by one or more analysis step(s). Designers of free energy protocols
+utilize the simulation and analysis components of HTBAC to create any
+customized sequence of simulation(s) and/or analysis steps.
+
 % In this paper, we focus on the default sequence of
 % simulation steps which consist of minimization, initial equilibration,
 % secondary equilibration, and production MD simulation. 
-Designers of free energy protocols utilize the simulation and analysis 
-components of HTBAC to create any customized sequence of simulation(s) and/or
-analysis steps. 
 
 % Within each step, the user assigns the number of ensemble 
 % members along with configuration details such as simulation timesteps, and 
 % execution details including MD kernel and cores per ensemble member. 
 
-In~\ref{lst:esmacs.py}, we provide the 
-encoding of an ESMACS protocol instance using HTBAC, showing a customization of 
-simulation conditions for a minimization step. 
+In~\ref{lst:esmacs.py}, we provide the encoding of an ESMACS protocol
+instance using HTBAC, showing a customization of simulation conditions for a
+minimization step.
 
-\lstinputlisting[language=Python,label={lst:esmacs.py},
-caption={Application of HTBAC using ESMACS protocol instance. We import the 
-ESMACS predefined protocol and customize its 
-simulation steps. We assign the physical system to the protocol instance, and 
-using the simulation component we specify the conditions for all ensemble 
-members of the minimization step (\texttt{step0}). Once the conditions are 
-defined, we append them to \texttt{step0}. Using the runner component, we pass 
-the protocol instance and resource request of the CI (NCSA Blue Waters) along 
-with allocation time (walltime)}]{esmacs.py}
+\lstinputlisting[
+  language=Python, 
+  label={lst:esmacs.py}, 
+  caption={Instance of the ESMACS protocol implemented with HTBAC. We import
+  the predefined protocol `ESMACS' and customize its simulation steps. We
+  assign the physical system to the protocol instance and, using the
+  Simulation component, we specify the conditions for all ensemble members of
+  the minimization step \texttt{step0}. Using the Runner component, we pass
+  the protocol instance and resource request along with allocation time
+  (walltime) to EnTK.} 
+  ]{esmacs.py}
 
 % The analysis step(s) vary according to each protocol. ESMACS contains a
 % single analysis step with 25 tasks that computes the MMPBSA with respect to
