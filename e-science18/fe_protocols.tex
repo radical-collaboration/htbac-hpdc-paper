@@ -1,43 +1,156 @@
 % Science drivers --------------------------------------------------------------
 % Everything related to the chemistry/drug discovery science in this paper. ----
 
-\jdnote{added content here and will go through to reduce}
+% In its simplest form, the aim of a 
+% drug discovery campaign is to optimize the efficacy of a drug molecule to a 
+% \emph{certain} target (usually a protein) as a function of the drug molecule 
+% itself. In the \emph{hit to lead}, and \emph{lead optimization} stages of the 
+% pipeline this is done by maximizing a quantity called the binding affinity 
+% (which is a good proxy for efficacy of the medication). To find 
+% the maximum binding affinity fidelity we have to probe large number of candidate 
+% drug molecules and find the best ones. The basic use case for HTBAC is to enable 
+% this type of large scale binding free energy studies of protein-ligand complexes 
+% using ensemble simulations. 
 
-The drug discovery pipeline is continuously evolving and morphing from a fully 
-experimental procedure, to stages of it being replaced by computational 
-methods, like computer aided drug design. In its simplest form, the aim of a 
-drug discovery campaign is to optimize the efficacy of a drug molecule to a 
-\emph{certain} target (usually a protein) as a function of the drug molecule 
-itself. In the \emph{hit to lead}, and \emph{lead optimization} stages of the 
-pipeline this is done by maximizing a quantity called the binding affinity 
-(which is a good proxy for efficacy of the medication at this stage). To find 
-the a maximum we have to probe large number of candidate drug molecules and 
-find the best ones. The basic use case for HTBAC is to enable this type of 
-large scale binding free energy studies of protein-ligand complexes using 
-ensemble simulations. 
+% Given the very large number of drug candidates, it is imperative to
+% gain maximum insight into potential candidate compounds using time and
+% resources efficiently. This provides one clear motivation for the use of
+% adaptive methods which minimize the compute time used whilst producing binding
+% free energy estimates meeting pre-defined quality criteria (such as
+% convergence or statistical uncertainty below a given threshold). 
+
+Here we provide more details of ESMACS and TIES practical specifications and 
+provide details on the adaptive methodologies using TIES. 
+
+
+% Both ESMACS and 
+% TIES have been successfully used to predict binding affinities quickly and 
+% accurately~\cite{Wan2017brd4, Bhati2017}.
 
 \subsection{ESMACS and TIES}\label{ssec:esm_ties}
 
+
+
+% The drug discovery pipeline is continuously evolving and morphing from a fully 
+% experimental procedure, to stages of it being replaced by computational 
+% methods, like computer aided drug design. 
+
+
+
 % Intro to binding affinity ----------------------------------------------------
 
-There exists two types of free energy calculation protocols: absolute and 
-relative. Absolute free energy methods calculate the binding affinity of a 
-\emph{single} drug molecule to a protein, while relative methods calculate the 
-\emph{difference} in binding affinity between two (usually similar in 
-structure) drug molecules. The computational requirements of the two protocols 
-differ sometimes significantly, but deciding which one is more appropriate for 
-the task at hand is not trivial, as it is a function of resources, required 
-time to convergence, accuracy thresholds etc.
+% There exists two types of free energy calculation protocols: absolute and 
+% relative. Absolute free energy methods calculate the binding affinity of a 
+% \emph{single} drug molecule to a protein, while relative methods calculate the 
+% \emph{difference} in binding affinity between two (usually similar in 
+% structure) drug molecules. The computational requirements of the two protocols 
+% differ sometimes significantly, but deciding which one is more appropriate for 
+% the task at hand is not trivial, as it is a function of resources, required 
+% time to convergence, accuracy thresholds etc.
 
+ 
 Briefly introduced in the previous section, the two free energy calculation 
-protocols, ESMACS and TIES ~\cite{Wan2017brd4, Bhati2017}, are our 
-implementations of the absolute and relative methods. 
-In both protocols, ensembles of MD simulations are employed to perform 
-averaging and to obtain tight control of error bounds in our estimates.
-Due to their shared philosophical underpinning both protocols share similar 
-middleware requirements. Here we provide more details of their practical 
-specifications and of the protein ligand systems we used to benchmark and refine 
-them in this work.
+protocols, ESMACS and TIES~\cite{Wan2017brd4, Bhati2017}, are 
+implementations of the absolute and relative methods, respectively. 
+Absolute free energy methods calculate the binding affinity of a \emph{single} 
+drug molecule to a protein, while relative methods calculate the 
+\emph{difference} in binding affinity between two (usually similar in structure) 
+drug molecules. In both protocols, ensembles of MD simulations are employed to 
+perform averaging and to obtain tight control of error bounds in free energy 
+estimates.
+
+% Using these protocols, we have demonstrated the lack of reproducibility of 
+% binding affinities derived from individual simulations for a variety of protein 
+% systems, with calculations for the same protein-ligand combination (using almost 
+% identical initial conditions) producing results varying by up to 12 kcal mol 
+% $^{-1}$ for small molecules, whilst flexible ligands can vary even 
+% more~\cite{Sadiq2010, Wright2014}. 
+
+
+TIES is a so called ``alchemical'' relative free energy method 
+in which the fact that the potential used to describe the system is user 
+definable to transform one system into another. This allows for the calculation 
+of free energy differences between the two systems, such as those induced by an 
+alteration to a candidate drug. 
+
+The computational requirements of the two protocols differ sometimes 
+significantly, but deciding which one is more appropriate for the task at hand 
+is not trivial, as it is a function of resources, required time to convergence, 
+accuracy thresholds etc. TIES is based on rigorous, but computationally 
+expensive, calculations of relative free energies (i.e. results provide a 
+comparison between two drugs). ESMACS, in contrast, provides absolute binding 
+free energies at low computational cost, but to achieve this coarse grains many 
+of the details of the physical system being studied. 
+
+Conceptually, ESMACS and TIES consists of three steps: minimization, 
+equilibration and production MD. In practice the equilibration phase is broken 
+into multiple steps to ensure that the size of the simulation box does not alter 
+too much over the simulation. During these steps positional constraints are 
+gradually released from the structure and the physical system is heated to a 
+physiologically realistic temperature. Whilst both protocols share a common 
+workflow of steps and simulations, the make up of the ensemble-member is 
+different. In the case of ESMACS, an ensemble consists of a set 25 
+\textbf{replicas} which are identical simulations differing only in the initial 
+velocities assigned to each atom. 
+
+In TIES, the ensemble contains the set of \textbf{$\lambda$} windows that each 
+spawn a set of replicas. A transformation parameter $\lambda$ is defined such 
+that as it increases from zero to one the system description transforms from 
+containing an initial drug to a target compound via a series of hybrid states. 
+Sampling along $\lambda$ is then required in order to compute the difference in 
+binding free energy. Consequently, whereas in ESMACS replicas run simulations on 
+samples using the same system description, in TIES replicas run simulations at 
+different points along $\lambda$. The change in free energy associated with the 
+transformation is calculated using an adaptive quadrature function which
+numerically integrates the values of the $\partial U/\partial\lambda$ across the 
+full set of $\lambda$ windows simulated. 
+
+Obtaining accurate and precise results from TIES using adaptive quadratures 
+requires that the $\lambda$ windows correctly capture the changes of 
+$\partial U/\partial\lambda$ over the transformation. This behavior is highly 
+sensitive to the chemical details of the compounds being studied and varies 
+considerably between systems (i.e. drug candidates). Typically, windows are 
+evenly spaced between 0 and 1 with the spacing between them set before execution 
+at a distance determined by the simulator to be sufficient for a wide range of 
+systems. Typically, TIES contains 65 replicas evenly distributed between 13 
+$\lambda$ windows. Figure~\ref{fig:ties_esmacs_application} provides the details 
+in constructing ESMACS and TIES protocols. 
+
+% In order to obtain a meaningful TIES result it is necessary to not only 
+% simulate the drug pair in the protein but also in an aqueous environment, 
+% adding a further 65 replicas albeit it using a smaller system at lower 
+% computational cost.
+
+Following simulation steps, both protocols require the execution of free energy 
+analysis steps. Both protocols are highly customizable, for example the number 
+of simulation replicas in the ensemble and the lengths of their runs can be 
+varied. More generally though, there may be cases where it is important to 
+increase the sampling of phase space possibly through expanding the ensemble 
+or in TIES changing the distribution of $\lambda$ windows.
+
+
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\columnwidth]{figures/ties_esmacs_application_model.pdf}
+  \caption{TIES and ESMACS protocols consist of simulations steps followed
+  by analysis step(s). ESMACS contains 25 replicas per simulation step while 
+  TIES contains the $\lambda$ transformation parameter which generates 5 
+  replicas per $\lambda$ window. Here we model TIES with 13 $\lambda$ windows to 
+  spawn a total of 65 replicas in each simulation step. All replicas simulate 
+  for 6 nanosecond durations.}
+  % All replicas within a simulation step are assigned simulation timesteps 
+  % based \jdnote{UCL please provide the end of sentence
+  % $S1=1000$; $S2=30,000$; $S3=800,000$; $S4=2,000,000$.}
+\label{fig:ties_esmacs_application}
+\end{figure}
+
+
+
+% In addition, the ESMACS protocol can also be extended to account for 
+% adaptation energies involved in altering the conformation of the protein 
+% or ligand during binding through the use of separate component simulations.
+
 
 % Some notes on ensembles and replicas. ----------------------------------------
 
@@ -47,48 +160,31 @@ them in this work.
 %significantly reduced compared to the generation of single long trajectories. 
 %Due to their shared philosophical underpinning both protocols share similar 
 %middleware requirements.
-Using these protocols, we have demonstrated the lack of reproducibility of
-binding affinities derived from individual simulations for a variety of protein 
-systems, with calculations for the same protein-ligand combination (using almost 
-identical initial conditions) producing results varying by up to 12 kcal
-mol $^{-1}$ for small molecules, whilst flexible ligands can vary even
-more ~\cite{Sadiq2010, Wright2014}. 
-Indeed, our work has revealed how completely unreliable single simulation based 
-approaches are. 
-We have shown that averaging across multiple runs reliably produces results in
-agreement with previously published experimental findings~\cite{Sadiq2010,
-Wan2011, Wright2014, Bhati2017, Wan2017brd4, Wan2017trk}, and correctly
-predicted the results of experimental studies performed by colleagues in
-collaboration~\cite{Bunney2015}. 
+
+% Indeed, our work has revealed how completely unreliable single simulation based 
+% approaches are. 
+% We have shown that averaging across multiple runs reliably produces results in
+% agreement with previously published experimental findings~\cite{Sadiq2010,
+% Wan2011, Wright2014, Bhati2017, Wan2017brd4, Wan2017trk}, and correctly
+% predicted the results of experimental studies performed by colleagues in
+% collaboration~\cite{Bunney2015}. 
 %We term this approach ensemble molecular
 %dynamics, ``ensemble'' here referring to the set of individual (replica)
 %simulations conducted for the same physical system.
 
 % First a quick intro to NAMD, then generic simulation protocol description. ---
 
-The current implementation of both TIES and ESMACS uses the the NAMD 
-package~\cite{Phillips2005} to conduct the simulations. Conceptually, each 
-replica simulation consists of three stages: minimization, equilibration and 
-production MD. In practice the equilibration phase is broken into multiple 
-steps to ensure that the size of the simulation box does not alter too much 
-over the simulation. During these steps positional constraints are gradually 
-released from the structure and the system is heated to a physiologically 
-realistic temperature. Whilst both protocols share a common workflow for 
-individual replicas, the make up of the ensemble is different.
+% The current implementation of both TIES and ESMACS uses the the NAMD 
+% package~\cite{Phillips2005} to conduct the simulations. 
+
+
 
 % TIES and ESMACS intro --------------------------------------------------------
 
-TIES is based on rigorous, but computationally expensive, calculations of 
-relative free energies (i.e. results provide a comparison between two drugs). 
-ESMACS, in contrast, provides absolute binding free energies at low 
-computational cost, but to achieve this coarse grains many of the details of 
-the system being studied. The simplifications employed by ESMACS can reduce its 
-effectiveness in some systems. In the case of ESMACS, an ensemble consists of a 
-set of 25 identical simulations differing only in the initial velocities 
-assigned to each atom. In TIES the ensemble also contains the set of $\lambda$ 
-windows along the replicas. Upon completion of the MD simulation, free energy 
-computations are performed on a per replica basis and then globally across all 
-ensembles. 
+
+%  Upon completion of the MD simulation, free energy 
+% computations are performed on a per replica basis and then globally across all 
+% ensembles. 
 
 %~\cite{amber14, Case2005, MillerIII2012}.
 
@@ -96,67 +192,15 @@ ensembles.
 
 
 
-TIES is a so called ``alchemical'' method in which the fact that the potential 
-used to describe the system is user definable to transform one system into 
-another. This allows for the calculation of free energy differences between 
-the two systems, such as those induced by an alteration to a candidate drug.
-Typically a transformation parameter (called $\lambda$) is defined such 
-that as it increases from zero to one the system description transforms from 
-containing an initial drug to a target compound via a series of hybrid states.
-Sampling along $\lambda$ is then required in order to compute the difference 
-in binding free energy. Consequently, whereas in ESMACS all replicas sample 
-using the same system description, in TIES sub-ensembles are executed at 
-different points along $\lambda$. The change in free energy associated 
-with the transformation is calculated by numerically integrating 
-(via adaptive quadrature) the values of the $\partial U/\partial\lambda$ 
-across the full set of $\lambda$ windows simulated. 
-
-Obtaining accurate and precise results from TIES requires that the $\lambda$ 
-windows correctly capture the changes of $\partial U/\partial\lambda$ over 
-the transformation. This behavior is highly sensitive to
-the chemical details of the compounds being studied and varies considerably 
-between systems. Typically, windows are evenly spaced between 0 and 1 with 
-the spacing between them set before execution at a distance determined by the 
-simulator to be sufficient for a wide range of systems. Typically, a TIES 
-ensemble 65 replicas evenly distributed between 13 $\lambda$ windows
-In order to obtain a meaningful TIES result it is necessary to not only 
-simulate the drug pair in the protein but also in an aqueous environment, 
-adding a further 65 replicas albeit it using a smaller system at lower 
-computational cost.
 
 % Analysis ---------------------------------------------------------------------
 
-Following simulation (and in the case of ESMACS free energy analysis steps) 
-both protocols require the execution of short serial steps to provide summary 
-statistics. Both protocols can are highly customizable, for example the number 
-of simulation replicas in the ensemble and the lengths of their runs can be 
-varied. More generally though, there may be cases where it is important to 
-increase the sampling of phase space possibly through expanding the ensemble 
-or in TIES changing the distribution of $\lambda$ windows.
-In addition, the ESMACS protocol can also be extended to account for 
-adaptation energies involved in altering the conformation of the protein 
-or ligand during binding through the use of separate component simulations.
 
 
 %-----------------------------------------------------------------------------%
 % move this section to fe_protocols.tex
 
-Figure~\ref{fig:ties_esmacs_application} shows the implementation of the
-ESMACS and TIES protocols. ESMACS contains 25 replicas per simulation step
-while TIES contains a $\lambda$ sampling parameter which generates 5 replicas
-per $\lambda$ window. In this paper, we implement TIES with 13 $\lambda$
-windows to spawn a total of 65 replicas in each simulation step.
 
-\begin{figure}
-  \centering
-  \includegraphics[width=\columnwidth]{figures/ties_esmacs_application_model.pdf}
-  \caption{TIES and ESMACS protocols consist of simulations steps followed
-  by analysis step(s). All replicas simulate for 6 nanosecond durations. 
-  All replicas within a simulation step are assigned simulation timesteps 
-  based on the \jdnote{UCL please provide the end of sentence}}
-  % $S1=1000$; $S2=30,000$; $S3=800,000$; $S4=2,000,000$.}
-\label{fig:ties_esmacs_application}
-\end{figure}
 
 %Adaptive quadrature is a numerical integration algorithm that is designed to
 %minimize the number of function evaluations while still achieving a given error
@@ -167,15 +211,16 @@ windows to spawn a total of 65 replicas in each simulation step.
 
 \subsection{The Value of Adaptivity}\label{ssec:adapt_ties}
 
-Both ESMACS and TIES have been successfully used to predict binding affinities
-quickly and accurately. Nonetheless, they are very expensive computationally,
+ Nonetheless, they are very expensive computationally,
 and optimizing the execution time while still improving the accuracy is
-desirable. Given the very large number of drug candidates, it is imperative to
-gain maximum insight into potential candidate compounds using time and
-resources efficiently. This provides one clear motivation for the use of
-adaptive methods which minimize the compute time used whilst producing binding
-free energy estimates meeting pre-defined quality criteria (such as
-convergence or statistical uncertainty below a given threshold).
+desirable. 
+
+% Given the very large number of drug candidates, it is imperative to
+% gain maximum insight into potential candidate compounds using time and
+% resources efficiently. This provides one clear motivation for the use of
+% adaptive methods which minimize the compute time used whilst producing binding
+% free energy estimates meeting pre-defined quality criteria (such as
+% convergence or statistical uncertainty below a given threshold).
   
 % Drug discovery programmes usually have limited resources, and require a
 % resource budget carefully looking to gain maximum insight into potential
