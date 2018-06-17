@@ -1,0 +1,46 @@
+\jhanote{As written, this sub-section has nothing about HTBAC and would be
+better placed/merged in Science Driver.  What would be useful is pseudo-code
+or code listing to show how ESMACS and TIES are encoded in
+HTBAC}\jdnote{added context}
+
+In Section~\ref{ssec:esm_ties} we define the requirements of the ESMACS and
+TIES protocols. While ESMACS and TIES protocols compute binding affinity
+calculations for different systems and purposes, their implementation in
+HTBAC have the same underlying pattern, consisting of simulations steps,
+followed by one or more analysis step(s). Designers of free energy protocols
+can utilize the simulation and analysis components of HTBAC to create any
+customized sequence of simulation(s) and/or analysis steps.
+
+Listing~\ref{lst:esmacs.py} shows the skeleton of the ESMACS protocol
+implemented in HTBAC. Specifically, the listing shows the customization of
+simulation conditions for a minimization step of the protocol.
+
+\lstinputlisting[
+  language=Python, 
+  label={lst:esmacs.py}, 
+  caption={Instance of the ESMACS protocol implemented with HTBAC. We import
+  the predefined protocol `ESMACS' and customize its simulation steps. We
+  assign the physical system to the protocol instance and, using the
+  Simulation component, we specify the conditions for all ensemble members of
+  the minimization step \texttt{step0}. Using the Runner component, we pass
+  the protocol instance and resource request along with allocation time
+  (walltime) to EnTK.} 
+  ]{esmacs.py}
+
+
+In Section~\ref{ssec:adapt_ties} we describe intra-protocol adaptivity using 
+TIES. In~\ref{lst:ties_adaptivity.py} we provide an adaptive implementation 
+based on the described use-case. In Section~\ref{ssec:adaptive_execution} we 
+show HTBAC's adaptive execution capabilities. 
+
+\lstinputlisting[
+  language=Python,
+  label={lst:ties_adaptivity.py},
+  caption={Adaptive implementation of the TIES protocol in HTBAC. We import
+  the predefined protocol `TIES' and partition the protocol into multiple
+  simulation steps. Between steps, the user specifies an analysis script that
+  operates on partial simulation results, which generates new simulation
+  conditions for the next simulation step. In this implementation, we use the
+  adaptive quadrature function which determines whether to spawn a new
+  $\lambda$ value between an interval of 2 existing $\lambda$ windows}
+  ]{ties_adaptivity.py}

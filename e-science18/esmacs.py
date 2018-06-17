@@ -1,4 +1,4 @@
-# creating a customized ESMACS protocol instance
+# creating a customized ESMACS protocol
 import htbac.protocols.Esmacs
 esmacs_1 = Protocol(system = 'e255k')
 sim = Simulation(name = 'minimization')

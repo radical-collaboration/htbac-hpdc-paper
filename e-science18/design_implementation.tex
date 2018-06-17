@@ -2,7 +2,7 @@ HTBAC serves as a software tool to enable ensemble-based free energy
 protocols to run adaptively and at scale on HPC resources. Currently, HTBAC
 supports protocols composed of an arbitrary number of analysis and simulation
 steps. Further, HTBAC relies on the ensemble management system and runtime
-system provided the RADICAL-Cybertools (RCT). HTBAC is designed to be
+system provided by the RADICAL-Cybertools (RCT). HTBAC is designed to be
 progressively extended to support more types of free energy protocols and
 alternative runtime middleware.
 
@@ -218,15 +218,20 @@ management from the user. Fig. \jdnote{will be added once we have a complete
 diagram} shows the components (orange) and subcomponents (green) of HTBAC,
 organized in two layers: API and application management layer.
 
-All components are stateless as they do not require different processes. The
-API enables users to codify protocol descriptions. The  application
-management layer retrieves the application description, aggregates and
-coordinates protocols and communicates with the ensemble management system.
-The ensemble management system handles the dependencies of the protocols, and
-acquires resources via a runtime system. The Application Generator contains
-three subcomponents, Protocol Manager, Step Manager, and Ensemble-Member
-Manager, which synchronize and coordinate the ensemble members and simulation
-or analysis steps within each protocol.
+% All components are stateless as they do not require different processes. 
+The API enables users to codify protocol descriptions. The  application
+generator retrieves the application description, aggregates and
+coordinates protocols and communicates with the Runner. The Runner contains 
+two subcomponents, Resource Manager and (EnTK) Connector. The Resource Manager
+handles the resource requirements from the application description and 
+communicates them to the ensemble management system (EnTK). The EnTK Connector
+subcomponent is responsible for converting the application description into an
+ensemble description. The ensemble management system handles the dependencies of 
+the protocols, and acquires resources via a runtime system. 
+
+% The Application 
+% Generator which synchronize and coordinate the ensemble members 
+% and simulation or analysis steps within each protocol.
 
 \jdnote{I've changed the description of the architecture, the actual diagram
 (which is a continuous iteration is: \href{https://docs.google.com/drawings/d
@@ -366,36 +371,36 @@ circumventing the queue policies of computing infrastructure.
 % in?}
 
 % D -------------------------------------------------------------------------
-\subsection{Implementation of the ESMACS and TIES Protocols in HTBAC} 
+% \subsection{Implementation of the ESMACS and TIES Protocols in HTBAC} 
 
-\jhanote{As written, this sub-section has nothing about HTBAC and would be
-better placed/merged in Science Driver.  What would be useful is pseudo-code
-or code listing to show how ESMACS and TIES are encoded in
-HTBAC}\jdnote{added context}
+% \jhanote{As written, this sub-section has nothing about HTBAC and would be
+% better placed/merged in Science Driver.  What would be useful is pseudo-code
+% or code listing to show how ESMACS and TIES are encoded in
+% HTBAC}\jdnote{added context}
 
-In Section~\ref{ssec:esm_ties} we define the requirements of the ESMACS and
-TIES protocols. While ESMACS and TIES protocols compute binding affinity
-calculations for different systems and purposes, their implementation in
-HTBAC have the same underlying pattern, consisting of simulations steps,
-followed by one or more analysis step(s). Designers of free energy protocols
-can utilize the simulation and analysis components of HTBAC to create any
-customized sequence of simulation(s) and/or analysis steps.
+% In Section~\ref{ssec:esm_ties} we define the requirements of the ESMACS and
+% TIES protocols. While ESMACS and TIES protocols compute binding affinity
+% calculations for different systems and purposes, their implementation in
+% HTBAC have the same underlying pattern, consisting of simulations steps,
+% followed by one or more analysis step(s). Designers of free energy protocols
+% can utilize the simulation and analysis components of HTBAC to create any
+% customized sequence of simulation(s) and/or analysis steps.
 
-Listing~\ref{lst:esmacs.py} shows the skeleton of the ESMACS protocol
-implemented in HTBAC. Specifically, the listing shows the customization of
-simulation conditions for a minimization step of the protocol.
+% Listing~\ref{lst:esmacs.py} shows the skeleton of the ESMACS protocol
+% implemented in HTBAC. Specifically, the listing shows the customization of
+% simulation conditions for a minimization step of the protocol.
 
-\lstinputlisting[
-  language=Python, 
-  label={lst:esmacs.py}, 
-  caption={Instance of the ESMACS protocol implemented with HTBAC. We import
-  the predefined protocol `ESMACS' and customize its simulation steps. We
-  assign the physical system to the protocol instance and, using the
-  Simulation component, we specify the conditions for all ensemble members of
-  the minimization step \texttt{step0}. Using the Runner component, we pass
-  the protocol instance and resource request along with allocation time
-  (walltime) to EnTK.} 
-  ]{esmacs.py}
+% \lstinputlisting[
+%   language=Python, 
+%   label={lst:esmacs.py}, 
+%   caption={Instance of the ESMACS protocol implemented with HTBAC. We import
+%   the predefined protocol `ESMACS' and customize its simulation steps. We
+%   assign the physical system to the protocol instance and, using the
+%   Simulation component, we specify the conditions for all ensemble members of
+%   the minimization step \texttt{step0}. Using the Runner component, we pass
+%   the protocol instance and resource request along with allocation time
+%   (walltime) to EnTK.} 
+%   ]{esmacs.py}
 
 % In this paper, we focus on the default sequence of
 % simulation steps which consist of minimization, initial equilibration,
@@ -446,6 +451,8 @@ support adaptivity in the context of TIES.}
 section ``Implementing ESMACS and TIES in HTBAC'' with this, the previous
 subsections and, maybe, the last one about implementing adaptivity (I can see
 why to keep that here though)?}
+
+\jdnote{I created another section that comes after this section. }
 
 % \jdnote{I think we need to tackle this section differently,
 
@@ -543,10 +550,10 @@ concurrently. EnTK's Execution Manager component uses its underlying runtime
 system (RP) to execute the tasks of the pipelines on specific target
 resources.
 
-The application generator component of HTBAC also describes the computational
-requirements of the workflow including walltime, cores, queue, and user
-credentials. EnTK uses these requirements to derive a resource request that
-is then converted into a pilot description for RP. RP converts this pilot
+The resource requirements as specified by the user in HTBAC which include
+walltime, cores, queue, and user credentials. The Runner passes this resource 
+description to EnTK which uses these requirements to derive a resource request 
+that is then converted into a pilot description for RP. RP converts this pilot
 requests into a batch script that is submitted to a suitable HPC machine.
 Once the pilot becomes active, it pulls the tasks made available by EnTK in
 bulk, executing them on the pilot resources~\cite{merzky2015radical}.
@@ -558,7 +565,7 @@ bulk, executing them on the pilot resources~\cite{merzky2015radical}.
 % workflows},
 
 % F -------------------------------------------------------------------------
-\subsection{Supporting Adaptive Execution}
+\subsection{Supporting Adaptive Execution}\label{ssec:adaptive_execution}
 
 Support for intra-protocol adaptive execution requires an adaptive execution
 strategy. In HTBAC, we leverage the adaptive capabilities provided by
@@ -587,8 +594,8 @@ generate new simulation steps based on current simulation results.
 % steps.
 
 The Runner in HTBAC provides a flag to enable sending the results of the
-latest ensemble member that has been executed back to the client machine.
-This provides partial simulation results that can be processed by the
+latest simulations or analysis that have been executed back to the client 
+machine. This provides partial simulation results that can be processed by the
 user-defined analysis script to generate additional simulation steps.
 
 % Therefore, the user implements adaptivity in HTBAC as follows:
@@ -603,29 +610,14 @@ user-defined analysis script to generate additional simulation steps.
 % Depending on the number of iterations of the newly generated simulation
 % steps, the sequence of steps (2) and (3) can be repeatedly specified.
 
-Listing~\ref{lst:ties_adaptivity.py} shows an adaptive implementation of the
-TIES protocol in HTBAC, as defined in Section~\ref{ssec:adapt_ties}.
-
-\lstinputlisting[
-  language=Python,
-  label={lst:ties_adaptivity.py},
-  caption={Adaptive implementation of the TIES protocol in HTBAC. We import
-  the predefined protocol `TIES' and partition the protocol into multiple
-  simulation steps. Between steps, the user specifies an analysis script that
-  operates on partial simulation results, which generates new simulation
-  conditions for the next simulation step. In this implementation, we use the
-  adaptive quadrature function which determines whether to spawn a new
-  $\lambda$ value between an interval of 2 existing $\lambda$ windows}
-  ]{ties_adaptivity.py}
-
-The Application Generator tracks the pipeline ID of the submitted protocol to
+The Runner tracks the pipeline ID of the submitted protocol to
 keep track of protocol instances that require additional simulations. The
 Protocol component accepts new simulation conditions and builds a new
 workflow that extends the current protocol by keeping old and new simulation
 steps. In this way, older simulations can continue executing while new
 simulations can begin. As the number of simulations grows at runtime, the
-ratio of cores-to-task fluctuates. The Application Generator automatically
-redistributes an even share of the total requested cores to each simulation.
+ratio of cores-to-task fluctuates. The Runner automatically redistributes an 
+even share of the total requested cores to each simulation.
 
 % The \textbf{Application Manager} in EnTK signals RP to bypass termination
 % of the pilot and instead keep the session alive, as long as additional

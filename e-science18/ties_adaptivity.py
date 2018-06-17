@@ -1,4 +1,4 @@
-# creating a customized ESMACS protocol instance
+# creating a customized adaptive TIES protocol 
 import htbac.protocols.Rfe
 ties_1 = Protocol(system = 'e255k')
         ...
