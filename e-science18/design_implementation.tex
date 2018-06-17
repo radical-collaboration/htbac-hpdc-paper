@@ -19,7 +19,7 @@ alternative runtime middleware.
 % available during the software lifetime which in turn can be used by domain
 % experts to build new algorithms that require such features.
 
-% ---------------------------------------------------------------------------
+% A -------------------------------------------------------------------------
 \subsection{Requirements}
 
 HTBAC has three primary requirements: (1) enable the scalable execution of
@@ -115,7 +115,7 @@ energy protocols.
 % \jdnote{I can see that, but wanted to explicitly highlight the adaptive
 % features as part of usability.}
 
-% ---------------------------------------------------------------------------
+% B -------------------------------------------------------------------------
 \subsection{Design}
 
 HTBAC exposes the following user-facing constructs to enable users to specify
@@ -196,7 +196,7 @@ scientific problem in terms of computational tasks.
 % \mtnote{End of part to move up to design.}
 
 
-% ---------------------------------------------------------------------------
+% C -------------------------------------------------------------------------
 \subsubsection{Architecture}
 
 % \jdnote{should this stay as a subsubsection? Or maybe we can merge Design
@@ -312,7 +312,7 @@ or analysis steps within each protocol.
 % Figure~\ref{fig:pst} provides the visual implementation of the TIES
 % protocols into the PST model.
 
-% ---------------------------------------------------------------------------
+% D -------------------------------------------------------------------------
 \subsection{Implementation}
 
 HTBAC is implemented in Python as a domain specific library. All components
@@ -365,8 +365,8 @@ circumventing the queue policies of computing infrastructure.
 % \jdnote{Added background, but in general how much of RP's details should go
 % in?}
 
-% ---------------------------------------------------------------------------
-\subsection{ESMACS and TIES} 
+% D -------------------------------------------------------------------------
+\subsection{Implementation of the ESMACS and TIES Protocols in HTBAC} 
 
 \jhanote{As written, this sub-section has nothing about HTBAC and would be
 better placed/merged in Science Driver.  What would be useful is pseudo-code
@@ -378,20 +378,12 @@ TIES protocols. While ESMACS and TIES protocols compute binding affinity
 calculations for different systems and purposes, their implementation in
 HTBAC have the same underlying pattern, consisting of simulations steps,
 followed by one or more analysis step(s). Designers of free energy protocols
-utilize the simulation and analysis components of HTBAC to create any
+can utilize the simulation and analysis components of HTBAC to create any
 customized sequence of simulation(s) and/or analysis steps.
 
-% In this paper, we focus on the default sequence of
-% simulation steps which consist of minimization, initial equilibration,
-% secondary equilibration, and production MD simulation. 
-
-% Within each step, the user assigns the number of ensemble 
-% members along with configuration details such as simulation timesteps, and 
-% execution details including MD kernel and cores per ensemble member. 
-
-In~\ref{lst:esmacs.py}, we provide the encoding of an ESMACS protocol
-instance using HTBAC, showing a customization of simulation conditions for a
-minimization step.
+Listing~\ref{lst:esmacs.py} shows the skeleton of the ESMACS protocol
+implemented in HTBAC. Specifically, the listing shows the customization of
+simulation conditions for a minimization step of the protocol.
 
 \lstinputlisting[
   language=Python, 
@@ -405,14 +397,22 @@ minimization step.
   (walltime) to EnTK.} 
   ]{esmacs.py}
 
+% In this paper, we focus on the default sequence of
+% simulation steps which consist of minimization, initial equilibration,
+% secondary equilibration, and production MD simulation. 
+
+% Within each step, the user assigns the number of ensemble 
+% members along with configuration details such as simulation timesteps, and 
+% execution details including MD kernel and cores per ensemble member. 
+
 % The analysis step(s) vary according to each protocol. ESMACS contains a
 % single analysis step with 25 tasks that computes the MMPBSA with respect to
-% each replica.\jdnote{MMPBSA needs to be defined in feprotocol} TIES contains
-% two analysis steps. The first step is a local analysis containing 5 tasks
-% that aggregate the simulation results of each replica using the Hamiltonian
-% derivative calculation. This is followed by a global analysis stage that
-% contains a single task to calculate the thermodynamic integration across
-% replicas.
+% each replica.\jdnote{MMPBSA needs to be defined in feprotocol} TIES
+% contains two analysis steps. The first step is a local analysis containing
+% 5 tasks that aggregate the simulation results of each replica using the
+% Hamiltonian derivative calculation. This is followed by a global analysis
+% stage that contains a single task to calculate the thermodynamic
+% integration across replicas.
 
 % In HTBAC, each replica is encoded as a pipeline, which contains stages of
 % simulation steps. Each stage contains a single task which performs a
@@ -420,7 +420,7 @@ minimization step.
 % independent pipelines.
 
 % ---------------------------------------------------------------------------
-\subsection{Intra-protocol Adaptivity} 
+% \subsection{Intra-protocol Adaptivity} 
 
 \jhanote{Also, as written, this has nothing to do HTBAC. These are details 
 about algorithms, none of which is specific to their implementation in HTBAC.
@@ -430,105 +430,126 @@ support adaptivity in the context of TIES.}
 % Protocols that have the ability to The flexibility at the protocol
 % component enables the user to modify the simulation steps.
 
-\mtnote{As agreed yesterday, I started to edit heavily the text.}
-\jdnote{I think it's best if we remove this section and do the following:
--- I've moved what was here (left as commented) to section III to a new 
-subsection called Intra-Protocol Adaptivity. There I am modifying the current
-description to show adaptive workflow.
--- I've changed the subsection called adaptive execution model to Support for  
-Adaptive Execution where I've modified the text to include a snippet that 
-captures an adaptive application
--- Certain execution details will need be captured in the experiment design for 
-adaptivity experiments i.e. what is the initial pilot size 
-and how we redistribute resources}
+% \mtnote{As agreed yesterday, I started to edit heavily the text.}
+\jdnote{I think it's best if we remove this section and do the following:\\
+  -- I've moved what was here (left as commented) to section III to a new
+     subsection called Intra-Protocol Adaptivity. There I am modifying the
+     current description to show adaptive workflow.\\
+  -- I've changed the subsection called adaptive execution model to Support
+     for Adaptive Execution where I've modified the text to include a snippet
+     that captures an adaptive application.\\
+  -- Certain execution details will need be captured in the experiment design
+     for adaptivity experiments, i.e., what is the initial pilot size and how
+     we redistribute resources}
+
+\mtnote{Are we sure it would not be faster/cleaner to just add another
+section ``Implementing ESMACS and TIES in HTBAC'' with this, the previous
+subsections and, maybe, the last one about implementing adaptivity (I can see
+why to keep that here though)?}
 
 % \jdnote{I think we need to tackle this section differently,
 
-% Let's take this section out 
+% Let's take this section out
 
-% I've moved what was here (left as commented) to section III to a new 
-% subsection called Intra-Protocol Adaptivity. There I have modified the current
-% description to show the adaptive workflow.
+% I've moved what was here (left as commented) to section III to a new
+% subsection called Intra-Protocol Adaptivity. There I have modified the
+% current description to show the adaptive workflow.
 
-% I've changed the subsection called adaptive execution model to Support for  
-% Adaptive Execution where I've modified the text to reflect the 
+% I've changed the subsection called adaptive execution model to Support for
+% Adaptive Execution where I've modified the text to reflect the
 
-% Going to section 5, in the experimental design this is where we should 
+% Going to section 5, in the experimental design this is where we should
 % capture the}
 
 % Protocols like ESMACS or TIES can be implemented via a workflow with or
 % without adaptivity. The nonadaptive implementation specifies all the
-% requirements of the protocol prior to execution. The adaptive implementation
-% provides instead partial requirements before execution but ``learns'' the
-% remaining requirements during execution.
+% requirements of the protocol prior to execution. The adaptive
+% implementation provides instead partial requirements before execution but
+% ``learns'' the remaining requirements during execution.
 
-% Intra-protocol adaptivity relies on the intermediate results \textit{within}
-% a protocol instance to define the next set of requirements. In this paper, we
-% use an intra-protocol adaptive implementation of TIES because, as indicated
-% in section~\ref{sec:science-drivers}, the optimal positions of the $\lambda$
-% windows are not known \textit{a priori}. Therefore, the number of simulations
-% and their descriptions, which are dictated by the $\lambda$ windows
-% parameter, cannot be specified before execution \mtnote{`cannot be specified'
-% or `cannot be effectively specified'? If the former, then would that imply
-% that a nonadaptive implementation is not possible?}.
+% Intra-protocol adaptivity relies on the intermediate results
+% \textit{within} a protocol instance to define the next set of requirements.
+% In this paper, we use an intra-protocol adaptive implementation of TIES
+% because, as indicated in section~\ref{sec:science-drivers}, the optimal
+% positions of the $\lambda$ windows are not known \textit{a priori}.
+% Therefore, the number of simulations and their descriptions, which are
+% dictated by the $\lambda$ windows parameter, cannot be specified before
+% execution \mtnote{`cannot be specified' or `cannot be effectively
+% specified'? If the former, then would that imply that a nonadaptive
+% implementation is not possible?}.
 
-% Figure~\ref{fig:adaptive_ties} shows our implementation of TIES as a workflow
-% with an iterative pipeline of two stages: a simulation step followed by an
-% analysis step which determines optimal placement \mtnote{is placement the
-% correct term here? In the previous paragraph we wrote about number of
-% simulations and their description, not about their placement} of further
-% simulations. We initialize the workflow with $y$ evenly-spaced $\lambda$
-% windows, which generates $y \times n$ initial replicas. After the first
-% simulation step, the analysis step operates on the simulation results to
-% determine the next placement of $\lambda$ windows and to generate a second
-% simulation step with new configurations. 
+% Figure~\ref{fig:adaptive_ties} shows our implementation of TIES as a
+% workflow with an iterative pipeline of two stages: a simulation step
+% followed by an analysis step which determines optimal placement \mtnote{is
+% placement the correct term here? In the previous paragraph we wrote about
+% number of simulations and their description, not about their placement} of
+% further simulations. We initialize the workflow with $y$ evenly-spaced
+% $\lambda$ windows, which generates $y \times n$ initial replicas. After the
+% first simulation step, the analysis step operates on the simulation results
+% to determine the next placement of $\lambda$ windows and to generate a
+% second simulation step with new configurations.
 
 % Each simulation step consists of multiple tasks that simulates 1 nanosecond
 % of \ldots \mtnote{please add here what we are simulating}. The analysis
-% consists of a single task that computes adaptive quadrature calculations 
-% % (as defined in section~\ref{sec:science-drivers}) 
-% to determine whether to spawn
-% additional $\lambda$ windows \textit{in between} existing windows. This
-% enables continuous execution of existing simulations and beginning of new
-% simulations \mtnote{I do not understand this sentence. Can we eliminate it?}.
-% The workflow is executed iteratively until the total simulation duration
-% defined by the user is reached, determining termination.
+% consists of a single task that computes adaptive quadrature calculations %
+% (as defined in section~\ref{sec:science-drivers}) to determine whether to
+% spawn additional $\lambda$ windows \textit{in between} existing windows.
+% This enables continuous execution of existing simulations and beginning of
+% new simulations \mtnote{I do not understand this sentence. Can we eliminate
+% it?}. The workflow is executed iteratively until the total simulation
+% duration defined by the user is reached, determining termination.
 
 % \begin{figure}
 %   \centering
-%   \includegraphics[width=\columnwidth]{figures/adaptive_TIES_workflow_diagram.pdf}
-%   \caption{Adaptive workflow of TIES with multiple concurrent and independent
-%   simulations. The analysis (adaptive quadratures) operates on a snapshot of
-%   the current simulations for each $\lambda$ window, and decides whether the
-%   critical threshold is reached, else current simulations continue executing
-%   and new simulations are spawned based on additional $\lambda$ values.}
+%   \includegraphics[width=\columnwidth]{figures/adaptive_TIES_workflow_diagr
+%   am.pdf}
+%   \caption{Adaptive workflow of TIES with multiple concurrent and
+%   independent simulations. The analysis (adaptive quadratures) operates on
+%   a snapshot of the current simulations for each $\lambda$ window, and
+%   decides whether the critical threshold is reached, else current
+%   simulations continue executing and new simulations are spawned based on
+%   additional $\lambda$ values.}
 % \label{fig:adaptive_ties}
 % \end{figure}
 
 
+% E -------------------------------------------------------------------------
 \subsection{Execution Model}
 
-Once an adaptive or nonadaptive workflow is described in HTBAC, the Runner
-component tags each protocol instance with a unique ID and converts protocols
-into EnTK pipelines or stages of tasks. 
+Once an adaptive or nonadaptive workflow is described in HTBAC
+(Figure~\ref{fig:architecture}.1), the Runner component tags each protocol
+instance with a unique ID and converts protocols into EnTK pipelines of
+stages of tasks (Figure~\ref{fig:architecture}.2). The Runner aggregates the
+application description, including protocols
+(Figure~\ref{fig:architecture}.3), their simulation conditions
+(Figure~\ref{fig:architecture}.4), and information about computing
+infrastructure requirements (Figure~\ref{fig:architecture}.5).
 
-The Runner aggregates the  
-the application description which includes protocols and their simulation 
-conditions as well as CI information. 
+The Application Generator passes the protocol description to the Protocol
+Manager (Figure~\ref{fig:architecture}.6) which communicates with the Step
+Manager and the Ensemble-Member Manager to generate the protocol with the
+appropriate simulation conditions (Figure~\ref{fig:architecture}.7). The
+Application Generator aggregates all protocols
+(Figure~\ref{fig:architecture}.8) and passes the protocols as well as the
+application's resource configuration to the ensemble management system
+(Figure~\ref{fig:architecture}.9).\mtnote{This is an example of a meaningful
+numbering for the architecture diagram. Steps 3, 4, and 5 could be a single
+one, depending on the granularity of the diagram.}
 
-The application generator passes the protocol description to the 
-Protocol Manager which communicates with the Step Manager and the 
-Ensemble-Member Manager to generate the protocol with the appropriate 
-simulation conditions. The application generator aggregates all protocols 
-and passes the protocols as well as the application's resource configuration 
-to the ensemble management system.  
+Pipelines are submitted to EnTK's Application Manager component which sets up
+multiple processes, threads and a message queue for communication. EnTK
+identifies tasks which have satisfied dependencies and can be executed
+concurrently. EnTK's Execution Manager component uses its underlying runtime
+system (RP) to execute the tasks of the pipelines on specific target
+resources.
 
-Pipelines are submitted to EnTK's
-Application Manager component which sets up multiple processes, threads and a
-message queue for communication. EnTK identifies tasks which have satisfied
-dependencies and can be executed concurrently. EnTK's Execution Manager
-component uses its underlying runtime system (RP) to execute the tasks of the
-pipelines on specific target resources.
+The application generator component of HTBAC also describes the computational
+requirements of the workflow including walltime, cores, queue, and user
+credentials. EnTK uses these requirements to derive a resource request that
+is then converted into a pilot description for RP. RP converts this pilot
+requests into a batch script that is submitted to a suitable HPC machine.
+Once the pilot becomes active, it pulls the tasks made available by EnTK in
+bulk, executing them on the pilot resources~\cite{merzky2015radical}.
 
 % \mtnote{the previous paragraph does not mention workflow(s) so this
 % surprises and confuses the reader. Note that this is a byproduct of
@@ -536,183 +557,175 @@ pipelines on specific target resources.
 % workflow was explicitly established}\jdnote{provided earlier definition of
 % workflows},
 
-The application generator component of HTBAC also describes the computational 
-requirements of the workflow including walltime, cores, queue, and user 
-credentials. EnTK uses these requirements to derive a resource request that is 
-then converted into a pilot description for RP. RP converts this pilot requests 
-into a batch script that is submitted to a suitable HPC machine. Once the pilot 
-becomes active, it pulls the tasks made available by EnTK in bulk, executing 
-them on the pilot resources~\cite{merzky2015radical}.
-
-% ---------------------------------------------------------------------------
+% F -------------------------------------------------------------------------
 \subsection{Supporting Adaptive Execution}
 
-Support for intra-protocol adaptive workflows requires an adaptive execution 
-strategy. We leverage the adaptive capabilities provided by 
-EnTK~\cite{adaptivebiomolecular} to raise the level of adaptive features 
-in the HTBAC abstraction. The intra-protocol adaptivity schema as described in 
-section~\ref{ssec:adapt_ties} requires a redistribution of resources to account 
-for additional simulations generated during runtime. This requirement was based 
-on the consideration that a runtime system may not provide dynamic resource 
-capabilities, where additional resource requests are submitted to the batch 
-system of the HPC to maintain the workload-to-cores ratio. The redistribution 
-of resources are evenly partitioned. As by design of ensemble-based free energy 
-protocols, all simulations within a protocol instance require the same 
-resources. 
+Support for intra-protocol adaptive execution requires an adaptive execution
+strategy. In HTBAC, we leverage the adaptive capabilities provided by
+EnTK~\cite{adaptivebiomolecular} to implement such a strategy. 
 
-HTBAC's abstraction provides the granularity to specify individual steps and 
-simulation conditions. We leverage this ability in order to design adaptive 
-workflows, where the user can partition protocols based on simulation steps and 
-invoke adaptive functionality that can be used to generate new simulation 
-conditions for following simulation steps. 
+As described in section~\ref{ssec:adapt_ties}, intra-protocol adaptivity
+requires a redistribution of resources to account for additional simulations
+generated at runtime. Resources are evenly redistributed across simulations
+as, by design of ensemble-based free energy protocols, all simulations within
+a protocol instance require the same amount of resources.
 
-The adaptive application requires a user-defined script that can generate new 
-simulation conditions based on current simulation results. This requirement 
-captures the various adaptivity functionalities that are use-case specific. 
-The adaptivity script is inserted between simulation steps. 
+% This requirement was based on the consideration that a runtime system may
+% not provide dynamic resource capabilities, where additional resource
+% requests are submitted to the batch system of the HPC to maintain the
+% workload-to-cores ratio.
 
-The runner in HTBAC provides a flag that when enabled, aggregates and performs a 
-write operation of the results of each ensemble member of the most recently 
-executed step, back to the client machine. The written results enables the  
-user-defined analysis script to generate additional simulation conditions. The 
-user defines the adaptive application in the following sequence: 
+HTBAC allows to specify conditions tailored to individual simulation steps of
+a protocol implementation. We leverage this ability to implement adaptivity
+by enabling the user to partition protocols into simulation steps and
+generate new simulation steps at runtime, based on a set of predefined
+conditions. The user specifies this conditions in an analysis script to
+generate new simulation steps based on current simulation results.
 
-\begin{enumerate}
-  \item describes the initial protocol configuration
-  \item specifies a user-defined analysis script 
-  \item describes the simulation configurations for the next simulation step
-\end{enumerate}
+% This requirement captures the various adaptivity functionalities that are
+% use-case specific. The adaptivity script is inserted between simulation
+% steps.
 
-Depending on the number of iterations of newly generated simulations as required 
-by the user, the sequence of steps (2) and (3) can be repeatedly specified.
-In~\ref{lst:ties_adaptivity.py}, we show an example of an adaptive HTBAC 
-application using TIES as defined in Section~\ref{ssec:adapt_ties}. 
+The Runner in HTBAC provides a flag to enable sending the results of the
+latest ensemble member that has been executed back to the client machine.
+This provides partial simulation results that can be processed by the
+user-defined analysis script to generate additional simulation steps.
 
-\lstinputlisting[language=Python,label={lst:ties_adaptivity.py},
-caption={Adaptive application of HTBAC using TIES. We import the 
-Rfe (TIES) predefined protocol and partition the protocol into multiple 
-simulation steps. Between steps the user specifies a script that operates on
-the current snapshot of simulation results, which generates new simulation 
-conditions for the next simulation step. In this application, we use the 
-adaptive quadrature function which determines whether to spawn a new $\lambda$ 
-value between an interval of 2 existing $\lambda$ windows}]{ties_adaptivity.py}
+% Therefore, the user implements adaptivity in HTBAC as follows:
 
-The application generator tracks the pipeline ID of the submitted protocol to 
-keep track of protocol instances that require additional simulations. The 
-protocol component accepts new simulation conditions and builds a new workflow 
-that extends the current protocol by keeping old and new simulations. In this 
-manner, older simulations can continue executing while new simulations can 
-begin. As the number of simulations grows during runtime, the ratio of 
-cores-to-task fluctuates. The application generator automatically redistributes 
-an even share of the total requested cores to each simulation. 
+% \begin{enumerate}
+%   \item describing an initial protocol configuration;
+%   \item specifying a user-defined analysis script;
+%   \item describing the simulation configurations for the next simulation
+%   step;
+% \end{enumerate}
 
-The \textbf{Application Manager} in EnTK signals RP to 
-bypass termination of the pilot and instead keep the session alive, as long as 
-additional tasks are submitted within provisional walltime. \mtnote{I tried to 
-fix a bit the paragraph but it still difficult to read and understand.}
-\jdnote{Rewrote this subsection}
+% Depending on the number of iterations of the newly generated simulation
+% steps, the sequence of steps (2) and (3) can be repeatedly specified.
 
+Listing~\ref{lst:ties_adaptivity.py} shows an adaptive implementation of the
+TIES protocol in HTBAC, as defined in Section~\ref{ssec:adapt_ties}.
 
+\lstinputlisting[
+  language=Python,
+  label={lst:ties_adaptivity.py},
+  caption={Adaptive implementation of the TIES protocol in HTBAC. We import
+  the predefined protocol `TIES' and partition the protocol into multiple
+  simulation steps. Between steps, the user specifies an analysis script that
+  operates on partial simulation results, which generates new simulation
+  conditions for the next simulation step. In this implementation, we use the
+  adaptive quadrature function which determines whether to spawn a new
+  $\lambda$ value between an interval of 2 existing $\lambda$ windows}
+  ]{ties_adaptivity.py}
 
-% The \texttt{func_condition} enables the user to define an intermediate parameter
-% that evaluates a boolean output. The \texttt{func_on_true} is executed when 
-% the boolean output is true. This adds another stage of simulations to the 
-% pipeline. The \texttt{func_on_false} is executed when the condition returns 
-% false, and only the first stage is added. 
+The Application Generator tracks the pipeline ID of the submitted protocol to
+keep track of protocol instances that require additional simulations. The
+Protocol component accepts new simulation conditions and builds a new
+workflow that extends the current protocol by keeping old and new simulation
+steps. In this way, older simulations can continue executing while new
+simulations can begin. As the number of simulations grows at runtime, the
+ratio of cores-to-task fluctuates. The Application Generator automatically
+redistributes an even share of the total requested cores to each simulation.
 
+% The \textbf{Application Manager} in EnTK signals RP to bypass termination
+% of the pilot and instead keep the session alive, as long as additional
+% tasks are submitted within provisional walltime. \mtnote{I tried to fix a
+% bit the paragraph but it still difficult to read and understand.}
+% \jdnote{Rewrote this subsection}
 
+% \begin{figure}
+%   \centering
+%   \includegraphics[width=\columnwidth]{figures/ht-bac-rp_integration.pdf}
+%   \caption{HTBAC, Ensemble Toolkit (EnTK) and RADICAL-Pilot (RP)
+%   integration and execution sequence.\mtnote{Unreferenced
+%   figure.}\jdnote{does this figure help with execution model subsection?}}
+% \label{fig:integration}
+% \end{figure}
 
+% ------------------------   OLD  -------------------------------------------
 
-% As demonstrated by the requirements of the TIES intra-protocol 
-% adaptivity schema, the runtime system that provisions resources to support 
-% execution of concurrent simulations will need to redistribute resources in order 
-% to support concurrent execution of both existing and new simulations. 
+% The \texttt{func_condition} enables the user to define an intermediate
+% parameter that evaluates a boolean output. The \texttt{func_on_true} is
+% executed when the boolean output is true. This adds another stage of
+% simulations to the pipeline. The \texttt{func_on_false} is executed when
+% the condition returns false, and only the first stage is added.
 
+% As demonstrated by the requirements of the TIES intra-protocol adaptivity
+% schema, the runtime system that provisions resources to support execution
+% of concurrent simulations will need to redistribute resources in order to
+% support concurrent execution of both existing and new simulations.
 
+% The workflow method exposed by the protocol component enables granularity
+% in creating multiple ``shorter" protocols.
 
-% The workflow method exposed by
-% the protocol component enables granularity in creating multiple ``shorter" 
-% protocols. 
-
-
-% The protocol component 
-% contains a post-execution property that invokes the application once the protocol 
-% terminates. In HTBAC, the 
-
-
-
-
+% The protocol component contains a post-execution property that invokes the
+% application once the protocol terminates. In HTBAC, the
 
 % Spawning of new task contribute to task count adaptivity and task attribute
 % adaptivity. Using EnTK, HTBAC creates the necessary set of new tasks.
 
 % In section~\ref{sec:science-drivers}, we described a particular type of
-% adaptivity within TIES that would enable the simulation \mtnote{which one? Or
-% should this be `a simulation' or `simulations'?} to reach convergence
-% earlier. Figure~\ref{fig:adaptive_ties} illustrates the adaptive workflow of
-% TIES (change $\lambda$ step size as $\delta$ \mtnote{is this a comment?
-% Please clearly identify comments in the text.}). Adaptive execution requires
-% changes to the task graph during runtime, a capability supported by the RCT
-% runtime layers~\cite{power-of-many17}.
+% adaptivity within TIES that would enable the simulation \mtnote{which one?
+% Or should this be `a simulation' or `simulations'?} to reach convergence
+% earlier. Figure~\ref{fig:adaptive_ties} illustrates the adaptive workflow
+% of TIES (change $\lambda$ step size as $\delta$ \mtnote{is this a comment?
+% Please clearly identify comments in the text.}). Adaptive execution
+% requires changes to the task graph during runtime, a capability supported
+% by the RCT runtime layers~\cite{power-of-many17}.
 
 % The TIES adaptive workflow decides, postmortem \mtnote{no dash}, about the
-% placement of new $\lambda$ windows for the next set of simulations. In turn,
-% the workflow makes runtime decisions about the number of tasks in the task
-% graph. This type of adaptivity in the workflow requires as \mtnote{as what?
-% Requires capabilities to count tasks and changing the attribute of tasks
-% depending on \ldots?} task-count and task-attribute
+% placement of new $\lambda$ windows for the next set of simulations. In
+% turn, the workflow makes runtime decisions about the number of tasks in the
+% task graph. This type of adaptivity in the workflow requires as \mtnote{as
+% what? Requires capabilities to count tasks and changing the attribute of
+% tasks depending on \ldots?} task-count and task-attribute
 % adaptivity~\cite{adaptivebiomolecular}.
 
 % HTBAC monitors the output of the completed tasks during runtime, and
 % redefines the existing workflow by adding more $\lambda$ windows \mtnote{as
-% required? The sentence appears to be incomplete}. A boolean results generated
-% at the end of a pipeline defines a criteria of whether or not
+% required? The sentence appears to be incomplete}. A boolean results
+% generated at the end of a pipeline defines a criteria of whether or not
 % \mtnote{when using `whether' the `or not' is implied} to spawn additional
-% tasks. 
+% tasks.
 
+% For users to design an adaptive workflow requires the flexibility and
+% granularity to enhance specific parts of the workflow to act upon runtime
+% decisions.
 
-% For users to design an 
-% adaptive workflow requires the flexibility and granularity to enhance specific 
-% parts of the workflow to act upon runtime decisions. 
-
-% Within a protocol, there may
-% be a case for hybrid workflows. Certain steps in the protocol may be completely 
-% specified while others require stopping the simulations to perform an 
-% evaluation that aids in deciding the continued set of requirements. 
+% Within a protocol, there may be a case for hybrid workflows. Certain steps
+% in the protocol may be completely specified while others require stopping
+% the simulations to perform an evaluation that aids in deciding the
+% continued set of requirements.
 
 % In HTBAC, the protocol component allows the user to decompose a single
 % protocol instance into multiple protocols that execute shorter simulations.
 
-% When describing the application, the user can directly specify between 
-% sub-protocols that analyze results of the most recent snapshot of simulations, 
-% and exchange this information with the next sub-protocol. 
+% When describing the application, the user can directly specify between
+% sub-protocols that analyze results of the most recent snapshot of
+% simulations, and exchange this information with the next sub-protocol.
 
-% In HTBAC, the application terminates once the control logic returns to the user
-% after executing all protocols. The segmented sub-protocols allow for more 
-% control between executions. 
+% In HTBAC, the application terminates once the control logic returns to the
+% user after executing all protocols. The segmented sub-protocols allow for
+% more control between executions.
 
+% TIES
+% ---------------------------------------------------------------------------
 
-% TIES 
-% -------------------------------------------------------------------------------
+% In EnTK, a Pipeline is created for each unique combination of the following
+% parameters: system, replica, and thermodynamic state i.e. $\lambda$ window
+% in the case of TIES~\ref{fig:ties_workflow} \mtnote{This paragraph overlaps
+% in scope with the last part of the previous paragraph. This results in
+% repetition and confusion for the reader. Also, note that punctuation is
+% missing, including the one closing the sentence.}
+% ---------------------------------------------------------------------------
 
-% In EnTK, a Pipeline is created for each unique combination of the following parameters:
-% system, replica, and thermodynamic state i.e. $\lambda$ window in the case of
-% TIES~\ref{fig:ties_workflow} \mtnote{This paragraph overlaps in scope with
-% the last part of the previous paragraph. This results in repetition and
-% confusion for the reader. Also, note that punctuation is missing, including
-% the one closing the sentence.}
-% -------------------------------------------------------------------------------
-
-% A protocol 
-% defines a % simulation 
-% pipeline composed of an ordered sequence of simulation steps. In
-% ensemble-based, free energy protocols such as ESMACS or TIES, these
-% pipelines are replicated, where replicas differ by their parameter
-% configurations. For example, in ESMACS and TIES, replicas only differ by initial
-% velocities, which are assigned randomly by the MD engine at the start of
-% execution. By nature of ensemble applications, each replica within a protocol
-% can execute its pipeline independently.
-
+% A protocol defines a % simulation pipeline composed of an ordered sequence
+% of simulation steps. In ensemble-based, free energy protocols such as
+% ESMACS or TIES, these pipelines are replicated, where replicas differ by
+% their parameter configurations. For example, in ESMACS and TIES, replicas
+% only differ by initial velocities, which are assigned randomly by the MD
+% engine at the start of execution. By nature of ensemble applications, each
+% replica within a protocol can execute its pipeline independently.
 
 % Sets of tasks with dependencies that determine the order of their execution
 % are usually referred to as “workflows”.
@@ -720,43 +733,34 @@ fix a bit the paragraph but it still difficult to read and understand.}
 % In section \ref{sec:science-drivers}, we described two examples of
 % ensemble-based protocols for computing binding affinities.
 
-
-
-% A computational
-% \textbf{task} represents an independent simulation. Aggregates of tasks
-% create \textbf{workflows} 
-
-
-
+% A computational \textbf{task} represents an independent simulation.
+% Aggregates of tasks create \textbf{workflows}
 
 % \begin{figure}
 %   \centering
 %   \includegraphics[width=\columnwidth]{figures/building_blocks.pdf}
 %   \caption{Layered architecture of HTBAC, EnTK, and RP. The HTBAC API
-%   exposes the Protocol component. Current protocols supporting the use cases
-%   include ESMACS and TIES. EnTK serves as the workload execution system.
-%   RADICAL-Pilot serves as the runtime system.}
+%   exposes the Protocol component. Current protocols supporting the use
+%   cases include ESMACS and TIES. EnTK serves as the workload execution
+%   system. RADICAL-Pilot serves as the runtime system.}
 % \label{fig:blockdiagram}
 % \end{figure}
-
-
-
 
 % ---------------------------------------------------------------------------
 % \subsubsection{Workload Management and Runtime System}
 
 % EnTK simplifies the process of creating ensemble-based applications with
-% complex coordination and communication requirements. The EnTK API exposes the
-% PST model which consists of three components\mtnote{I am not sure these are
-% components. There is the risk to consider them architectural elements when
-% they are not}: \textbf{Pipeline}, \textbf{Stage}, and \textbf{Task}. HTBAC
-% promotes binding affinity \textbf{Protocols} as the user-facing construct,
-% and uses the programming model defined by the Pipeline, Stage and Tasks model
-% to express a specific protocol. \mtnote{The second part of this paragraph is
-% inconsistent with the first: for example, see the use of PST and then
-% `Pipeline, Stage and Task', or the use of protocols with capitalization
-% (proper names are not plural) without differentiating them (it?) from those
-% defined in EnTK via PST}
+% complex coordination and communication requirements. The EnTK API exposes
+% the PST model which consists of three components\mtnote{I am not sure these
+% are components. There is the risk to consider them architectural elements
+% when they are not}: \textbf{Pipeline}, \textbf{Stage}, and \textbf{Task}.
+% HTBAC promotes binding affinity \textbf{Protocols} as the user-facing
+% construct, and uses the programming model defined by the Pipeline, Stage
+% and Tasks model to express a specific protocol. \mtnote{The second part of
+% this paragraph is inconsistent with the first: for example, see the use of
+% PST and then `Pipeline, Stage and Task', or the use of protocols with
+% capitalization (proper names are not plural) without differentiating them
+% (it?) from those defined in EnTK via PST}
 
 % Each HTBAC application aggregates one or more protocols. A workflow is
 % comprised of $N_P$ instances of the P$^{th}$ protocol.
@@ -771,28 +775,16 @@ fix a bit the paragraph but it still difficult to read and understand.}
 % In section \ref{sec:science-drivers}, we described two examples of
 % ensemble-based protocols for computing binding affinities.
 
-
-
 % \begin{figure}
 %   \centering
 %   \includegraphics[width=\columnwidth]{figures/ties_workflow.pdf}
 %   \caption{TIES workflow consisting a physical system, thermodynamic states
-%   and replicas. Each replica is assigned a thermodynamic state. The workflow
-%   is translated into an EnTK PST workflow. Construction Number of EnTK
-%   Pipelines = 2 * (($\lambda$(max)/$\delta$) + 1) * 5 where $\lambda$(max) =
-%   1 }
+%   and replicas. Each replica is assigned a thermodynamic state. The
+%   workflow is translated into an EnTK PST workflow. Construction Number of
+%   EnTK Pipelines = 2 * (($\lambda$(max)/$\delta$) + 1) * 5 where
+%   $\lambda$(max) = 1 }
 % \label{fig:ties_workflow}
 % \end{figure}
-
-  
-\begin{figure}
-  \centering
-  \includegraphics[width=\columnwidth]{figures/ht-bac-rp_integration.pdf}
-  \caption{HTBAC, Ensemble Toolkit (EnTK) and RADICAL-Pilot (RP) integration 
-  and execution sequence.\mtnote{Unreferenced figure.}\jdnote{does this figure
-  help with execution model subsection?}}
-\label{fig:integration}
-\end{figure}
 
 % Consistent with EnTK's programming model, HTBAC also uses the PST model to
 % express {\bf Protocols}.
@@ -800,7 +792,7 @@ fix a bit the paragraph but it still difficult to read and understand.}
 % Each protocol contains multiple stages with simulations and analysis tasks
 % interspersed, in the most general case.
 
-% programming model (that are consistent with the EnTK) to enable the user 
+% programming model (that are consistent with the EnTK) to enable the user
 
 % HTBAC rests upon established middleware solutions~\cite{review_bb_2016},
 % validated runtime abstractions~\cite{turilli2017comprehensive} for scalable
