@@ -165,7 +165,7 @@ windows to spawn a total of 65 replicas in each simulation step.
 %number of full simulations that are required to be run, while still keeping the
 %high accuracy of the protocol.
 
-\subsection{The Value of Adaptivity}
+\subsection{The Value of Adaptivity}\label{ssec:adapt_ties}
 
 Both ESMACS and TIES have been successfully used to predict binding affinities
 quickly and accurately. Nonetheless, they are very expensive computationally,
@@ -230,8 +230,9 @@ simulation step with new configurations.
 
 Each simulation step consists of multiple tasks that simulates 1 nanosecond
 of \ldots \mtnote{please add here what we are simulating}. The analysis
-consists of a single task that computes adaptive quadrature calculations (as
-defined in section~\ref{sec:science-drivers}) to determine whether to spawn
+consists of a single task that computes adaptive quadrature calculations 
+% (as defined in section~\ref{sec:science-drivers}) 
+to determine whether to spawn
 additional $\lambda$ windows \textit{in between} existing windows. This
 enables continuous execution of existing simulations and beginning of new
 simulations \mtnote{I do not understand this sentence. Can we eliminate it?}.

@@ -10,6 +10,6 @@ esmacs_1.append(Esmacs.step0)
 # assign resources, append protocol to Runner 
 runner = Runner(resource = 'ncsa.blue_waters',
                 walltime = 60) 
-runner.add_protocol(esmacs_1)
+runner.add_protocol(protocol = esmacs_1)
 # launch application
 runner.run()
