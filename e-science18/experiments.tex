@@ -1270,17 +1270,30 @@ Therefore, certain decisions, like number of time steps, $\lambda$ window
 placement have to be made \emph{a priori}, and the continuous accumulation of
 results can, by definition, have no effect of these parameters.
 
+\jhanote{This discussion needs more care: adaptive algorithms are difficult to
+implement at scale. That is why we have fewer adaptive algorithms than one
+might suspect. The opening line says the cause of the lack of adaptivity is 
+the way they are implemented.}
+
+
 Having the mobility and dynamism that HTBAC offers, we are able to enhance our
 protocols (that run with these static simulation engines) to use adaptive
 schemes. Utilizing adaptivity results in faster convergence rate and more
 accurate results.
 
-The aim of introducing adaptive quadrature to alchemical free energy
+\jhanote{Once again, we need to be careful: there is conflation between cause and effect. Adatpvitiy is not a principle in of itself so has not intrinsic value standalone. what is important
+is faster convergence and more accurate results. adaptivity is one route to
+obtain them. The way the previous sentence is written conflates effect with
+driver.}
+
+
+The aim of introducing adaptive quadrature \jhanote{adaptive quadrature is
+raised several times it isn't describe anywhire}  to alchemical free energy
 calculation protocols (e.g. TIES) is to reduce time to completion while
-maintaining (or increasing) the accuracy of the results. Time to completion
-is measured by the number of core hours consumed by the simulations. Accuracy
-is defined as the error with respect to a reference value, calculated via a
-dense $\lambda$ window spacing (65 windows). This reference value is used to
+maintaining (or increasing) the accuracy of the results. Time to completion is
+measured by the number of core hours consumed by the simulations. Accuracy is
+defined as the error with respect to a reference value, calculated via a dense
+$\lambda$ window spacing (65 windows). This reference value is used to
 establish the accuracy of the non-adaptive protocol (which has 13 $\lambda$
 windows) and the adaptive protocol (which has a variable number of $\lambda$
 windows, determined at run time).
