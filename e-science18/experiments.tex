@@ -1299,7 +1299,7 @@ same amount. The error on the adaptive results is also decreased, on average by
 \SI{77}{\percent} (see figure~\ref{fig:savings}). More importantly, the error on all of the systems are reduced
 to below \SI{0.2}{\kilo\calorie\per\mole}, which has recently been shown to be
 the upper bound of reproducibility across different simulation
-engines~\cite{}.\mtnote{missing reference}
+engines~\cite{Loeffler2018}.
 
 The Total Task Execution Time of the TYK2 L7-L8 system has increased for the
 adaptive run by 1 $\lambda$ window compared to the non-adaptive case. This is
@@ -1385,14 +1385,15 @@ closely.
 
 \begin{figure}
   \input{figures/fig-savings.tex}
-  \caption{Quantifying the benefits of the adaptive quadrature simulations.
-  (a) The error of the adaptive run is reduced for all 5 test systems
-  sometimes by a s significant amount. Recently \cite{} it has been shown
-  that reproducibility of free energy calculations can be achieved up to \SI{0.2}{\kilo\calorie\per\mole}. The adaptive algorithm brings down the error of the non-adaptive
-  simulations below this threshold, ensuring that results and also
-  reproducible. (b) Resource consumption is also reduced, except for one of
-  the systems, where the low error threshold required more $\lambda$ windows
-  to fulfill.}
+  \caption{Quantifying the benefits of the adaptive quadrature simulations. (a)
+  The error of the adaptive run is reduced for all 5 test systems sometimes by a
+  s significant amount. Recently \cite{Loeffler2018} it has been shown that
+  reproducibility of free energy calculations can be achieved up to
+  \SI{0.2}{\kilo\calorie\per\mole}. The adaptive algorithm brings down the error
+  of the non-adaptive simulations below this threshold, ensuring that results
+  and also reproducible. (b) Resource consumption is also reduced, except for
+  one of the systems, where the low error threshold required more $\lambda$
+  windows to fulfill.}
   \label{fig:savings}
 \end{figure}
 
