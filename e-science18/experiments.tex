@@ -194,22 +194,28 @@ proteins.
 \end{table*}
 
 Experiment 1 and 2 measure the weak scalability of HTBAC using multiple
-instances of the ESMACS (experiment 1) and TIES (experiment 2) protocol.
+instances of the ESMACS (Experiment 1) and TIES (Experiment 2) protocol.
 Experiments 3 uses both the TIES and ESMACS protocols, characterizing the
 weak scaling of heterogeneous protocol executions. Experiments 4 and 5
 measure the strong scalability of HTBAC using a fix number of instances of
-the ESMACS (experiment 4) or TIES (experiment 5) protocol. Experiments 6 and
+the ESMACS (Experiment 4) and TIES (Experiment 5) protocol. Experiments 6 and
 7 characterize nonadaptive and adaptive simulation methods using the TIES
 protocol.
+
+We leverage strong scaling to support the objective in this work, which is to
+characterize: (a) the time-to-solution differences between adaptive and
+nonadaptive methods; (b) the increase in the number of resources as required
+by the nonadaptive method to reach an acceptable accuracy threshold. As such,
+we do not run an experiment about strong scaling with both the TIES and
+ESMACS protocols.
 
 In each weak scaling experiment (1--3), we keep the ratio between resources
 allocated and protocol instances constant. Consistently, for each experiment
 we progressively increase both the number of cores (i.e., measure of
 resource) and the number of protocol instances by a factor of 2. In each
 strong scaling experiment (4--5), we change the ratio between resources
-allocated and the number of protocol instances. For each experiment, we fix
-the number of protocol instances and reduce the number of cores by a factor
-of 2.
+allocated and the number of protocol instances: we fix the number of protocol
+instances and reduce the number of cores by a factor of 2.
 
 Weak scaling experiments provide insight into the size of the workload that
 can be executed in a given amount of time, while strong scaling experiments
@@ -226,54 +232,53 @@ are consistent with characterizing scalability performance instead of
 simulation duration. For the experiments 1--5 we used the following
 time-steps: $S1=1000$; $S2=5000$; $S3=5000$; and $S4=50000$.
 
-We also characterize the overheads of HTBAC, EnTK, runtime system, and
-\texttt{aprun} for the weak and strong scaling experiments. We compare
-these overheads to the total execution time of all the tasks, measuring
-the following durations:
+We measure the following durations for Experiments 1--5:
 
 \begin{itemize}
-    \item \textbf{Total Task Execution Time}: Time taken by the aggregate of
-    task executables to run on the computing infrastructure (CI).
+    \item \textbf{Total Task Execution Time}: Time taken by the
+    aggregate of task executables to run on the computing infrastructure.
+    
     \item \textbf{HTBAC Overhead}: Time taken to process the application,
     instantiate HTBAC's components and subcomponents, translate protocols
     into pipelines for EnTK, and validate resource descriptions.
+    
     \item \textbf{EnTK and RP Overhead}: Time taken by EnTK and its runtime
     system (RP) to submit and manage the execution of tasks.
+    
     \item \textbf{\texttt{aprun} Overhead}: Approximated time taken by 
-    \texttt{aprun} to launch tasks on a set of compute nodes.
+    \texttt{aprun} to launch tasks on a set of compute nodes on Blue Waters.
 \end{itemize}
 
 Note that once the runtime system relinquishes the control flow to
 \texttt{aprun}, the precise time at which \texttt{aprun} schedules each task
 on a compute node and the MD kernel of each task begins execution cannot be
-measured. Instead, for each task, we measure the difference between Task
-Execution Time and its \texttt{NAMD} kernel execution time, provided by the
+measured. Instead, for each task, we measure the difference between the task
+execution time and its \texttt{NAMD} kernel execution time, provided by the
 \texttt{NAMD} output logs. In this way, we approximate the portion of the
-TAsk Execution Time taken by \texttt{aprun} to launch the task. Once
+task execution time taken by \texttt{aprun} to launch the task. Once
 aggregated, these measures constitute what we defined as \texttt{aprun}
-Overhead.\mtnote{Am I right to assume that: $Task Execution Time = NAMD
-execution time$?}
+Overhead.
 
 Experiments 6 and 7 compare the the accuracy and time to solution of
 nonadaptive and adaptive simulation methods. For the nonadaptive simulation
 method of Experiment 6 we use 13 preassigned and approximated $\lambda$
 windows, consistent with the value reported in Ref.~\cite{Bhati2017}. In this
 way, we produce 65 concurrent simulations for stages $S1$--$S4$ of the TIES
-workflow (Figure~\ref{fig:ties_esmacs_application}). The production
-simulation stage $S4$ executes each simulation for 4ns. Stage $S5$ consists
-of 5 analysis tasks which aggregate the simulation results of $S4$. The
-global analysis stage $S6$ contains a single task that aggregates the results
-from $S5$.
+workflow (see Figure~\ref{fig:ties_esmacs_application}). The production
+simulation stage $S4$ executes each simulation for \SI{4}{\nano\second}.
+Stage $S5$ consists of 5 analysis tasks which aggregate the simulation
+results of $S4$. The global analysis stage $S6$ contains a single task that
+aggregates the results from $S5$.
 
 In the adaptive workflow~\ref{fig:adaptive_ties}, we initialize the TIES
 protocol with 3 $\lambda$ windows, obtaining 15 replicas. We separate stage
-$S4$ of each TIES replica into 4 sub-stages. Each sub-stage runs a 1ns
-simulation, followed by an adaptive quadratures analysis which estimates free
-energy errors with respect to each interval of two $\lambda$ values. We
-evaluate the total number of $\lambda$ windows as determined by the adaptive
-quadrature results in order to measure the differences in time duration
-between adaptive and non-adaptive methods as well as the differences in
-accuracy.
+$S4$ of each TIES replica into 4 sub-stages. Each sub-stage runs a
+\SI{1}{\nano\second} simulation, followed by an adaptive quadratures analysis
+which estimates free energy errors with respect to each interval of two
+$\lambda$ values. We evaluate the total number of $\lambda$ windows as
+determined by the adaptive quadrature results in order to measure the
+differences in time duration between adaptive and non-adaptive methods as
+well as the differences in accuracy.
 
 \begin{figure}
   \centering
@@ -304,12 +309,11 @@ we used \texttt{AmberTools}.
 NCSA sets a system policy on the maximum number of processes that
 \texttt{aprun} can spawn, limiting the number of concurrent tasks we can
 execute on Blue Waters to approximately 450. During the execution of
-Experiment 2, we observed failing tasks once we scale up to 8 TIES protocol
-instances, which is equivalent to 520 concurrent tasks. In a trial of 10
-repetitions at this scale, we observed an average failing tasks of $70
-\pm6.67$, and range of $59-83$ tasks. Given that we only ran a small number
-of trials, more data would be required to properly model the distribution
-type of these results.
+Experiment 2, we observed failing tasks with 8 TIES protocol instances, i.e.,
+520 concurrent tasks. In a trial of 10 repetitions at this scale, we observed
+an average failing tasks of $70\pm6.67$, and range of $59--83$ tasks. Given
+that we only ran a small number of trials, more data would be required to
+properly model the distribution type of these results.
 
 NCSA allows to run only one MPI application for each compute node. As a
 consequence, we had to run each MD simulation with 32 cores (i.e., one full
@@ -744,30 +748,24 @@ computing time and communication overhead.
 % overhead.}
 
 % B -------------------------------------------------------------------------
-\subsection{Weak Scaling and Performance Characterization}
+\subsection{Weak Scaling Characterization}
 
-We investigate the weak scaling of HTBAC with three experiments: Experiment 1
-that executes only the TIES protocol; Experiment 2 that executes only the
-ESMACS protocol; and Experiment 3 that executes both TIES and ESMACS
-together. Each experiment uses a specific protocol configuration,
-concurrently executing an increasing number of protocol instances,
-proportional to the amount of requested resources. On Blue Waters,
-\texttt{aprun} determines the upper boundary of the number of supported
-concurrent executions.
-
-% Each experiment uses a different protocol configuration, with a number of
-% instances determined by the number of concurrent executions supported by
-% \texttt{aprun} on Blue Waters. In each experiment, we increase the number
-% of instances of the protocol configuration, proportionally to the amount of
-% requested resources.
+% We investigate the weak scaling of HTBAC with three experiments: Experiment
+% 1 that executes only the TIES protocol; Experiment 2 that executes only the
+% ESMACS protocol; and Experiment 3 that executes both TIES and ESMACS
+% together. Each experiment uses a specific protocol configuration,
+% concurrently executing an increasing number of protocol instances,
+% proportional to the amount of requested resources. On Blue Waters,
+% \texttt{aprun} determines the upper boundary of the number of supported
+% concurrent executions.
 
 Figure~\ref{fig:ws}(a) shows the weak scalability of HTBAC with the TIES
 protocol. Each instance of the TIES protocol contains a single pipeline with
 4 stages and 65 concurrent tasks. We increase the number of protocol
 instances linearly, between 2 and 8. When scaling to 8 protocol instances, we
 execute more than 450 concurrent tasks, the average limit supported by
-\texttt{aprun} described in Section~\ref{ssec:exp_design}. Nevertheless, we
-include results at this scale to show HTBAC's performance when supporting
+\texttt{aprun}, as described in Section~\ref{ssec:exp_design}. Nevertheless,
+we include results at this scale to show HTBAC's performance when supporting
 higher orders of concurrent simulations.
 
 \begin{figure}
@@ -783,9 +781,9 @@ higher orders of concurrent simulations.
 \end{figure}
 
 Figure~\ref{fig:ws}(b) shows the weak scalability of HTBAC with the ESMACS
-protocol. We increase the number of instances
-linearly, between 2 and 16. Each ESMACS protocol contains 1 pipeline with 4
-stages and 25 concurrent tasks.
+protocol. We increase the number of instances linearly, between 2 and 16.
+Each ESMACS protocol contains 1 pipeline with 4 stages and 25 concurrent
+tasks.
 
 Figure~\ref{fig:ws}(c) shows the weak scalability of HTBAC with instances of
 both TIES and ESMACS protocols. Also in this case, we scale the instances of
@@ -799,7 +797,7 @@ For all weak scaling experiments (1--3) we use physical systems from the
 \texttt{BRD4-GSK} library with the same number of atoms and similar chemical
 properties. The uniformity of these physical systems ensures a consistent
 workload with insignificant variability when characterizing their performance
-under different conditions.
+under different conditions.\mtnote{moving to design?}
 
 \dwwnote{The figure captions and legends don't appear to agree which axis
 applies to which measurement. Also the legend should be inside the plots.}
@@ -833,22 +831,22 @@ Figure~\ref{fig:ws}, blue bars.
 
 The RP overhead is calculated by measuring and aggregating the execution time
 of the RP components that manage and coordinate the execution of the protocol
-instances. Among these components, the
-task scheduler of RP introduces the largest overhead. The task scheduling
-overhead scales linearly with the number of tasks because the time taken to
-schedule a task depends on the total number of tasks that need to be
-scheduled.
-\mtnote{Are we sure? In the latest RP paper I thought we wrote that the
-performance of the RP CU scheduler depends on the size of the pilot? Would
-you mind double checking?}\jdnote{sent you note on slack about discrepancy in
-papers.}\mtnote{Answered there.}
+instances. Among these components, the task scheduler of RP introduces the
+largest overhead. Due to the general scheduling algorithm loaded by default
+in RP, the task scheduling overhead scales linearly with the number of tasks that need to be scheduled.
 
 In comparison to Total Task Execution Time, the EnTK and RP overheads are an
 order of magnitude shorter, yet they directly contribute to the total
-duration of the application. Based on Figure~\ref{fig:ws}, we approximate the
-use of our runtime systems will results in $\approx15\%$ additional usage of
-resource allocation. This overhead can be reduced by using a special-purpose
-scheduler for the RP runtime system as illustrated in Ref.~\cite{merzky2018}.
+duration of the application execution. Based on Figure~\ref{fig:ws}, we
+approximate the use of our runtime systems will results in $\approx15\%$
+additional usage of resource allocation. This overhead can be substantially
+reduced by using a special-purpose scheduler for the RP runtime system as
+illustrated in Ref.~\cite{merzky2018}.
+
+% \mtnote{Are we sure? In the latest RP paper I thought we wrote that the
+% performance of the RP CU scheduler depends on the size of the pilot? Would
+% you mind double checking?}\jdnote{sent you note on slack about discrepancy
+% in papers.}\mtnote{Answered there.}
 
 % \mtnote{protocol?}\jdnote{addressed}
 
@@ -1019,30 +1017,24 @@ scheduler for the RP runtime system as illustrated in Ref.~\cite{merzky2018}.
 % before rewriting a new paragraph if needed.}
 
 % C -------------------------------------------------------------------------
-\subsection{Strong Scaling and Performance Characterization}
+\subsection{Strong Scaling Characterization}
 
-We investigate the strong scaling of HTBAC on Blue Waters with two
-experiments: Experiment 4 that executes the TIES protocol and Experiment 5
-that executes the ESMACS protocol.  These Experiments show how the
-time-to-solution varies when consistently increasing the number of resources
-for a fixed problem size. We leverage strong scaling to support the objective
-in this work, which is to characterize: (a) the time-to-solution differences
-between adaptive and nonadaptive methods; (b) the increase in the number of
-resources as required by the nonadaptive method to reach an acceptable
-accuracy threshold. As such, we do not run an experiment about strong scaling
-with both the TIES and ESMACS protocols.
+% We investigate the strong scaling of HTBAC on Blue Waters with two
+% experiments: Experiment 4 that executes the TIES protocol and Experiment 5
+% that executes the ESMACS protocol.  These Experiments show how the
+% time-to-solution varies when consistently increasing the number of
+% resources for a fixed problem size.
 
-In Experiment 4 we fix the number of instances of the TIES protocol to 8 due
-to the described \texttt{aprun} limitations. We vary the amount of resources
-between 4160, 8320 and 16640 cores. Given 4160 cores, we can execute 4
-generations (defined in Section~\ref{ssec:exp_design}) of 130 concurrent
-tasks; with 8320 cores, we can execute 2 generations of 260 concurrent tasks;
-with 16640 cores we can execute \ldots\mtnote{please complete}
+In Experiment 4 we fix the number of instances of the TIES protocol to 8 (due
+to the described \texttt{aprun} limitations) and we vary the amount of
+resources between 4160, 8320 and 16640 cores. Given 4160 cores, we can
+execute 4 generations (defined in Section~\ref{ssec:exp_design}) of 130
+concurrent tasks; with 8320 cores, 2 generations of 260 concurrent tasks; and
+with 16640 cores, 1 generation of 520 concurrent tasks.
 
 In Experiment 5 we fix the number of instances of the ESMACS protocols to 16
 and vary the amount of resources between 3200, 6400 and 12800 cores. In this
-way, we obtain the same number of generations of execution as in experiment
-4. 
+way, we obtain the same number of generations as in Experiment 4.
 
 Figure~\ref{fig:ss} shows a linear speedup in Total Task Execution Time for
 both experiments, proportional to the increase in the number of cores. The
@@ -1051,13 +1043,6 @@ behavior. All overheads remain constant for both experiments when increasing
 the number of cores. The scheduling of the number of tasks as opposed to the
 amount of resources, is the main driver of the fixed runtime overheads,
 namely EnTK and RP. This is confirmed for RP in Ref.~\cite{merzky2018}.
-\jdnote{this statement is now inconsistent with the performance
-characterization of Ref~\cite{merzky2018} but in Ref.~\cite{power-of-many17},
-(Power of Many) cites `` EnTK and RP overheads mostly depend on the number of
-managed tasks, not on the size of the pilot on which they are executed. This
-is confirmed for RP in Ref.~\cite{merzky2018}." Given that I see the same
-behavior as what is reported in Ref.~\cite{power-of-many17} I used the same
-reference.}\mtnote{Please see discussion on Slack}
 
 \begin{figure}
   \centering
@@ -1069,6 +1054,15 @@ reference.}\mtnote{Please see discussion on Slack}
     and ESMACS protocol (Experiment 5). We ran 3 trials for each experiment.}
 \label{fig:ss}
 \end{figure}
+
+% \jdnote{this statement is now inconsistent with the performance
+% characterization of Ref~\cite{merzky2018} but in
+% Ref.~\cite{power-of-many17}, (Power of Many) cites `` EnTK and RP overheads
+% mostly depend on the number of managed tasks, not on the size of the pilot
+% on which they are executed. This is confirmed for RP in
+% Ref.~\cite{merzky2018}." Given that I see the same behavior as what is
+% reported in Ref.~\cite{power-of-many17} I used the same
+% reference.}\mtnote{Please see discussion on Slack}
 
 % \mtnote{name?}\jdnote{addressed} 
 % \mtnote{Are you sure this should not be the `nth experiment
