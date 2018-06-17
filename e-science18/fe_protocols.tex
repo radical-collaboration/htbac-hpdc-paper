@@ -211,9 +211,6 @@ or in TIES changing the distribution of $\lambda$ windows.
 
 \subsection{The Value of Adaptivity}\label{ssec:adapt_ties}
 
- Nonetheless, they are very expensive computationally,
-and optimizing the execution time while still improving the accuracy is
-desirable. 
 
 % Given the very large number of drug candidates, it is imperative to
 % gain maximum insight into potential candidate compounds using time and
@@ -226,72 +223,95 @@ desirable.
 % resource budget carefully looking to gain maximum insight into potential
 % candidate compounds. 
 
-A second driver for adaptivity is that such algorithmic methods  will
+The main driver for adaptivity is that computational campaigns will
 typically involve compounds with a wide range of chemical properties which can
 impact not only the time to convergence, but the type of sampling required to
 gain accurate results. In general, there is no way to know before running
 calculations exactly which setup of calculation is required for a particular
 system. For example in TIES, the number (or the exact location) of the
 $\lambda$ windows that will most impact the calculation are not known
-\textit{a priori}, and change between physical systems (drugs). As multiple
-simulations must be run for each window, sampling with a very high frequency
-is expensive and impractical. Furthermore, adaptive placement of $\lambda$
+\textit{a priori}, and varies across (drugs). As multiple simulations must be 
+run for each window, sampling with a very high frequency is expensive and 
+impractical. Instead approximations using evenly spaced $\lambda$ windows
+suffice for reaching an acceptable accuracy threshold. 
+
+%  Nonetheless, they are very expensive computationally,
+% and optimizing the execution time while still improving the accuracy is
+% desirable. 
+
+However, adaptive placement of $\lambda$
 windows is likely to better capture the shape of the 
 $\partial U/\partial\lambda$ curve, leading to more accurate and precise 
 results for a given computational cost.
 
-On occasion, alchemical methods may be very slow to converge; in such
-circumstances use of another method, such as ESMACS, may be the best option.
-This means that the most effective way to gain accurate and precise free
-energy results on industrially or clinically relevant timescales is to be able
-to adapt both sampling (intra-protocol) and even the type of calculation 
-(inter-protocol) used at run time. With potentially thousands of simulations, 
-often employing multiple analysis methodologies, this provides the most 
-effective way to utilize these techniques and resources at scale.
+Another driver of adaptivity is that on occasion, alchemical methods may be very 
+slow to converge; in such circumstances use of another method, such as ESMACS,
+may be the best option. This means that the most effective way to gain accurate 
+and precise free energy results on industrially or clinically relevant 
+timescales is to be able to adapt both sampling (\textbf{intra-protocol}) and 
+even the type of calculation (\textbf{inter-protocol}) used at run time. With 
+potentially thousands of simulations, often employing multiple analysis 
+methodologies, this provides the most effective way to utilize these techniques 
+and resources at scale.
 
 %-----------------------------------------------------------------------------%
 % move this section to fe_protocols.tex
 
-Intra-protocol adaptivity relies on the intermediate results \textit{within}
-a protocol instance to define the next set of requirements. In this paper, we
-use an intra-protocol adaptive implementation of TIES because, as indicated
-in section~\ref{sec:science-drivers}, the optimal positions of the $\lambda$
-windows are not known \textit{a priori}. Therefore, the number of simulations
-and their descriptions, which are dictated by the $\lambda$ windows
-parameter, cannot be specified before execution \mtnote{`cannot be specified'
-or `cannot be effectively specified'? If the former, then would that imply
-that a nonadaptive implementation is not possible?}.
+Here we focus on intra-protocol adaptivity using TIES to demonstrate the 
+computational efficiency between static, nonadaptive simulation methods and 
+simulations methods that adapt during runtime. Intra-protocol adaptivity relies 
+on the intermediate results \textit{within} a protocol instance to define the 
+next set of further simulation requirements. In TIES, the optimal positions of 
+the $\lambda$ windows are not known \textit{a priori}. Therefore, the number of 
+simulations and their descriptions, which are dictated by the $\lambda$ windows
+parameter, cannot be accurately specified before execution \mtnote{`cannot be 
+specified' or `cannot be effectively specified'? If the former, then would that 
+imply that a nonadaptive implementation is not possible?}\jdnote{addressed}.
+Instead, we leverage the use of adaptive software solutions that can automate
+runtime decisions based on intermediately generated data. As opposed to using
+approximations to place all $\lambda$ prior to execution, we can provide less 
+$\lambda$ windows and run shorter bursts of simulations. The intermediate data 
+(i.e. simulation results) can be analyzed during runtime and provide additional
+parameters of customized and ideally placed $\lambda$ windows.   
 
-Figure~\ref{fig:adaptive_ties} shows our implementation of TIES as a workflow
-with an iterative pipeline of two stages: a simulation step followed by an
-analysis step which determines optimal placement \mtnote{is placement the
-correct term here? In the previous paragraph we wrote about number of
-simulations and their description, not about their placement} of further
-simulations. We initialize the workflow with $y$ evenly-spaced $\lambda$
-windows, which generates $y \times n$ initial replicas. After the first
-simulation step, the analysis step operates on the simulation results to
-determine the next placement of $\lambda$ windows and to generate a second
-simulation step with new configurations. 
+% Figure~\ref{fig:adaptive_ties} shows our design of capturing adaptivity within 
+% TIES using an iterative pipeline of two stages: a short simulation step 
+% (1 nanosecond) followed by the adaptive quadrature analysis which determines 
+% optimal sampling positions \mtnote{is placement the correct term here? In the 
+% previous paragraph we wrote about number of simulations and their description, 
+% not about their placement}\jdnote{changed to optimal sampling position} of 
+% further simulations. We initially assign TIES with $y$ evenly-spaced 
+% $\lambda$ windows, which generates $y \times n$ initial replicas. After the 
+% first simulations finish executing, the adaptive quadratures function aggregates 
+% simulation results and determines where to assign new $\lambda$ windows. 
 
-Each simulation step consists of multiple tasks that simulates 1 nanosecond
-of \ldots \mtnote{please add here what we are simulating}. The analysis
-consists of a single task that computes adaptive quadrature calculations 
-% (as defined in section~\ref{sec:science-drivers}) 
-to determine whether to spawn
-additional $\lambda$ windows \textit{in between} existing windows. This
-enables continuous execution of existing simulations and beginning of new
-simulations \mtnote{I do not understand this sentence. Can we eliminate it?}.
-The workflow is executed iteratively until the total simulation duration
-defined by the user is reached, determining termination.
+
+% After the first simulation step, 
+% the analysis step operates on the simulation results to
+% determine the next placement of $\lambda$ windows and to generate a second
+% simulation step with new configurations. 
+
+% Each simulation step consists of multiple tasks that simulates 1 nanosecond
+% of \ldots \mtnote{please add here what we are simulating}. The analysis
+% consists of a single task that computes adaptive quadrature calculations 
+% % (as defined in section~\ref{sec:science-drivers}) 
+% to determine whether to spawn
+% additional $\lambda$ windows \textit{in between} existing windows. This
+% enables continuous execution of existing simulations and beginning of new
+% simulations \mtnote{I do not understand this sentence. Can we eliminate it?}.
+% The workflow is executed iteratively until the total simulation duration
+% defined by the user is reached, determining termination.
 
 \begin{figure}
   \centering
   \includegraphics[width=\columnwidth]{figures/adaptive_TIES_workflow_diagram.pdf}
-  \caption{Adaptive workflow of TIES with multiple concurrent and independent
-  simulations. The analysis (adaptive quadratures) operates on a snapshot of
-  the current simulations for each $\lambda$ window, and decides whether the
-  critical threshold is reached, else current simulations continue executing
-  and new simulations are spawned based on additional $\lambda$ values.}
+  \caption{Intra-protocol adaptivity using TIES with multiple concurrent and 
+  independent simulations. The analysis (adaptive quadratures) operates on a 
+  snapshot of the current simulations for each $\lambda$ window, and decides 
+  whether the critical accuracy threshold is reached, else current simulations 
+  continue executing and additional $\lambda$ windows are assigned in order to 
+  account for additionally needed simulations in specific regions of the phase-
+  space}
 \label{fig:adaptive_ties}
 \end{figure}
 
