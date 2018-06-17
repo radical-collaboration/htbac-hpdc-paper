@@ -1160,7 +1160,7 @@ of the TIES protocol.
   from the original study by Wan et al. and experimental data. This
   experiment proves that HTBAC implements TIES correctly, as the calculated
   values are either the same or within error bar of the original study. All
-  values are in \textbf{kcal mol\textsuperscript{-1}}.}  
+  values are in \si{\kilo\calorie\per\mole}.}  
   % \begin{tabular}{l@{\hskip 1in}r@{\hskip 0.2in}r@{\hskip 0.2in}r}
   \begin{tabular}{lrrr}
     \toprule
@@ -1259,23 +1259,24 @@ of the TIES protocol.
 % E -------------------------------------------------------------------------
 \subsection{Adaptive Experiments}
 
-The lack of adaptivity in most workflows usually comes down to the way
-simulation engines (like NAMD, Gromacs, Amber and others) work. The user
-hand-writes a configuration file and, together with the system description
-(topology, PDB), passes it to a binary executable, waiting for the simulation
-to end before analyzing the results. There is a disconnect between the
-simulation run and the analysis, i.e. the intermediate results can have no
-influence over the simulation \emph{after} it has been started. Therefore,
-certain decisions, like number of time steps to run for have to be made
-\emph{a priori}, and the continuous accumulation of results can, by
-definition, have no effect of these parameters.
+The lack of adaptivity in free energy calculation workflows usually comes down
+to the way simulation engines (like NAMD, Gromacs, Amber, etc.) work. The user
+hand-writes a configuration file and, together with the physical system
+description (topology, PDB), passes it to a binary executable, waiting for the
+simulation to end before analyzing the results. There is a disconnect between
+running the simulation and analysis, i.e. the intermediate results have no
+influence over the simulation parameters \emph{after} it has been started.
+Therefore, certain decisions, like number of time steps, $\lambda$ window
+placement have to be made \emph{a priori}, and the continuous accumulation of
+results can, by definition, have no effect of these parameters.
 
-Having the mobility and dynamism that HTBAC offers, we are able to enhance
-our protocols, using adaptive schemes. Utilizing adaptivity results in faster
-convergence rate and more accurate results.
+Having the mobility and dynamism that HTBAC offers, we are able to enhance our
+protocols (that run with these static simulation engines) to use adaptive
+schemes. Utilizing adaptivity results in faster convergence rate and more
+accurate results.
 
 The aim of introducing adaptive quadrature to alchemical free energy
-calculation protocols (e.g., TIES) is to reduce time to completion while
+calculation protocols (e.g. TIES) is to reduce time to completion while
 maintaining (or increasing) the accuracy of the results. Time to completion
 is measured by the number of core hours consumed by the simulations. Accuracy
 is defined as the error with respect to a reference value, calculated via a
@@ -1290,14 +1291,14 @@ threshold to the error of the non-adaptive algorithm calculated via the
 reference value. The algorithm then tries to minimize the number of $\lambda$
 windows constrained by the accuracy requirement.
 
-Table~\ref{tab:adapquad} shows the results of running adaptive quadrature on
-5 protein ligand systems, comparing the Total Task Execution Time and
-accuracy versus the non-adaptive case. The number of lambda windows are
-reduced on average by \SI{32}{\percent}, hence reducing Total Task Execution
-Time by the same amount. The error on the adaptive results is also decreased,
-on average by \SI{77}{\percent}. More importantly, the error on all of the
-systems are reduced to below \num{0.2} kcal/mol, which has recently been
-shown to be the upper bound of reproducibility across different MD
+Table~\ref{tab:adapquad} shows the results of running adaptive quadrature on 5
+protein ligand systems, comparing the Total Task Execution Time and accuracy
+versus the non-adaptive case. The number of lambda windows are reduced on
+average by \SI{32}{\percent}, hence reducing Total Task Execution Time by the
+same amount. The error on the adaptive results is also decreased, on average by
+\SI{77}{\percent} (see figure~\ref{fig:savings}). More importantly, the error on all of the systems are reduced
+to below \SI{0.2}{\kilo\calorie\per\mole}, which has recently been shown to be
+the upper bound of reproducibility across different simulation
 engines~\cite{}.\mtnote{missing reference}
 
 The Total Task Execution Time of the TYK2 L7-L8 system has increased for the
@@ -1313,7 +1314,7 @@ increased by \SI{40}{\percent}.
   \begin{tabular}{lSSSSS[table-format=5.1]S[table-format=5.1]}
     \toprule
     {System}                               & 
-    {Ref $\Delta \Delta$G}                 &
+    {\makecell{Ref $\Delta \Delta$G \\ (\si{\kilo\calorie\per\mole})}}  &
     {Non-adaptive $\Delta \Delta$G}        &
     {Adaptive $\Delta \Delta$G}            &
     {Num. of $\lambda$ windows}            &
@@ -1387,12 +1388,11 @@ closely.
   \caption{Quantifying the benefits of the adaptive quadrature simulations.
   (a) The error of the adaptive run is reduced for all 5 test systems
   sometimes by a s significant amount. Recently \cite{} it has been shown
-  that reproducibility of free energy calculations can be achieved up to 0.2
-  kcal/mol. The adaptive algorithm brings down the error of the non-adaptive
+  that reproducibility of free energy calculations can be achieved up to \SI{0.2}{\kilo\calorie\per\mole}. The adaptive algorithm brings down the error of the non-adaptive
   simulations below this threshold, ensuring that results and also
   reproducible. (b) Resource consumption is also reduced, except for one of
   the systems, where the low error threshold required more $\lambda$ windows
-  to fulfill.\mtnote{This figure in unreferenced in the text.}}
+  to fulfill.}
   \label{fig:savings}
 \end{figure}
 
@@ -1406,31 +1406,34 @@ a predefined simulation time, set based on the assumption that the simulation
 will converge by that time. This means that in practical examples the
 simulation might have converged before the predefined time interval.
 
-In the original TIES protocol the simulation has to be run for
-\SI{4}{\nano\second} and the results are analyzed thereafter. This assumes
-that all systems need this time interval for the results to converge. In
-reality, certain systems could converge faster, terminating the simulation
-before the static \SI{4}{\nano\second} end. This would lead to faster time to
-insight and less compute resources consumed. Adaptive termination was
-implemented in HTBAC by having a checkpoint every $\tau =
-\SI{0.5}{\nano\second}$ in the simulation. Results show that the adaptively
-terminated TIES protocol saves compute resources and reduced time to insight
-on average by \SI{16}{\percent} for the physical systems we tested.
+In the original TIES protocol the production part of the simulation has to be
+run for \SI{4}{\nano\second} and the results are analyzed thereafter. This
+assumes that all systems need this simulation time for the results to converge.
+In reality, certain systems could converge faster, therefore one can terminate
+the simulation before the static \SI{4}{\nano\second} end. This would lead to
+faster time to insight and less compute resources consumed. Adaptive termination
+was implemented in HTBAC by having a checkpoint every $\tau =
+\SI{0.5}{\nano\second}$ in the simulation. Figure~\ref{fig:termination} shows
+how the observable for a specific simulation changes as a function of resource
+consumption. At every checkpoint the convergence is evaluated, and the
+simulation is indeed terminated earlier than the non-adaptive protocol would
+suggest. Table~\ref{tab:adapterm} shows results that the adaptively terminated
+TIES protocol saves compute resources and reduces time to insight on average by
+\SI{16}{\percent} for the physical systems tested.
 
 \begin{figure}
   \input{figures/fig-term.tex}
   \caption{Plot of the free energy as a function of the resources consumed
   (hence simulation time). The adaptive termination algorithm checks the
   convergence of the observable every $\tau = \SI{0.5}{\nano\second}$ and if
-  the threshold (\num{0.01} kcal/mol) has been met, terminates the
-  simulation.\mtnote{This figure in unreferenced in the text.}}
+  the threshold (\SI{0.01}{\kilo\calorie\per\mole}) has been met, terminates the
+  simulation.}
   \label{fig:termination}
 \end{figure}
 
 \begin{table}
   \caption{Simulation time of non-adaptive and adaptively terminated runs for
-  a given convergence criterion.\mtnote{This table in unreferenced in the
-  text.}}
+  a given convergence criterion.}
   \label{tab:adapterm}
   \centering
   \begin{tabular}{lSSS[table-format=5.1, table-column-width=2cm]}
