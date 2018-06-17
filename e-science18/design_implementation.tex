@@ -204,10 +204,10 @@ abstracting the complexity of encoding end-to-end protocols, resource
 acquisition and execution management. The Runner initializes HTBAC and holds
 the global state of the application, submits protocols and communicates with
 the ensemble management system that handles the dependencies of the
-protocols, and acquires resources via a runtime system.''}\jdnote{incorporated
-this description into the main paragraph}
+protocols, and acquires resources on a cyber-infrastructure (CI) via a runtime 
+system.''}\jdnote{incorporated this description into the main paragraph}
 
-HTBAC rests between the domain scientist and the cyber-infrastructure. HTBAC 
+HTBAC rests between the domain scientist and the CI. HTBAC 
 abstracts the protocol coordination, resource management and execution 
 management from the user. Fig. \jdnote{will be added once we have a complete
 diagram} shows the components (orange) and subcomponents 
@@ -354,44 +354,49 @@ RP but we then introduce only EnTK explaining how HTBAC uses it.}
 \jdnote{Added background, but in general how much of RP's details should go in?}
 
 % ---------------------------------------------------------------------------
-\subsection{ESMACS and TIES}
+\subsection{ESMACS and TIES} 
 
 \jhanote{As written, this sub-section has nothing about HTBAC and would be better
-placed/merged in Science Driver.  What would be useful is psuedo-code or code listing to show how ESMACS and TIES are encoded in HTBAC}
+placed/merged in Science Driver.  What would be useful is pseudo-code or code 
+listing to show how ESMACS and TIES are encoded in HTBAC}\jdnote{added context}
 
-While ESMACS and TIES protocols compute binding affinity calculations for
-different systems and purposes, their implementation in HTBAC have the same
-underlying pattern, consisting of simulations steps, followed by one or more
-analysis step(s). In this paper, we focus on the default sequence of
-simulation steps which consist of minimization, initial equilibration,
-secondary equilibration, and production MD simulation. Designers of free
-energy protocols are not bound by this sequence and can utilize the Protocol
-component of HTBAC to enable arbitrary sequences. 
+In Section~\ref{ssec:esm_ties} we define the requirements of the ESMACS and 
+TIES protocols. While ESMACS and TIES protocols compute binding affinity 
+calculations for different systems and purposes, their implementation in HTBAC 
+have the same underlying pattern, consisting of simulations steps, followed by 
+one or more analysis step(s). 
+% In this paper, we focus on the default sequence of
+% simulation steps which consist of minimization, initial equilibration,
+% secondary equilibration, and production MD simulation. 
+Designers of free energy protocols utilize the simulation and analysis 
+components of HTBAC to create any customized sequence of simulation(s) and/or
+analysis steps. Within each step, the user assigns the number of ensemble 
+members along with configuration details such as simulation timesteps, and 
+execution details including MD kernel and cores per ensemble member. 
+In~\ref{lst:esmacs.py}, we provide the 
+encoding of an ESMACS protocol instance using HTBAC, showing a customization of 
+simulation conditions for a minimization step. 
 
-Figure~\ref{fig:ties_esmacs_application} shows the implementation of the
-ESMACS and TIES protocols. ESMACS contains 25 replicas per simulation step
-while TIES contains a $\lambda$ sampling parameter which generates 5 replicas
-per $\lambda$ window. In this paper, we implement TIES with 13 $\lambda$
-windows to spawn a total of 65 replicas in each simulation step.
+\lstinputlisting[language=Python,label={lst:esmacs.py},
+caption={Application of HTBAC using ESMACS protocol instance. We import the 
+ESMACS predefined protocol and customize its 
+simulation steps. We assign the physical system to the protocol instance, and 
+using the simulation component we specify the conditions for all ensemble 
+members of the minimization step (\texttt{step0}). Once the conditions are 
+defined, we append them to \texttt{step0}. Using the runner component, we pass 
+the protocol instance and resource request of the CI (NCSA Blue Waters) along 
+with allocation time (walltime)}]{esmacs.py}
 
-\begin{figure}
-  \centering
-  \includegraphics[width=\columnwidth]{figures/ties_esmacs_application_model.pdf}
-  \caption{TIES and ESMACS protocols consist of simulations steps followed
-  by analysis step(s). All replicas within a simulation step are assigned the
-  following simulation timesteps, for 6 nanoseconds simulation duration:
-  $S1=1000$; $S2=30,000$; $S3=800,000$; $S4=2,000,000$.}
-\label{fig:ties_esmacs_application}
-\end{figure}
 
-The analysis step(s) vary according to each protocol. ESMACS contains a
-single analysis step with 25 tasks that computes the MMPBSA with respect to
-each replica.\jdnote{MMPBSA needs to be defined in feprotocol} TIES contains
-two analysis steps. The first step is a local analysis containing 5 tasks
-that aggregate the simulation results of each replica using the Hamiltonian
-derivative calculation. This is followed by a global analysis stage that
-contains a single task to calculate the thermodynamic integration across
-replicas.
+
+% The analysis step(s) vary according to each protocol. ESMACS contains a
+% single analysis step with 25 tasks that computes the MMPBSA with respect to
+% each replica.\jdnote{MMPBSA needs to be defined in feprotocol} TIES contains
+% two analysis steps. The first step is a local analysis containing 5 tasks
+% that aggregate the simulation results of each replica using the Hamiltonian
+% derivative calculation. This is followed by a global analysis stage that
+% contains a single task to calculate the thermodynamic integration across
+% replicas.
 
 % In HTBAC, each replica is encoded as a pipeline, which contains stages of
 % simulation steps. Each stage contains a single task which performs a
@@ -411,55 +416,13 @@ support adaptivity in the context of TIES.}
 
 \mtnote{As agreed yesterday, I started to edit heavily the text.}
 
-Protocol like ESMACS or TIES can be implemented via a workflow with or
+Protocols like ESMACS or TIES can be implemented via a workflow with or
 without adaptivity. The nonadaptive implementation specifies all the
 requirements of the protocol prior to execution. The adaptive implementation
 provides instead partial requirements before execution but ``learns'' the
 remaining requirements during execution.
 
-Intra-protocol adaptivity relies on the intermediate results \textit{within}
-a protocol instance to define the next set of requirements. In this paper, we
-use an intra-protocol adaptive implementation of TIES because, as indicated
-in section~\ref{sec:science-drivers}, the optimal positions of the $\lambda$
-windows are not known \textit{a priori}. Therefore, the number of simulations
-and their descriptions, which are dictated by the $\lambda$ windows
-parameter, cannot be specified before execution \mtnote{`cannot be specified'
-or `cannot be effectively specified'? If the former, then would that imply
-that a nonadaptive implementation is not possible?}.
 
-Figure~\ref{fig:adaptive_ties} shows our implementation of TIES as a workflow
-with an iterative pipeline of two stages: a simulation step followed by an
-analysis step which determines optimal placement \mtnote{is placement the
-correct term here? In the previous paragraph we wrote about number of
-simulations and their description, not about their placement} of further
-simulations. We initialize the workflow with $y$ evenly-spaced $\lambda$
-windows, which generates $y \times n$ initial replicas. After the first
-simulation step, the analysis step operates on the simulation results to
-determine the next placement of $\lambda$ windows and to generate a second
-simulation step with new configurations. 
-
-Each simulation step consists of multiple tasks that simulates 1 nanosecond
-of \ldots \mtnote{please add here what we are simulating}. The analysis
-consists of a single task that computes adaptive quadrature calculations (as
-defined in section~\ref{sec:science-drivers}) to determine whether to spawn
-additional $\lambda$ windows \textit{in between} existing windows. This
-enables continuous execution of existing simulations and beginning of new
-simulations \mtnote{I do not understand this sentence. Can we eliminate it?}.
-The workflow is executed iteratively until the total simulation duration
-defined by the user is reached, determining termination.
-
-\begin{figure}
-  \centering
-  \includegraphics[width=\columnwidth]{figures/adaptive_TIES_workflow_diagram.pdf}
-  \caption{Adaptive workflow of TIES with multiple concurrent and independent
-  simulations. The analysis (adaptive quadratures) operates on a snapshot of
-  the current simulations for each $\lambda$ window, and decides whether the
-  critical threshold is reached, else current simulations continue executing
-  and new simulations are spawned based on additional $\lambda$ values.}
-\label{fig:adaptive_ties}
-\end{figure}
-
-% ---------------------------------------------------------------------------
 \subsection{Execution Model}
 
 Once an adaptive or nonadaptive workflow is described in HTBAC, the Runner

@@ -1,6 +1,8 @@
 % Science drivers --------------------------------------------------------------
 % Everything related to the chemistry/drug discovery science in this paper. ----
 
+\jdnote{added content here and will go through to reduce}
+
 The drug discovery pipeline is continuously evolving and morphing from a fully 
 experimental procedure, to stages of it being replaced by computational 
 methods, like computer aided drug design. In its simplest form, the aim of a 
@@ -14,7 +16,7 @@ find the best ones. The basic use case for HTBAC is to enable this type of
 large scale binding free energy studies of protein-ligand complexes using 
 ensemble simulations. 
 
-\subsection{ESMACS and TIES}
+\subsection{ESMACS and TIES}\label{ssec:esm_ties}
 
 % Intro to binding affinity ----------------------------------------------------
 
@@ -33,10 +35,9 @@ implementations of the absolute and relative methods.
 In both protocols, ensembles of MD simulations are employed to perform 
 averaging and to obtain tight control of error bounds in our estimates.
 Due to their shared philosophical underpinning both protocols share similar 
-middleware requirements.
-Here we provide more 
-details of their practical specifications and of the protein ligand systems we 
-used to benchmark and refine them in this work.
+middleware requirements. Here we provide more details of their practical 
+specifications and of the protein ligand systems we used to benchmark and refine 
+them in this work.
 
 % Some notes on ensembles and replicas. ----------------------------------------
 
@@ -136,6 +137,27 @@ In addition, the ESMACS protocol can also be extended to account for
 adaptation energies involved in altering the conformation of the protein 
 or ligand during binding through the use of separate component simulations.
 
+
+%-----------------------------------------------------------------------------%
+% move this section to fe_protocols.tex
+
+Figure~\ref{fig:ties_esmacs_application} shows the implementation of the
+ESMACS and TIES protocols. ESMACS contains 25 replicas per simulation step
+while TIES contains a $\lambda$ sampling parameter which generates 5 replicas
+per $\lambda$ window. In this paper, we implement TIES with 13 $\lambda$
+windows to spawn a total of 65 replicas in each simulation step.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\columnwidth]{figures/ties_esmacs_application_model.pdf}
+  \caption{TIES and ESMACS protocols consist of simulations steps followed
+  by analysis step(s). All replicas simulate for 6 nanosecond durations. 
+  All replicas within a simulation step are assigned simulation timesteps 
+  based on the \jdnote{UCL please provide the end of sentence}}
+  % $S1=1000$; $S2=30,000$; $S3=800,000$; $S4=2,000,000$.}
+\label{fig:ties_esmacs_application}
+\end{figure}
+
 %Adaptive quadrature is a numerical integration algorithm that is designed to
 %minimize the number of function evaluations while still achieving a given error
 %tolerance when estimating the integral. 
@@ -181,4 +203,49 @@ to adapt both sampling (intra-protocol) and even the type of calculation
 (inter-protocol) used at run time. With potentially thousands of simulations, 
 often employing multiple analysis methodologies, this provides the most 
 effective way to utilize these techniques and resources at scale.
+
+%-----------------------------------------------------------------------------%
+% move this section to fe_protocols.tex
+
+Intra-protocol adaptivity relies on the intermediate results \textit{within}
+a protocol instance to define the next set of requirements. In this paper, we
+use an intra-protocol adaptive implementation of TIES because, as indicated
+in section~\ref{sec:science-drivers}, the optimal positions of the $\lambda$
+windows are not known \textit{a priori}. Therefore, the number of simulations
+and their descriptions, which are dictated by the $\lambda$ windows
+parameter, cannot be specified before execution \mtnote{`cannot be specified'
+or `cannot be effectively specified'? If the former, then would that imply
+that a nonadaptive implementation is not possible?}.
+
+Figure~\ref{fig:adaptive_ties} shows our implementation of TIES as a workflow
+with an iterative pipeline of two stages: a simulation step followed by an
+analysis step which determines optimal placement \mtnote{is placement the
+correct term here? In the previous paragraph we wrote about number of
+simulations and their description, not about their placement} of further
+simulations. We initialize the workflow with $y$ evenly-spaced $\lambda$
+windows, which generates $y \times n$ initial replicas. After the first
+simulation step, the analysis step operates on the simulation results to
+determine the next placement of $\lambda$ windows and to generate a second
+simulation step with new configurations. 
+
+Each simulation step consists of multiple tasks that simulates 1 nanosecond
+of \ldots \mtnote{please add here what we are simulating}. The analysis
+consists of a single task that computes adaptive quadrature calculations (as
+defined in section~\ref{sec:science-drivers}) to determine whether to spawn
+additional $\lambda$ windows \textit{in between} existing windows. This
+enables continuous execution of existing simulations and beginning of new
+simulations \mtnote{I do not understand this sentence. Can we eliminate it?}.
+The workflow is executed iteratively until the total simulation duration
+defined by the user is reached, determining termination.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\columnwidth]{figures/adaptive_TIES_workflow_diagram.pdf}
+  \caption{Adaptive workflow of TIES with multiple concurrent and independent
+  simulations. The analysis (adaptive quadratures) operates on a snapshot of
+  the current simulations for each $\lambda$ window, and decides whether the
+  critical threshold is reached, else current simulations continue executing
+  and new simulations are spawned based on additional $\lambda$ values.}
+\label{fig:adaptive_ties}
+\end{figure}
 
