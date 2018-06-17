@@ -63,7 +63,7 @@ resources by scaling the number of highly parallel simulations.
 Most of these computational approaches focus on the utilization of core hours 
 using fire-and-forget executions, but not many try to use core-hours effectively. 
 As the scope of drug screening campaigns can be of the order of millions of compounds 
-these considerations ae vital for the uptake of binding affinity calculations in 
+these considerations are vital for the uptake of binding affinity calculations in 
 industrial (and clinical) settings.
 Tools that only leverage the scalable computation of varied binding free energy 
 calculations on HPC resources are not enough to deliver this alone.
@@ -82,10 +82,10 @@ Moreover, in practical applications binding free energy protocols must also
 optimize the accuracy and precision of results obtained from a given set of 
 resources (for example fixed computing time). 
 This is challenging as, by definition, drug discovery involves screening 
-compounds that are highly varied and potentiall unique in their chemical 
+compounds that are highly varied and potentially unique in their chemical 
 properties. 
 The variability in the drug candidate chemistry (or protein sequence) results 
-in divergent sampling  behaviour and consequently the converege and statistical 
+in divergent sampling  behavior and consequently the convergence and statistical 
 uncertainty of binding free energy predictions for a given compounds is 
 unpredictable.
 A particular difficulty comes from the fact that not all changes induced in 
@@ -99,7 +99,7 @@ This approach also fails to account for the differing value provided by
 each  of results, e.g. it is less important to know precisely how weak 
 the interactions of the worst compound is compared to how strong the binding 
 is of the top candidates.
-Key to successful campaigns are identfying when small chemical changes result in 
+Key to successful campaigns are identifying when small chemical changes result in 
 large changes in binding strength.
 This can mean that the parameters which are important to campaign evolve as the
 study progresses.
@@ -115,7 +115,7 @@ effective use of computational resources to deliver better fidelity of
 statistical uncertainties than general approaches. 
 %For drug campaigns, we can 
 %leverage adaptive approaches to support drug campaigns for clinical insight. 
-These approaches can tailored to support drug design campaigns or clinical 
+These approaches can be tailored to support drug design campaigns or clinical 
 decision support applications where strategic concerns may be different 
 (and even vary over the course of a study).
 
@@ -131,24 +131,19 @@ decision support applications where strategic concerns may be different
 %\textbf{Specific adaptive methods within binding free energy can enhance 
 %clinical insight}
 
+Existing software tools do not support the ability to encode and execute more 
+complex algorithm logic that can leverage intermediately generated data and 
+provision runtime capabilities that have dynamic resource configurations. 
 
-
-\textbf{Suggest solution to address execution of scalable adaptive methods}
-
-\jdnote{following paragraphs are taken from EnTK, will fix}
-Most tools do not support the ability to encode and execute more complex 
-algorithm logic, let alone provision runtime capabilities that can change 
-resource configurations based on intermediately generated data.  
-We need a tool that can leverage scalable execution of adaptive algorithms.
-
-Implementation of adaptive algorithms on high performance clusters are 
-predicated on adaptive runtime systems that provide the ability to make 
-runtime decisions based on intermediate results and can manage resources 
-efficiently. To achieve scalability and efficiency, such adaptivity cannot be 
-performed via user intervention and hence automation of the control logic and 
-execution is important. HTBAC enables the scalable execution of adaptive 
-algorithms. 
-
+Tools that leverage scalable execution of adaptive algorithms are currently 
+in demand for supporting efficient drug campaigns. Implementation of adaptive 
+algorithms on high performance computers (HPC) require adaptive 
+runtime systems that provide the ability to make runtime decisions based on 
+intermediate results and can manage resources efficiently. To achieve 
+scalability and efficiency, such adaptivity cannot be performed via user 
+intervention and hence automation of the control logic and execution is 
+important. We have developed HTBAC to address these needs to enable the scalable 
+execution of adaptive algorithms. 
 
 % Leveraging ensemble-based simulations, we can now explore new adaptive sampling 
 % schemes can improve sampling quality of ligand binding affinity of individual drug candidates
@@ -168,8 +163,6 @@ This paper makes the following contributions:
   and validates the scientific results from these applications.
 \end{itemize}
 
-\textbf{results of scaling experiments and intra-protocol adaptivity experiments}
-
 This paper is organized as follows: 
 Section~\ref{sec:science-drivers} describes ESMACS and TIES as ensemble-based 
 free energy protocols as well as an adaptive methodology that is implemented 
@@ -184,7 +177,7 @@ adaptive methods.
 In Section~\ref{sec:experiments} we demonstrate experiments of scalability, 
 validation of results, and adaptive simulation methods. We show that given a 
 fixed amount of computing resources, we can achieve better accuracy and hence 
-better time to solution using adaptive simulation methods. 
+better time to solution using adaptive simulation approaches. 
 
 
 
