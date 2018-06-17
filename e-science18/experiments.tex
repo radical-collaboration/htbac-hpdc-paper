@@ -226,6 +226,34 @@ are consistent with characterizing scalability performance instead of
 simulation duration. For the experiments 1--5 we used the following
 time-steps: $S1=1000$; $S2=5000$; $S3=5000$; and $S4=50000$.
 
+We also characterize the overheads of HTBAC, EnTK, runtime system, and
+\texttt{aprun} for the weak and strong scaling experiments. We compare
+these overheads to the total execution time of all the tasks, measuring
+the following durations:
+
+\begin{itemize}
+    \item \textbf{Total Task Execution Time}: Time taken by the aggregate of
+    task executables to run on the computing infrastructure (CI).
+    \item \textbf{HTBAC Overhead}: Time taken to process the application,
+    instantiate HTBAC's components and subcomponents, translate protocols
+    into pipelines for EnTK, and validate resource descriptions.
+    \item \textbf{EnTK and RP Overhead}: Time taken by EnTK and its runtime
+    system (RP) to submit and manage the execution of tasks.
+    \item \textbf{\texttt{aprun} Overhead}: Approximated time taken by 
+    \texttt{aprun} to launch tasks on a set of compute nodes.
+\end{itemize}
+
+Note that once the runtime system relinquishes the control flow to
+\texttt{aprun}, the precise time at which \texttt{aprun} schedules each task
+on a compute node and the MD kernel of each task begins execution cannot be
+measured. Instead, for each task, we measure the difference between Task
+Execution Time and its \texttt{NAMD} kernel execution time, provided by the
+\texttt{NAMD} output logs. In this way, we approximate the portion of the
+TAsk Execution Time taken by \texttt{aprun} to launch the task. Once
+aggregated, these measures constitute what we defined as \texttt{aprun}
+Overhead.\mtnote{Am I right to assume that: $Task Execution Time = NAMD
+execution time$?}
+
 Experiments 6 and 7 compare the the accuracy and time to solution of
 nonadaptive and adaptive simulation methods. For the nonadaptive simulation
 method of Experiment 6 we use 13 preassigned and approximated $\lambda$
@@ -618,48 +646,49 @@ computing time and communication overhead.
 % single average across all replicas.
 
 % B -------------------------------------------------------------------------
-\subsection{Overhead Characterization}
+% \subsection{Overhead Characterization}
 
-\mtnote{I would create a subsection with overheads, discussing their
-behavior and nature while referencing both weak and strong scaling
-experiments.}
-\jdnote{placing this here...}
-\mtnote{This does not work as most of the overheads are still discussed in
-the next subsection. It is getting late to keep altering the structure of
-this section. It seems to me, we are measuring: weak scaling, strong scaling
-and overheads. Do we measure and discuss overheads in both weak and strong
-scaling? If so, I would not have a separate subsection for overheads at this
-point in time from the deadline. If we are discussing them only in the
-context of the weak scaling, then we may have a problem and we need to
-discuss it.}
+% \mtnote{I would create a subsection with overheads, discussing their
+% behavior and nature while referencing both weak and strong scaling
+% experiments.}
+% \jdnote{placing this here...}
+% \mtnote{This does not work as most of the overheads are still discussed in
+% the next subsection. It is getting late to keep altering the structure of
+% this section. It seems to me, we are measuring: weak scaling, strong
+% scaling and overheads. Do we measure and discuss overheads in both weak and
+% strong scaling? If so, I would not have a separate subsection for overheads
+% at this point in time from the deadline. If we are discussing them only in
+% the context of the weak scaling, then we may have a problem and we need to
+% discuss it.}
 
-We perform 5 experiments to characterize the overheads of HTBAC, EnTK, 
-runtime system, and \texttt{aprun} as a function of weak and strong scaling
-properties. We compare these overheads to the total execution time of all the
-tasks, assessing the overall impact of these overheads on the application
-time to completion. We measure the following durations:
+% We perform 5 experiments to characterize the overheads of HTBAC, EnTK,
+% runtime system, and \texttt{aprun} as a function of weak and strong scaling
+% properties. We compare these overheads to the total execution time of all
+% the tasks, assessing the overall impact of these overheads on the
+% application time to completion. We measure the following durations:
 
-\begin{itemize}
-    \item \textbf{Total Task Execution Time}: Time taken by the aggregate of
-    task executables to run on the computing infrastructure (CI).
-    \item \textbf{HTBAC Overhead}: Time taken to process the application,
-    instantiate HTBAC's components and subcomponents, translate protocols
-    into pipelines for EnTK, and validate resource descriptions.
-    \item \textbf{EnTK and RP Overhead}: Time taken by EnTK and its runtime
-    system (RP) to submit and manage the execution of tasks.
-    \item \textbf{\texttt{aprun} Overhead}: Approximated time taken by 
-    \texttt{aprun} to launch tasks on a set of compute nodes.
-\end{itemize}
+% \begin{itemize}
+%     \item \textbf{Total Task Execution Time}: Time taken by the aggregate
+%     of task executables to run on the computing infrastructure (CI).
+%     \item \textbf{HTBAC Overhead}: Time taken to process the application,
+%     instantiate HTBAC's components and subcomponents, translate protocols
+%     into pipelines for EnTK, and validate resource descriptions.
+%     \item \textbf{EnTK and RP Overhead}: Time taken by EnTK and its runtime
+%     system (RP) to submit and manage the execution of tasks.
+%     \item \textbf{\texttt{aprun} Overhead}: Approximated time taken by
+%     \texttt{aprun} to launch tasks on a set of compute nodes.
+% \end{itemize}
 
-Once the runtime system relinquishes the control flow to \texttt{aprun}, the
-precise time at which \texttt{aprun} schedules each task on a compute node
-and the MD kernel of each task begins execution cannot be measured. Instead,
-for each task, we measure the difference between Task Execution Time and its
-\texttt{NAMD} kernel execution time, provided by the \texttt{NAMD} output
-logs. In this way, we approximate the portion of the TAsk Execution Time
-taken by \texttt{aprun} to launch the task. Once aggregated, these measures
-constitute what we defined as \texttt{aprun} Overhead.\mtnote{Am I right to
-assume that: $Task Execution Time = NAMD execution time$?}
+% Once the runtime system relinquishes the control flow to \texttt{aprun},
+% the precise time at which \texttt{aprun} schedules each task on a compute
+% node and the MD kernel of each task begins execution cannot be measured.
+% Instead, for each task, we measure the difference between Task Execution
+% Time and its \texttt{NAMD} kernel execution time, provided by the
+% \texttt{NAMD} output logs. In this way, we approximate the portion of the
+% TAsk Execution Time taken by \texttt{aprun} to launch the task. Once
+% aggregated, these measures constitute what we defined as \texttt{aprun}
+% Overhead.\mtnote{Am I right to assume that: $Task Execution Time = NAMD
+% execution time$?}
 
 % \mtnote{Are we sure aprun `schedules' tasks? Maybe launch as we call
 % `aprun' a launch method?} \jdnote{addressed, as referenced by cray
@@ -714,26 +743,32 @@ assume that: $Task Execution Time = NAMD execution time$?}
 % tasks' executable, then TTX and $T_{O}$ both contain part of RP %
 % overhead.}
 
-% C -------------------------------------------------------------------------
+% B -------------------------------------------------------------------------
 \subsection{Weak Scaling and Performance Characterization}
 
 We investigate the weak scaling of HTBAC with three experiments: Experiment 1
 that executes only the TIES protocol; Experiment 2 that executes only the
 ESMACS protocol; and Experiment 3 that executes both TIES and ESMACS
-together. Each experiment uses a different protocol configuration, with a
-number of instances determined by the number of concurrent executions
-supported by \texttt{aprun} on Blue Waters. In each experiment, we increase
-the number of instances of the protocol configuration, proportionally to the
-amount of requested resources.
+together. Each experiment uses a specific protocol configuration,
+concurrently executing an increasing number of protocol instances,
+proportional to the amount of requested resources. On Blue Waters,
+\texttt{aprun} determines the upper boundary of the number of supported
+concurrent executions.
+
+% Each experiment uses a different protocol configuration, with a number of
+% instances determined by the number of concurrent executions supported by
+% \texttt{aprun} on Blue Waters. In each experiment, we increase the number
+% of instances of the protocol configuration, proportionally to the amount of
+% requested resources.
 
 Figure~\ref{fig:ws}(a) shows the weak scalability of HTBAC with the TIES
 protocol. Each instance of the TIES protocol contains a single pipeline with
-4 stages and 65 concurrent tasks. We increase the number of instances
-linearly, between 2 and 8. When scaling to 8 protocol instances, we execute
-more than 450 concurrent tasks, the average limit supported by \texttt{aprun}
-described in Section~\ref{ssec:exp_design}. Nevertheless, we include results
-at this scale to show HTBAC's performance when supporting higher orders of
-concurrent simulations.
+4 stages and 65 concurrent tasks. We increase the number of protocol
+instances linearly, between 2 and 8. When scaling to 8 protocol instances, we
+execute more than 450 concurrent tasks, the average limit supported by
+\texttt{aprun} described in Section~\ref{ssec:exp_design}. Nevertheless, we
+include results at this scale to show HTBAC's performance when supporting
+higher orders of concurrent simulations.
 
 \begin{figure}
   \centering
@@ -771,9 +806,10 @@ applies to which measurement. Also the legend should be inside the plots.}
 \jdnote{addressed, except with subplots I figured it would look cleaner with
 the legend at the bottom.}
 
-In all weak scaling experiments (Figure~\ref{fig:ws}) we observe Total Task
-Execution Time to be fixed as the number of protocol increases, thereby
-showing ideal weak scaling behavior.
+In all weak scaling experiments (Figure~\ref{fig:ws}) we observe that the
+value of Total Task Execution Time (green bar) shows minimal variation as the
+number of protocol instances increases. We conclude that HTBAC shows ideal
+weak scaling behavior under these conditions.
 
 The HTBAC overhead depends mostly on the number of protocol instances that
 need to be generated for an application. This overhead shows a super linear
@@ -982,7 +1018,7 @@ scheduler for the RP runtime system as illustrated in Ref.~\cite{merzky2018}.
 % a previous paragraph. See comments and iterations of the previous paragraph
 % before rewriting a new paragraph if needed.}
 
-% D -------------------------------------------------------------------------
+% C -------------------------------------------------------------------------
 \subsection{Strong Scaling and Performance Characterization}
 
 We investigate the strong scaling of HTBAC on Blue Waters with two
@@ -1105,7 +1141,7 @@ reference.}\mtnote{Please see discussion on Slack}
 % properties that relate to contributions of overheads and trends observed in
 % TTX.}
 
-% E -------------------------------------------------------------------------
+% D -------------------------------------------------------------------------
 \subsection{Experiments Validation}
 
 In order to validate the correctness of the results produced using HTBAC and
@@ -1237,7 +1273,7 @@ focusing on the separation between methodology and results.}.
 % \label{fig:adaptive_vs_nonadaptive_TIES}
 % \end{figure}
 
-% F -------------------------------------------------------------------------
+% E -------------------------------------------------------------------------
 \subsection{Adaptive Experiments}
 
 The lack of adaptivity in most workflows usually comes down to the way
