@@ -1275,7 +1275,9 @@ of the TIES protocol.
 % E -------------------------------------------------------------------------
 \subsection{Adaptive Experiments}
 
-Even at small scale it is hard to implement adaptive algorithms that use common molecular dynamics simulations engines (e.g., NAMD, Gromacs, Amber). This is in part because of the way the scientist interacts with these codes. The user
+Even at small scale it is hard to implement adaptive algorithms that use common
+molecular dynamics simulations engines (e.g., NAMD, Gromacs, Amber). This is in
+part because of the way the scientist interacts with these codes. The user
 hand-writes a configuration file and, together with the physical system
 description (topology, PDB), passes it to a binary executable, waiting for the
 simulation to end before analyzing the results. There is a disconnect between
@@ -1286,13 +1288,14 @@ placement have to be made \emph{a priori}, and the continuous accumulation of
 results can, by definition, have no effect of these parameters.
 
 \jhanote{This discussion needs more care: adaptive algorithms are difficult to
-implement at scale. That is why we have fewer adaptive algorithms than one
-might suspect. The opening line says the cause of the lack of adaptivity is 
-the way they are implemented.}
+implement at scale. That is why we have fewer adaptive algorithms than one might
+suspect. The opening line says the cause of the lack of adaptivity is  the way
+they are implemented.}\kfnote{I was trying to describe this smaller problem, not
+related to scale, just adaptivity. I modified the sentence to reflect this.}
 
 Having the mobility and dynamism that HTBAC offers, we are able to enhance our
 protocols (that run with these static simulation engines) to use adaptive
-schemes to increase convergence rate and more obtain accurate results scientific
+schemes to increase convergence rate and obtain more accurate scientific
 results.
 
 To this end we implemented two adaptive methods in HTBAC: adaptive quadrature
@@ -1303,18 +1306,18 @@ offered in HTBAC to scale to large number of concurrent simulations.
 and effect. Adatpvitiy is not a principle in of itself so has not intrinsic
 value standalone. what is important is faster convergence and more accurate
 results. adaptivity is one route to obtain them. The way the previous sentence
-is written conflates effect with driver.} 
+is written conflates effect with driver.}\kfnote{Rephrased to reflect this.}
 
 The aim of introducing adaptive quadrature \jhanote{adaptive quadrature is
-raised several times it isn't describe anywhire}  to alchemical free energy
-calculation protocols (e.g. TIES) is to reduce time to completion while
-maintaining (or increasing) the accuracy of the results. Time to completion is
-measured by the number of core hours consumed by the simulations. Accuracy is
-defined as the error with respect to a reference value, calculated via a dense
-$\lambda$ window spacing (65 windows). This reference value is used to
-establish the accuracy of the non-adaptive protocol (which has 13 $\lambda$
-windows) and the adaptive protocol (which has a variable number of $\lambda$
-windows, determined at run time).
+raised several times it isn't describe anywhere}\kfnote{it is in previous
+sections, no?}  to alchemical free energy calculation protocols (e.g. TIES) is
+to reduce time to completion while maintaining (or increasing) the accuracy of
+the results. Time to completion is measured by the number of core hours consumed
+by the simulations. Accuracy is defined as the error with respect to a reference
+value, calculated via a dense $\lambda$ window spacing (65 windows). This
+reference value is used to establish the accuracy of the non-adaptive protocol
+(which has 13 $\lambda$ windows) and the adaptive protocol (which has a variable
+number of $\lambda$ windows, determined at run time).
 
 One of the input parameters of the adaptive quadrature algorithm is the
 desired acceptable error threshold of the estimated integral. We set this
