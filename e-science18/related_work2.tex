@@ -1,26 +1,28 @@
-\begin{itemize}
-  \item Binding affinity calculations in general
-  \item Binding affinity using ensemble approach
-  \item How are people doing scalable binding affinity calculations currently
-  \item Overview of adaptive algorithms used for free energy calculations i.e. 
-  MSM, REST, EE 
-  \item How are adaptive algorithms managed
-  \item What are the existing tools: HPCs: MPI mainly, clouds and 
-  ensemble-based middleware 
-  \item Appreciate why ensemble-based methods are not done in clouds
-\end{itemize}
+% \begin{itemize}
+%   \item Binding affinity calculations in general
+%   \item Binding affinity using ensemble approach
+%   \item How are people doing scalable binding affinity calculations currently
+%   \item Overview of adaptive algorithms used for free energy calculations i.e. 
+%   MSM, REST, EE 
+%   \item How are adaptive algorithms managed
+%   \item What are the existing tools: HPCs: MPI mainly, clouds and 
+%   ensemble-based middleware 
+%   \item Appreciate why ensemble-based methods are not done in clouds
+% \end{itemize}
 
 Free-energy calculations using molecular dynamics simulations are now used in 
 a wide range of research including protein folding and interactions as well as
-the assement of small molecule binding. 
-Free-energy calculation require 3 main components, a suitable model Hamiltonian,
-sampling protocol and estimator for free energy. 
-Several approaches to computing binding free-energies exist, amongst which relative 
-binding free energy (or binding affinity) calculations are generating accurate 
-predictions delivering considerable promising for hit-to-lead optimization. 
-In this approach the Hamiltonion used in the calculation is gradually transformed 
-from a description of an intial compound into that of a second molecule and the 
-difference in binding strength between the two computed.
+the assessment of small molecule binding. Free-energy calculation require 
+3 main components, a suitable model Hamiltonian, sampling protocol and estimator 
+for free energy. Several approaches to computing binding free-energies exist, 
+amongst which relative binding free energy (or binding affinity) calculations 
+are generating accurate predictions delivering considerable promise for 
+computational drug campaigns~\cite{Karplus2005}. 
+
+% In this approach the Hamiltonian used in the 
+% calculation is gradually transformed from a description of an initial compound 
+% into that of a second molecule and the difference in binding strength between 
+% the two is computed.
 
 %The improvements in hardware, namely GPGPUs, are leveraging more rapid 
 %simulations, however to deliver clinical insight for drug screening campaigns 
@@ -28,40 +30,68 @@ difference in binding strength between the two computed.
 %\jdnote{EnTK paper mentions D.E. Shaw paper on specialized hardware and 
 %running single long simulation}
 
-Ensemble-based simulations, have been shown to reduce the sampling time required to 
-to deliver the precision necessary to meet the requirements of drug design campaigns.
-In biomolecular simulation, several classes of ensemble-based algorithms are widely used 
-in the computation of binding free energies. 
-Each exist to tackle different problem spaces. 
-For example, an increasingly popular approach is to
-used Markov state models (MSM) to learn a simplified representation of the
-phase space explored by simulations and use this to inform which regions are
-further sampled in future simulations \cite{Bowman2010}.
-Other adaptive methods such as replica exchange and well-known variations of
-replica exchange i.e. replica exchange with solute tempering (REST) use the
-Metropolis-Hastings criteria to make periodic decisions that impact which
-regions of the phase space are being sampled \cite{Earl2005, Hritz2008, Kim2012}.
-In expanded ensemble simulations, thermodynamic states are explored via a biased 
-random walk in state space \cite{Lyubartsev1992}.
-Approaches such as these that learn by exchanging information have been found to
-improve sampling results, and always decorrelating as fast or faster than standard 
-simulations.
+Ensemble-based simulations, have been shown to reduce the sampling time 
+required to deliver the precision necessary to meet the requirements of 
+drug design campaigns. In biomolecular simulation, several classes of 
+ensemble-based methods are widely used in the computation of binding free 
+energies. Each exist to tackle different problem spaces. For example, an 
+increasingly popular approach is to used Markov state models (MSM) to learn a 
+simplified representation of the phase space explored by simulations and use 
+this to inform which regions are further sampled in future simulations 
+\cite{Bowman2010}. Other adaptive methods such as replica exchange and 
+well-known variations of replica exchange i.e. replica exchange with solute 
+tempering (REST) use the Metropolis-Hastings criteria to make periodic decisions 
+that impact which regions of the phase space are being sampled 
+\cite{Earl2005, Hritz2008, Kim2012}. In expanded ensemble simulations, 
+thermodynamic states are explored via a biased random walk in state space 
+\cite{Lyubartsev1992}. Approaches such as these that learn by exchanging 
+information have been found to improve sampling results, and always 
+decorrelating as fast or faster than standard simulations.
 
 Generally in relative binding free energy calculations sampling is performed at 
 discrete regions along the transformation between the two compounds.
-Consequently, the choice of where exactly this sampling occurs is a key determinant 
-of the uncertainty in and accuray of the calculations \cite{Ruiter2013}.
-Increasing simulation in regions of most rapid change reduces errors on the 
-predicated binding affinity. 
+Consequently, the choice of where exactly this sampling occurs is a key 
+determinant of the uncertainty in and accuracy of the calculations 
+\cite{Ruiter2013}. Increasing simulation in regions of most rapid change reduces 
+errors on the predicated binding affinity. 
 
-Executing simulations directly on HPCs using ensemble-based methods presents 
-several challenges. 
-Most users rely on using MD kernels directly with 
-execution models such as MPI to run simulations. 
+Capturing and executing scalable and adaptive simulations methodologies 
+directly on High Performance Computers (HPCs) and other infrastructures using 
+ensemble-based methods presents several challenges. On HPCs, users can only  
+exploit the adaptive features provided by MD kernels and often run applications with
+execution models such as MPI. For example, a parallel programming systems such 
+as Charm++ relies on MPI to spawn multiple executables of MD kernels, thereby 
+incurring communication overheads and failures at larger scales. By designing 
+ensemble-based methods to use MPI, it is difficult to implement existing 
+applications in other programming models. 
 
-Why is running adaptive ensemble-based simulations on clouds a big faux-pas?
+This is especially the case when running ensemble-based methods on clouds. 
+The ensemble-based methods designed using MPI specifically on HPCs cannot be 
+transported without rewriting the algorithm to fit into a specific programming 
+model such as MapReduce. 
 
-Some existing workflow tools enable scalable execution of ensemble-based 
-approaches on HPCs, yet only offer end-to-end solutions...\jdnote{BAC is one 
-that is domain specific, we have others}
+As we reach higher scales of concurrency required by ensemble-based methods,
+the use of middleware becomes a necessity in order to provide reliable
+coordination and distribution mechanisms and low performance overheads. Some 
+existing software tools enable execution of ensemble-based methods on HPCs, 
+yet only offer end-to-end solutions and lack in providing portability and 
+flexibility bounding the user to a particular infrastructure. In domain-
+specific projects or languages, the user is bound to a limited 
+adaptive features that target specific adaptive sampling methods, and require 
+explicit management of resources.
+
+Domain scientists who wish to create adaptive methods require a solution that 
+provides the flexibility to create and customize ensemble-based free energy 
+calculations with the ability to incorporate user-defined adaptivity. These 
+considerations provide the motivation behind the design and development of
+HTBAC which serves as a software tool to enable ensemble-based free energy 
+methods to run adaptively and at scale on HPC resources. 
+
+
+
+
+
+
+
+
 
