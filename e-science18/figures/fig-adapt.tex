@@ -1,5 +1,8 @@
 \begin{tikzpicture}
 \begin{axis}[
+  height=5cm,
+  width=\columnwidth,
+  font=\small,
   title style={align=center},
   title={Observed accuracy of adaptive vs. non-adaptive workflows\\for same simulation duration ({\SI{6}{\nano\second}}) },
   no markers,
@@ -10,7 +13,6 @@
   yticklabel style={
   /pgf/number format/precision=3,
   /pgf/number format/fixed},
-  scale=0.85,
   ]
   
   
@@ -26,12 +28,12 @@
 \draw[densely dotted, color=gray] (10586.058921984,0.08) -- (10586.058921984,-0.025);
 \draw[densely dotted, color=gray] (8143.1222476800012,0.08) -- (8143.1222476800012,-0.025);
 \draw[->] (10586.058921984,0.075) -- (8143.1222476800012,0.075) ;
-\node[align = right] at (8700, 0.115) {Resource\\consumption\\decrease};
+\node[align = right] at (8100, 0.105) {Resource consumption\\decrease};
 
-\node at (9200, 0.025) {\contour{white}{Error decrease}};
+\node at (9400, 0.025) {\contour{white}{Error decrease}};
 \draw[->] (11500,0.049299384672436553) -- (11500,0.0015858767437348931) ;
 
 
   
 \end{axis}
-\end{tikzpicture}
+\end{tikzpicture}%

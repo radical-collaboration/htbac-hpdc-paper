@@ -1,6 +1,7 @@
 \begin{flushleft}
 \begin{tikzpicture}
 \begin{axis}[
+  font=\small,
   ybar,
   area legend,
   ymin=0,
@@ -38,6 +39,8 @@
 \end{tikzpicture}
 \begin{tikzpicture}
 \begin{axis}[
+  font=\small,
+  x tick label style={font=\tiny},
   ybar,
   ymin=0,
   ylabel={Consumption\\(1K CPU-hours)},
@@ -55,5 +58,5 @@
 % \legend{Non-adaptive,Adaptive}
   
 \end{axis}
-\end{tikzpicture}
-\end{flushleft}
+\end{tikzpicture}%
+\end{flushleft}%

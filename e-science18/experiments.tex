@@ -1172,15 +1172,11 @@ of the TIES protocol.
 
 \begin{table}
   \centering
-  \caption{Comparison of the calculated binding free energies using HTBAC,
-  from the original study by Wan et al. and experimental data. This
-  experiment proves that HTBAC implements TIES correctly, as the calculated
-  values are either the same or within error bar of the original study. All
-  values are in \si{\kilo\calorie\per\mole}.}  
+  \caption{COMPARISON OF THE CALCULATED BINDING FREE ENERGIES USING HTBAC, FROM THE ORIGINAL STUDY BY WAN ET AL. AND EXPERIMENTAL DATA}  
   % \begin{tabular}{l@{\hskip 1in}r@{\hskip 0.2in}r@{\hskip 0.2in}r}
   \begin{tabular}{lrrr}
     \toprule
-    System & HTBAC & Wan et. al & Experiment \\
+    System & HTBAC & Wan et al. & Experiment \\
     \midrule
     BRD4 \textbf{3 to 1} & \num{0.39 +- 0.10} &   \num{0.41 +- 0.04} &  \num{0.3 +- 0.09} \\
     BRD4 \textbf{3 to 4} & \num{0.02 +- 0.12} &   \num{0.01 +- 0.06} &  \num{0.0 +- 0.13} \\
@@ -1425,15 +1421,15 @@ closely.
 \end{figure}
 
 \begin{figure}
-  \input{figures/fig-savings.tex}
-  \caption{Quantifying the benefits of the adaptive quadrature simulations. (a)
-  The error of the adaptive run is reduced for all 5 test systems sometimes by a
-  s significant amount. Recently \cite{Loeffler2018} it has been shown that
-  reproducibility of free energy calculations can be achieved up to
+  \input{figures/fig-savings.tex}%
+  \caption{Quantifying the benefits of the adaptive quadrature simulations.
+  (top) The error of the adaptive run is reduced for all 5 test systems
+  sometimes by a s significant amount. Recently \cite{Loeffler2018} it has been
+  shown that reproducibility of free energy calculations can be achieved up to
   \SI{0.2}{\kilo\calorie\per\mole}. The adaptive algorithm brings down the error
   of the non-adaptive simulations below this threshold, ensuring that results
-  and also reproducible. (b) Resource consumption is also reduced, except for
-  one of the systems, where the low error threshold required more $\lambda$
+  and also reproducible. (bottom) Resource consumption is also reduced, except
+  for one of the systems, where the low error threshold required more $\lambda$
   windows to fulfill.}
   \label{fig:savings}
 \end{figure}
