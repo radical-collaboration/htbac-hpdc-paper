@@ -1,10 +1,9 @@
-HTBAC serves as a software tool to enable ensemble-based free energy
-protocols to run adaptively and at scale on HPC resources. Currently, HTBAC
-supports protocols composed of an arbitrary number of analysis and simulation
-steps. Further, HTBAC relies on the ensemble management system and runtime
-system provided by the RADICAL-Cybertools (RCT). HTBAC is designed to be
-progressively extended to support more types of free energy protocols and
-alternative runtime middleware.
+HTBAC is a software system for running ensemble-based free energy protocols
+adaptively and at scale on HPC resources. Currently, HTBAC supports protocols
+composed of an arbitrary number of analysis and simulation steps, and relies
+on the ensemble management system and runtime system provided by the
+RADICAL-Cybertools (RCT). HTBAC is designed to be extended to support more
+types of protocols and alternative runtime middleware.
 
 % \mtnote{protocols?}\jdnote{addressed}.
 
@@ -118,34 +117,33 @@ energy protocols.
 % B -------------------------------------------------------------------------
 \subsection{Design and Architecture}\label{ssec:design_arch}
 
-HTBAC exposes the following user-facing constructs to enable users to specify
-free energy protocols: % in terms of ensemble applications:
+HTBAC exposes four user-facing constructs to enable users to specify free
+energy protocols: Protocol, Simulation, Analysis, and Resource.
 
-\begin{itemize}
-  \item \textbf{Protocol:} A generic abstraction of a free energy protocol
-  (e.g., ESMACS or TIES).
-  \item \textbf{Simulation:} Simulation parameters for each protocol
-  instance.
-  \item \textbf{Analysis:} Analysis parameters for each protocol instance.
-  \item \textbf{Resource:} A generic abstraction to describe resources needed
-  by the application.
-\end{itemize}
+% in terms of ensemble applications:
+
+% \begin{itemize}
+%   \item \textbf{Protocol:} Abstraction of a free energy protocol.
+%   \item \textbf{Simulation:} Simulation parameters for a protocol.
+%   \item \textbf{Analysis:} Analysis parameters for a protocol.
+%   \item \textbf{Resource:} Abstraction to describe resources requirements.
+% \end{itemize}
 
 \textbf{Protocol} enables multiple descriptions of protocol types, while
 \textbf{Simulation} and \textbf{Analysis} specify simulation and analysis
 parameters for each protocol. \textbf{Resource} allows to specify the amount
-of resources needed to execute the given protocols and the amount of time for
-which these resources should be available. Thus, in HTBAC an application
-consists of protocol instances, simulation and analysis parameters, and
-resource requirements.
+of resources needed to execute the given protocols 
+% and the amount of time for which these resources should be available. 
+Thus, in HTBAC an application consists of protocol instances, simulation and
+analysis parameters, and resource requirements.
 
 In HTBAC, each protocol models a unique protein ligand physical system. Each
 protocol follows a sequence of simulation and analysis steps, assigning
 ensemble members to execute independent simulations or analysis. An ensemble
 member that executes an independent simulation within a simulation step is
-referred to as a \textbf{replica}. Each simulation is assigned a different
-initial velocity, which enables simulations to begin in different parts of
-the ligand's phase space.
+referred to as a replica. Each simulation is assigned a different initial
+velocity, which enables simulations to begin in different parts of the
+ligand's phase space.
 
 An individual simulation or analysis is designed as a computational
 \textbf{task}, with well-defined input, output, termination criteria and
@@ -212,18 +210,19 @@ scientific problem in terms of computational tasks.
 % cyber-infrastructure (CI) via a runtime system.''}\jdnote{incorporated this
 % description into the main paragraph}
 
-HTBAC rests between the domain scientist and the computing infrastructure.
-HTBAC abstracts the protocol coordination, resource management and execution
-management from the user. Figure~\ref{fig:architecture} shows the components
-(green) and subcomponents (yellow) of HTBAC.
+% HTBAC rests between the domain scientist and the computing infrastructure.
+% HTBAC abstracts the protocol coordination, resource management and
+% execution management from the user.
+
+Figure~\ref{fig:architecture} shows the components (green) and subcomponents
+(yellow) of HTBAC.
 
 \begin{figure}
   \centering
   \includegraphics[width=\columnwidth]{figures/HTBAC_architecture_model.pdf}
-  \caption{Architecture of HTBAC. The API layer enables users to specify
-  applications in terms of one or more protocols with multiple simulation and
-  analysis steps. The Descriptor convert these specifications into a single
-  application that the Runner executes on computing resources via an external
+  \caption{Architecture of HTBAC. Users specify applications in terms of
+  protocol(s) with multiple simulation and analysis steps. The Descriptor
+  derives a single application that the Runner executes on via an external
   execution layer. The Runtime Adaptive Evaluator enables the execution of
   adaptive protocols.}
 \label{fig:architecture}
@@ -232,41 +231,41 @@ management from the user. Figure~\ref{fig:architecture} shows the components
 % All components are stateless as they do not require different processes.
 The HTBAC API enables users to codify protocol descriptions in terms of
 protocol type, simulation and analysis steps, and computer infrastructure
-requirements. The Descriptor uses two dedicated subcomponents to aggregate
-protocol descriptions into a single and consistent application description
-and resource description. Note that these descriptions can aggregate
-different types of protocols, with different computing and resource
-requirements.
+requirements. The Descriptor uses two subcomponents to aggregate protocol
+descriptions into a single application and resource description. Note that
+the Descriptor can aggregate different types of protocols, with different
+computing and resource requirements.
 
 Currently, the Runner contains three subcomponents: Execution Manager,
 Middleware Connector and Runtime Adaptive Evaluator. The Execution Manager
-communicates with the underlying middleware via a connector to coordinate the
+communicates with the execution layer via a connector to coordinate the
 execution of the given application. In principle, HTBAC can use multiple
-connectors to diverse middleware and, through it, access different types of
-computing architectures to execute applications. Using a system based on
-connectors allows to isolate middleware-specific capabilities within
-well-defined architectural components. 
-% For example, in the case of EnTK,
-% the application is converted into and ensemble of pipelines, stages and
-% tasks. 
+connectors for diverse middleware to access different computing
+infrastructures. 
 
-The connector converts the application
-description of HTBAC into the format specific to the target middleware. The 
-Execution Manager can pass the given application to the connector
-in full or only in parts. This enables to start to execute an application
-before its full description is available or to change those parts of the
-application that still have to be executed. Note that this will also enable
-future capabilities like, for example, to concurrently execute the
-application on diverse middleware.
+% Using a design based on connectors allows to isolate middleware-specific
+% capabilities within well-defined architectural components.
+
+% For example, in the case of EnTK, the application is converted into and
+% ensemble of pipelines, stages and tasks.
+
+The Middleware Connector converts the application description of HTBAC into a
+middleware-specific format. The Execution Manager can pass the given
+application to the connector in full or only in parts. This enables to start
+to execute an application before its full description is available or to
+change those parts of the application that still have to be executed. Note
+that this will also enable future capabilities like, for example, to
+concurrently execute the application on diverse middleware.
 
 The Runtime Adaptive Evaluator enables the execution of adaptive
-applications. This subcomponent can evaluate the results obtained by
-executing part of an application by using one or more adaptive algorithms. On
-the base of this evaluation, the Runtime Adaptive Evaluator can decide to
-return the control to the Execution Manager or to modify the description of
-the application that is being executed. In this way, HTBAC can implement
-adaptivity for diverse protocols, allowing users to define arbitrary
-conditions and algorithms for the adaptive steps.
+applications. This subcomponent can evaluate partial results of an
+application execution via tailored algorithms. On the base of this
+evaluation, the Runtime Adaptive Evaluator can decide to return the control
+to the Execution Manager or to modify the description of the application that
+is being executed. In this way, HTBAC can implement adaptivity for diverse
+protocols, allowing users to define arbitrary conditions and algorithms.
+
+% for the adaptive steps.
 
 % Resource Manager handles the resource requirements from the application
 % description and communicates them to the ensemble management system (EnTK).
@@ -357,15 +356,15 @@ conditions and algorithms for the adaptive steps.
 % C -------------------------------------------------------------------------
 \subsection{Implementation}
 
-HTBAC is implemented in Python as a domain specific library. All components
-of HTBAC are implemented as objects that communicate via method calls.
-HTBAC uses the RCT as building blocks~\cite{review_bb_2016} to support
-HTBAC's workflow execution across diverse computing
-platforms~\cite{turilli2017comprehensive}. HTBAC rests on two primary RCT:
-Ensemble Toolkit (EnTK) and RADICAL-Pilot (RP).
+HTBAC is implemented in Python as a domain-specific library. All components
+of HTBAC are implemented as objects that communicate via method calls. HTBAC
+uses the RCT as building blocks~\cite{review_bb_2016} to support HTBAC's
+workflow execution across diverse computing
+platforms~\cite{turilli2017comprehensive}. HTBAC uses two RCT: Ensemble
+Toolkit (EnTK) and RADICAL-Pilot (RP).
 
 EnTK provides an application model that simplifies both the encoding and
-execution of scalable and adaptive free energy protocols. EnTK exposes 3
+execution of scalable and adaptive free energy protocols. EnTK exposes three
 user-facing constructs: \textbf{Task}, \textbf{Stage} and
 \textbf{Pipeline}~\cite{power-of-many17}. Tasks contain information regarding
 an executable, its software environment and its data dependencies. Stages are
@@ -373,23 +372,18 @@ sets of tasks without mutual dependencies and that can therefore be executed
 concurrently. Pipeline are lists of stages, where stages can execute only
 sequentially and each pipeline can execute independently.
 
-EnTK serves HTBAC as the ensemble management system that provides specific
-interfaces and execution models for ensemble-based
-applications~\cite{power-of-many17}. HTBAC uses the programming model of EnTK
-to construct workflows. In HTBAC, a protocol instance is encoded as a single
-pipeline, which contains stages of simulation and analysis steps. The HTBAC
-EnTK Connector bundles individual simulations and analyses as tasks within a
-stage. 
+EnTK provides HTBAC specific interfaces and execution models for
+ensemble-based applications~\cite{power-of-many17}. HTBAC uses the
+programming model of EnTK to execute workflows. In HTBAC, a protocol instance
+is encoded via the Middleware Connector for EnTK as a single pipeline, which
+contains stages of individual simulations and analyses tasks.
 
 EnTK uses the runtime system of RADICAL-Pilot to execute ensemble
-applications via pilots. The pilot abstraction supports the requirements of
-task-level parallelism and high-throughput as needed by the use cases. Pilot
-systems acquire resources from a computing infrastructure by submitting a
-pilot job and waiting in the queue until the infrastructure's scheduler
-bootstraps the job. Once the pilot is bootstrapped, it can pull tasks for
-execution. This enables tasks to be executed directly on the resources,
-without being queued on the infrastructure's scheduler and without
-circumventing the queue policies of computing infrastructure.
+applications via pilots. Pilots support task-level parallelism and
+high-throughput by acquiring resources from a computing infrastructure and
+scheduling tasks on those resources for execution. Pilot systems execute
+tasks directly on the resources, without queuing them on the infrastructure's
+scheduler.
 
 % In this paper, we study the implementation of two protocols via HTBAC:
 % ESMACS and TIES.
@@ -577,14 +571,13 @@ EnTK at the moment), tags each protocol instance of the application with a
 unique ID, and passes all or part of the application description to the
 chosen connector for execution (Figure~\ref{fig:architecture}.3).
 
-The Connector of the Runner gets the application description
-that needs to be executed and convert it into a middleware-specific
-description, i.e., into EnTK pipelines of stages of tasks. At the same time,
-the Connector also create a middleware-specific resource request and submits
-it to the underlying execution layer (Figure~\ref{fig:architecture}.4). Once
-the resources are acquired, the middleware of the execution layer
-communicates the availability to the Connector
-(Figure~\ref{fig:architecture}.5) that initiate the execution.
+The Middleware Connector of the Runner gets the application description and
+converts it into a middleware-specific description, i.e., into EnTK pipelines
+of stages of tasks. The connector also creates a middleware-specific resource
+request and submits it to the underlying execution layer
+(Figure~\ref{fig:architecture}.4). Once the resources are acquired, the
+middleware of the execution layer communicates the availability to the
+connector (Figure~\ref{fig:architecture}.5) that initiate the execution.
 
 The resource requirements as specified by the user in HTBAC include walltime,
 cores, queue, and user credentials. EnTK uses these requirements to derive a 
@@ -592,11 +585,10 @@ resource request that is then converted into a pilot description for RP. RP
 converts this pilot requests into a batch script that is submitted to a
 suitable HPC machine.
 
-Once the pilot becomes active, EnTK sets up multiple processes, threads and a
-message queue for communication, identifying those application tasks that
+Once the pilot becomes active, EnTK identifies those application tasks that
 have satisfied dependencies and can be executed concurrently. EnTK's own
-Execution Manager component uses its underlying runtime system (RP) to
-execute the tasks on specific target resources.
+Execution Manager uses its underlying runtime system (RP) to execute those
+tasks on pilot's resources.
 
 % The Descriptor aggregates the application description, including protocols
 % (Figure~\ref{fig:architecture}.3) and their simulation conditions,
@@ -625,16 +617,16 @@ execute the tasks on specific target resources.
 % E -------------------------------------------------------------------------
 \subsection{Supporting Adaptive Execution}\label{ssec:adaptive_execution}
 
-Support for intra-protocol adaptive execution requires an adaptive execution
-strategy. In HTBAC, we leverage the adaptive capabilities provided by
-EnTK~\cite{adaptivebiomolecular} to implement such a strategy. 
+% Support for intra-protocol adaptive execution requires an adaptive
+% execution strategy. In HTBAC, we leverage the adaptive capabilities
+% provided by EnTK~\cite{adaptivebiomolecular} to implement such a strategy.
 
-As described in section~\ref{ssec:adapt_ties}, intra-protocol adaptivity 
-generates additional simulations which require a redistribution of 
-resources to maintain concurrency of execution. Resources are evenly 
-redistributed across simulations as, by design of ensemble-based free energy 
-protocols, all simulations within a protocol
-require the same amount of resources.
+% As described in section~\ref{ssec:adapt_ties}, intra-protocol adaptivity
+% generates additional simulations which require a redistribution of
+% resources to maintain concurrency of execution. Resources are evenly
+% redistributed across simulations as, by design of ensemble-based free
+% energy protocols, all simulations within a protocol require the same amount
+% of resources.
 
 HTBAC allows to specify conditions tailored to individual simulation steps of
 a protocol implementation. We leverage this ability to implement adaptivity
@@ -643,21 +635,21 @@ generate new simulation steps at runtime, based on a set of predefined
 conditions. The user specifies these conditions in an analysis script to
 generate new simulation steps based on current simulation results.
 
-The Execution Manager in HTBAC provides a flag to enable sending the results of 
-the latest simulations or analysis that have been executed back to the client 
-machine (Figure~\ref{fig:architecture}.6). This provides partial simulation 
-results that can be processed by the Runtime Adaptive Evaluator via the 
-user-defined analysis script (Figure~\ref{fig:architecture}.7). Depending on the 
-evaluation, the Runtime Adaptive Evaluator may generate new simulation 
-conditions for further steps (Figure~\ref{fig:architecture}.8).
- 
+The Execution Manager in HTBAC provides a flag to enable retrieving the
+results of the simulations or analysis that have been executed from the
+Middleware Connector (Figure~\ref{fig:architecture}.6). This provides partial
+simulation results that can be evaluated by the Runtime Adaptive Evaluator
+via the user-defined analysis script (Figure~\ref{fig:architecture}.7).
+Depending on the result of the evaluation, the Runtime Adaptive Evaluator may
+generate new simulation steps and add them to the application description
+(Figure~\ref{fig:architecture}.8).
 
-The Execution Manager uses the ID of the submitted protocols to keep track of 
-those protocols that require additional simulations at runtime. In this way, 
-older simulations can continue executing while new simulations can be passed to 
-the Execution Manager. As the number of simulations grows at runtime, the ratio 
-of cores-to-task fluctuates. The Execution Manager automatically redistributes 
-an even share of the total requested cores to each simulation.
+The Execution Manager uses the ID of the submitted protocols to keep track of
+those protocols that require additional simulations at runtime. In this way,
+older simulations can continue executing while new simulations can be passed
+to the Execution Manager. As the number of simulations grows at runtime, the
+ratio of cores-to-task fluctuates. The Execution Manager automatically
+redistributes an even share of the total requested cores to each simulation.
 
 % This requirement was based on the consideration that a runtime system may
 % not provide dynamic resource capabilities, where additional resource
