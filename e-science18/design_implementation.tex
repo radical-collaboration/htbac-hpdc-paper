@@ -245,12 +245,14 @@ execution of the given application. In principle, HTBAC can use multiple
 connectors to diverse middleware and, through it, access different types of
 computing architectures to execute applications. Using a system based on
 connectors allows to isolate middleware-specific capabilities within
-well-defined architectural components.
+well-defined architectural components. 
+% For example, in the case of EnTK,
+% the application is converted into and ensemble of pipelines, stages and
+% tasks. 
 
-The EnTK connector converts the application description of HTBAC into the
-format specific to the target middleware. For example, in the case of EnTK,
-the application is converted into and ensemble of pipelines, stages and
-tasks. The Execution Manager can pass the given application to the connector
+The connector converts the application
+description of HTBAC into the format specific to the target middleware. The 
+Execution Manager can pass the given application to the connector
 in full or only in parts. This enables to start to execute an application
 before its full description is available or to change those parts of the
 application that still have to be executed. Note that this will also enable
@@ -568,14 +570,14 @@ takes these descriptions as an input and returns an application description
 application consists of tasks with possibly a set of priority relations among
 them, alongside a set of resource requirements for their execution.
 
-The application description is passed to the Application Manager of the
-Runner component (Figure~\ref{fig:architecture}.2). The Application Manager
+The application description is passed to the Execution Manager of the
+Runner component (Figure~\ref{fig:architecture}.2). The Execution Manager
 evaluates the resource requirements, selects a suitable connector (only to
 EnTK at the moment), tags each protocol instance of the application with a
 unique ID, and passes all or part of the application description to the
 chosen connector for execution (Figure~\ref{fig:architecture}.3).
 
-The Connector subcomponent of the Runner gets the application description
+The Connector of the Runner gets the application description
 that needs to be executed and convert it into a middleware-specific
 description, i.e., into EnTK pipelines of stages of tasks. At the same time,
 the Connector also create a middleware-specific resource request and submits
@@ -585,16 +587,16 @@ communicates the availability to the Connector
 (Figure~\ref{fig:architecture}.5) that initiate the execution.
 
 The resource requirements as specified by the user in HTBAC include walltime,
-cores, queue, and user credentials. EnTK uses these requirements to derive a
+cores, queue, and user credentials. EnTK uses these requirements to derive a 
 resource request that is then converted into a pilot description for RP. RP
 converts this pilot requests into a batch script that is submitted to a
 suitable HPC machine.
 
 Once the pilot becomes active, EnTK sets up multiple processes, threads and a
 message queue for communication, identifying those application tasks that
-have satisfied dependencies and can be executed concurrently. EnTK's
+have satisfied dependencies and can be executed concurrently. EnTK's own
 Execution Manager component uses its underlying runtime system (RP) to
-execute the tasks of the on specific target resources.
+execute the tasks on specific target resources.
 
 % The Descriptor aggregates the application description, including protocols
 % (Figure~\ref{fig:architecture}.3) and their simulation conditions,
@@ -627,35 +629,35 @@ Support for intra-protocol adaptive execution requires an adaptive execution
 strategy. In HTBAC, we leverage the adaptive capabilities provided by
 EnTK~\cite{adaptivebiomolecular} to implement such a strategy. 
 
-As described in section~\ref{ssec:adapt_ties}, intra-protocol adaptivity
-requires a redistribution of resources to account for additional simulations
-generated at runtime. Resources are evenly redistributed across simulations
-as, by design of ensemble-based free energy protocols, all simulations within
-a protocol instance require the same amount of resources.
+As described in section~\ref{ssec:adapt_ties}, intra-protocol adaptivity 
+generates additional simulations which require a redistribution of 
+resources to maintain concurrency of execution. Resources are evenly 
+redistributed across simulations as, by design of ensemble-based free energy 
+protocols, all simulations within a protocol
+require the same amount of resources.
 
 HTBAC allows to specify conditions tailored to individual simulation steps of
 a protocol implementation. We leverage this ability to implement adaptivity
 by enabling the user to partition protocols into simulation steps and
 generate new simulation steps at runtime, based on a set of predefined
-conditions. The user specifies this conditions in an analysis script to
+conditions. The user specifies these conditions in an analysis script to
 generate new simulation steps based on current simulation results.
 
-The Execution Manager in HTBAC provides a flag to enable sending the results
-of the latest simulations or analysis that have been executed back to the
-client machine (Figure~\ref{fig:architecture}.6). This provides partial
-simulation results that can be processed by the Runtime Adaptive Evaluator
-via the user-defined analysis script (Figure~\ref{fig:architecture}.7).
-Depending on the evaluation, the Runtime Adaptive Evaluator may generate new
-simulation conditions for further steps (Figure~\ref{fig:architecture}.8).
+The Execution Manager in HTBAC provides a flag to enable sending the results of 
+the latest simulations or analysis that have been executed back to the client 
+machine (Figure~\ref{fig:architecture}.6). This provides partial simulation 
+results that can be processed by the Runtime Adaptive Evaluator via the 
+user-defined analysis script (Figure~\ref{fig:architecture}.7). Depending on the 
+evaluation, the Runtime Adaptive Evaluator may generate new simulation 
+conditions for further steps (Figure~\ref{fig:architecture}.8).
+ 
 
-The Execution Manager tracks the ID of the submitted protocols to keep track
-of those protocol that require additional simulations at runtime. The
-Descriptor component accepts new simulation conditions and extends the
-current application description with new simulation steps. In this way, older
-simulations can continue executing while new simulations can be passed to the
-Execution Manager. As the number of simulations grows at runtime, the ratio
-of cores-to-task fluctuates. The Application Manager automatically
-redistributes an even share of the total requested cores to each simulation.
+The Execution Manager uses the ID of the submitted protocols to keep track of 
+those protocols that require additional simulations at runtime. In this way, 
+older simulations can continue executing while new simulations can be passed to 
+the Execution Manager. As the number of simulations grows at runtime, the ratio 
+of cores-to-task fluctuates. The Execution Manager automatically redistributes 
+an even share of the total requested cores to each simulation.
 
 % This requirement was based on the consideration that a runtime system may
 % not provide dynamic resource capabilities, where additional resource
