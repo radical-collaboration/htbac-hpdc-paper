@@ -186,6 +186,14 @@ proteins.
     (1, 1, 1)                         &  % number of protocols
     2080, 2080, 2080                  \\ % total cores
     %
+    \B{8}                             &  % Experiment ID
+    Reference                         &  % experiment type
+    PTP1B, MC1, TYK2                  &  % physical system
+    % Blue Waters                       &  % CI
+    TIES                              &  % protocol type
+    (1, 1, 1)                         &  % number of protocols
+    10400, 10400, 10400                  \\ % total cores
+    %
     \bottomrule
     %
     \end{tabular}
@@ -259,7 +267,7 @@ task execution time taken by \texttt{aprun} to launch the task. Once
 aggregated, these measures constitute what we defined as \texttt{aprun}
 Overhead.
 
-Experiments 6 and 7 compare the the accuracy and time to solution of
+Experiments 6, 7 and 8 compare the accuracy and time to solution of
 nonadaptive and adaptive simulation methods. For the nonadaptive simulation
 method of Experiment 6 we use 13 preassigned and approximated $\lambda$
 windows, consistent with the value reported in Ref.~\cite{Bhati2017}. In this
@@ -275,10 +283,18 @@ protocol with 3 $\lambda$ windows, obtaining 15 replicas. We separate stage
 $S4$ of each TIES replica into 4 sub-stages. Each sub-stage runs a
 \SI{1}{\nano\second} simulation, followed by an adaptive quadratures analysis
 which estimates free energy errors with respect to each interval of two
-$\lambda$ values. We evaluate the total number of $\lambda$ windows as
-determined by the adaptive quadrature results in order to measure the
-differences in time duration between adaptive and non-adaptive methods as
-well as the differences in accuracy.
+$\lambda$ values.
+
+% We evaluate the total number of $\lambda$ windows as
+% determined by the adaptive quadrature results in order to measure the
+% differences in time duration between adaptive and non-adaptive methods as
+% well as the differences in accuracy.
+
+To meaningfully compare the adaptive and non-adaptive results, we also ran a
+reference experiment (no. 8), where we used a large number of (65) equally
+spaced $\lambda$ windows to calculate the free energy with high accuracy. This
+is to create a baseline that we can compare the adaptive and non-adaptive
+results to.
 
 \begin{figure}
   \centering
@@ -291,10 +307,10 @@ well as the differences in accuracy.
 \label{fig:adaptive_TIES}
 \end{figure}
 
-For Experiment 6, we assigned the following simulation time-steps: $S1=3000$;
-$S2=50000$; $S3=50000$; and $S4=2000000$. The adaptive simulation method of
-Experiment 7 uses the same simulation time-steps, apart from $S4$ which is
-divided into 4 sub-stages of 500000 time-steps each. 
+For Experiment 6 and 8, we assigned the following simulation time-steps:
+$S1=3000$; $S2=50000$; $S3=50000$; and $S4=2000000$. The adaptive simulation
+method of Experiment 7 uses the same simulation time-steps, apart from $S4$
+which is divided into 4 sub-stages of 500000 time-steps each. 
 
 We performed all the experiments on Blue Waters, a 26868 node Cray XE6/XK6
 SuperComputer with peak performance of 13.3 petaFLOPS managed by NCSA. We
@@ -1259,8 +1275,7 @@ of the TIES protocol.
 % E -------------------------------------------------------------------------
 \subsection{Adaptive Experiments}
 
-The lack of adaptivity in free energy calculation workflows usually comes down
-to the way simulation engines (like NAMD, Gromacs, Amber, etc.) work. The user
+Even at small scale it is hard to implement adaptive algorithms that use common molecular dynamics simulations engines (e.g., NAMD, Gromacs, Amber). This is in part because of the way the scientist interacts with these codes. The user
 hand-writes a configuration file and, together with the physical system
 description (topology, PDB), passes it to a binary executable, waiting for the
 simulation to end before analyzing the results. There is a disconnect between
@@ -1275,17 +1290,20 @@ implement at scale. That is why we have fewer adaptive algorithms than one
 might suspect. The opening line says the cause of the lack of adaptivity is 
 the way they are implemented.}
 
-
 Having the mobility and dynamism that HTBAC offers, we are able to enhance our
 protocols (that run with these static simulation engines) to use adaptive
-schemes. Utilizing adaptivity results in faster convergence rate and more
-accurate results.
+schemes to increase convergence rate and more obtain accurate results scientific
+results.
 
-\jhanote{Once again, we need to be careful: there is conflation between cause and effect. Adatpvitiy is not a principle in of itself so has not intrinsic value standalone. what is important
-is faster convergence and more accurate results. adaptivity is one route to
-obtain them. The way the previous sentence is written conflates effect with
-driver.}
+To this end we implemented two adaptive methods in HTBAC: adaptive quadrature
+and adaptive termination. Both of these methods use the features of adaptivity
+offered in HTBAC to scale to large number of concurrent simulations.
 
+\jhanote{Once again, we need to be careful: there is conflation between cause
+and effect. Adatpvitiy is not a principle in of itself so has not intrinsic
+value standalone. what is important is faster convergence and more accurate
+results. adaptivity is one route to obtain them. The way the previous sentence
+is written conflates effect with driver.} 
 
 The aim of introducing adaptive quadrature \jhanote{adaptive quadrature is
 raised several times it isn't describe anywhire}  to alchemical free energy
@@ -1309,10 +1327,10 @@ protein ligand systems, comparing the Total Task Execution Time and accuracy
 versus the non-adaptive case. The number of lambda windows are reduced on
 average by \SI{32}{\percent}, hence reducing Total Task Execution Time by the
 same amount. The error on the adaptive results is also decreased, on average by
-\SI{77}{\percent} (see figure~\ref{fig:savings}). More importantly, the error on all of the systems are reduced
-to below \SI{0.2}{\kilo\calorie\per\mole}, which has recently been shown to be
-the upper bound of reproducibility across different simulation
-engines~\cite{Loeffler2018}.
+\SI{77}{\percent} (see figure~\ref{fig:savings}). More importantly, the error on
+all of the systems are reduced to below \SI{0.2}{\kilo\calorie\per\mole}, which
+has recently been shown to be the upper bound of reproducibility across
+different simulation engines~\cite{Loeffler2018}.
 
 The Total Task Execution Time of the TYK2 L7-L8 system has increased for the
 adaptive run by 1 $\lambda$ window compared to the non-adaptive case. This is
