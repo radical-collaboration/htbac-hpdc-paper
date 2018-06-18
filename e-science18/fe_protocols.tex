@@ -259,9 +259,7 @@ and resources at scale.
 %-----------------------------------------------------------------------------%
 % move this section to fe_protocols.tex
 
-Here we focus on intra-protocol adaptivity using TIES to demonstrate the 
-computational efficiency between static, nonadaptive simulation methods and 
-simulations methods that adapt during runtime. Intra-protocol adaptivity relies 
+Intra-protocol adaptivity relies 
 on the intermediate results \textit{within} a protocol instance to define the 
 next set of further simulation requirements. In TIES, the optimal positions of 
 the $\lambda$ windows are not known \textit{a priori}. Therefore, the number of 
@@ -269,12 +267,17 @@ simulations and their descriptions, which are dictated by the $\lambda$ windows
 parameter, cannot be accurately specified before execution \mtnote{`cannot be 
 specified' or `cannot be effectively specified'? If the former, then would that 
 imply that a nonadaptive implementation is not possible?}\jdnote{addressed}.
-Instead, we leverage the use of adaptive software solutions that can automate
-runtime decisions based on intermediately generated data. As opposed to using
-approximations to place all $\lambda$ prior to execution, we can provide less 
-$\lambda$ windows and run shorter bursts of simulations. The intermediate data 
-(i.e. trajectory results) can be analyzed during runtime and provide additional
-parameters that can seed new and ideally placed $\lambda$ windows.   
+
+As an alternative to using approximations to place all $\lambda$ prior to 
+execution, we can provide less $\lambda$ windows and run shorter bursts of 
+simulations. The intermediate data (i.e. trajectory results) can be analyzed 
+during runtime and provide additional parameters that can seed new and ideally 
+placed $\lambda$ windows. 
+
+We leverage the use of adaptive software solutions and middleware in
+order to (1) automate runtime decisions based on intermediately 
+generated data, (2) redistribute resources during runtime to support continued 
+and incoming simulations. 
 
 % Figure~\ref{fig:adaptive_ties} shows our design of capturing adaptivity within 
 % TIES using an iterative pipeline of two stages: a short simulation step 
