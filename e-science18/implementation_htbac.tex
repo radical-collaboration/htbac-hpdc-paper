@@ -1,46 +1,74 @@
-\jhanote{As written, this sub-section has nothing about HTBAC and would be
-better placed/merged in Science Driver.  What would be useful is pseudo-code
-or code listing to show how ESMACS and TIES are encoded in
-HTBAC}\jdnote{added context}
+% \jhanote{As written, this sub-section has nothing about HTBAC and would be
+% better placed/merged in Science Driver.  What would be useful is pseudo-code
+% or code listing to show how ESMACS and TIES are encoded in
+% HTBAC}\jdnote{added context}
 
-In Section~\ref{ssec:esm_ties} we define the requirements of the ESMACS and
-TIES protocols. While ESMACS and TIES protocols compute binding affinity
-calculations for different systems and purposes, their implementation in
-HTBAC have the same underlying pattern, consisting of simulations steps,
-followed by one or more analysis step(s). Designers of free energy protocols
-can utilize the simulation and analysis components of HTBAC to create any
-customized sequence of simulation(s) and/or analysis steps.
+In Section~\ref{ssec:esm_ties} we define the structure of the ESMACS and
+TIES protocols. Here we provide skeletons of the TIES protocol implemented in 
+HTBAC. In~\ref{lst:ties.py} we show a customization of a production MD 
+simulation step. In Section~\ref{ssec:adaptive_execution} we show HTBAC's 
+adaptive execution capabilities. In~\ref{lst:ties_adaptivity.py} we provide an 
+intra-protocol adaptive implementation based on the described use-case in 
+Section~\ref{ssec:adapt_ties}. 
 
-Listing~\ref{lst:esmacs.py} shows the skeleton of the ESMACS protocol
-implemented in HTBAC. Specifically, the listing shows the customization of
-simulation conditions for a minimization step of the protocol.
+
+% While ESMACS and TIES protocols compute binding affinity
+% calculations for different systems and purposes, their implementation in
+% HTBAC have the same underlying pattern, consisting of simulations steps,
+% followed by one or more analysis step(s). Designers of free energy protocols
+% can utilize the simulation and analysis components of HTBAC to create any
+% customized sequence of simulation(s) and/or analysis steps. The main 
+% implementation differences between protocols is in their design of ensemble 
+% members. 
+
+
+% Listing~\ref{lst:esmacs.py} shows the skeleton of the ESMACS protocol
+% implemented in HTBAC. Specifically, the listing shows the customization of
+% simulation conditions for a minimization step of the protocol.
 
 \lstinputlisting[
   language=Python, 
-  label={lst:esmacs.py}, 
-  caption={Instance of the ESMACS protocol implemented with HTBAC. We import
-  the predefined protocol `ESMACS' and customize its simulation steps. We
+  label={lst:ties.py}, 
+  caption={Instance of the TIES protocol implemented with HTBAC. We import
+  the predefined protocol `TIES' and customize its simulation steps. We
   assign the physical system to the protocol instance and, using the
-  Simulation component, we specify the conditions for all ensemble members of
-  the minimization step \texttt{step0}. Using the Runner component, we pass
-  the protocol instance and resource request along with allocation time
+  Simulation component, we specify the conditions for all ensemble members and
+  their type of a production MD step \texttt{step0}. Using the Runner component, 
+  we pass the protocol instance and resource request along with allocation time
   (walltime) to EnTK.} 
-  ]{esmacs.py}
+  ]{ties.py}
 
 
-In Section~\ref{ssec:adapt_ties} we describe intra-protocol adaptivity using 
-TIES. In~\ref{lst:ties_adaptivity.py} we provide an adaptive implementation 
-based on the described use-case. In Section~\ref{ssec:adaptive_execution} we 
-show HTBAC's adaptive execution capabilities. 
+% In Section~\ref{ssec:adaptive_execution} we 
+% show HTBAC's adaptive execution capabilities. Here we show an example of a 5 
+% step simulation run. For brevity, we did not specify the simulation
+% conditions for \texttt{TIES.step0--2}, which are typically minimization and 
+% equilibration steps. We focus on implementing adaptivity within the protocol 
+% for the production MD step. In a non-adaptive protocol, the production MD step 
+% executes for the entire simulation duration as specified by the user. The 
+% adaptive protocol breaks down the production MD step into multiple, shorter 
+% steps. Between steps, the user assigns analysis scripts that generate 
+% simulation conditions necessary for further simulations. The shorter
+% \texttt{TIES.step3} and \texttt{TIES.step4} specify production MD phase 1 and 
+% phase 2, respectively. Simulations from \texttt{TIES.step3} execute but the 
+% application does not terminate, as specified by the flag 
+% \texttt{terminate = false}. The adaptive quadratures function computes where to 
+% place subsequent $\lambda$ windows and provides the information to 
+% \texttt{TIES.step4}. 
+
+% The additional windows 
 
 \lstinputlisting[
   language=Python,
   label={lst:ties_adaptivity.py},
-  caption={Adaptive implementation of the TIES protocol in HTBAC. We import
-  the predefined protocol `TIES' and partition the protocol into multiple
-  simulation steps. Between steps, the user specifies an analysis script that
-  operates on partial simulation results, which generates new simulation
-  conditions for the next simulation step. In this implementation, we use the
-  adaptive quadrature function which determines whether to spawn a new
-  $\lambda$ value between an interval of 2 existing $\lambda$ windows}
-  ]{ties_adaptivity.py}
+  caption={Adaptive implementation of the TIES protocol in HTBAC. We build on the 
+  implementation provided in~\ref{lst:ties.py} and show a partitioning of 
+  production MD simulation step into multiple simulation steps and divide the 
+  simulation duration. Flags are passed to the runner to save the output of the 
+  latest simulations and bypass termination of the application. Between steps, the 
+  user specifies an analysis script that operates on partial simulation results, 
+  which generates new simulation conditions for the next simulation step. The 
+  simulations from the previous step are automatically merged with the new 
+  simulations. In this implementation, we use the adaptive quadrature 
+  function which determines whether to spawn additional $\lambda$ windows.}]
+  {ties_adaptivity.py}
