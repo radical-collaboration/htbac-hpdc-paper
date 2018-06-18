@@ -69,77 +69,54 @@ estimates.
 % more~\cite{Sadiq2010, Wright2014}. 
 
 
-TIES is a so called ``alchemical'' relative free energy method 
-in which the fact that the potential used to describe the system is user 
-definable to transform one system into another. This allows for the calculation 
-of free energy differences between the two systems, such as those induced by an 
-alteration to a candidate drug. 
+% TIES is a so called ``alchemical'' relative free energy method 
+% in which the fact that the potential used to describe the system is user 
+% definable to transform one system into another. This allows for the calculation 
+% of free energy differences between the two systems, such as those induced by an 
+% alteration to a candidate drug. 
 
-The computational requirements of the two protocols differ sometimes 
-significantly, but deciding which one is more appropriate for the task at hand 
-is not trivial, as it is a function of resources, required time to convergence, 
-accuracy thresholds etc. TIES is based on rigorous, but computationally 
-expensive, calculations of relative free energies. 
-ESMACS, in contrast, provides absolute binding 
-free energies at low computational cost, but to achieve this coarse grains many 
-of the details of the physical system being studied. 
+% The computational requirements of the two protocols differ sometimes 
+% significantly, but deciding which one is more appropriate for the task at hand 
+% is not trivial, as it is a function of resources, required time to convergence, 
+% accuracy thresholds etc. TIES is based on rigorous, but computationally 
+% expensive, calculations of relative free energies. 
+% ESMACS, in contrast, provides absolute binding 
+% free energies at low computational cost, but to achieve this coarse grains many 
+% of the details of the physical system being studied. 
 
-Conceptually, ESMACS and TIES consists of three steps: minimization, 
-equilibration and production MD. 
-In practice the equilibration phase is broken 
+Conceptually, ESMACS and TIES consists of three main steps: minimization, 
+equilibration and production MD. In practice the equilibration phase is broken 
 into multiple steps to ensure that the size of the simulation box does not alter 
-too much over the simulation. 
-During these steps positional constraints are 
+too much over the simulation. During these steps positional constraints are 
 gradually released from the structure and the physical system is heated to a 
 physiologically realistic temperature. 
 
-Whilst both protocols share a common workflow of steps and simulations, 
-the make up of the ensemble-member is different. 
-In the case of ESMACS, an ensemble consists of a set 25 
-\textbf{replicas} which are identical simulations differing only in the initial 
-velocities assigned to each atom. 
-In TIES, the ensemble contains the set of \textbf{$\lambda$} windows that each 
-spawn a set of replicas. 
-A transformation parameter $\lambda$ is defined such 
-that as it increases from zero to one the system description transforms from 
-containing an initial drug to a target compound via a series of hybrid states. 
-Sampling along $\lambda$ is then required in order to compute the difference in 
-binding free energy. Consequently, whereas in ESMACS replicas run simulations on 
-samples using the same system description, in TIES replicas sample at 
-different points along $\lambda$. 
-The change in free energy associated with the 
-transformation is calculated using an adaptive quadrature function which
-numerically integrates the values of the $\partial U/\partial\lambda$ across the 
-full set of $\lambda$ windows simulated. 
-
-Obtaining accurate and precise results from TIES using adaptive quadratures 
-requires that the $\lambda$ windows correctly capture the changes of 
-$\partial U/\partial\lambda$ over the transformation. This behavior is highly 
-sensitive to the chemical details of the compounds being studied and varies 
-considerably between systems (i.e. drug candidates). 
-Typically, windows are evenly spaced between 0 and 1 with the spacing between 
-them set before execution 
-at a distance determined by the simulator to be sufficient for a wide range of 
-systems. In previous studies TIES has been deployed using 65 replicas evenly 
-distributed between 13 $\lambda$ windows. 
-Following the completion of the simulation steps, both protocols require 
-the execution of free energy analysis steps.
-The detailed composition of ESMACS and TIES protocols is illustrated in 
+Whilst both protocols share a common sequence of steps, the make-up of the 
+ensemble is different. In the case of ESMACS, an ensemble consists of a set 
+25 \textbf{replicas} which are identical simulations differing only in the 
+initial velocities assigned to each atom. In TIES, the ensemble contains the set 
+of \textbf{$\lambda$} windows that each spawn a set of replicas. A 
+transformation parameter $\lambda$ is defined such that as it increases from 
+0 to 1 the system description transforms from containing an initial drug to 
+a target compound via a series of hybrid states. Sampling along $\lambda$ is 
+then required in order to compute the difference in binding free energy. In 
+previous studies TIES has been deployed using 65 replicas evenly distributed 
+between 13 $\lambda$ windows. Following the completion of the simulation steps, 
+both protocols require the execution of free energy analysis steps. The detailed 
+composition of ESMACS and TIES protocols is shown in 
 Figure~\ref{fig:ties_esmacs_application}. 
+
+
+
 
 % In order to obtain a meaningful TIES result it is necessary to not only 
 % simulate the drug pair in the protein but also in an aqueous environment, 
 % adding a further 65 replicas albeit it using a smaller system at lower 
 % computational cost.
 
-Both protocols are highly customizable, for example the number 
-of simulation replicas in the ensemble and the lengths of their runs can be 
-varied. 
-More generally though, there may be cases where it is important to 
-increase the sampling of phase space possibly through expanding the ensemble 
-or in TIES changing the distribution of $\lambda$ windows.
-
-
+% Both protocols are highly customizable, for example the number 
+% of simulation replicas in the ensemble and the lengths of their runs can be 
+% varied. 
 
 \begin{figure}
   \centering
@@ -222,6 +199,53 @@ or in TIES changing the distribution of $\lambda$ windows.
 
 \subsection{The Value of Adaptivity}\label{ssec:adapt_ties}
 
+The main driver for adaptivity is that computational campaigns will
+typically involve compounds with a wide range of chemical properties which can
+impact not only the time to convergence, but the type of sampling required to
+gain accurate results. There may be cases where it is important to 
+increase the sampling of phase space possibly through expanding the ensemble 
+% or in TIES changing the distribution of $\lambda$ windows. 
+In general, there is no way to know before running calculations exactly which 
+setup of calculation is required for a particular system. 
+
+Another driver of adaptivity is that on occasion, alchemical methods may be very 
+slow to converge; in such circumstances use of another method, such as ESMACS,
+may be the best option. This means that the most effective way to gain accurate 
+and precise free energy results on industrially or clinically relevant 
+timescales is to be able to adapt both sampling (\textbf{intra-protocol}) and 
+even the type of calculation (\textbf{inter-protocol}) used at run time. With 
+potentially thousands of simulations, often employing multiple analysis 
+methodologies, this provides the most effective way to utilize these techniques 
+and resources at scale.
+
+In TIES, the change in free energy 
+associated with the transformation is calculated using an adaptive quadrature 
+function which numerically integrates the values of the 
+$\partial U/\partial\lambda$ across the full set of $\lambda$ windows simulated. 
+Obtaining accurate and precise results from TIES using adaptive quadratures 
+requires that the $\lambda$ windows correctly capture the changes of 
+$\partial U/\partial\lambda$ over the transformation. This behavior is highly 
+sensitive to the chemical details of the 
+compounds being studied and varies considerably between candidates. Typically, 
+$\lambda$ windows are evenly spaced between 0 and 1 with the spacing between 
+them set before execution at a distance determined by the simulator to be 
+sufficient for a wide range of systems. 
+
+However, the number (or the exact location) of the $\lambda$ windows that will 
+most impact the calculation are not known \textit{a priori}, and varies across 
+candidates. As multiple simulations must be run for each window, sampling with a 
+very high frequency is expensive and impractical. Instead, approximations using 
+evenly spaced $\lambda$ windows have historically been sufficient for reaching 
+an acceptable accuracy threshold. However, adaptive placement of $\lambda$
+windows is likely to better capture the shape of the 
+$\partial U/\partial\lambda$ curve, leading to more accurate and precise 
+results for a given computational cost.
+
+% Consequently, whereas in ESMACS replicas run simulations 
+% on samples using the same system description, in TIES replicas sample at 
+% different points along $\lambda$. 
+
+
 
 % Given the very large number of drug candidates, it is imperative to
 % gain maximum insight into potential candidate compounds using time and
@@ -234,48 +258,26 @@ or in TIES changing the distribution of $\lambda$ windows.
 % resource budget carefully looking to gain maximum insight into potential
 % candidate compounds. 
 
-The main driver for adaptivity is that computational campaigns will
-typically involve compounds with a wide range of chemical properties which can
-impact not only the time to convergence, but the type of sampling required to
-gain accurate results. In general, there is no way to know before running
-calculations exactly which setup of calculation is required for a particular
-system. For example in TIES, the number (or the exact location) of the
-$\lambda$ windows that will most impact the calculation are not known
-\textit{a priori}, and varies across candidates (drugs). As multiple simulations 
-must be run for each window, sampling with a very high frequency is expensive and 
-impractical. Instead approximations using evenly spaced $\lambda$ windows
-suffice for reaching an acceptable accuracy threshold. 
+
+
 
 %  Nonetheless, they are very expensive computationally,
 % and optimizing the execution time while still improving the accuracy is
 % desirable. 
 
-However, adaptive placement of $\lambda$
-windows is likely to better capture the shape of the 
-$\partial U/\partial\lambda$ curve, leading to more accurate and precise 
-results for a given computational cost.
 
-Another driver of adaptivity is that on occasion, alchemical methods may be very 
-slow to converge; in such circumstances use of another method, such as ESMACS,
-may be the best option. This means that the most effective way to gain accurate 
-and precise free energy results on industrially or clinically relevant 
-timescales is to be able to adapt both sampling (\textbf{intra-protocol}) and 
-even the type of calculation (\textbf{inter-protocol}) used at run time. With 
-potentially thousands of simulations, often employing multiple analysis 
-methodologies, this provides the most effective way to utilize these techniques 
-and resources at scale.
+
+
 
 %-----------------------------------------------------------------------------%
 % move this section to fe_protocols.tex
 
-Intra-protocol adaptivity relies 
-on the intermediate results \textit{within} a protocol instance to define the 
-next set of further simulation requirements. In TIES, the optimal positions of 
-the $\lambda$ windows are not known \textit{a priori}. Therefore, the number of 
+In this work, we focus on one type of adaptivity, intra-protocol adaptivity, 
+which relies on the intermediate results \textit{within} a protocol instance to 
+define the next set of further simulation requirements. In TIES, the optimal 
+positions of the $\lambda$ windows are not known \textit{a priori}. Therefore, the number of 
 simulations and their descriptions, which are dictated by the $\lambda$ windows
-parameter, cannot be accurately specified before execution \mtnote{`cannot be 
-specified' or `cannot be effectively specified'? If the former, then would that 
-imply that a nonadaptive implementation is not possible?}\jdnote{addressed}.
+parameter, cannot be accurately specified before execution. 
 
 As an alternative to using approximations to place all $\lambda$ prior to 
 execution, we can provide less $\lambda$ windows and run shorter bursts of 
@@ -285,8 +287,8 @@ placed $\lambda$ windows.
 
 We leverage the use of adaptive software solutions and middleware in
 order to (1) automate runtime decisions based on intermediately 
-generated data, (2) redistribute resources during runtime to support continued 
-and incoming simulations. 
+generated data, (2) redistribute resources during runtime to support existing  
+and intermediately generated simulations. 
 
 % Figure~\ref{fig:adaptive_ties} shows our design of capturing adaptivity within 
 % TIES using an iterative pipeline of two stages: a short simulation step 
