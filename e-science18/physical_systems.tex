@@ -1,10 +1,15 @@
 \subsection{Physical system description}
 
-The scientific and or computational improvements require validation across a number of protein ligand complexes. We selected 4 proteins and 8 ligands or ligand pairs to run the adaptive relative free energy calculations. The systems were previously used for non-adaptive simulations by \cite{} et. al., offering a baseline comparison against our results. 
+The scientific and or computational improvements require validation across a 
+number of protein ligand complexes. 
+We selected 4 proteins and 8 ligands or ligand pairs to run the adaptive 
+relative free energy calculations. 
+The proteins are the Protein tyrosine phosphatase 1B (PTP1B), the Induced myeloid leukemia cell differentiation protein (MC1), tyrosine kinase 2 (TYK2) and the bromodomain-containing protein 4 (BRD4). 
+Four of the eight ligands are alchemical transformations from one to another (used in TIES), the rest being single ligands suitable for absolute free energy calculations (ESMACS).
+All systems were taken from previously published studies \cite{} in order to 
+provide a baseline against which to compare our results.
 
-The selected proteins are the Protein tyrosine phosphatase 1B (PTP1B), the Induced myeloid leukemia cell differentiation protein (MC1), tyrosine kinase 2 (TYK2) and the bromodomain-containing protein 4 (BRD4). The ligand complexed with the protein fall into two categories. Four of the eight ligands are alchemical transformations from one to another (used in TIES), the rest being single ligands suitable for absolute free energy calculations, in our case for ESMACS.
-
-Preparation and setup of the simulations were implemented using our automated tool, BAC~\cite{Sadiq2008}. This process includes parametrization of the compounds, solvation of the complexes, electrostatic neutralization of the systems by adding counterions and generation of configurations files for the simulations. The AMBER ff99SB-ILDN \cite{Lindorff-Larsen2010} force field was used for the proteins, and TIP3P was used for water molecules. Compound parameters were produced using the general AMBER force field (GAFF)~\cite{Wang2004} with Gaussian 03~\cite{Frisch} to optimize compound geometries and to determine electrostatic potentials at the Hartree–Fock level with 6-31G** basis functions. The restrained electrostatic potential (RESP) module in the AMBER package~\cite{Case2005} was used to calculate the partial atomic charges for the compounds. All systems were solvated in orthorhombic water boxes with a minimum extension from the protein of 14 \AA\ (the resulting systems contain approximately 40 thousand atoms).
+Preparation and setup of the simulations were implemented using our automated tool, BAC~\cite{Sadiq2008}. This process includes parametrization of the compounds, solvation of the complexes, electrostatic neutralization of the systems by adding counterions and generation of configurations files for the simulations. The AMBER ff99SB-ILDN \cite{Lindorff-Larsen2010} force field was used for the proteins, and TIP3P was used for water molecules. Compound parameters were produced using the general AMBER force field (GAFF)~\cite{Wang2004} with Gaussian 03~\cite{Frisch} to optimize compound geometries and to determine electrostatic potentials at the Hartree–Fock level (with 6-31G** basis functions). The restrained electrostatic potential (RESP) module in the AMBER package~\cite{Case2005} was used to calculate the partial atomic charges for the compounds. All systems were solvated in orthorhombic water boxes with a minimum extension from the protein of 14 \AA\ (the resulting systems contain approximately 40 thousand atoms).
 
 % \subsection{Target protein: BRD4}
 % 
