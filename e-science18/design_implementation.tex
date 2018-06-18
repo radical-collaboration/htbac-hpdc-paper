@@ -135,7 +135,7 @@ free energy protocols in terms of ensemble applications:
 \textbf{Simulation} and \textbf{Analysis} specify simulation and analysis
 parameters that shape each protocol. \textbf{Runner} provides functionalities
 to specify the amount of resources needed to execute a protocol and the
-amount of time these resources should be available for. Thus, in HTBAC an
+amount of time for which these resources should be available. Thus, in HTBAC an
 application consists of protocol instances, simulation and analysis
 parameters, and resource requirements.
 
@@ -219,7 +219,7 @@ diagram} shows the components (orange) and subcomponents (green) of HTBAC,
 organized in two layers: API and application management layer.
 
 % All components are stateless as they do not require different processes. 
-The API enables users to codify protocol descriptions. The  application
+The API enables users to codify protocol descriptions. The application
 generator retrieves the application description, aggregates and
 coordinates protocols and communicates with the Runner. The Runner contains 
 two subcomponents, Resource Manager and (EnTK) Connector. The Resource Manager
@@ -228,6 +228,8 @@ communicates them to the ensemble management system (EnTK). The EnTK Connector
 subcomponent is responsible for converting the application description into an
 ensemble description. The ensemble management system handles the dependencies of 
 the protocols, and acquires resources via a runtime system. 
+\jdnote{this has been modified to reflect the current architecture in the 
+diagram on the google drive}
 
 % The Application 
 % Generator which synchronize and coordinate the ensemble members 
@@ -348,7 +350,7 @@ TIES.
 EnTK uses the runtime system of RADICAL-Pilot to execute ensemble
 applications via pilots. The pilot abstraction supports the requirements of
 task-level parallelism and high-throughput as needed by the use cases. Pilot
-systems acquires resources from a computing infrastructure by submitting a
+systems acquire resources from a computing infrastructure by submitting a
 pilot job and waiting in the queue until the infrastructure's scheduler
 bootstraps the job. Once the pilot is bootstrapped, it can pull tasks for
 execution. This enables tasks to be executed directly on the resources,
@@ -452,7 +454,8 @@ section ``Implementing ESMACS and TIES in HTBAC'' with this, the previous
 subsections and, maybe, the last one about implementing adaptivity (I can see
 why to keep that here though)?}
 
-\jdnote{I created another section that comes after this section. }
+\jdnote{I created another section that comes after this section that shows the
+code for esmacs (nonadaptive) and TIES (intra-protocol adaptivity)}
 
 % \jdnote{I think we need to tackle this section differently,
 
@@ -526,20 +529,22 @@ why to keep that here though)?}
 Once an adaptive or nonadaptive workflow is described in HTBAC
 (Figure~\ref{fig:architecture}.1), the Runner component tags each protocol
 instance with a unique ID and converts protocols into EnTK pipelines of
-stages of tasks (Figure~\ref{fig:architecture}.2). The Runner aggregates the
-application description, including protocols
-(Figure~\ref{fig:architecture}.3), their simulation conditions
-(Figure~\ref{fig:architecture}.4), and information about computing
-infrastructure requirements (Figure~\ref{fig:architecture}.5).
+stages of tasks (Figure~\ref{fig:architecture}.2). The Application Generator 
+aggregates the application description, including protocols
+(Figure~\ref{fig:architecture}.3) and their simulation conditions, 
+(Figure~\ref{fig:architecture}.4)
+
+% , and information about computing
+% infrastructure requirements (Figure~\ref{fig:architecture}.5).
 
 The Application Generator passes the protocol description to the Protocol
-Manager (Figure~\ref{fig:architecture}.6) which communicates with the Step
-Manager and the Ensemble-Member Manager to generate the protocol with the
-appropriate simulation conditions (Figure~\ref{fig:architecture}.7). The
-Application Generator aggregates all protocols
-(Figure~\ref{fig:architecture}.8) and passes the protocols as well as the
-application's resource configuration to the ensemble management system
-(Figure~\ref{fig:architecture}.9).\mtnote{This is an example of a meaningful
+Manager to generate the protocol with the appropriate simulation 
+conditions (Figure~\ref{fig:architecture}.7). The Runner 
+aggregates all protocols (Figure~\ref{fig:architecture}.8) and passes the 
+protocols as well as the application's resource description that contains 
+information about computing infrastructure requirements to the ensemble 
+management system (Figure~\ref{fig:architecture}.9).
+\mtnote{This is an example of a meaningful
 numbering for the architecture diagram. Steps 3, 4, and 5 could be a single
 one, depending on the granularity of the diagram.}
 
@@ -550,7 +555,7 @@ concurrently. EnTK's Execution Manager component uses its underlying runtime
 system (RP) to execute the tasks of the pipelines on specific target
 resources.
 
-The resource requirements as specified by the user in HTBAC which include
+The resource requirements as specified by the user in HTBAC include
 walltime, cores, queue, and user credentials. The Runner passes this resource 
 description to EnTK which uses these requirements to derive a resource request 
 that is then converted into a pilot description for RP. RP converts this pilot
@@ -596,7 +601,8 @@ generate new simulation steps based on current simulation results.
 The Runner in HTBAC provides a flag to enable sending the results of the
 latest simulations or analysis that have been executed back to the client 
 machine. This provides partial simulation results that can be processed by the
-user-defined analysis script to generate additional simulation steps.
+user-defined analysis script to generate new simulation conditions for further 
+steps. 
 
 % Therefore, the user implements adaptivity in HTBAC as follows:
 
