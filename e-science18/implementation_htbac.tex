@@ -1,16 +1,26 @@
-In Section~\ref{ssec:esm_ties} we define the structure of the ESMACS and TIES
+In \S\ref{ssec:esm_ties} we define the structure of the ESMACS and TIES
 protocols. Here we provide skeletons of the TIES protocol implemented in
-HTBAC\@. In Listing~\ref{lst:ties.py} we show a customization of a production
+HTBAC\@. In L.~\ref{lst:ties.py} we show a customization of a production
 MD simulation step.
 
-\lstinputlisting[language=Python, label={lst:ties.py}, caption={Instance of the TIES protocol implemented with HTBAC. We import the predefined protocol `TIES' and customize its simulation steps. We assign the physical system to the protocol instance and, using the Simulation construct, we specify the conditions for all ensemble members and their type of a production MD step \texttt{step0}. We pass the protocol instance and resource request along with allocation time (walltime) to to the Runner component.}]{ties.py}
+\lstinputlisting[language=Python, label={lst:ties.py}, caption={TIES protocol
+implemented with HTBAC. We import the predefined protocol `TIES'. We assign
+the physical system to the protocol, we instantiate a simulation, customize
+its steps (\texttt{replica}, \texttt{lambda}) and assign it to the TIES's
+\texttt{step0}. We instantiate a Runner with a resource request and pass the
+protocol to it.}]{ties.py}
 
-In Section~\ref{ssec:adaptive_execution} we show HTBAC's adaptive execution
-capabilities. In Listing~\ref{lst:ties_adaptivity.py} we provide an
+In \S\ref{ssec:adaptive_execution} we show HTBAC's adaptive execution
+capabilities. In L.~\ref{lst:ties_adaptivity.py} we provide an
 intra-protocol adaptive implementation of TIES, based on the use-case
-of Section~\ref{ssec:adapt_ties}.
+of \S\ref{ssec:adapt_ties}.
 
-\lstinputlisting[language=Python, label={lst:ties_adaptivity.py}, caption={Adaptive implementation of the TIES protocol in HTBAC. Expanding on Listing~\ref{lst:ties.py}, we partition a production MD simulation step into multiple simulation steps and divide the simulation duration. Flags are passed to the Runner to save the output of the latest simulations. Between steps, an analysis script operates on partial simulation results, generating new simulation conditions for the next simulation step. The simulations from the previous step are automatically merged with the new simulations. In this implementation, we use the adaptive quadrature function which determines whether to spawn additional $\lambda$ windows.}]{ties_adaptivity.py}
+\lstinputlisting[language=Python, label={lst:ties_adaptivity.py},
+caption={Adaptive TIES protocol implemented with HTBAC. Assuming
+L.~\ref{lst:ties.py}, we run the runner retrieving runtime results, we
+specify an adaptivity script for the evaluator, create TIES's \texttt{step1}.
+The analysis script operates on partial simulation results, generating new
+simulation conditions for the next simulation step.}]{ties_adaptivity.py}
 
 % \jhanote{As written, this sub-section has nothing about HTBAC and would be
 % better placed/merged in Science Driver.  What would be useful is
@@ -29,7 +39,7 @@ of Section~\ref{ssec:adapt_ties}.
 % implemented in HTBAC. Specifically, the listing shows the customization of
 % simulation conditions for a minimization step of the protocol.
 
-% In Section~\ref{ssec:adaptive_execution} we show HTBAC's adaptive execution
+% In \S\ref{ssec:adaptive_execution} we show HTBAC's adaptive execution
 % capabilities. Here we show an example of a 5 step simulation run. For
 % brevity, we did not specify the simulation conditions for
 % \texttt{TIES.step0--2}, which are typically minimization and equilibration
