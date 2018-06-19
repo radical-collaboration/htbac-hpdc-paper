@@ -1172,15 +1172,11 @@ of the TIES protocol.
 
 \begin{table}
   \centering
-  \caption{Comparison of the calculated binding free energies using HTBAC,
-  from the original study by Wan et al. and experimental data. This
-  experiment proves that HTBAC implements TIES correctly, as the calculated
-  values are either the same or within error bar of the original study. All
-  values are in \si{\kilo\calorie\per\mole}.}  
+  \caption{COMPARISON OF THE CALCULATED BINDING FREE ENERGIES USING HTBAC, FROM THE ORIGINAL STUDY BY WAN ET AL. AND EXPERIMENTAL DATA}  
   % \begin{tabular}{l@{\hskip 1in}r@{\hskip 0.2in}r@{\hskip 0.2in}r}
   \begin{tabular}{lrrr}
     \toprule
-    System & HTBAC & Wan et. al & Experiment \\
+    System & HTBAC & Wan et al. & Experiment \\
     \midrule
     BRD4 \textbf{3 to 1} & \num{0.39 +- 0.10} &   \num{0.41 +- 0.04} &  \num{0.3 +- 0.09} \\
     BRD4 \textbf{3 to 4} & \num{0.02 +- 0.12} &   \num{0.01 +- 0.06} &  \num{0.0 +- 0.13} \\
@@ -1287,11 +1283,11 @@ Therefore, certain decisions, like number of time steps, $\lambda$ window
 placement have to be made \emph{a priori}, and the continuous accumulation of
 results can, by definition, have no effect of these parameters.
 
-\jhanote{This discussion needs more care: adaptive algorithms are difficult to
-implement at scale. That is why we have fewer adaptive algorithms than one might
-suspect. The opening line says the cause of the lack of adaptivity is  the way
-they are implemented.}\kfnote{I was trying to describe this smaller problem, not
-related to scale, just adaptivity. I modified the sentence to reflect this.}
+% \jhanote{This discussion needs more care: adaptive algorithms are difficult to
+% implement at scale. That is why we have fewer adaptive algorithms than one might
+% suspect. The opening line says the cause of the lack of adaptivity is  the way
+% they are implemented.}\kfnote{I was trying to describe this smaller problem, not
+% related to scale, just adaptivity. I modified the sentence to reflect this.}
 
 Having the mobility and dynamism that HTBAC offers, we are able to enhance our
 protocols (that run with these static simulation engines) to use adaptive
@@ -1302,22 +1298,27 @@ To this end we implemented two adaptive methods in HTBAC: adaptive quadrature
 and adaptive termination. Both of these methods use the features of adaptivity
 offered in HTBAC to scale to large number of concurrent simulations.
 
-\jhanote{Once again, we need to be careful: there is conflation between cause
-and effect. Adatpvitiy is not a principle in of itself so has not intrinsic
-value standalone. what is important is faster convergence and more accurate
-results. adaptivity is one route to obtain them. The way the previous sentence
-is written conflates effect with driver.}\kfnote{Rephrased to reflect this.}
+% \jhanote{Once again, we need to be careful: there is conflation between cause
+% and effect. Adatpvitiy is not a principle in of itself so has not intrinsic
+% value standalone. what is important is faster convergence and more accurate
+% results. adaptivity is one route to obtain them. The way the previous sentence
+% is written conflates effect with driver.}\kfnote{Rephrased to reflect this.}
 
-The aim of introducing adaptive quadrature \jhanote{adaptive quadrature is
+\jhanote{adaptive quadrature is
 raised several times it isn't describe anywhere}\kfnote{it is in previous
-sections, no?}  to alchemical free energy calculation protocols (e.g. TIES) is
-to reduce time to completion while maintaining (or increasing) the accuracy of
-the results. Time to completion is measured by the number of core hours consumed
-by the simulations. Accuracy is defined as the error with respect to a reference
-value, calculated via a dense $\lambda$ window spacing (65 windows). This
-reference value is used to establish the accuracy of the non-adaptive protocol
-(which has 13 $\lambda$ windows) and the adaptive protocol (which has a variable
-number of $\lambda$ windows, determined at run time).
+sections, no?}\jhanote{Its probably fine. A picky reviewer will complain that
+we talk about how it is used, but not why it is used? Or which type of 
+adaptive quadrature}
+
+The aim of introducing adaptive quadrature for alchemical free energy
+calculation protocols (e.g. TIES) is to reduce time to completion while
+maintaining (or increasing) the accuracy of the results. Time to completion is
+measured by the number of core hours consumed by the simulations. Accuracy is
+defined as the error with respect to a reference value, calculated via a dense
+$\lambda$ window spacing (65 windows). This reference value is used to
+establish the accuracy of the non-adaptive protocol (which has 13 $\lambda$
+windows) and the adaptive protocol (which has a variable number of $\lambda$
+windows, determined at run time).
 
 One of the input parameters of the adaptive quadrature algorithm is the
 desired acceptable error threshold of the estimated integral. We set this
@@ -1337,8 +1338,8 @@ different simulation engines~\cite{Loeffler2018}.
 
 The Total Task Execution Time of the TYK2 L7-L8 system has increased for the
 adaptive run by 1 $\lambda$ window compared to the non-adaptive case. This is
-due to the non-adaptive error begin very low, and matching that same accuracy
-required the use of a large number of windows. Nonetheless due to the
+due to the non-adaptive error being very low, and matching that same accuracy
+required in the use of a large number of windows. Nonetheless due to the
 efficient placing of the windows, the accuracy of the free energy still
 increased by \SI{40}{\percent}.
 
@@ -1399,9 +1400,11 @@ increased by \SI{40}{\percent}.
   \end{tabular}
 \end{table*}
 
+\jhanote{This para is difficult to parse. How does one appreciate the
+iteration count?}
 Figure~\ref{fig:adapconv} shows progression of the algorithm, starting from 3
 initial lambda windows, and at each iteration bisecting the interval where
-the error is above the set threshold. For system X, we can see as how the
+the error is above the set threshold. For system \jhanote{X -- fix!!} we can see as how the
 parts of the function that change less have relatively fewer windows, while
 parts of greater change (usually, though not always, around the $\lambda=0.5$
 mark) have more $\lambda$ windows to represent the shape of the function more
@@ -1418,28 +1421,29 @@ closely.
 \end{figure}
 
 \begin{figure}
-  \input{figures/fig-savings.tex}
-  \caption{Quantifying the benefits of the adaptive quadrature simulations. (a)
-  The error of the adaptive run is reduced for all 5 test systems sometimes by a
-  s significant amount. Recently \cite{Loeffler2018} it has been shown that
-  reproducibility of free energy calculations can be achieved up to
+  \input{figures/fig-savings.tex}%
+  \caption{Quantifying the benefits of the adaptive quadrature simulations.
+  (top) The error of the adaptive run is reduced for all 5 test systems
+  sometimes by a s significant amount. Recently \cite{Loeffler2018} it has been
+  shown that reproducibility of free energy calculations can be achieved up to
   \SI{0.2}{\kilo\calorie\per\mole}. The adaptive algorithm brings down the error
   of the non-adaptive simulations below this threshold, ensuring that results
-  and also reproducible. (b) Resource consumption is also reduced, except for
-  one of the systems, where the low error threshold required more $\lambda$
+  and also reproducible. (bottom) Resource consumption is also reduced, except
+  for one of the systems, where the low error threshold required more $\lambda$
   windows to fulfill.}
   \label{fig:savings}
 \end{figure}
 
 Adaptive quadrature is specific to alchemical free energy calculations.
-\emph{Adaptive termination}, the second adaptive protocol implemented in
-HTBAC, offers dynamic termination for any simulation protocol that has as its
-aim the prediction of an observable value. The protocol monitors the
-convergence of the observable as the simulation progresses, and stops the
-execution when a criterion has been met. Non-adaptive protocols usually have
-a predefined simulation time, set based on the assumption that the simulation
-will converge by that time. This means that in practical examples the
-simulation might have converged before the predefined time interval.
+\emph{Adaptive termination}, the second adaptive \jhanote{I would not use
+"protocol" } protocol implemented in HTBAC, offers dynamic termination for any
+simulation protocol that has as its aim the prediction of an observable value.
+The protocol monitors the convergence of the observable as the simulation
+progresses, and stops the execution when a criterion has been met. Non-
+adaptive protocols usually have a predefined simulation time, set based on the
+assumption that the simulation will converge by that time. This means that in
+practical examples the simulation might have converged before the predefined
+time interval.
 
 In the original TIES protocol the production part of the simulation has to be
 run for \SI{4}{\nano\second} and the results are analyzed thereafter. This
