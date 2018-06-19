@@ -1273,19 +1273,19 @@ study, validating the results we produced with HTBAC.
 % E -------------------------------------------------------------------------
 \subsection{Adaptive Experiments}
 
-\jhanote{On looking at this afresh, this whole paragraph should either be
-zapped for it does not belong here but in an earlier section} \sout{Even at small
-scale it is hard to implement adaptive al- gorithms that use common molecular
-dynamics simulations engines (e.g., NAMD, Gromacs, Amber). This is in part
-because of the way the scientist interacts with these codes. The user hand-
-writes a configuration file and, together with the physical system description
-(topology, PDB), passes it to a binary executable, waiting for the simulation
-to end before analyzing the results. There is a disconnect between running the
-simulation and analysis, i.e. the intermediate results have no influence over
-the simulation parameters \emph{after} it has been started. Therefore, certain
-decisions, like number of time steps, $\lambda$ window placement have to be
-made \emph{a priori}, and the continuous accumulation of results can, by
-definition, have no effect of these parameters.}
+% \jhanote{On looking at this afresh, this whole paragraph should either be
+% zapped for it does not belong here but in an earlier section} \sout{Even at small
+% scale it is hard to implement adaptive al- gorithms that use common molecular
+% dynamics simulations engines (e.g., NAMD, Gromacs, Amber). This is in part
+% because of the way the scientist interacts with these codes. The user hand-
+% writes a configuration file and, together with the physical system description
+% (topology, PDB), passes it to a binary executable, waiting for the simulation
+% to end before analyzing the results. There is a disconnect between running the
+% simulation and analysis, i.e. the intermediate results have no influence over
+% the simulation parameters \emph{after} it has been started. Therefore, certain
+% decisions, like number of time steps, $\lambda$ window placement have to be
+% made \emph{a priori}, and the continuous accumulation of results can, by
+% definition, have no effect of these parameters.}
 
 % \jhanote{This discussion needs more care: adaptive algorithms are difficult to
 % implement at scale. That is why we have fewer adaptive algorithms than one might
@@ -1293,7 +1293,7 @@ definition, have no effect of these parameters.}
 % they are implemented.}\kfnote{I was trying to describe this smaller problem, not
 % related to scale, just adaptivity. I modified the sentence to reflect this.}
 
-The design of HTBAC  permits enhancing protocols while continuing to use
+The design of HTBAC permits enhancing protocols while continuing to use
 "static" simulation engines. To this end we implemented two adaptive methods
 using HTBAC: adaptive quadrature and adaptive termination. Both of these
 methods use the features of adaptivity offered in HTBAC to scale to large
@@ -1352,7 +1352,6 @@ same amount. The error on the adaptive results is also decreased, on average by
 all of the systems are reduced to below \SI{0.2}{\kilo\calorie\per\mole}, which
 has recently been shown to be the upper bound of reproducibility across
 different simulation engines~\cite{Loeffler2018}.
-
 
 
 The Total Task Execution Time of the TYK2 L7-L8 system has increased for the
@@ -1420,14 +1419,8 @@ increased by \SI{40}{\percent}.
 \end{table*}
 
 \jhanote{This para is difficult to parse. How does one appreciate the
-iteration count? Needs complete rewrite.}
-Fig.~\ref{fig:adapconv} shows progression of the algorithm, starting from 3
-initial lambda windows, and at each iteration bisecting the interval where
-the error is above the set threshold. For system \jhanote{X -- fix!!} we can see as how the
-parts of the function that change less have relatively fewer windows, while
-parts of greater change (usually, though not always, around the $\lambda=0.5$
-mark) have more $\lambda$ windows to represent the shape of the function more
-closely.
+iteration count? Needs complete rewrite.} \kfnote{rewrote}
+Figure~\ref{fig:adapconv} compares the error on the adaptive and non-adaptive simulations as a time series plot. As fewer lambda windows are calculated the adaptive algorithm uses less resources. Still, the error is drastically reduced as the windows are places ideally to capture the changes in function. 
 
 \begin{figure}
   \input{figures/fig-adapt.tex}
@@ -1444,7 +1437,7 @@ closely.
 
 Adaptive quadrature is specific to alchemical free energy calculations.
 \emph{Adaptive termination}, the second adaptive \jhanote{I would not use
-"protocol" } protocol implemented in HTBAC, offers dynamic termination for any
+"protocol" } \kfnote{method?} method implemented in HTBAC, offers dynamic termination for any
 simulation protocol that has as its aim the prediction of an observable value.
 The protocol monitors the convergence of the observable as the simulation
 progresses, and stops the execution when a criterion has been met. Non-
@@ -1475,7 +1468,7 @@ TIES protocol saves compute resources and reduces time to insight on average by
   (hence simulation time). The adaptive termination algorithm checks the
   convergence of the observable every $\tau = \SI{0.5}{\nano\second}$ and if
   the threshold (\SI{0.01}{\kilo\calorie\per\mole}) has been met, terminates the
-  simulation. \jhanote{Reviwer will want to know what happens with remaining two candidates?}}
+  simulation. \jhanote{Reviwer will want to know what happens with remaining two candidates?}\kfnote{Results are in the table for all the systems.}}
   \label{fig:termination}
 \end{figure}
 
