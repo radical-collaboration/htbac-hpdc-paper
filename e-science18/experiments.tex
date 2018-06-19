@@ -1271,17 +1271,19 @@ of the TIES protocol.
 % E -------------------------------------------------------------------------
 \subsection{Adaptive Experiments}
 
-Even at small scale it is hard to implement adaptive algorithms that use common
-molecular dynamics simulations engines (e.g., NAMD, Gromacs, Amber). This is in
-part because of the way the scientist interacts with these codes. The user
-hand-writes a configuration file and, together with the physical system
-description (topology, PDB), passes it to a binary executable, waiting for the
-simulation to end before analyzing the results. There is a disconnect between
-running the simulation and analysis, i.e. the intermediate results have no
-influence over the simulation parameters \emph{after} it has been started.
-Therefore, certain decisions, like number of time steps, $\lambda$ window
-placement have to be made \emph{a priori}, and the continuous accumulation of
-results can, by definition, have no effect of these parameters.
+\jhanote{On looking at this afresh, this whole paragraph should either be
+zapped for it does not belong here but in an earlier section} \sout{Even at small
+scale it is hard to implement adaptive al- gorithms that use common molecular
+dynamics simulations engines (e.g., NAMD, Gromacs, Amber). This is in part
+because of the way the scientist interacts with these codes. The user hand-
+writes a configuration file and, together with the physical system description
+(topology, PDB), passes it to a binary executable, waiting for the simulation
+to end before analyzing the results. There is a disconnect between running the
+simulation and analysis, i.e. the intermediate results have no influence over
+the simulation parameters \emph{after} it has been started. Therefore, certain
+decisions, like number of time steps, $\lambda$ window placement have to be
+made \emph{a priori}, and the continuous accumulation of results can, by
+definition, have no effect of these parameters.}
 
 % \jhanote{This discussion needs more care: adaptive algorithms are difficult to
 % implement at scale. That is why we have fewer adaptive algorithms than one might
@@ -1289,14 +1291,12 @@ results can, by definition, have no effect of these parameters.
 % they are implemented.}\kfnote{I was trying to describe this smaller problem, not
 % related to scale, just adaptivity. I modified the sentence to reflect this.}
 
-Having the mobility and dynamism that HTBAC offers, we are able to enhance our
-protocols (that run with these static simulation engines) to use adaptive
-schemes to increase convergence rate and obtain more accurate scientific
-results.
-
-To this end we implemented two adaptive methods in HTBAC: adaptive quadrature
-and adaptive termination. Both of these methods use the features of adaptivity
-offered in HTBAC to scale to large number of concurrent simulations.
+The design of HTBAC  permits enhancing protocols while continuing to use
+"static" simulation engines. To this end we implemented two adaptive methods
+using HTBAC: adaptive quadrature and adaptive termination. Both of these
+methods use the features of adaptivity offered in HTBAC to scale to large
+number of concurrent simulations and to increase convergence rate and obtain
+more accurate scientific results.
 
 % \jhanote{Once again, we need to be careful: there is conflation between cause
 % and effect. Adatpvitiy is not a principle in of itself so has not intrinsic
@@ -1326,6 +1326,21 @@ threshold to the error of the non-adaptive algorithm calculated via the
 reference value. The algorithm then tries to minimize the number of $\lambda$
 windows constrained by the accuracy requirement.
 
+\begin{figure}
+  \input{figures/fig-savings.tex}%
+  \caption{Quantifying the benefits of the adaptive quadrature simulations.
+  (top) The error of the adaptive run is reduced for all 5 test systems
+  sometimes by a s significant amount. Recently \cite{Loeffler2018} it has been
+  shown that reproducibility of free energy calculations can be achieved up to
+  \SI{0.2}{\kilo\calorie\per\mole}. The adaptive algorithm brings down the error
+  of the non-adaptive simulations below this threshold, ensuring that results
+  and also reproducible. (bottom) Resource consumption is also reduced, except
+  for one of the systems, where the low error threshold required more $\lambda$
+  windows to fulfill.}
+  \label{fig:savings}
+\end{figure}
+
+
 Table~\ref{tab:adapquad} shows the results of running adaptive quadrature on 5
 protein ligand systems, comparing the Total Task Execution Time and accuracy
 versus the non-adaptive case. The number of lambda windows are reduced on
@@ -1335,6 +1350,8 @@ same amount. The error on the adaptive results is also decreased, on average by
 all of the systems are reduced to below \SI{0.2}{\kilo\calorie\per\mole}, which
 has recently been shown to be the upper bound of reproducibility across
 different simulation engines~\cite{Loeffler2018}.
+
+
 
 The Total Task Execution Time of the TYK2 L7-L8 system has increased for the
 adaptive run by 1 $\lambda$ window compared to the non-adaptive case. This is
@@ -1420,19 +1437,8 @@ closely.
 \label{fig:adapconv}
 \end{figure}
 
-\begin{figure}
-  \input{figures/fig-savings.tex}%
-  \caption{Quantifying the benefits of the adaptive quadrature simulations.
-  (top) The error of the adaptive run is reduced for all 5 test systems
-  sometimes by a s significant amount. Recently \cite{Loeffler2018} it has been
-  shown that reproducibility of free energy calculations can be achieved up to
-  \SI{0.2}{\kilo\calorie\per\mole}. The adaptive algorithm brings down the error
-  of the non-adaptive simulations below this threshold, ensuring that results
-  and also reproducible. (bottom) Resource consumption is also reduced, except
-  for one of the systems, where the low error threshold required more $\lambda$
-  windows to fulfill.}
-  \label{fig:savings}
-\end{figure}
+
+
 
 Adaptive quadrature is specific to alchemical free energy calculations.
 \emph{Adaptive termination}, the second adaptive \jhanote{I would not use
@@ -1444,6 +1450,7 @@ adaptive protocols usually have a predefined simulation time, set based on the
 assumption that the simulation will converge by that time. This means that in
 practical examples the simulation might have converged before the predefined
 time interval.
+
 
 In the original TIES protocol the production part of the simulation has to be
 run for \SI{4}{\nano\second} and the results are analyzed thereafter. This
