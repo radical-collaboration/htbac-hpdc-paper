@@ -1038,10 +1038,10 @@ Ref.~\cite{merzky2018}.
 
 In Experiment 4 we fix the number of instances of the TIES protocol to 8 (due
 to the described \texttt{aprun} limitations) and we vary the amount of
-resources between 4160, 8320 and 16640 cores. Given 4160 cores, we can
-execute 4 generations (defined in \S\ref{ssec:exp_design}) of 130
-concurrent tasks; with 8320 cores, 2 generations of 260 concurrent tasks; and
-with 16640 cores, 1 generation of 520 concurrent tasks.
+resources between 4160, 8320 and 16640 cores. Assuming the definition of
+`generation' in \S\ref{ssec:exp_design}, given 4160 cores, we can execute 4
+generations of 130 concurrent tasks; with 8320 cores, 2 generations of 260
+tasks; and with 16640 cores, 1 generation of 520 tasks.
 
 In Experiment 5 we fix the number of instances of the ESMACS protocols to 16
 and vary the amount of resources between 3200, 6400 and 12800 cores. In this
@@ -1050,20 +1050,21 @@ way, we obtain the same number of generations as in Experiment 4.
 Fig.~\ref{fig:ss} shows a linear speedup in Total Task Execution Time for
 both experiments, proportional to the increase in the number of cores. The
 availability of more resources for a fixed number of protocols explains this
-behavior. All overheads remain constant for both experiments when increasing
-the number of cores. The scheduling of the number of tasks as opposed to the
-amount of resources, is the main driver of the fixed runtime overheads,
-namely EnTK and RP. This is confirmed for RP in Ref.~\cite{merzky2018}.
+behavior. Overheads remain essentially constant for both experiments when
+increasing the number of cores. The scheduling of the number of tasks, as
+opposed to the amount of resources, is the main driver of EnTK and RP
+overheads (Ref.~\cite{merzky2018}).
 
 \begin{figure}
   \centering
    \includegraphics[width=\columnwidth]{figures/ss_all_base2.pdf} 
-   \caption{Strong scaling properties of HTBAC. We investigate the strong
-    scaling of HTBAC by fixing the number of protocol instance and increasing
-    the number of cores. Overheads of HTBAC, EnTK + RP and \texttt{aprun},
-    and Task Execution Time as a function of (a) TIES protocol (Experiment 4)
-    and ESMACS protocol (Experiment 5). We ran 3 trials for each
-    experiment.}\label{fig:ss}
+   \caption{Strong scaling of HTBAC. The number of protocol instances is
+    fixed while the number of core increases. Task Execution Time with and
+    HTBAC, EnTK+RP, \texttt{aprun} overheads with (a) TIES (Experiment 4) and
+    ESMACS (Experiment 5).}\label{fig:ss}
+\up{}
+\up{}
+\up{}
 \end{figure}
 
 % \jdnote{this statement is now inconsistent with the performance
@@ -1152,24 +1153,26 @@ namely EnTK and RP. This is confirmed for RP in Ref.~\cite{merzky2018}.
 In order to validate the correctness of the results produced in Experiment
 1--5, using HTBAC and the BRD4-GSK physical systems, we compare our results
 with those previously published in Wan et al.~\cite{Wan2017brd4}. In this
-way, we can confirm that our implementation of the TIES and ESMACS protocols
-calculate the correct binding free energies values.\mtnote{NOTE: ESMACS protocol validation is still missing, Kristof is working on it.}
+way, we can confirm that we calculated the correct binding free energies
+values.
+% \mtnote{NOTE: ESMACS protocol validation is still missing, Kristof is
+% working on it.}
 
-We validated our implementation of the TIES protocol selecting a subset of
-the protein ligand systems used in Wan et al.~\cite{Wan2017brd4}: ligand
-transformations 3 to 1, 4, and 7. We then performed a full simulation on all
-3 systems and calculated the binding affinity using HTBAC.
+We validated our implementation % of the TIES protocol 
+selecting a subset of the protein ligand systems used in Wan et
+al.~\cite{Wan2017brd4}: ligand transformations 3 to 1, 4, and 7. We then
+performed a full simulation on all 3 systems and calculated the binding
+affinity using HTBAC.
 
 The results of our experiments, collected in Table~\ref{tab:exp2}, show that
 all three $\Delta \Delta$G values are within error bars of the original
-study, validating the results we produced with HTBAC and our implementation
-of the TIES protocol.
+study, validating the results we produced with HTBAC.
+% and our implementation of the TIES protocol.
 
 \begin{table}
   \centering
-  \caption{Comparison of the calculated binding free energies using htbac,
-  from the original study by Wan et al., and experimental
-  data}\label{tab:exp2}  
+  \caption{Validation of HTBAC results against published and experimental
+  values}\label{tab:exp2}  
   % \begin{tabular}{l@{\hskip 1in}r@{\hskip 0.2in}r@{\hskip 0.2in}r}
   \begin{tabular}{lrrr}
     \toprule
@@ -1180,6 +1183,9 @@ of the TIES protocol.
     BRD4 \textbf{3 to 7} & \num{-0.88 +- 0.17} &  \num{-0.90 +- 0.08} & \num{-1.3 +- 0.11} \\
     \bottomrule
   \end{tabular}
+\up{}
+\up{}
+\up{}
 \end{table}
 
 % HTBAC automates the process of calculating the binding affinity of
