@@ -1,22 +1,3 @@
-% \textbf{Start with importance of binding free energy for drug design}
-
-% Drug discovery and design is immensely expensive with one study putting the
-% current cost of each new therapeutic molecule that reaches the clinic at
-% US\$1.8 billion~\cite{Paul2010}. Furthermore, the basic premise of one-size-
-% fits-all treatments has been eroded by the need for personalized treatment
-% regimes. Computational approaches, specifically binding free energy
-% calculations which rely on physics-based molecular dynamics simulations (MD),
-% support a better understanding of structure-based drug design at a vastly
-% reduced cost compared to wet lab alternatives. \jhanote{Dave/Kristof: Please
-% correct me, but I dojn't think this claim is correct. The claim that is
-% correct is that some computational approaches have been shown to be as
-% accurate as experiments.?}
-
-
-% A diversity of methodologies have been developed to calculate binding
-% affinities~\cite{Mobley2012} and blind tests show that many have
-% considerable predictive potential~\cite{Mey2017,Yin2017}. 
-
 Drug discovery and design is immensely expensive with one study putting the
 current cost of each new therapeutic molecule that reaches the clinic at
 US\$1.8 billion~\cite{Paul2010}. A diversity of computational approaches,
@@ -28,6 +9,120 @@ that claim accuracy of below 1 kcal mol$^{-1}$~\cite{Wang2015} has led to
 increased interest from the pharmaceutical industry~\cite{Ganesan2017} in
 designing computational drug campaigns.
 
+These improvements can be attributed to many advances in methodologies and
+hardware. Specifically, ensemble-based binding free energy calculations,
+which favor many shorter simulation trajectories over few longer simulations
+have been shown to increase sampling efficiency whilst also reducing time to
+insight.\jhanote{reference needed. Please do not use self reference. We have
+14 self-references out of 33.} For binding affinity calculations to gain
+traction, they must have well-defined uncertainty and consistently produce
+statistically meaningful results.
+
+Computational drug campaigns rely on rapid screening of millions of
+compounds, which start with an initial screening of candidate compounds to
+filter out the ineffective binders before using more sensitive methods to
+refine the structure of promising candidates. Two  prominent ensemble-based
+free energy protocols, ESMACS and TIES~\cite{Bhati2017}, have demonstrated
+the  ability to consistently filter and refine the drug design process. The
+ESMACS  (enhanced sampling of molecular dynamics with approximation of
+continuum solvent) protocol provides an ``approximate'' endpoint method used
+to screen out poor binders. The TIES protocol (thermodynamic integration with
+enhanced sampling) uses a more rigorous ``alchemical'' thermodynamic
+integration approach. These protocols have demonstrated statistically
+meaningful results for industrial computational drug
+campaign\cite{Wan2017brd4}.
+
+Most computational campaigns focus on the utilization of core hours, using
+fire-and-forget executions, but not many try to use these core-hours
+effectively. As drug screening campaigns can cover millions of compounds and
+hundreds of millions of core-hours, it is important that these binding
+affinity calculations be effective and optimize the accuracy and precision of
+results obtained from a given set of resources. This is challenging as, by
+definition, drug discovery involves screening compounds that are highly
+varied and potentially unique in their chemical properties. The variability
+in the drug candidate chemistry results in divergent sampling behavior that
+increases the statistical uncertainty of binding free energy predictions,
+making convergence unpredictable. Further, a particular difficulty comes from
+the fact that not all changes induced in protein shape or behavior are local
+to the drug binding site and, in some cases, simulation protocols will need
+to adjust to account for complex interactions between drugs and their targets
+within individual studies.
+
+Traditionally, simulation protocols have been deployed with the worst case
+scenario in mind and with sufficient sampling conducted to account for the
+slowest convergence previously encountered. This approach has at least two
+shortcomings: it wastes valuable resource allocation and fails to account
+for the different value of the simulations results. For example, in a drug
+campaign it is more important to understand how strong the binding of the
+best compound candidates is than precisely knowing how weak the interactions
+of the worst compound is.
+
+Key to successful campaigns is identifying when small chemical changes result
+in large changes in binding strength. This can mean that the parameters which
+are important to campaign evolve as the study progresses. Here we show how
+adaptive approaches within ensemble-based free energy protocols can be
+designed to capture unique chemical properties and thereby customize the
+simulations for a candidate to make the most effective use of computational
+resources, delivering better fidelity of statistical uncertainties than
+general approaches.
+
+Implementation of adaptive algorithms on high performance computers (HPC)
+require runtime systems that support adaptivity, i.e., provide the ability to
+make runtime decisions based on intermediate results and can manage resources
+efficiently. To achieve scalability and efficiency, such adaptivity cannot be
+performed via user intervention and hence automation of the control logic and
+execution is important. We have developed the High-Throughput Binding
+Affinity Calculator (HTBAC) to enable the scalable execution of adaptive
+algorithms.
+
+This paper identifies the challenge in advancing adaptive algorithms and
+methodologies.\jhanote{We do not identify the challenge of advancing
+adaptive algorithms. Thus I have removed it from a main contribution, so as
+to not dilute the real contributions. If you can point me to sections where
+challenges of advancing adaptive algorithms is discussed I would be glad to
+revise.} It makes three main contributions: (1) shows the importance of using
+adaptive approaches within ensemble-based free energy protocols to improve
+binding affinity accuracy given a fixed amount of computing resources; (2)
+presents and characterizes HTBAC, a software system that enables the scalable
+execution of adaptive applications; and (3) shows the capability to execute
+adaptive applications at scale, validating their scientific results.
+%
+\jhanote{I refrain from using tool because of connotation of end-user. One
+day HTBAC maybe non-end user middleware.... thus the term software system, as
+opposed to software tool.}
+
+This paper is organized as follows: Section~\ref{sec:science-drivers}
+introduces ESMACS and TIES, two ensemble-based free energy protocols, arguing
+how implementing adaptive methodology within TIES could achieve higher
+precision with limited resources. Section~\ref{sec:related-work} describes
+the motivation for ensemble-based approaches and existing solutions alongside
+the limitations in their ability to support adaptive methods.
+Section~\ref{sec:htbac} describes the design and implementation of HTBAC and
+in and Section~\ref{sec:implementation_htbac} we show how we used HTBAC to
+implement ESMACS and an adaptive and nonadaptive version of TIES. In
+Section~\ref{sec:experiments} we present experiments we performed with HTBAC
+to characterize its scalability and overheads, and showing that given a fixed
+amount of computing resources, we can achieve better accuracy and hence
+better time to solution using adaptive simulation approaches.
+
+% \textbf{Start with importance of binding free energy for drug design}
+
+% Drug discovery and design is immensely expensive with one study putting the
+% current cost of each new therapeutic molecule that reaches the clinic at
+% US\$1.8 billion~\cite{Paul2010}. Furthermore, the basic premise of
+% one-size- fits-all treatments has been eroded by the need for personalized
+% treatment regimes. Computational approaches, specifically binding free
+% energy calculations which rely on physics-based molecular dynamics
+% simulations (MD), support a better understanding of structure-based drug
+% design at a vastly reduced cost compared to wet lab alternatives.
+% \jhanote{Dave/Kristof: Please correct me, but I dojn't think this claim is
+% correct. The claim that is correct is that some computational approaches
+% have been shown to be as accurate as experiments.?}
+
+% A diversity of methodologies have been developed to calculate binding
+% affinities~\cite{Mobley2012} and blind tests show that many have
+% considerable predictive potential~\cite{Mey2017,Yin2017}. 
+
 % The same technologies have also shown promise in analysing the influence of
 % protein mutations on drug binding~\cite{Mondal2016, Bunney2015}. These
 % developments have also spurred renewed interest in the factors affecting
@@ -37,34 +132,11 @@ designing computational drug campaigns.
 % This means that that such approaches are becoming a viable alternative to
 % expensive experimental screening programs. 
 
-These improvements can be attributed to many advances in methodologies, as
-well as enhancements in hardware. Specifically, ensemble-based binding free
-energy calculations, which favor many shorter simulation trajectories over few
-longer simulations have been shown to increase sampling efficiency whilst also
-reducing time to insight. \jhanote{reference needed. Please do not use self
-reference. we have 14 self-references out of 33.} For binding affinity
-calculations to gain traction, they must have well-defined uncertainty and
-consistently produce statistically meaningful results.
-
-% The same techniques are also applicable to gaining clinical insight into the
-% influence of individual patients genetic sequence on drug efficacy in the
-% context of clinical decision support.
-
+% The same techniques are also applicable to gaining clinical insight into
+% the influence of individual patients genetic sequence on drug efficacy in
+% the context of clinical decision support.
 
 % \textbf{2 prominent free energy protocols}
-
-Computational drug campaigns rely on rapid screening of millions of compounds,
-which start with an initial screening of candidate compounds to filter out the
-ineffective binders before using more sensitive methods to refine the
-structure of promising candidates. Two  prominent ensemble-based  free energy
-protocols, ESMACS and TIES~\cite{Bhati2017}, have demonstrated the  ability to
-consistently filter and refine the drug design process. The ESMACS  (enhanced
-sampling of molecular dynamics with approximation of continuum solvent)
-protocol provides an ``approximate'' endpoint method used to screen out poor
-binders. The TIES protocol (thermodynamic integration with enhanced sampling)
-uses a more rigorous ``alchemical'' thermodynamic integration approach. These
-protocols have demonstrated statistically meaningful results for industrial
-computational drug campaign\cite{Wan2017brd4}.
 
 % \jdnote{maybe this requires a citation from UCL?}\mtnote{agreed}\kfnote{our
 % collab with gsk on this is a good citation? industry + free energy methods}
@@ -75,7 +147,6 @@ computational drug campaign\cite{Wan2017brd4}.
 % Scalable simulation computing approaches such as ensemble-based free energy
 % protocols in drug campaigns are utilizing a growing number of compute
 % resources by scaling the number of parallel simulations they execute.
-
 
 % effectiveness is vital for the uptake of
 % binding affinity calculations in industrial and clinical settings.
@@ -94,44 +165,10 @@ computational drug campaign\cite{Wan2017brd4}.
 % \textbf{In order to do so requires advances in methods and resource
 % efficiency}
 
-Most computational campaigns focus on the utilization of core hours, using
-fire-and-forget executions, but not many try to use these core-hours
-effectively. As drug screening campaigns can cover millions of compounds and
-hundreds of millions of core-hours, it is important that these binding
-affinity calculations be effective and optimize the accuracy and precision of
-results obtained from a given set of resources. This is challenging as, by
-definition, drug discovery involves screening compounds that are highly varied
-and potentially unique in their chemical properties. The variability in the
-drug candidate chemistry results in divergent sampling behavior that increases
-the statistical uncertainty of binding free energy predictions, making
-convergence unpredictable. Further, a particular difficulty comes from the
-fact that not all changes induced in protein shape or behavior are local to
-the drug binding site and, in some cases, simulation protocols will need to
-adjust to account for complex interactions between drugs and their targets
-within individual studies.
-
-Traditionally, simulation protocols have been deployed with the worst case
-scenario in mind and with sufficient sampling conducted to account for the
-slowest convergence previously encountered. This approach has at least two
-shortcomings: it wastes valuable resource allocation and fails to account
-for the different value of the simulations results. For example, in a drug
-campaign it is more important to understand how strong the binding of the
-best compound candidates is than precisely knowing how weak the interactions
-of the worst compound is.
-
 % time. This approach also fails to account for the different value provided
 % by each of results, e.g., it is less important to know precisely how weak
 % the interactions of the worst compound is compared to how strong the
 % binding is of the top candidates.
-
-Key to successful campaigns is identifying when small chemical changes
-result in large changes in binding strength. This can mean that the
-parameters which are important to campaign evolve as the study progresses.
-Here we show how adaptive approaches within ensemble-based free energy
-protocols can be designed to capture unique chemical properties and thereby
-customize the simulations for a candidate in a way that makes the most
-effective use of computational resources to deliver better fidelity of
-statistical uncertainties than general approaches.
 
 % Advanced methodologies can capture complexities in simulations for a given
 % compound, however they rely on learning the positions of simulations during
@@ -164,49 +201,9 @@ statistical uncertainties than general approaches.
 % Software tools that leverage scalable execution of adaptive algorithms are
 % currently in demand for supporting efficient drug campaigns. 
 
-Implementation of adaptive algorithms on high performance computers (HPC)
-require runtime systems that support adaptivity, i.e., provide the ability to
-make runtime decisions based on intermediate results and can manage resources
-efficiently. To achieve scalability and efficiency, such adaptivity cannot be
-performed via user intervention and hence automation of the control logic and
-execution is important. We have developed the High-Throughput Binding Affinity
-Calculator (HTBAC) to enable the scalable execution of adaptive algorithms.
-
 % Leveraging ensemble-based simulations, we can now explore new adaptive
 % sampling schemes can improve sampling quality of ligand binding affinity of
 % individual drug candidates
 
 % \textbf{Different adaptivity schemas exist, highlight intra-protocol
 % adaptivity but other forms of adaptivity exist}
-
-This paper identifies the challenge in advancing adaptive algorithms and
-methodologies. \jhanote{We do not identify the challenge of advancing adaptive
-algorithms. Thus I have removed it from a main contribution, so as to not
-dilute the real contributions. If you can point me to sections where
-challenges of advancing adaptive algorithms is discussed I would be glad to
-revise.} It makes three main contributions: (1) shows the importance of using
-adaptive approaches within ensemble-based free energy protocols to improve
-binding affinity accuracy given a fixed amount of computing resources; (2)
-presents and characterizes HTBAC, a software system that enables the scalable
-execution of adaptive applications; and (3) shows the capability to execute
-adaptive applications at scale, validating their scientific results.
-
-\jhanote{I refrain from using tool because of connotation of end-user. One day
-HTBAC maybe non-end user middleware.... thus the term software system, as opposed
-to software tool.}
-
-
-
-This paper is organized as follows: Section~\ref{sec:science-drivers}
-introduces ESMACS and TIES, two ensemble-based free energy protocols, arguing
-how implementing adaptive methodology within TIES could achieve higher
-precision with limited resources. Section~\ref{sec:related-work} describes
-the motivation for ensemble-based approaches and existing solutions alongside
-the limitations in their ability to support adaptive methods.
-Section~\ref{sec:htbac} describes the design and implementation of HTBAC and
-in and Section~\ref{sec:implementation_htbac} we show how we used HTBAC to
-implement ESMACS and an adaptive and nonadaptive version of TIES. In
-Section~\ref{sec:experiments} we present experiments we performed with HTBAC
-to characterize its scalability and overheads, and showing that given a fixed
-amount of computing resources, we can achieve better accuracy and hence
-better time to solution using adaptive simulation approaches.
