@@ -1365,7 +1365,7 @@ increased by \SI{40}{\percent}.
 
 \begin{table*}
   \caption{Comparing results of adaptive, non-adaptive and reference
-  runs}\label{tab:adapquad}
+  runs.}\label{tab:adapquad}
   \begin{tabular}{lSSSSS[table-format=5.1]S[table-format=5.1]}
     \toprule
     {System}                               & 
@@ -1423,8 +1423,9 @@ increased by \SI{40}{\percent}.
 % iteration count? Needs complete rewrite.} \kfnote{rewrote}
 Figure~\ref{fig:adapconv} compares the error on the adaptive and non-adaptive
 simulations as a time series plot. As fewer lambda windows are calculated the
-adaptive algorithm uses less resources. Still, the error is drastically
-reduced as the windows are places ideally to capture the changes in function.
+adaptive algorithm uses less resources. Remarkably, the error is drastically
+reduced as the windows are placed adaptively to capture the changes in
+function.
 
 \begin{figure}
   \input{figures/fig-adapt.tex}
@@ -1443,7 +1444,7 @@ Adaptive quadrature is specific to alchemical free energy calculations.
 offers dynamic termination for any simulation protocol that has as its aim
 the prediction of an observable value. The protocol monitors the convergence
 of the observable as the simulation progresses, and stops the execution when
-a criterion has been met. Non- adaptive protocols usually have a predefined
+a criterion has been met. Non-adaptive protocols usually have a predefined
 simulation time, set based on the assumption that the simulation will
 converge by that time. This means that in practical examples the simulation
 might have converged before the predefined time interval.
@@ -1469,14 +1470,14 @@ on average by \SI{16}{\percent} for the physical systems tested.
   (hence simulation time). The adaptive termination algorithm checks the
   convergence of the observable every $\tau = \SI{0.5}{\nano\second}$ and if
   the threshold (\SI{0.01}{\kilo\calorie\per\mole}) has been met, terminates
-  the simulation. \jhanote{Reviwer will want to know what happens with
-  remaining two candidates?}\kfnote{Results are in the table for all the
-  systems.}}\label{fig:termination}
+  the simulation.}\label{fig:termination}
 \end{figure}
 
 \begin{table}
   \caption{Simulation time of non-adaptive and adaptively terminated runs for
-  a given convergence criterion.}\label{tab:adapterm}
+  a given convergence criterion.\jhanote{Reviwer will want to know what happens with
+  remaining two candidates?}\kfnote{Results are in the table for all the
+  systems.}\jhanote{Sorry wrong caption. Moved to table IV.}}\label{tab:adapterm}
   \centering
   \begin{tabular}{lSSS[table-format=5.1, table-column-width=2cm]}
     \toprule
