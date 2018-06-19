@@ -1356,11 +1356,11 @@ importantly, the error on all of the systems are reduced to below
 upper bound of reproducibility across different simulation
 engines~\cite{Loeffler2018}.
 
-The Total Task Execution Time of the TYK2 L7-L8 system has increased for the
-adaptive run by 1 $\lambda$ window compared to the non-adaptive case. This is
-due to the non-adaptive error being very low, and matching that same accuracy
-required in the use of a large number of windows. Nonetheless due to the
-efficient placing of the windows, the accuracy of the free energy still
+The Total Task Execution Time of the TYK2 L7--L8 system has increased for the
+adaptive run by 1 $\lambda$ window, compared to the non-adaptive case. This
+is due to the non-adaptive error being very low, and matching that same
+accuracy required in the use of a large number of windows. Nonetheless due to
+the efficient placing of the windows, the accuracy of the free energy still
 increased by \SI{40}{\percent}.
 
 \begin{table*}
@@ -1429,10 +1429,9 @@ reduced as the windows are places ideally to capture the changes in function.
 \begin{figure}
   \input{figures/fig-adapt.tex}
   \caption{Plot of the error estimate as a function of the resource
-  consumption comparing the adaptive and nonadaptive simulations. While the
-  error estimate converges for both simulations, the adaptive simulation
-  places the lambda windows in such a way that the error is considerably
-  lowered. This is a plot for one of the systems.}\label{fig:adapconv}
+  consumption, comparing the adaptive and nonadaptive simulations. The error
+  estimate converges for both simulations but the window placement of the
+  adaptive simulation considerably lowered the error.}\label{fig:adapconv}
 \up{}
 \up{}
 \end{figure}
