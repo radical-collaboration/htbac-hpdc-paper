@@ -1274,50 +1274,52 @@ study, validating the results we produced with HTBAC.
 \subsection{Adaptive Experiments}
 
 % \jhanote{On looking at this afresh, this whole paragraph should either be
-% zapped for it does not belong here but in an earlier section} \sout{Even at small
-% scale it is hard to implement adaptive al- gorithms that use common molecular
-% dynamics simulations engines (e.g., NAMD, Gromacs, Amber). This is in part
-% because of the way the scientist interacts with these codes. The user hand-
-% writes a configuration file and, together with the physical system description
-% (topology, PDB), passes it to a binary executable, waiting for the simulation
-% to end before analyzing the results. There is a disconnect between running the
-% simulation and analysis, i.e. the intermediate results have no influence over
-% the simulation parameters \emph{after} it has been started. Therefore, certain
-% decisions, like number of time steps, $\lambda$ window placement have to be
-% made \emph{a priori}, and the continuous accumulation of results can, by
-% definition, have no effect of these parameters.}
+% zapped for it does not belong here but in an earlier section} \sout{Even at
+% small scale it is hard to implement adaptive al- gorithms that use common
+% molecular dynamics simulations engines (e.g., NAMD, Gromacs, Amber). This
+% is in part because of the way the scientist interacts with these codes. The
+% user hand- writes a configuration file and, together with the physical
+% system description (topology, PDB), passes it to a binary executable,
+% waiting for the simulation to end before analyzing the results. There is a
+% disconnect between running the simulation and analysis, i.e. the
+% intermediate results have no influence over the simulation parameters
+% \emph{after} it has been started. Therefore, certain decisions, like number
+% of time steps, $\lambda$ window placement have to be made \emph{a priori},
+% and the continuous accumulation of results can, by definition, have no
+% effect of these parameters.}
 
-% \jhanote{This discussion needs more care: adaptive algorithms are difficult to
-% implement at scale. That is why we have fewer adaptive algorithms than one might
-% suspect. The opening line says the cause of the lack of adaptivity is  the way
-% they are implemented.}\kfnote{I was trying to describe this smaller problem, not
-% related to scale, just adaptivity. I modified the sentence to reflect this.}
+% \jhanote{This discussion needs more care: adaptive algorithms are difficult
+% to implement at scale. That is why we have fewer adaptive algorithms than
+% one might suspect. The opening line says the cause of the lack of
+% adaptivity is  the way they are implemented.}\kfnote{I was trying to
+% describe this smaller problem, not related to scale, just adaptivity. I
+% modified the sentence to reflect this.}
 
 The design of HTBAC permits enhancing protocols while continuing to use
-"static" simulation engines. To this end we implemented two adaptive methods
-using HTBAC: adaptive quadrature and adaptive termination. Both of these
-methods use the features of adaptivity offered in HTBAC to scale to large
-number of concurrent simulations and to increase convergence rate and obtain
-more accurate scientific results.
+``static'' simulation engines. To this end, we implemented two adaptive
+methods using HTBAC: adaptive quadrature and adaptive termination. Both of
+these methods use the features of adaptivity offered in HTBAC to scale to
+large number of concurrent simulations and to increase convergence rate and
+obtain more accurate scientific results.
 
-% \jhanote{Once again, we need to be careful: there is conflation between cause
-% and effect. Adatpvitiy is not a principle in of itself so has not intrinsic
-% value standalone. what is important is faster convergence and more accurate
-% results. adaptivity is one route to obtain them. The way the previous sentence
-% is written conflates effect with driver.}\kfnote{Rephrased to reflect this.}
+% \jhanote{Once again, we need to be careful: there is conflation between
+% cause and effect. Adatpvitiy is not a principle in of itself so has not
+% intrinsic value standalone. what is important is faster convergence and
+% more accurate results. adaptivity is one route to obtain them. The way the
+% previous sentence is written conflates effect with
+% driver.}\kfnote{Rephrased to reflect this.}
 
-\jhanote{adaptive quadrature is
-raised several times it isn't describe anywhere}\kfnote{it is in previous
-sections, no?}\jhanote{Its probably fine. A picky reviewer will complain that
-we talk about how it is used, but not why it is used? Or which type of 
-adaptive quadrature}
+% \jhanote{adaptive quadrature is raised several times it isn't describe
+% anywhere}\kfnote{it is in previous sections, no?}\jhanote{Its probably
+% fine. A picky reviewer will complain that we talk about how it is used, but
+% not why it is used? Or which type of adaptive quadrature}
 
 The aim of introducing adaptive quadrature for alchemical free energy
-calculation protocols (e.g. TIES) is to reduce time to completion while
-maintaining (or increasing) the accuracy of the results. Time to completion is
-measured by the number of core hours consumed by the simulations. Accuracy is
-defined as the error with respect to a reference value, calculated via a dense
-$\lambda$ window spacing (65 windows). This reference value is used to
+calculation protocols (e.g., TIES) is to reduce time to completion while
+maintaining (or increasing) the accuracy of the results. Time to completion
+is measured by the number of core hours consumed by the simulations. Accuracy
+is defined as the error with respect to a reference value, calculated via a
+dense $\lambda$ window spacing (65 windows). This reference value is used to
 establish the accuracy of the non-adaptive protocol (which has 13 $\lambda$
 windows) and the adaptive protocol (which has a variable number of $\lambda$
 windows, determined at run time).
@@ -1331,28 +1333,28 @@ windows constrained by the accuracy requirement.
 \begin{figure}
   \input{figures/fig-savings.tex}%
   \caption{Quantifying the benefits of the adaptive quadrature simulations.
-  (top) The error of the adaptive run is reduced for all 5 test systems
-  sometimes by a s significant amount. Recently \cite{Loeffler2018} it has been
-  shown that reproducibility of free energy calculations can be achieved up to
-  \SI{0.2}{\kilo\calorie\per\mole}. The adaptive algorithm brings down the error
-  of the non-adaptive simulations below this threshold, ensuring that results
-  and also reproducible. (bottom) Resource consumption is also reduced, except
-  for one of the systems, where the low error threshold required more $\lambda$
-  windows to fulfill.}
-  \label{fig:savings}
+  (top) The error of the adaptive run is reduced for all 5 test systems,
+  sometimes by a significant amount. It has been shown that reproducibility
+  of free energy calculations can be achieved up to
+  \SI{0.2}{\kilo\calorie\per\mole}~\cite{Loeffler2018}. The adaptive
+  algorithm brings down the error of the nonadaptive simulations below this
+  threshold, ensuring that results are also reproducible. (bottom) Resource
+  consumption is reduced, except for one of the systems, where the low error
+  threshold required more $\lambda$ windows.}\label{fig:savings}
+\up{}
+\up{}
 \end{figure}
 
-
-Table~\ref{tab:adapquad} shows the results of running adaptive quadrature on 5
-protein ligand systems, comparing the Total Task Execution Time and accuracy
-versus the non-adaptive case. The number of lambda windows are reduced on
-average by \SI{32}{\percent}, hence reducing Total Task Execution Time by the
-same amount. The error on the adaptive results is also decreased, on average by
-\SI{77}{\percent} (see figure~\ref{fig:savings}). More importantly, the error on
-all of the systems are reduced to below \SI{0.2}{\kilo\calorie\per\mole}, which
-has recently been shown to be the upper bound of reproducibility across
-different simulation engines~\cite{Loeffler2018}.
-
+Table~\ref{tab:adapquad} shows the results of running adaptive quadrature on
+5 protein ligand systems, comparing the Total Task Execution Time and
+accuracy versus the non-adaptive case. The number of lambda windows are
+reduced on average by \SI{32}{\percent}, hence reducing Total Task Execution
+Time by the same amount. The error on the adaptive results is also decreased,
+on average by \SI{77}{\percent} (see figure~\ref{fig:savings}). More
+importantly, the error on all of the systems are reduced to below
+\SI{0.2}{\kilo\calorie\per\mole}, which has recently been shown to be the
+upper bound of reproducibility across different simulation
+engines~\cite{Loeffler2018}.
 
 The Total Task Execution Time of the TYK2 L7-L8 system has increased for the
 adaptive run by 1 $\lambda$ window compared to the non-adaptive case. This is
@@ -1362,8 +1364,8 @@ efficient placing of the windows, the accuracy of the free energy still
 increased by \SI{40}{\percent}.
 
 \begin{table*}
-  \caption{Comparing results of adaptive, non-adaptive and reference runs}
-  \label{tab:adapquad}
+  \caption{Comparing results of adaptive, non-adaptive and reference
+  runs}\label{tab:adapquad}
   \begin{tabular}{lSSSSS[table-format=5.1]S[table-format=5.1]}
     \toprule
     {System}                               & 
@@ -1414,13 +1416,15 @@ increased by \SI{40}{\percent}.
     -8\si{\percent} & 
     40\si{\percent} \\
     \bottomrule 
-    
   \end{tabular}
 \end{table*}
 
-\jhanote{This para is difficult to parse. How does one appreciate the
-iteration count? Needs complete rewrite.} \kfnote{rewrote}
-Figure~\ref{fig:adapconv} compares the error on the adaptive and non-adaptive simulations as a time series plot. As fewer lambda windows are calculated the adaptive algorithm uses less resources. Still, the error is drastically reduced as the windows are places ideally to capture the changes in function. 
+% \jhanote{This para is difficult to parse. How does one appreciate the
+% iteration count? Needs complete rewrite.} \kfnote{rewrote}
+Figure~\ref{fig:adapconv} compares the error on the adaptive and non-adaptive
+simulations as a time series plot. As fewer lambda windows are calculated the
+adaptive algorithm uses less resources. Still, the error is drastically
+reduced as the windows are places ideally to capture the changes in function.
 
 \begin{figure}
   \input{figures/fig-adapt.tex}
@@ -1428,54 +1432,52 @@ Figure~\ref{fig:adapconv} compares the error on the adaptive and non-adaptive si
   consumption comparing the adaptive and nonadaptive simulations. While the
   error estimate converges for both simulations, the adaptive simulation
   places the lambda windows in such a way that the error is considerably
-  lowered. This is a plot for one of the systems.}
-\label{fig:adapconv}
+  lowered. This is a plot for one of the systems.}\label{fig:adapconv}
+\up{}
+\up{}
 \end{figure}
 
-
-
+% \jhanote{I would not use ``protocol''} \kfnote{method?}
 
 Adaptive quadrature is specific to alchemical free energy calculations.
-\emph{Adaptive termination}, the second adaptive \jhanote{I would not use
-"protocol" } \kfnote{method?} method implemented in HTBAC, offers dynamic termination for any
-simulation protocol that has as its aim the prediction of an observable value.
-The protocol monitors the convergence of the observable as the simulation
-progresses, and stops the execution when a criterion has been met. Non-
-adaptive protocols usually have a predefined simulation time, set based on the
-assumption that the simulation will converge by that time. This means that in
-practical examples the simulation might have converged before the predefined
-time interval.
-
+\emph{Adaptive termination}, the second adaptive method implemented in HTBAC,
+offers dynamic termination for any simulation protocol that has as its aim
+the prediction of an observable value. The protocol monitors the convergence
+of the observable as the simulation progresses, and stops the execution when
+a criterion has been met. Non- adaptive protocols usually have a predefined
+simulation time, set based on the assumption that the simulation will
+converge by that time. This means that in practical examples the simulation
+might have converged before the predefined time interval.
 
 In the original TIES protocol the production part of the simulation has to be
 run for \SI{4}{\nano\second} and the results are analyzed thereafter. This
-assumes that all systems need this simulation time for the results to converge.
-In reality, certain systems could converge faster, therefore one can terminate
-the simulation before the static \SI{4}{\nano\second} end. This would lead to
-faster time to insight and less compute resources consumed. Adaptive termination
-was implemented in HTBAC by having a checkpoint every $\tau =
-\SI{0.5}{\nano\second}$ in the simulation. Fig.~\ref{fig:termination} shows
-how the observable for a specific simulation changes as a function of resource
-consumption. At every checkpoint the convergence is evaluated, and the
-simulation is indeed terminated earlier than the non-adaptive protocol would
-suggest. Table~\ref{tab:adapterm} shows results that the adaptively terminated
-TIES protocol saves compute resources and reduces time to insight on average by
-\SI{16}{\percent} for the physical systems tested.
+assumes that all systems need this simulation time for the results to
+converge. In reality, certain systems could converge faster, therefore one
+can terminate the simulation before the static \SI{4}{\nano\second} end. This
+would lead to faster time to insight and less compute resources consumed.
+Adaptive termination was implemented in HTBAC by having a checkpoint every
+$\tau = \SI{0.5}{\nano\second}$ in the simulation. Fig.~\ref{fig:termination}
+shows how the observable for a specific simulation changes as a function of
+resource consumption. At every checkpoint the convergence is evaluated, and
+the simulation is indeed terminated earlier than the non-adaptive protocol
+would suggest. Table~\ref{tab:adapterm} shows results that the adaptively
+terminated TIES protocol saves compute resources and reduces time to insight
+on average by \SI{16}{\percent} for the physical systems tested.
 
 \begin{figure}
   \input{figures/fig-term.tex}
   \caption{Plot of the free energy as a function of the resources consumed
   (hence simulation time). The adaptive termination algorithm checks the
   convergence of the observable every $\tau = \SI{0.5}{\nano\second}$ and if
-  the threshold (\SI{0.01}{\kilo\calorie\per\mole}) has been met, terminates the
-  simulation. \jhanote{Reviwer will want to know what happens with remaining two candidates?}\kfnote{Results are in the table for all the systems.}}
-  \label{fig:termination}
+  the threshold (\SI{0.01}{\kilo\calorie\per\mole}) has been met, terminates
+  the simulation. \jhanote{Reviwer will want to know what happens with
+  remaining two candidates?}\kfnote{Results are in the table for all the
+  systems.}}\label{fig:termination}
 \end{figure}
 
 \begin{table}
   \caption{Simulation time of non-adaptive and adaptively terminated runs for
-  a given convergence criterion.}
-  \label{tab:adapterm}
+  a given convergence criterion.}\label{tab:adapterm}
   \centering
   \begin{tabular}{lSSS[table-format=5.1, table-column-width=2cm]}
     \toprule
