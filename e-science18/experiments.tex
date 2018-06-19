@@ -1,32 +1,34 @@
-Computational campaigns for drug discovery require sizable compute resources
-both in terms of scale and allocation. Typically, a computational campaign
-explores a large number of drug candidates by running several workflows
-multiple times, each requiring thousands of concurrent simulations. Before
-embarking on a drug campaign that will utilize 150 million core hours on NCSA
-Blue Waters, we perform experiments to characterize the weak and strong
-scaling performance of HTBAC and its overheads on Blue Waters. We validate
-the results of the free energy calculations produced using HTBAC by comparing
-them to results that are already available in referenced literature.
+Typically, a computational campaign for drug discovery explores a large
+number of drug candidates by running several workflows multiple times, each
+requiring thousands of concurrent simulations. Before embarking on a campaign
+that will utilize 150 million core hours on NCSA Blue Waters, we perform
+experiments to characterize the weak and strong scaling performance of HTBAC
+and its overheads on Blue Waters. We validate the results of the free energy
+calculations produced using HTBAC against published results.
 
 Given that protocols like TIES are more computationally demanding than
 protocols like ESMACS, it is paramount to use resource efficiently,
 especially for campaigns that have a predefined computational budget. As
 described in Sections~\ref{sec:science-drivers} and~\ref{sec:htbac}, adaptive
-simulation methods have the potential for higher computational efficiency
-when compared to non-adaptive simulation methods. Specifically, adaptive
-simulation methods can reduce the number of simulations for each lead
-candidate without a loss in free energy accuracy and with a lower
-computational load. Further, given a defined number of resources, adaptive
-methods can also increase computational efficiency by improving the rate of
-statistical convergence and thereby reducing the time to solution.
+simulation methods have the potential to reduce the number of simulations
+without a loss in accuracy and with a lower computational load. We run
+experiments with an adaptive implementation of TIES in HTBAC, measuring the
+benefits in terms of accuracy, reduced number of simulations and
+computational load.
 
-Specifying, coordinating and executing adaptive simulation methods requires
-middleware supporting runtime decisions. As seen in Section~\ref{sec:htbac},
-HTBAC has been designed to enable decisions based on intermediate runtime
-results. These results are evaluated to determine a redistribution of
-resource to better support the execution of new simulations. We use HTBAC to
-perform experiments about adaptivity, comparing and characterizing resource
-efficiency with non-adaptive simulation methods.
+% Further, adaptive methods can also increase computational efficiency by
+% improving the rate of statistical convergence and thereby reducing the time
+% to solution.
+
+% Specifying, coordinating and executing adaptive simulation methods requires
+% middleware supporting runtime decisions.
+
+% As seen in \S\ref{sec:htbac}, HTBAC has been designed to enable decisions
+% based on intermediate runtime results. These results are evaluated to
+% determine a redistribution of resource to better support the execution of
+% new simulations. We use HTBAC to perform experiments about adaptivity,
+% comparing and characterizing resource efficiency with non-adaptive
+% simulation methods.
 
 % - Weak Scalability Design : Keep Pipeline of Ensembles to show barrier
 %   needed in S5 and S6.
@@ -101,14 +103,14 @@ Table~\ref{tab:experiments} shows 7 experiments we designed to characterize
 the behavior of HTBAC on Blue Waters. Each experiment executes the ESMACS
 and/or TIES protocol for different physical systems. Experiments 1--5 use the
 BRD4 physical systems provided by GlaxoSmithKline, while experiments 6 and 7
-utilize the PTP1B, MC1, and TYK2 physical systems which are a diverse set of
-proteins.
+utilize the PTP1B, MC1, and TYK2 physical systems. 
+% which are a diverse set of proteins.
 
 \begin{table*}
-    \caption{Parameters of scalability and adaptivity experiments.}
-    \label{tab:experiments}
+    \caption{Parameters of scalability and adaptivity
+    experiments.}\label{tab:experiments}
     \centering
-    \resizebox{\textwidth}{!}{
+%    \resizebox{\textwidth}{!}{
     \begin{tabular}{l            % Experiment ID
                     l            % experiment type
                     l            % physical system 
@@ -197,25 +199,24 @@ proteins.
     \bottomrule
     %
     \end{tabular}
-    }
+%    }
 \up{}
 \end{table*}
 
-Experiment 1 and 2 measure the weak scalability of HTBAC using multiple
-instances of the ESMACS (Experiment 1) and TIES (Experiment 2) protocol.
-Experiments 3 uses both the TIES and ESMACS protocols, characterizing the
-weak scaling of heterogeneous protocol executions. Experiments 4 and 5
-measure the strong scalability of HTBAC using a fix number of instances of
-the ESMACS (Experiment 4) and TIES (Experiment 5) protocol. Experiments 6 and
-7 characterize nonadaptive and adaptive simulation methods using the TIES
-protocol.
+Experiment 1 and 2 measure the weak scaling of HTBAC using the ESMACS
+(Experiment 1) and TIES (Experiment 2) protocols. Experiments 3 uses both the
+TIES and ESMACS protocols, characterizing the weak scaling of heterogeneous
+protocol executions. Experiments 4 and 5 measure the strong scaling of
+HTBAC using a fix number of instances of the ESMACS (Experiment 4) and TIES
+(Experiment 5) protocols. Experiments 6--8 characterize nonadaptive and
+adaptive simulation methods using the TIES protocol.
 
-We leverage strong scaling to support the objective in this work, which is to
-characterize: (a) the time-to-solution differences between adaptive and
-nonadaptive methods; (b) the increase in the number of resources as required
-by the nonadaptive method to reach an acceptable accuracy threshold. As such,
-we do not run an experiment about strong scaling with both the TIES and
-ESMACS protocols.
+% We leverage strong scaling to support the objective in this work, which is
+% to characterize: (a) the time-to-solution differences between adaptive and
+% nonadaptive methods; (b) the increase in the number of resources as
+% required by the nonadaptive method to reach an acceptable accuracy
+% threshold. As such, we do not run an experiment about strong scaling with
+% both the TIES and ESMACS protocols.
 
 In each weak scaling experiment (1--3), we keep the ratio between resources
 allocated and protocol instances constant. Consistently, for each experiment
@@ -235,52 +236,45 @@ and its middleware on the time to completion of each workload.
 
 For weak and strong scaling experiments, we reduced the number of time-steps
 of the protocols and omitted the analysis steps $S5$ and $S6$ of their
-workflows (Figure~\ref{fig:ties_esmacs_application}). These simplifications
+workflows (Fig.~\ref{fig:ties_esmacs_application}). These simplifications
 are consistent with characterizing scalability performance instead of
 simulation duration. For the experiments 1--5 we used the following
 time-steps: $S1=1000$; $S2=5000$; $S3=5000$; and $S4=50000$.
 
 We measure the following durations for Experiments 1--5:
-
 \begin{itemize}
-    \item \textbf{Total Task Execution Time}: Time taken by the
-    aggregate of task executables to run on the computing infrastructure.
-    
-    \item \textbf{HTBAC Overhead}: Time taken to process the application,
-    instantiate HTBAC's components and subcomponents, translate protocols
-    into pipelines for EnTK, and validate resource descriptions.
-    
-    \item \textbf{EnTK and RP Overhead}: Time taken by EnTK and its runtime
-    system (RP) to submit and manage the execution of tasks.
-    
-    \item \textbf{\texttt{aprun} Overhead}: Approximated time taken by 
-    \texttt{aprun} to launch tasks on a set of compute nodes on Blue Waters.
+    \item \textbf{Total Task Execution Time}: Time taken by all the
+    task executables to run on the computing infrastructure.
+    \item \textbf{HTBAC Overhead}: Time taken to instantiate HTBAC, and
+    validate and process the application description.
+    \item \textbf{EnTK and RP Overhead}: Time taken by EnTK and RP to manage
+    the execution of tasks.
+    \item \textbf{\texttt{aprun} Overhead}:  Time taken by \texttt{aprun} to
+    launch tasks on Blue Waters.
 \end{itemize}
 
-Note that once the runtime system relinquishes the control flow to
-\texttt{aprun}, the precise time at which \texttt{aprun} schedules each task
-on a compute node and the MD kernel of each task begins execution cannot be
-measured. Instead, for each task, we measure the difference between the task
-execution time and its \texttt{NAMD} kernel execution time, provided by the
-\texttt{NAMD} output logs. In this way, we approximate the portion of the
-task execution time taken by \texttt{aprun} to launch the task. Once
-aggregated, these measures constitute what we defined as \texttt{aprun}
-Overhead.
+Note that once RP relinquishes the control flow to \texttt{aprun}, the
+precise time at which \texttt{aprun} schedules each task on a compute node
+and the MD kernel of each task begins execution cannot be measured. Instead,
+for each task, we measure the difference between the task execution time and
+its \texttt{NAMD} kernel execution time, provided by the \texttt{NAMD} output
+logs. In this way, we approximate the time taken by \texttt{aprun} to launch
+the task. Once aggregated, these measures constitute what we defined as
+\texttt{aprun} Overhead.
 
-Experiments 6, 7 and 8 compare the accuracy and time to solution of
-nonadaptive and adaptive simulation methods. For the nonadaptive simulation
-method of Experiment 6 we use 13 preassigned and approximated $\lambda$
-windows, consistent with the value reported in Ref.~\cite{Bhati2017}. In this
-way, we produce 65 concurrent simulations for stages $S1$--$S4$ of the TIES
-workflow (see Figure~\ref{fig:ties_esmacs_application}). The production
-simulation stage $S4$ executes each simulation for \SI{4}{\nano\second}.
-Stage $S5$ consists of 5 analysis tasks which aggregate the simulation
-results of $S4$. The global analysis stage $S6$ contains a single task that
-aggregates the results from $S5$.
+Experiments 6--8 compare the accuracy and time to solution of nonadaptive and
+adaptive simulation methods. For the nonadaptive simulation method of
+Experiment 6 we use 13 preassigned and approximated $\lambda$ windows,
+consistent with the value reported in Ref.~\cite{Bhati2017}. In this way, we
+produce 65 concurrent simulations for stages $S1$--$S4$ of TIES (see
+Fig.~\ref{fig:ties_esmacs_application}). The production simulation stage $S4$
+executes each simulation for \SI{4}{\nano\second}. Stage $S5$ has 5 analysis
+tasks which aggregate the simulation results of $S4$. The global analysis
+stage $S6$ has a single task that aggregates the results from $S5$.
 
-In the adaptive workflow~\ref{fig:adaptive_ties}, we initialize the TIES
-protocol with 3 $\lambda$ windows, obtaining 15 replicas. We separate stage
-$S4$ of each TIES replica into 4 sub-stages. Each sub-stage runs a
+In the adaptive implementation~\ref{fig:adaptive_TIES}, we initialize the
+TIES protocol with 3 $\lambda$ windows, obtaining 15 replicas. We separate
+stage $S4$ of each TIES replica into 4 sub-stages. Each sub-stage runs a
 \SI{1}{\nano\second} simulation, followed by an adaptive quadratures analysis
 which estimates free energy errors with respect to each interval of two
 $\lambda$ values.
@@ -290,52 +284,51 @@ $\lambda$ values.
 % differences in time duration between adaptive and non-adaptive methods as
 % well as the differences in accuracy.
 
-To meaningfully compare the adaptive and non-adaptive results, we also ran a
-reference experiment (no. 8), where we used a large number of (65) equally
-spaced $\lambda$ windows to calculate the free energy with high accuracy. This
-is to create a baseline that we can compare the adaptive and non-adaptive
-results to.
+We use Experiment 8 to compare the adaptive and non-adaptive execution of
+TIES. We use a large number of (65) equally spaced $\lambda$ windows to
+calculate the free energy with high accuracy. This creates a baseline
+against which to compare the adaptive and non-adaptive results.
 
 \begin{figure}
   \centering
   \includegraphics[width=\columnwidth]{figures/Adaptive_TIES.pdf}
-  \caption{Adaptive workflow for TIES. After equilibrating 3 initial
-  $\lambda$, the first production stage starts. This is followed by analysis
-  at every $\lambda$ interval, to decide whether to add a new window in
-  between. In our implementation, the production-analysis cycle is repeated
-  for 4 production steps, not shown here.}
-\label{fig:adaptive_TIES}
+  \caption{Adaptive workflow for TIES. After equilibrating 3 
+  $\lambda$, the first stage starts. This is followed by analysis at every
+  $\lambda$ interval, to decide whether to add a new window in between. In
+  our implementation, the simulation-analysis cycle is repeated for 4
+  simulation steps, not shown here.}\label{fig:adaptive_TIES}
+\up{}
+\up{}
+\up{}
 \end{figure}
 
-For Experiment 6 and 8, we assigned the following simulation time-steps:
+We assigned the following simulation time-steps in Experiment 6 and 8:
 $S1=3000$; $S2=50000$; $S3=50000$; and $S4=2000000$. The adaptive simulation
-method of Experiment 7 uses the same simulation time-steps, apart from $S4$
-which is divided into 4 sub-stages of 500000 time-steps each. 
+of Experiment 7 uses the same time-steps, apart from $S4$ which is divided
+into 4 sub-stages of 500000 time-steps each.
 
 We performed all the experiments on Blue Waters, a 26868 node Cray XE6/XK6
-SuperComputer with peak performance of 13.3 petaFLOPS managed by NCSA. We
-initiated the experiments from a virtual machine outside NCSA. In this way,
-we did not run any persistent process on the NCSA login node, consistent with
-NCSA usage policies. We used HTBAC 0.1, EnTK 0.6, and RP 0.47 and the same
-versions of the \texttt{NAMD-MPI} MD kernel, compiled according to the
-capabilities of each environment and of \texttt{NAMD} itself, and launched
-via the \texttt{aprun} command. For the analysis stages in the TIES protocol
-we used \texttt{AmberTools}.
+SuperComputer with peak performance of 13.3 petaFLOPS managed by NCSA.
+consistent with NCSA policies, we initiated the experiments from a virtual
+machine outside NCSA, avoiding to run persistent process on the NCSA login
+node. We used HTBAC 0.1, EnTK 0.6, and RP 0.47 and the \texttt{NAMD-MPI} MD
+kernel, compiled according to the capabilities of each environment and of
+\texttt{NAMD} itself, and launched via the \texttt{aprun} command. For the
+analysis stages in the TIES protocol we used \texttt{AmberTools}.
 
 NCSA sets a system policy on the maximum number of processes that
 \texttt{aprun} can spawn, limiting the number of concurrent tasks we can
-execute on Blue Waters to approximately 450. During the execution of
-Experiment 2, we observed failing tasks with 8 TIES protocol instances, i.e.,
-520 concurrent tasks. In a trial of 10 repetitions at this scale, we observed
-an average failing tasks of $70\pm6.67$, and range of $59--83$ tasks. Given
-that we only ran a small number of trials, more data would be required to
-properly model the distribution type of these results.
+execute on Blue Waters to $\approx$450. During the execution of Experiment 2,
+we observed failing tasks with 8 TIES protocol instances, i.e., 520
+concurrent tasks. In a trial of 10 repetitions at this scale, we observed an
+average of $70\pm6.67$ failing tasks.% , and range of 59--83 tasks. 
+More data would be required to model the distribution type of these results.
 
-NCSA allows to run only one MPI application for each compute node. As a
-consequence, we had to run each MD simulation with 32 cores (i.e., one full
-compute node) even if our performance measurement of \texttt{NAMD} on Blue
-Waters indicated that 16 cores would offer the best trade-off between
-computing time and communication overhead.
+NCSA allows to run only one MPI application for each compute node. Thus, we
+had to run each MD simulation with 32 cores (i.e., one compute node) even if
+our performance measurement of \texttt{NAMD} on Blue Waters indicated that 16
+cores would offer the best trade-off between computing time and communication
+overhead.
 
 % \mtnote{I had to simply this paragraph a lot. Please check whether I
 % omitted some essential detail or got the algorithm wrong.}
@@ -424,14 +417,14 @@ computing time and communication overhead.
 % solution of the two methods.
 
 % By design of the nonadaptive TIES workflow
-% (Figure~\ref{fig:ties_esmacs_application}), each $\lambda$ window creates a
+% (Fig.~\ref{fig:ties_esmacs_application}), each $\lambda$ window creates a
 % new simulation condition that must be replicated. TIES requires 5 replicas
 % per $\lambda$, thereby producing $\lambda \times 5$ or simulations.
 
 % \mtnote{Reference table and exp number}
 % \jdnote{addressed in this and previous sentence}
 % \mtnote{Reference table with S*}
-% \jdnote{the ref to Figure~\ref{fig:ties_esmacs_application} already points
+% \jdnote{the ref to Fig.~\ref{fig:ties_esmacs_application} already points
 % to the description of S*, no?}
 % \mtnote{Grammar: no spaces before and after dashes}
 % \jdnote{noted}
@@ -618,7 +611,7 @@ computing time and communication overhead.
 % I understand this sentence: For measuring the weak scaling performance of
 % TIES?}
 % \jdnote{better?}, we use between 4160 and 33280 cores as indicated in
-% Figure~\ref{fig:weak_scaling_TIES} because the NAMD executable used in all
+% Fig.~\ref{fig:weak_scaling_TIES} because the NAMD executable used in all
 % tasks \mtnote{does the reader know what a task is in this context?}
 % \jdnote{will be defined in Section IV} from $S1$-$S4$ require
 % \mtnote{grammar: requires} a single node i.e. 32 cores per task, as
@@ -629,7 +622,7 @@ computing time and communication overhead.
 % For strong scaling performance, we fix the number of protocol instances to
 % 8 instances given that we experience failing concurrency of tasks when we
 % scale the workload to 8 protocols.\mtnote{why 8?} We vary the amount of
-% resources as shown in Figure~\ref{fig:strong_scaling_TIES} by showing
+% resources as shown in Fig.~\ref{fig:strong_scaling_TIES} by showing
 % reducing of resources by a factor of 2. \mtnote{Please expand indicating
 % and justifying the the chosen amount of resources. Experiments can be
 % design in many ways, we need not only to describe but also to justify why
@@ -775,37 +768,39 @@ computing time and communication overhead.
 % \texttt{aprun} determines the upper boundary of the number of supported
 % concurrent executions.
 
-Figure~\ref{fig:ws}(a) shows the weak scalability of HTBAC with the TIES
-protocol. Each instance of the TIES protocol contains a single pipeline with
-4 stages and 65 concurrent tasks. We increase the number of protocol
-instances linearly, between 2 and 8. When scaling to 8 protocol instances, we
-execute more than 450 concurrent tasks, the average limit supported by
-\texttt{aprun}, as described in Section~\ref{ssec:exp_design}. Nevertheless,
-we include results at this scale to show HTBAC's performance when supporting
-higher orders of concurrent simulations.
+Fig.~\ref{fig:ws}(a) shows the weak scaling of HTBAC with the TIES protocol.
+Each instance of the TIES protocol contains a single pipeline with 4 stages
+and 65 concurrent tasks. We increase the number of protocol instances
+linearly, between 2 and 8. When scaling to 8 protocol instances, we execute
+more than 450 concurrent tasks, the average limit supported by
+\texttt{aprun}, as described in \S\ref{ssec:exp_design}. This introduces some failures that contribute to a slight degradation in performance. 
+
+% Nevertheless, we include results at this scale to show HTBAC's performance
+% when supporting higher orders of concurrent simulations.
 
 \begin{figure}
   \centering
     \includegraphics[width=\columnwidth]{figures/ws_all_base2.pdf}
-    \caption{Weak scaling properties of HTBAC. We investigate the weak
-    scaling of HTBAC as the ratio of the number of protocol instances to
-    resources is kept constant. Overheads of HTBAC, EnTK + RP, and
-    \texttt{aprun}, and Task Execution Time as a function of (a) TIES
-    protocol (Experiment 1), (b) ESMACS protocol (Experiment 2) , and (c)
-    TIES and ESMACS protocols (Experiment 3).}
-\label{fig:ws}
+    \caption{Weak scaling of HTBAC. The ratio number of protocol
+    instances to resources is constant. Task Execution Time with and HTBAC,
+    EnTK+RP, \texttt{aprun} overheads with (a) TIES (Experiment 1), (b)
+    ESMACS (Experiment 2), and (c) TIES and ESMACS (Experiment
+    3).}\label{fig:ws}
+\up{}
+\up{}
+\up{}
 \end{figure}
 
-Figure~\ref{fig:ws}(b) shows the weak scalability of HTBAC with the ESMACS
+Fig.~\ref{fig:ws}(b) shows the weak scaling of HTBAC with the ESMACS
 protocol. We increase the number of instances linearly, between 2 and 16.
 Each ESMACS protocol contains 1 pipeline with 4 stages and 25 concurrent
 tasks.
 
-Figure~\ref{fig:ws}(c) shows the weak scalability of HTBAC with instances of
+Fig.~\ref{fig:ws}(c) shows the weak scaling of HTBAC with instances of
 both TIES and ESMACS protocols. Also in this case, we scale the instances of
 both protocols linearly, between 2 and 8. The first configuration shows 1
 ESMACS and 1 TIES protocol, and with each increase in scale we double the
-number of protocols. Experiments 2 and 3 show scalability ranges within the
+number of protocols. Experiments 2 and 3 show scaling ranges within the
 limit of the maximum number of concurrent tasks we can successfully execute
 on Blue Waters. 
 
@@ -813,17 +808,17 @@ For all weak scaling experiments (1--3) we use physical systems from the
 \texttt{BRD4-GSK} library with the same number of atoms and similar chemical
 properties. The uniformity of these physical systems ensures a consistent
 workload with insignificant variability when characterizing their performance
-under different conditions.\mtnote{moving to design?}
+under different conditions.%\mtnote{moving to design?}
+%
+% \dwwnote{The figure captions and legends don't appear to agree which axis
+% applies to which measurement. Also the legend should be inside the plots.}
+% \jdnote{addressed, except with subplots I figured it would look cleaner
+% with the legend at the bottom.}
 
-\dwwnote{The figure captions and legends don't appear to agree which axis
-applies to which measurement. Also the legend should be inside the plots.}
-\jdnote{addressed, except with subplots I figured it would look cleaner with
-the legend at the bottom.}
-
-In all weak scaling experiments (Figure~\ref{fig:ws}) we observe that the
-value of Total Task Execution Time (green bar) shows minimal variation as the
-number of protocol instances increases. We conclude that HTBAC shows ideal
-weak scaling behavior under these conditions.
+In all weak scaling experiments (Fig.~\ref{fig:ws}) we observe that the value
+of Total Task Execution Time (green bar) shows minimal variation as the
+number of protocol instances increases. We conclude that HTBAC shows
+near-ideal weak scaling behavior under these conditions.
 
 The HTBAC overhead depends mostly on the number of protocol instances that
 need to be generated for an application. This overhead shows a super linear
@@ -832,32 +827,32 @@ overhead is negligible when compared to Total Task Execution Time.
 
 The \texttt{aprun} overhead increases as we approach the limit of concurrent
 \texttt{aprun} processes that can be executed on Blue Waters. For example,
-when scaling to 8 TIES protocol instances, as shown in
-Figure~\ref{fig:ws}(a), we see that the increase in \texttt{aprun} overhead
-occurs due to task failure. This is explained by noticing that attempts to
-relaunch failed tasks require additional communication among the nodes that
-were running the tasks and the MOM Nodes from which the execution is
-coordinated.
+when scaling to 8 TIES protocol instances (Fig.~\ref{fig:ws}(a)), we see
+that the increase in \texttt{aprun} overhead occurs due to task failure. This
+is explained by noticing that attempts to relaunch failed tasks require
+additional communication among the nodes that were running the tasks and the
+MOM Nodes from which the execution is coordinated.
 
-The runtime overheads, mainly EnTK and RP, mostly depend on the number of
-tasks that need to be translated in-memory from a Python object to a task
+EnTK and RP overheads mostly depend on the number of tasks that need to be
+translated in-memory from a Python object to a task
 description~\cite{dakka2017,merzky2018}. As such, those overheads are
 expected to grow proportionally to the number of tasks, as observed in
-Figure~\ref{fig:ws}, blue bars.
+Fig.~\ref{fig:ws}, blue bars.
 
 The RP overhead is calculated by measuring and aggregating the execution time
 of the RP components that manage and coordinate the execution of the protocol
 instances. Among these components, the task scheduler of RP introduces the
 largest overhead. Due to the general scheduling algorithm loaded by default
-in RP, the task scheduling overhead scales linearly with the number of tasks that need to be scheduled.
+in RP, the task scheduling overhead scales linearly with the number of tasks
+that need to be scheduled.
 
 In comparison to Total Task Execution Time, the EnTK and RP overheads are an
 order of magnitude shorter, yet they directly contribute to the total
-duration of the application execution. Based on Figure~\ref{fig:ws}, we
-approximate the use of our runtime systems will results in $\approx15\%$
-additional usage of resource allocation. This overhead can be substantially
-reduced by using a special-purpose scheduler for the RP runtime system as
-illustrated in Ref.~\cite{merzky2018}.
+duration of the application execution. Based on Fig.~\ref{fig:ws}, we
+approximate the use of our systems will results in $\approx15\%$ additional
+usage of resource allocation. This overhead can be substantially reduced by
+using a special-purpose scheduler for RP as illustrated in
+Ref.~\cite{merzky2018}.
 
 % \mtnote{Are we sure? In the latest RP paper I thought we wrote that the
 % performance of the RP CU scheduler depends on the size of the pilot? Would
@@ -994,13 +989,13 @@ illustrated in Ref.~\cite{merzky2018}.
 % actual discussion of the results.}
 
 % We use between 4160 and 16,640 cores as indicated in
-% Figure~\ref{fig:weak_scaling_TIES}.
+% Fig.~\ref{fig:weak_scaling_TIES}.
 
 % To characterize the weak scaling performance of TIES \mtnote{I am not sure
 % I understand this sentence: For measuring the weak scaling performance of
 % TIES?}
 % \jdnote{better?}, we use between 4160 and 33280 cores as indicated in
-% Figure~\ref{fig:weak_scaling_TIES} because the NAMD executable used in all
+% Fig.~\ref{fig:weak_scaling_TIES} because the NAMD executable used in all
 % tasks \mtnote{does the reader know what a task is in this context?}
 % \jdnote{will be defined in Section IV} from $S1$ -- $S4$ require
 % \mtnote{grammar: requires} a single node i.e. 32 cores per task, as
@@ -1018,11 +1013,11 @@ illustrated in Ref.~\cite{merzky2018}.
 %----------------------------------------------------------------------------
 % \subsubsection{Weak Scaling Experiments}
 
-% We investigated the weak scalability properties for the TIES protocol by
+% We investigated the weak scaling properties for the TIES protocol by
 % growing the number of protocol instances while adhering to the required
 % number of pipelines. By design of each protocol, an increase in the number
 % of instances simply means an increase in the number of pipelines. The first
-% weak scalability experiment demonstrates the behavior of HTBAC, EnTK and RP
+% weak scaling experiment demonstrates the behavior of HTBAC, EnTK and RP
 % using the multiple instances of the TIES protocol. By design of weak
 % scaling, the ratio between the number of pipelines and cores are kept
 % constant. As the number of cores (measure of resource) changes by a factor
@@ -1043,32 +1038,33 @@ illustrated in Ref.~\cite{merzky2018}.
 
 In Experiment 4 we fix the number of instances of the TIES protocol to 8 (due
 to the described \texttt{aprun} limitations) and we vary the amount of
-resources between 4160, 8320 and 16640 cores. Given 4160 cores, we can
-execute 4 generations (defined in Section~\ref{ssec:exp_design}) of 130
-concurrent tasks; with 8320 cores, 2 generations of 260 concurrent tasks; and
-with 16640 cores, 1 generation of 520 concurrent tasks.
+resources between 4160, 8320 and 16640 cores. Assuming the definition of
+`generation' in \S\ref{ssec:exp_design}, given 4160 cores, we can execute 4
+generations of 130 concurrent tasks; with 8320 cores, 2 generations of 260
+tasks; and with 16640 cores, 1 generation of 520 tasks.
 
 In Experiment 5 we fix the number of instances of the ESMACS protocols to 16
 and vary the amount of resources between 3200, 6400 and 12800 cores. In this
 way, we obtain the same number of generations as in Experiment 4.
 
-Figure~\ref{fig:ss} shows a linear speedup in Total Task Execution Time for
+Fig.~\ref{fig:ss} shows a linear speedup in Total Task Execution Time for
 both experiments, proportional to the increase in the number of cores. The
 availability of more resources for a fixed number of protocols explains this
-behavior. All overheads remain constant for both experiments when increasing
-the number of cores. The scheduling of the number of tasks as opposed to the
-amount of resources, is the main driver of the fixed runtime overheads,
-namely EnTK and RP. This is confirmed for RP in Ref.~\cite{merzky2018}.
+behavior. Overheads remain essentially constant for both experiments when
+increasing the number of cores. The scheduling of the number of tasks, as
+opposed to the amount of resources, is the main driver of EnTK and RP
+overheads (Ref.~\cite{merzky2018}).
 
 \begin{figure}
   \centering
    \includegraphics[width=\columnwidth]{figures/ss_all_base2.pdf} 
-   \caption{Strong scaling properties of HTBAC. We investigate the strong
-    scaling of HTBAC by fixing the number of protocol instance and increasing
-    the number of cores. Overheads of HTBAC, EnTK + RP and \texttt{aprun},
-    and Task Execution Time as a function of (a) TIES protocol (Experiment 4)
-    and ESMACS protocol (Experiment 5). We ran 3 trials for each experiment.}
-\label{fig:ss}
+   \caption{Strong scaling of HTBAC. The number of protocol instances is
+    fixed while the number of core increases. Task Execution Time with and
+    HTBAC, EnTK+RP, \texttt{aprun} overheads with (a) TIES (Experiment 4) and
+    ESMACS (Experiment 5).}\label{fig:ss}
+\up{}
+\up{}
+\up{}
 \end{figure}
 
 % \jdnote{this statement is now inconsistent with the performance
@@ -1119,7 +1115,7 @@ namely EnTK and RP. This is confirmed for RP in Ref.~\cite{merzky2018}.
 % The nonadaptive method runs in time Y with Z accuracy The adaptive method
 % runs in time X with N accuracy
 
-% The comparison between weak and strong scalability shows the overhead
+% The comparison between weak and strong scaling shows the overhead
 % introduced by load balancing and scheduling tasks in multiple generations.
 
 % By design of the TIES protocol, this workload show up to $65 \times 8$
@@ -1157,22 +1153,26 @@ namely EnTK and RP. This is confirmed for RP in Ref.~\cite{merzky2018}.
 In order to validate the correctness of the results produced in Experiment
 1--5, using HTBAC and the BRD4-GSK physical systems, we compare our results
 with those previously published in Wan et al.~\cite{Wan2017brd4}. In this
-way, we can confirm that our implementation of the TIES and ESMACS protocols
-calculate the correct binding free energies values.\mtnote{NOTE: ESMACS protocol validation is still missing, Kristof is working on it.}
+way, we can confirm that we calculated the correct binding free energies
+values.
+% \mtnote{NOTE: ESMACS protocol validation is still missing, Kristof is
+% working on it.}
 
-We validated our implementation of the TIES protocol selecting a subset of
-the protein ligand systems used in Wan et al.~\cite{Wan2017brd4}: ligand
-transformations 3 to 1, 4, and 7. We then performed a full simulation on all
-3 systems and calculated the binding affinity using HTBAC.
+We validated our implementation % of the TIES protocol 
+selecting a subset of the protein ligand systems used in Wan et
+al.~\cite{Wan2017brd4}: ligand transformations 3 to 1, 4, and 7. We then
+performed a full simulation on all 3 systems and calculated the binding
+affinity using HTBAC.
 
 The results of our experiments, collected in Table~\ref{tab:exp2}, show that
 all three $\Delta \Delta$G values are within error bars of the original
-study, validating the results we produced with HTBAC and our implementation
-of the TIES protocol.
+study, validating the results we produced with HTBAC.
+% and our implementation of the TIES protocol.
 
 \begin{table}
   \centering
-  \caption{COMPARISON OF THE CALCULATED BINDING FREE ENERGIES USING HTBAC, FROM THE ORIGINAL STUDY BY WAN ET AL. AND EXPERIMENTAL DATA}  
+  \caption{Validation of HTBAC results against published and experimental
+  values}\label{tab:exp2}  
   % \begin{tabular}{l@{\hskip 1in}r@{\hskip 0.2in}r@{\hskip 0.2in}r}
   \begin{tabular}{lrrr}
     \toprule
@@ -1183,7 +1183,9 @@ of the TIES protocol.
     BRD4 \textbf{3 to 7} & \num{-0.88 +- 0.17} &  \num{-0.90 +- 0.08} & \num{-1.3 +- 0.11} \\
     \bottomrule
   \end{tabular}
-  \label{tab:exp2}
+\up{}
+\up{}
+\up{}
 \end{table}
 
 % HTBAC automates the process of calculating the binding affinity of
@@ -1271,19 +1273,19 @@ of the TIES protocol.
 % E -------------------------------------------------------------------------
 \subsection{Adaptive Experiments}
 
-\jhanote{On looking at this afresh, this whole paragraph should either be
-zapped for it does not belong here but in an earlier section} \sout{Even at small
-scale it is hard to implement adaptive al- gorithms that use common molecular
-dynamics simulations engines (e.g., NAMD, Gromacs, Amber). This is in part
-because of the way the scientist interacts with these codes. The user hand-
-writes a configuration file and, together with the physical system description
-(topology, PDB), passes it to a binary executable, waiting for the simulation
-to end before analyzing the results. There is a disconnect between running the
-simulation and analysis, i.e. the intermediate results have no influence over
-the simulation parameters \emph{after} it has been started. Therefore, certain
-decisions, like number of time steps, $\lambda$ window placement have to be
-made \emph{a priori}, and the continuous accumulation of results can, by
-definition, have no effect of these parameters.}
+% \jhanote{On looking at this afresh, this whole paragraph should either be
+% zapped for it does not belong here but in an earlier section} \sout{Even at small
+% scale it is hard to implement adaptive al- gorithms that use common molecular
+% dynamics simulations engines (e.g., NAMD, Gromacs, Amber). This is in part
+% because of the way the scientist interacts with these codes. The user hand-
+% writes a configuration file and, together with the physical system description
+% (topology, PDB), passes it to a binary executable, waiting for the simulation
+% to end before analyzing the results. There is a disconnect between running the
+% simulation and analysis, i.e. the intermediate results have no influence over
+% the simulation parameters \emph{after} it has been started. Therefore, certain
+% decisions, like number of time steps, $\lambda$ window placement have to be
+% made \emph{a priori}, and the continuous accumulation of results can, by
+% definition, have no effect of these parameters.}
 
 % \jhanote{This discussion needs more care: adaptive algorithms are difficult to
 % implement at scale. That is why we have fewer adaptive algorithms than one might
@@ -1291,7 +1293,7 @@ definition, have no effect of these parameters.}
 % they are implemented.}\kfnote{I was trying to describe this smaller problem, not
 % related to scale, just adaptivity. I modified the sentence to reflect this.}
 
-The design of HTBAC  permits enhancing protocols while continuing to use
+The design of HTBAC permits enhancing protocols while continuing to use
 "static" simulation engines. To this end we implemented two adaptive methods
 using HTBAC: adaptive quadrature and adaptive termination. Both of these
 methods use the features of adaptivity offered in HTBAC to scale to large
@@ -1350,7 +1352,6 @@ same amount. The error on the adaptive results is also decreased, on average by
 all of the systems are reduced to below \SI{0.2}{\kilo\calorie\per\mole}, which
 has recently been shown to be the upper bound of reproducibility across
 different simulation engines~\cite{Loeffler2018}.
-
 
 
 The Total Task Execution Time of the TYK2 L7-L8 system has increased for the
@@ -1418,14 +1419,8 @@ increased by \SI{40}{\percent}.
 \end{table*}
 
 \jhanote{This para is difficult to parse. How does one appreciate the
-iteration count? Needs complete rewrite.}
-Figure~\ref{fig:adapconv} shows progression of the algorithm, starting from 3
-initial lambda windows, and at each iteration bisecting the interval where
-the error is above the set threshold. For system \jhanote{X -- fix!!} we can see as how the
-parts of the function that change less have relatively fewer windows, while
-parts of greater change (usually, though not always, around the $\lambda=0.5$
-mark) have more $\lambda$ windows to represent the shape of the function more
-closely.
+iteration count? Needs complete rewrite.} \kfnote{rewrote}
+Figure~\ref{fig:adapconv} compares the error on the adaptive and non-adaptive simulations as a time series plot. As fewer lambda windows are calculated the adaptive algorithm uses less resources. Still, the error is drastically reduced as the windows are places ideally to capture the changes in function. 
 
 \begin{figure}
   \input{figures/fig-adapt.tex}
@@ -1442,7 +1437,7 @@ closely.
 
 Adaptive quadrature is specific to alchemical free energy calculations.
 \emph{Adaptive termination}, the second adaptive \jhanote{I would not use
-"protocol" } protocol implemented in HTBAC, offers dynamic termination for any
+"protocol" } \kfnote{method?} method implemented in HTBAC, offers dynamic termination for any
 simulation protocol that has as its aim the prediction of an observable value.
 The protocol monitors the convergence of the observable as the simulation
 progresses, and stops the execution when a criterion has been met. Non-
@@ -1459,7 +1454,7 @@ In reality, certain systems could converge faster, therefore one can terminate
 the simulation before the static \SI{4}{\nano\second} end. This would lead to
 faster time to insight and less compute resources consumed. Adaptive termination
 was implemented in HTBAC by having a checkpoint every $\tau =
-\SI{0.5}{\nano\second}$ in the simulation. Figure~\ref{fig:termination} shows
+\SI{0.5}{\nano\second}$ in the simulation. Fig.~\ref{fig:termination} shows
 how the observable for a specific simulation changes as a function of resource
 consumption. At every checkpoint the convergence is evaluated, and the
 simulation is indeed terminated earlier than the non-adaptive protocol would
@@ -1473,7 +1468,7 @@ TIES protocol saves compute resources and reduces time to insight on average by
   (hence simulation time). The adaptive termination algorithm checks the
   convergence of the observable every $\tau = \SI{0.5}{\nano\second}$ and if
   the threshold (\SI{0.01}{\kilo\calorie\per\mole}) has been met, terminates the
-  simulation. \jhanote{Reviwer will want to know what happens with remaining two candidates?}}
+  simulation. \jhanote{Reviwer will want to know what happens with remaining two candidates?}\kfnote{Results are in the table for all the systems.}}
   \label{fig:termination}
 \end{figure}
 
