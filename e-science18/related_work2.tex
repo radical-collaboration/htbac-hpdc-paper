@@ -10,18 +10,17 @@ considerable promise for computational drug campaigns~\cite{Karplus2005}.
 Ensemble-based simulations have been shown to reduce the sampling time
 required to deliver the precision necessary to meet the requirements of drug
 design campaigns. In biomolecular simulation, several ensemble-based methods
-are widely used in the computation of binding free energies to study
-different problem spaces. For example, a popular approach is to use Markov
-state models to learn a simplified representation of the explored phase space
-and to choose which regions should be further sampled~\cite{Bowman2010}.
-Other adaptive methods such as replica exchange with solute tempering (one of
-the many replica exchange variations available) use the Metropolis-Hastings
-criteria to make periodic decisions about what regions of the phase space to
-sample~\cite{Earl2005,Hritz2008,Kim2012}. In expanded ensemble simulations,
-thermodynamic states are explored via a biased random walk in state
-space~\cite{Lyubartsev1992}. Approaches that learn by exchanging information
-have been found to improve sampling results and always decorrelating as fast
-or faster than standard simulations.
+are widely used to compute binding free energies, studying different problem
+spaces. For example, a popular approach is to use Markov state models to
+learn a simplified representation of the explored phase space and to choose
+which regions should be further sampled~\cite{Bowman2010}. Replica exchange
+with solute tempering (one of the many replica exchange variations available)
+use the Metropolis-Hastings criteria to make periodic decisions about what
+regions of the phase space to sample~\cite{Earl2005,Hritz2008,Kim2012}. In
+expanded ensemble simulations, thermodynamic states are explored via a biased
+random walk in state space~\cite{Lyubartsev1992}. Approaches that learn by
+exchanging information have been found to improve sampling results and always
+decorrelating as fast or faster than standard simulations.
 
 Generally, in relative binding free energy calculations sampling is performed
 at discrete regions along the transformation between the two compounds.
@@ -30,14 +29,14 @@ determinant of the uncertainty in and accuracy of the
 calculations~\cite{Ruiter2013}. Increasing simulation in regions of most
 rapid change reduces errors on the predicated binding affinity.
 
-Capturing and executing scalable and adaptive simulations methodologies
-directly on High Performance Computers (HPCs) and other infrastructures using
-ensemble-based methods presents several challenges. On HPCs, users can only
-exploit the adaptive features provided by MD kernels and often run
-applications with execution models such as MPI. For example, a parallel
-programming systems such as \texttt{Charm++} relies on MPI to spawn multiple
-executables of MD kernels, thereby incurring communication overheads and
-failures at larger scales. 
+Executing scalable and adaptive simulations methodologies directly on High
+Performance Computers (HPCs) and other infrastructures using ensemble-based
+methods presents several challenges. On HPCs, users can only exploit the
+adaptive features provided by MD kernels and often run applications with
+execution models such as MPI. For example, a parallel programming systems
+such as \texttt{Charm++} relies on MPI to spawn multiple executables of MD
+kernels, thereby incurring communication overheads and failures at larger
+scales.
 
 By designing ensemble-based methods to use MPI, it is difficult to implement
 existing applications in other programming models. This is especially the
