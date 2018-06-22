@@ -285,9 +285,9 @@ $\lambda$ values.
 % well as the differences in accuracy.
 
 We use Experiment 8 to compare the adaptive and non-adaptive execution of
-TIES. We use a large number of (65) equally spaced $\lambda$ windows to
-calculate the free energy with high accuracy. This creates a baseline
-against which to compare the adaptive and non-adaptive results.
+TIES. We use a large number of (65) simulations, derived from 13 equally spaced 
+$\lambda$ windows to calculate the free energy with high accuracy. This creates 
+a baseline against which to compare the adaptive and non-adaptive results.
 
 \begin{figure}
   \centering
@@ -318,7 +318,15 @@ analysis stages in the TIES protocol we used \texttt{AmberTools}.
 
 NCSA sets a system policy on the maximum number of processes that
 \texttt{aprun} can spawn, limiting the number of concurrent tasks we can
-execute on Blue Waters to $\approx$450. During the execution of Experiment 2,
+execute on Blue Waters to $\approx$450. \jdnote{Wanted to clear up the ideas in 
+this sentence: APRUN is the launch method, while ALPS is the scheduler. 
+The limit is in the number of \texttt{aprun} calls per user per ALPS. The 
+limitation in the number of concurrent tasks are caused by ALPS limiting the 
+number of concurrent \texttt{apruns}. The workflow can launch as many 
+apruns as required by the user but ALPS controls the placement and scheduling of 
+those apruns.}
+
+During the execution of Experiment 2,
 we observed failing tasks with 8 TIES protocol instances, i.e., 520
 concurrent tasks. In a trial of 10 repetitions at this scale, we observed an
 average of $70\pm6.67$ failing tasks.% , and range of 59--83 tasks. 
@@ -809,16 +817,10 @@ For all weak scaling experiments (1--3) we use physical systems from the
 properties. The uniformity of these physical systems ensures a consistent
 workload with insignificant variability when characterizing their performance
 under different conditions.%\mtnote{moving to design?}
-%
-% \dwwnote{The figure captions and legends don't appear to agree which axis
-% applies to which measurement. Also the legend should be inside the plots.}
-% \jdnote{addressed, except with subplots I figured it would look cleaner
-% with the legend at the bottom.}
 
 In all weak scaling experiments (Fig.~\ref{fig:ws}) we observe that the value
 of Total Task Execution Time (green bar) shows minimal variation as the
-number of protocol instances increases. We conclude that HTBAC shows
-near-ideal weak scaling behavior under these conditions.
+number of protocol instances increases, suggesting that HTBAC is invariant to the protocol. We conclude that HTBAC shows near-ideal weak scaling behavior under these conditions. 
 
 The HTBAC overhead depends mostly on the number of protocol instances that
 need to be generated for an application. This overhead shows a super linear
@@ -831,7 +833,7 @@ when scaling to 8 TIES protocol instances (Fig.~\ref{fig:ws}(a)), we see
 that the increase in \texttt{aprun} overhead occurs due to task failure. This
 is explained by noticing that attempts to relaunch failed tasks require
 additional communication among the nodes that were running the tasks and the
-MOM Nodes from which the execution is coordinated.
+MOM Nodes from which the execution is coordinated. 
 
 EnTK and RP overheads mostly depend on the number of tasks that need to be
 translated in-memory from a Python object to a task
