@@ -13,8 +13,7 @@ These improvements can be attributed to many advances in methodologies and
 hardware. Specifically, ensemble-based binding free energy calculations, which
 favor many shorter simulation trajectories over few longer simulations have been
 shown to increase sampling efficiency whilst also reducing time to
-insight~\cite{weis_ligand_2006}.\jhanote{reference needed. Please do not use self
-reference. We have 14 self-references out of 33.}\kfnote{adressed} For binding
+insight~\cite{weis_ligand_2006}. For binding
 affinity calculations to gain traction, they must have well-defined uncertainty
 and consistently produce statistically meaningful results.
 
@@ -24,17 +23,17 @@ filter out the ineffective binders before using more sensitive methods to
 refine the structure of promising candidates. Two  prominent ensemble-based
 free energy protocols, ESMACS and TIES~\cite{Bhati2017}, have demonstrated
 the  ability to consistently filter and refine the drug design process. The
-ESMACS  (enhanced sampling of molecular dynamics with approximation of
+ESMACS (enhanced sampling of molecular dynamics with approximation of
 continuum solvent) protocol provides an ``approximate'' endpoint method used
 to screen out poor binders. The TIES protocol (thermodynamic integration with
-enhanced sampling) uses a more rigorous ``alchemical'' thermodynamic
-integration approach. These protocols have demonstrated statistically
+enhanced sampling) uses the more rigorous ``alchemical'' thermodynamic
+integration approach as implemented in NAMD \cite{Phillips2005, Straatsma1991}. These protocols have demonstrated statistically
 meaningful results for industrial computational drug
 campaign~\cite{Wan2017brd4}.
 
-Most computational campaigns focus on the utilization of core-hours, using
-fire-and-forget executions, but not many try to use these core-hours
-effectively. As drug screening campaigns can cover millions of compounds and
+In recent years considerable effort has been put into improving the efficiency of free energy calculations \cite{Klimovich2015, Naden2016, Kaus2013}.
+Nonetheless many, perhaps most, computational campaigns are executed in a fire and forget manner which consumes core hours in inefficient ways.
+As drug screening campaigns can cover millions of compounds and
 hundreds of millions of core-hours, it is important that these binding
 affinity calculations be effective and optimize the accuracy and precision of
 results obtained from a given set of resources. This is challenging as, by
@@ -76,20 +75,13 @@ Affinity Calculator (HTBAC) to enable the scalable execution of adaptive
 algorithms.
 
 This paper identifies the challenge in advancing adaptive algorithms and
-methodologies.\jhanote{We do not identify the challenge of advancing
-adaptive algorithms. Thus I have removed it from a main contribution, so as
-to not dilute the real contributions. If you can point me to sections where
-challenges of advancing adaptive algorithms is discussed I would be glad to
-revise.} It makes three main contributions: (1) shows the importance of using
+methodologies. It makes three main contributions: (1) shows the importance of using
 adaptive approaches within ensemble-based free energy protocols to improve
 binding affinity accuracy given a fixed amount of computing resources; (2)
 presents and characterizes HTBAC, a software system that enables the scalable
 execution of adaptive applications; and (3) shows the capability to execute
 adaptive applications at scale, validating their scientific results.
 %
-\jhanote{I refrain from using tool because of connotation of end-user. One
-day HTBAC maybe non-end user middleware.... thus the term software system, as
-opposed to software tool.}
 
 This paper is organized as follows: Section~\ref{sec:science-drivers}
 introduces ESMACS and TIES, two ensemble-based free energy protocols, arguing
