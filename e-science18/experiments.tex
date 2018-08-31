@@ -232,7 +232,10 @@ show how the time duration of the workload scales when adding resources. For
 all the weak and strong scaling experiments we characterize the overheads of
 HTBAC, EnTK and RP, and we show an approximation of the time taken by the
 resources to become available. This offers insight about the impact of HTBAC
-and its middleware on the time to completion of each workload.
+and its middleware on the time to completion of each workload. 
+In~\cite{dakka2017}, we show the baseline performance of the overheads using a 
+null workload. 
+
 
 For weak and strong scaling experiments, we reduced the number of time-steps
 of the protocols and omitted the analysis steps $S5$ and $S6$ of their
@@ -260,7 +263,8 @@ for each task, we measure the difference between the task execution time and
 its \texttt{NAMD} kernel execution time, provided by the \texttt{NAMD} output
 logs. In this way, we approximate the time taken by \texttt{aprun} to launch
 the task. Once aggregated, these measures constitute what we defined as
-\texttt{aprun} Overhead.
+\texttt{aprun} Overhead. The summation of all durations provides the average
+wall-time of the job. 
 
 Experiments 6--8 compare the accuracy and time to solution of nonadaptive and
 adaptive simulation methods. For the nonadaptive simulation method of
@@ -820,7 +824,9 @@ under different conditions.%\mtnote{moving to design?}
 
 In all weak scaling experiments (Fig.~\ref{fig:ws}) we observe that the value
 of Total Task Execution Time (green bar) shows minimal variation as the
-number of protocol instances increases, suggesting that HTBAC is invariant to the protocol. We conclude that HTBAC shows near-ideal weak scaling behavior under these conditions. 
+number of protocol instances increases, suggesting that HTBAC is invariant to 
+the protocol. We conclude that HTBAC shows near-ideal weak scaling behavior 
+under these conditions. 
 
 The HTBAC overhead depends mostly on the number of protocol instances that
 need to be generated for an application. This overhead shows a super linear
