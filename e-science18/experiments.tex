@@ -99,10 +99,10 @@ computational load.
 % A -------------------------------------------------------------------------
 \subsection{Experiment Setup}\label{ssec:exp_design}
 
-Table~\ref{tab:experiments} shows 8 experiments we designed to characterize
+Table~\ref{tab:experiments} shows 9 experiments we designed to characterize
 the behavior of HTBAC on Blue Waters. Each experiment executes the ESMACS
-and/or TIES protocol for different physical systems. Experiments 1--5 use the
-BRD4 physical systems provided by GlaxoSmithKline, while experiments 6--8 
+and/or TIES protocol for different physical systems. Experiments 1--6 use the
+BRD4 physical systems provided by GlaxoSmithKline, while experiments 7--9 
 utilize the PTP1B, MC1, and TYK2 physical systems. 
 % which are a diverse set of proteins.
 
@@ -172,7 +172,16 @@ utilize the PTP1B, MC1, and TYK2 physical systems.
     (16, 16, 16)                      &  % number of protocols
     6400, 3200, 1600                  \\ % total cores
     %
+    %
     \B{6}                             &  % Experiment ID
+    Strong scaling                    &  % experiment type
+    BRD4                              &  % physical system
+    % Blue Waters                       &. % CI
+    ESMACS + TIES                     &  % protocol type
+    (20, 20, 20)                      &  % number of protocols
+    22120, 10560, 5280                  \\ % total cores
+    %
+    \B{7}                             &  % Experiment ID
     Non-adaptivity                    &  % experiment type
     PTP1B, MC1, TYK2                  &  % physical system
     % Blue Waters                       &  % CI
@@ -180,7 +189,7 @@ utilize the PTP1B, MC1, and TYK2 physical systems.
     (1, 1, 1)                         &  % number of protocols
     2080, 2080, 2080                  \\ % total cores
     %
-    \B{7}                             &  % Experiment ID
+    \B{8}                             &  % Experiment ID
     Adaptivity                        &  % experiment type
     PTP1B, MC1, TYK2                  &  % physical system
     % Blue Waters                       &  % CI
@@ -188,7 +197,7 @@ utilize the PTP1B, MC1, and TYK2 physical systems.
     (1, 1, 1)                         &  % number of protocols
     2080, 2080, 2080                  \\ % total cores
     %
-    \B{8}                             &  % Experiment ID
+    \B{9}                             &  % Experiment ID
     Reference                         &  % experiment type
     PTP1B, MC1, TYK2                  &  % physical system
     % Blue Waters                       &  % CI
@@ -208,8 +217,10 @@ Experiment 1 and 2 measure the weak scaling of HTBAC using the ESMACS
 TIES and ESMACS protocols, characterizing the weak scaling of heterogeneous
 protocol executions. Experiments 4 and 5 measure the strong scaling of
 HTBAC using a fix number of instances of the ESMACS (Experiment 4) and TIES
-(Experiment 5) protocols. Experiments 6--8 characterize nonadaptive and
-adaptive simulation methods using the TIES protocol.
+(Experiment 5) protocols. Experiments 6 uses both the TIES and ESMACS protocols, 
+characterizing the strong scaling of heterogeneous protocol executions.
+Experiments 7--9 characterize nonadaptive and adaptive simulation methods using 
+the TIES protocol.
 
 % We leverage strong scaling to support the objective in this work, which is
 % to characterize: (a) the time-to-solution differences between adaptive and
@@ -222,7 +233,7 @@ In each weak scaling experiment (1--3), we keep the ratio between resources
 allocated and protocol instances constant. Consistently, for each experiment
 we progressively increase both the number of cores (i.e., measure of
 resource) and the number of protocol instances by a factor of 2. In each
-strong scaling experiment (4--5), we change the ratio between resources
+strong scaling experiment (4--6), we change the ratio between resources
 allocated and the number of protocol instances: we fix the number of protocol
 instances and reduce the number of cores by a factor of 2.
 
@@ -241,10 +252,10 @@ For weak and strong scaling experiments, we reduced the number of time-steps
 of the protocols and omitted the analysis steps $S5$ and $S6$ of their
 workflows (Fig.~\ref{fig:ties_esmacs_application}). These simplifications
 are consistent with characterizing scalability performance instead of
-simulation duration. For the experiments 1--5 we used the following
+simulation duration. For the experiments 1--6 we used the following
 time-steps: $S1=1000$; $S2=5000$; $S3=5000$; and $S4=50000$.
 
-We measure the following durations for Experiments 1--5:
+We measure the following durations for Experiments 1--6:
 \begin{itemize}
     \item \textbf{Total Task Execution Time}: Time taken by all the
     task executables to run on the computing infrastructure.
@@ -266,9 +277,9 @@ the task. Once aggregated, these measures constitute what we defined as
 \texttt{aprun} Overhead. The summation of all durations provides the average
 wall-time of the job. 
 
-Experiments 6--8 compare the accuracy and time to solution of nonadaptive and
+Experiments 7--9 compare the accuracy and time to solution of nonadaptive and
 adaptive simulation methods. For the nonadaptive simulation method of
-Experiment 6 we use 13 preassigned and approximated $\lambda$ windows,
+Experiment 7 we use 13 preassigned and approximated $\lambda$ windows,
 consistent with the value reported in Ref.~\cite{Bhati2017}. In this way, we
 produce 65 concurrent simulations for stages $S1$--$S4$ of TIES (see
 Fig.~\ref{fig:ties_esmacs_application}). The production simulation stage $S4$
@@ -288,7 +299,7 @@ $\lambda$ values.
 % differences in time duration between adaptive and non-adaptive methods as
 % well as the differences in accuracy.
 
-We use Experiment 8 to compare the adaptive and non-adaptive execution of
+We use Experiment 9 to compare the adaptive and non-adaptive execution of
 TIES. We use a large number of (65) simulations, derived from 13 equally spaced 
 $\lambda$ windows to calculate the free energy with high accuracy. This creates 
 a baseline against which to compare the adaptive and non-adaptive results.
@@ -306,9 +317,9 @@ a baseline against which to compare the adaptive and non-adaptive results.
 \up{}
 \end{figure}
 
-We assigned the following simulation time-steps in Experiment 6 and 8:
+We assigned the following simulation time-steps in Experiment 7 and 9:
 $S1=3000$; $S2=50000$; $S3=50000$; and $S4=2000000$. The adaptive simulation
-of Experiment 7 uses the same time-steps, apart from $S4$ which is divided
+of Experiment 8 uses the same time-steps, apart from $S4$ which is divided
 into 4 sub-stages of 500000 time-steps each.
 
 We performed all the experiments on Blue Waters, a 26868 node Cray XE6/XK6
@@ -785,7 +796,8 @@ Each instance of the TIES protocol contains a single pipeline with 4 stages
 and 65 concurrent tasks. We increase the number of protocol instances
 linearly, between 2 and 8. When scaling to 8 protocol instances, we execute
 more than 450 concurrent tasks, the average limit supported by
-\texttt{aprun}, as described in \S\ref{ssec:exp_design}. This introduces some failures that contribute to a slight degradation in performance. 
+\texttt{aprun}, as described in \S\ref{ssec:exp_design}. This introduces some 
+failures that contribute to a slight degradation in performance. 
 
 % Nevertheless, we include results at this scale to show HTBAC's performance
 % when supporting higher orders of concurrent simulations.
@@ -1055,6 +1067,11 @@ In Experiment 5 we fix the number of instances of the ESMACS protocols to 16
 and vary the amount of resources between 3200, 6400 and 12800 cores. In this
 way, we obtain the same number of generations as in Experiment 4.
 
+In Experiment 6 we fix the number of instances of the ESMACS and TIES protocols 
+to 16 and 4 respectively, and vary the amount of resources between 5280, 10560
+and 22120 cores. In this way, we obtain the same number of generations as in 
+Experiment 4 and 5.
+
 Fig.~\ref{fig:ss} shows a linear speedup in Total Task Execution Time for
 both experiments, proportional to the increase in the number of cores. The
 availability of more resources for a fixed number of protocols explains this
@@ -1068,8 +1085,8 @@ overheads (Ref.~\cite{merzky2018}).
    \includegraphics[width=\columnwidth]{figures/ss_all_base2.pdf} 
    \caption{Strong scaling of HTBAC. The number of protocol instances is
     fixed while the number of core increases. Task Execution Time with and
-    HTBAC, EnTK+RP, \texttt{aprun} overheads with (a) TIES (Experiment 4) and
-    ESMACS (Experiment 5).}\label{fig:ss}
+    HTBAC, EnTK+RP, \texttt{aprun} overheads with (a) TIES (Experiment 4),
+    ESMACS (Experiment 5) and ESMACS + TIES (Experiment 6).}\label{fig:ss}
 \up{}
 \up{}
 \up{}
@@ -1159,7 +1176,7 @@ overheads (Ref.~\cite{merzky2018}).
 \subsection{Validation}
 
 In order to validate the correctness of the results produced in Experiment
-1--5, using HTBAC and the BRD4-GSK physical systems, we compare our results
+1--6, using HTBAC and the BRD4-GSK physical systems, we compare our results
 with those previously published in Wan et al.~\cite{Wan2017brd4}. In this
 way, we can confirm that we calculated the correct binding free energies
 values.
@@ -1486,9 +1503,7 @@ on average by \SI{16}{\percent} for the physical systems tested.
 
 \begin{table}
   \caption{Simulation time of non-adaptive and adaptively terminated runs for
-  a given convergence criterion\jhanote{Reviwer will want to know what happens with
-  remaining two candidates?}\kfnote{Results are in the table for all the
-  systems.}\jhanote{Sorry wrong caption. Moved to table IV.}}\label{tab:adapterm}
+  a given convergence criterion}\label{tab:adapterm}
   \centering
   \begin{tabular}{lSSS[table-format=5.1, table-column-width=2cm]}
     \toprule
