@@ -37,18 +37,22 @@ Absolute free energy methods calculate the binding affinity of a
 \emph{single} drug molecule to a protein, while relative methods calculate
 the \emph{difference} in binding affinity between two (usually similar in
 structure) drug molecules. 
-Both protocols are designed to use an ensemble MD simulation approach to enhance the reproducibility and accuracy of standard free energy calculation techniques (MMPBSA \cite{Massova1999} in the case of ESMACS and thermodynamic integration \cite{Straatsma1988, Straatsma1991} in TIES).
-The use of ensemble averaging allows tight control of error bounds in the resulting free energy estimates.
+Both protocols are designed to use an ensemble MD simulation approach to enhance the reproducibility and accuracy of standard free energy calculation techniques 
+(MMPBSA~\cite{Massova1999} in the case of ESMACS and thermodynamic 
+integration~\cite{Straatsma1988, Straatsma1991} in TIES).
+The use of ensemble averaging allows tight control of error bounds in the 
+resulting free energy estimates.
 
 ESMACS and TIES consists of three main steps: minimization, equilibration and
-production MD (in its current implementation all MD steps are conducted in NAMD\cite{Phillips2005}). In practice, the equilibration phase is broken into multiple
-steps to ensure that the size of the simulation box does not alter too much
-over the simulation. During these steps, positional constraints are gradually
-released from the structure and the physical system is heated to a
+production MD (in its current implementation all MD steps are conducted in 
+NAMD~\cite{Phillips2005}). In practice, the equilibration phase is broken into 
+multiple steps to ensure that the size of the simulation box does not alter too 
+much over the simulation. During these steps, positional constraints are 
+gradually released from the structure and the physical system is heated to a
 physiologically realistic temperature.
 
 Whilst both protocols share a common sequence of steps, the make-up of the
-ensemble is different. In ESMACS, an ensemble consists of a set 25
+ensemble is different. In ESMACS, an ensemble consists of a set of 25
 \textbf{replicas}, i.e., identical simulations differing only in the initial
 velocities assigned to each atom. In TIES, the ensemble contains a set of
 \textbf{$\lambda$} windows, each spawning a set of replicas. As a
@@ -59,16 +63,14 @@ compute the difference in binding free energy. In previous studies, TIES has
 been deployed using 65 replicas, evenly distributed among 13 $\lambda$
 windows. Following the completion of the simulation steps, both protocols
 require the execution of free energy analysis steps. The detailed composition
-of ESMACS and TIES protocols is shown in
-Fig.~\ref{fig:ties_esmacs_application}.
+of ESMACS and TIES protocols is shown in Fig.~\ref{fig:ties_esmacs_application}.
 
 \begin{figure}
   \centering
   \includegraphics[width=\columnwidth]{figures/ties_esmacs_application_model.pdf}
   \caption{TIES and ESMACS protocols consist of simulations steps followed by
   analysis step(s). ESMACS contains 25 replicas per simulation step; TIES
-  contains % a $\lambda$ transformation parameter which generates 
-  5 replicas per $\lambda$ window. We model TIES with 13 $\lambda$
+  contains 5 replicas per $\lambda$ window. We model TIES with 13 $\lambda$
   windows, spawning 65 replicas in each simulation step. All replicas
   simulate 6ns.}\label{fig:ties_esmacs_application}
 \up{}
@@ -184,14 +186,11 @@ Fig.~\ref{fig:ties_esmacs_application}.
 
 The main driver for adaptivity is that computational campaigns will typically
 involve compounds with a wide range of chemical properties which can impact
-% not only 
-the time to convergence %, but 
-and the type of sampling required to gain accurate results. There may be
-cases where it is important to increase the sampling of phase space, possibly
-through expanding the ensemble.
-% or in TIES changing the distribution of $\lambda$ windows. 
-In general, there is no way to know exactly which calculation setup a
-particular system requires before runtime.
+the time to convergence and the type of sampling required to gain accurate 
+results. There may be cases where it is important to increase the sampling of 
+phase space, possibly through expanding the ensemble. In general, there is no 
+way to know exactly which calculation setup a particular system requires before 
+runtime.
 
 Another driver of adaptivity is that, on occasion, alchemical methods may
 converge very slowly. 
@@ -220,7 +219,7 @@ sufficient for a wide range of systems.
 However, the number or the location of the $\lambda$ windows that will most
 impact the calculation are not known \textit{a priori}, and varies across
 candidates. As each window requires multiple simulations, sampling
-with an high frequency is expensive. % and impractical. 
+with a high frequency is expensive. % and impractical. 
 Approximations using evenly spaced $\lambda$ windows reach an acceptable
 accuracy threshold but adaptive placement of $\lambda$ windows is likely to
 better capture the shape of the $\partial U/\partial\lambda$ curve, leading
@@ -230,7 +229,7 @@ In this work, we use adaptive middleware to automate runtime decisions based
 on partial simulation data, and redistribute resources at runtime
 to support dynamically generated simulations. We focus on 
 % one type of adaptivity, 
-intra-protocol adaptivity which relies on % the 
+intra-protocol adaptivity which relies on
 intermediate runtime results
 \textit{within} a protocol instance to define the % next 
 following set of % further

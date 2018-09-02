@@ -27,7 +27,7 @@ execution and resource management; and, (3) provide runtime protocol
 adaptivity.
 
 Computational drug campaigns increasingly depend on scalable ensemble-based
-protocols. This pose at least two major computational challenges: First,
+protocols. This poses at least two major computational challenges: First,
 ensemble-based protocols require execution coordination and resource
 management among ensemble members, within protocols as well as across
 protocols. Second, the setup of execution environments and data management
@@ -39,7 +39,7 @@ Adaptivity is another feature required by modern computational drug
 campaigns. Adaptive protocols allow to change the control logic of the
 ensemble execution, based on intermediate results of the ongoing computation.
 Thus, HTBAC will have to support the redistribution of resources, according
-to the logic provided by the adaptive algorithms. In this way, HTBAC will
+to the logic of the adaptive algorithms. In this way, HTBAC will
 maximize computational efficiency.
 
 Finally, usability plays an important role in the development of HTBAC. HTBAC
@@ -135,13 +135,12 @@ resource requirements constitute an HTBAC \textbf{application}.
 %   \item \textbf{Resource:} Abstraction to describe resources requirements.
 % \end{itemize}
 
-In HTBAC, each protocol models a unique protein ligand physical system. Each
-protocol follows a sequence of simulation and analysis steps, assigning
-ensemble members to execute independent simulations or analysis. An ensemble
-member that executes an independent simulation within a simulation step is
-referred to as a replica. Each simulation is assigned a different initial
-velocity, which enables simulations to begin in different parts of the
-ligand's phase space.
+Each protocol models a unique protein ligand physical system. Protocols follow
+a sequence of simulation and analysis steps, assigning ensemble members to 
+execute independent simulations or analysis. An ensemble member that executes an 
+independent simulation within a simulation step is referred to as a replica. 
+Each simulation is assigned a different initial velocity, which enables 
+simulations to begin in different parts of the ligand's phase space.
 
 Individual simulations or analyses with input, output, termination criteria
 and dedicated resources are designed as a computational
@@ -212,9 +211,8 @@ workflow of computational tasks.
 % execution management from the user.
 
 Fig.~\ref{fig:architecture} shows the components and subcomponents of
-% All components are stateless as they do not require different processes.
-HTBAC API enables users to codify protocol descriptions in terms of protocol
-type, simulation and analysis steps, and computer infrastructure
+HTBAC. The API enables users to codify protocol descriptions in terms of 
+protocol type, simulation and analysis steps, and compute infrastructure
 requirements. Descriptor uses two subcomponents to aggregate protocol
 descriptions into a single application and resource description. Note that
 Descriptor can aggregate different types of protocols, with different
@@ -361,7 +359,7 @@ applications~\cite{power-of-many17}. EnTK exposes three constructs:
 information regarding an executable, its software environment and its data
 dependencies. Stages are sets of tasks without mutual dependencies that can
 execute concurrently. Pipeline are lists of stages, where stages can execute
-only sequentially and each pipeline can execute independently. HTBAC uses a
+only sequentially. Pipelines can execute independently. HTBAC uses a
 Middleware Connector for EnTK to encode a protocol instance as a single
 pipeline that contains stages of individual simulations and analyses tasks.
 
@@ -370,7 +368,7 @@ EnTK uses RP to execute tasks via pilots. RP supports task-level parallelism
 and high-throughput by acquiring resources from a computing infrastructure
 and scheduling tasks on those resources for execution. Pilot systems execute
 tasks directly on the resources, without queuing them on the infrastructure's
-scheduler.
+scheduler. 
 
 % In this paper, we study the implementation of two protocols via HTBAC:
 % ESMACS and TIES.
@@ -601,7 +599,7 @@ Execution Manager. As the number of simulations grows at runtime, the ratio
 of cores-to-task fluctuates. EnTK's Execution Manager automatically
 redistributes an even share of the total requested cores to each simulation. RP 
 allows for new simulations to execute within the job's wall-time, without 
-acquiring new resources. This is to avoid resubmitting the new application 
+acquiring new resources. This is to avoid submitting the new application 
 requirements to the batch queue.
 
 \subsection{Implementing ESMACS and TIES in

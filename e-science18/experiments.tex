@@ -7,7 +7,7 @@ and its overheads on Blue Waters. We validate the results of the free energy
 calculations produced using HTBAC against published results.
 
 Given that protocols like TIES are more computationally demanding than
-protocols like ESMACS, it is paramount to use resource efficiently,
+protocols like ESMACS, it is paramount to use resources efficiently,
 especially for campaigns that have a predefined computational budget. As
 described in Sections~\ref{sec:science-drivers} and~\ref{sec:htbac}, adaptive
 simulation methods have the potential to reduce the number of simulations
@@ -327,14 +327,16 @@ SuperComputer with peak performance of 13.3 petaFLOPS managed by NCSA.
 consistent with NCSA policies, we initiated the experiments from a virtual
 machine outside NCSA, avoiding to run persistent process on the NCSA login
 node. We used HTBAC 0.1, EnTK 0.6, and RP 0.47 and the \texttt{NAMD-MPI} MD
-kernel, compiled according to the capabilities of each environment and of
-\texttt{NAMD} itself, and launched via the \texttt{aprun} command. For the
+kernel, 
+% , compiled according to the capabilities of each environment and of
+% \texttt{NAMD} itself
+and launched via the \texttt{aprun} command. For the
 analysis stages in the TIES protocol we used \texttt{AmberTools}.
 
 NCSA sets a system policy on the maximum number of processes that
 \texttt{aprun} can spawn, limiting the number of concurrent tasks we can
 execute on Blue Waters to $\approx$450. \jdnote{Wanted to clear up the ideas in 
-this sentence: APRUN is the launch method, while ALPS is the scheduler. 
+this sentence: APRUN is the launch method, ALPS is the scheduler. 
 The limit is in the number of \texttt{aprun} calls per user per ALPS. The 
 limitation in the number of concurrent tasks are caused by ALPS limiting the 
 number of concurrent \texttt{apruns}. The workflow can launch as many 
@@ -348,7 +350,7 @@ average of $70\pm6.67$ failing tasks.% , and range of 59--83 tasks.
 More data would be required to model the distribution type of these results.
 
 NCSA allows to run only one MPI application for each compute node. Thus, we
-had to run each MD simulation with 32 cores (i.e., one compute node) even if
+run each MD simulation with 32 cores (i.e., one compute node) even if
 our performance measurement of \texttt{NAMD} on Blue Waters indicated that 16
 cores would offer the best trade-off between computing time and communication
 overhead.
