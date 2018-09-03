@@ -213,11 +213,11 @@ utilize the PTP1B, MC1, and TYK2 physical systems.
 \end{table*}
 
 Experiment 1 and 2 measure the weak scaling of HTBAC using the ESMACS
-(Experiment 1) and TIES (Experiment 2) protocols. Experiments 3 uses both the
-TIES and ESMACS protocols, characterizing the weak scaling of heterogeneous
-protocol executions. Experiments 4 and 5 measure the strong scaling of
-HTBAC using a fix number of instances of the ESMACS (Experiment 4) and TIES
-(Experiment 5) protocols. Experiments 6 uses both the TIES and ESMACS protocols, 
+and TIES protocols. Experiments 3 uses both the TIES and ESMACS protocols, 
+characterizing the weak scaling of heterogeneous protocol executions. 
+Experiments 4 and 5 measure the strong scaling of
+HTBAC using a fix number of instances of the ESMACS and TIES protocols. 
+Experiments 6 uses both the TIES and ESMACS protocols, 
 characterizing the strong scaling of heterogeneous protocol executions.
 Experiments 7--9 characterize nonadaptive and adaptive simulation methods using 
 the TIES protocol.
@@ -244,9 +244,8 @@ all the weak and strong scaling experiments we characterize the overheads of
 HTBAC, EnTK and RP, and we show an approximation of the time taken by the
 resources to become available. This offers insight about the impact of HTBAC
 and its middleware on the time to completion of each workload. 
-In~\cite{dakka2017}, we show the baseline performance of the overheads using a 
-null workload. 
-
+In~\cite{dakka2017}, we show baseline performance of the overheads using ESMACS 
+with a null workload. 
 
 For weak and strong scaling experiments, we reduced the number of time-steps
 of the protocols and omitted the analysis steps $S5$ and $S6$ of their
@@ -341,19 +340,17 @@ The limit is in the number of \texttt{aprun} calls per user per ALPS. The
 limitation in the number of concurrent tasks are caused by ALPS limiting the 
 number of concurrent \texttt{apruns}. The workflow can launch as many 
 apruns as required by the user but ALPS controls the placement and scheduling of 
-those apruns.}
-
-During the execution of Experiment 2,
-we observed failing tasks with 8 TIES protocol instances, i.e., 520
-concurrent tasks. In a trial of 10 repetitions at this scale, we observed an
-average of $70\pm6.67$ failing tasks.% , and range of 59--83 tasks. 
+those apruns.} During the execution of Experiment 2, we observed failing tasks 
+with 8 TIES protocol instances, i.e., 520 concurrent tasks. In a trial of 10 
+repetitions at this scale, we observed an average of $70\pm6.67$ failing 
+tasks.
+% , and range of 59--83 tasks. 
 More data would be required to model the distribution type of these results.
 
 NCSA allows to run only one MPI application for each compute node. Thus, we
 run each MD simulation with 32 cores (i.e., one compute node) even if
-our performance measurement of \texttt{NAMD} on Blue Waters indicated that 16
-cores would offer the best trade-off between computing time and communication
-overhead.
+our performance of \texttt{NAMD} on Blue Waters indicated that 16 cores offers 
+the best trade-off between computing time and communication overhead.
 
 % \mtnote{I had to simply this paragraph a lot. Please check whether I
 % omitted some essential detail or got the algorithm wrong.}
