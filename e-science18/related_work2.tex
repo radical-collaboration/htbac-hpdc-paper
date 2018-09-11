@@ -1,35 +1,34 @@
-Free-energy calculations using molecular dynamics simulations are now used in
-a wide range of research including protein folding and interactions as well
-as the assessment of small molecule binding. Free-energy calculation require
-three main components: (1) suitable model Hamiltonian; (2) sampling protocol;
+Free-energy calculations using MD simulations occur in
+a wide range of research including protein folding and assessing small molecule 
+binding. Free-energy calculation require three main components: 
+(1) suitable model Hamiltonian; (2) sampling protocol;
 and (3) estimator for free energy. Several approaches to computing binding
-free-energies exist, amongst which relative binding free energy (or binding
+free energies exist, amongst which relative binding free energy (or binding
 affinity) calculations are generating accurate predictions, delivering
 considerable promise for computational drug campaigns~\cite{Karplus2005}.
 
 Ensemble-based simulations have been shown to reduce the sampling time
 required to deliver the precision necessary to meet the requirements of drug
-design campaigns. In biomolecular simulation, several ensemble-based methods
-are widely used to compute binding free energies, studying different problem
-spaces. For example, a popular approach is to use Markov state models to
-learn a simplified representation of the explored phase space and to choose
-which regions should be further sampled~\cite{Bowman2010}. Replica exchange
-with solute tempering (one of the many replica exchange variations available)
-use the Metropolis-Hastings criteria to make periodic decisions about what
-regions of the phase space to sample~\cite{Earl2005,Hritz2008,Kim2012}. In
+design campaigns. Several ensemble-based methods are widely used to compute 
+binding free energies, studying different problem spaces. For example, a popular 
+approach is to use Markov state models to learn a simplified representation of 
+the explored phase space and to choose which regions should be further 
+sampled~\cite{Bowman2010}. Replica exchange with solute tempering use the 
+Metropolis-Hastings criteria to make periodic decisions about what regions of 
+the phase space to sample~\cite{Earl2005,Hritz2008,Kim2012}. In
 expanded ensemble simulations, thermodynamic states are explored via a biased
 random walk in state space~\cite{Lyubartsev1992}. Approaches that learn by
-exchanging information have been found to improve sampling results and always
-decorrelating as fast or faster than standard simulations.
+exchanging information have been found to improve sampling results and
+decorrolate as fast or faster than standard simulations.
 
-Generally, in relative binding free energy calculations sampling is performed
+In binding affinity calculations sampling is performed
 at discrete regions along the transformation between the two compounds.
-Consequently, the choice of where exactly this sampling occurs is a key
+The choice of where exactly this sampling occurs is a key
 determinant of the uncertainty in and accuracy of the
-calculations~\cite{Ruiter2013}. Increasing simulation in regions of most
-rapid change reduces errors on the predicated binding affinity.
+calculations~\cite{Ruiter2013, Ruiter2016}. Increasing simulations in regions of 
+most rapid change reduces errors on the predicated binding affinity.
 
-Executing scalable and adaptive simulations methodologies directly on High
+Executing scalable and adaptive simulation methods directly on High
 Performance Computers (HPCs) and other infrastructures using ensemble-based
 methods presents several challenges. On HPCs, users can only exploit the
 adaptive features provided by MD kernels and often run applications with
@@ -51,12 +50,12 @@ coordination and distribution mechanisms and low performance overheads. Some
 existing software tools enable execution of ensemble-based methods on HPCs,
 yet only offer end-to-end solutions and lack in providing portability and
 flexibility, bounding the user to a particular infrastructure. In
-domain-specific projects or languages, the user is bound to a limited
+domain-specific projects or languages, the user is limited to
 adaptive features that target specific adaptive sampling methods, and require
 explicit management of resources.
 
 Domain scientists who wish to create adaptive methods require a solution that
-provides the flexibility to create and customize ensemble-based free energy
+provides the flexibility to create ensemble-based free energy
 calculations with the ability to incorporate user-defined adaptivity. These
 considerations provide the motivation behind the design and development of
 HTBAC which serves as a software tool to enable ensemble-based free energy

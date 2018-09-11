@@ -1,15 +1,12 @@
-Ensemble-based protocols provide an efficient method for producing robust
-estimates of binding free energy, showing considerable predictive potential in
-computational drug campaigns. As drug screening can cover millions of
-compounds and hundreds of millions of core-hours, it is important for these
+Ensemble-based protocols provide are showing considerable predictive potential 
+% a method for producing robust estimates of binding free energy, 
+in computational drug campaigns. As drug screening can cover millions of
+compounds and hundreds of millions of core-hours, it is important for
 binding affinity calculations to optimize the accuracy and precision of
 results obtained from a given set of resources. However, the optimal protocol
 for a given system is difficult to determine {\it a priori}, thus requiring
-runtime adaptation to workflow executions. We introduce the High-throughput
-Binding Affinity Calculator (HTBAC) to enable the scalable and adaptive
-calculation of the binding free energy on high-performance computing
-resources.
-
+runtime adaptation to workflow executions. We introduce HTBAC to enable 
+scalable and adaptive binding affinity energy calculations on HPC. 
 % However, variations in the chemical and biophysical properties of different
 % systems impact the optimal protocol choice for different proteins and
 % classes of drugs targeting them.
@@ -17,28 +14,31 @@ resources.
 Specifically, this paper makes the following contributions: (1) shows
 adaptive approaches within a ensemble-based free energy protocol (TIES) to
 improve binding affinity accuracy given a fixed amount of computing
-resources; (2) characterizes HTBAC, the software system we developed to
-enable the scalable execution of adaptive applications; and (3) shows the
-capability to execute adaptive applications at scale, validating their
-scientific results.
+resources; (2) characterizes HTBAC, the software systems we developed to address
+the aforementioned requirements;
+%, the software system we developed to
+% enable the scalable execution of adaptive applications; 
+and (3) shows the capability to execute adaptive applications at scale, 
+validating their scientific results.
 
 We characterize the performance of HTBAC on NCSA Blue Waters. We show
-near-ideal weak scaling behavior for ESMACS and TIES, individually and
-together, reaching scales of 21120 cores. Furthermore, we provide preliminary
-strong scaling results using ESMACS and TIES individually, demonstrating
-linear speedup, and consistent overhead. Furthermore, we validate binding
-free energies computed with HTBAC using TIES with both experimental and
-previously published computational results.
+near-ideal weak and strong scaling behavior for ESMACS and TIES, individually 
+and together, reaching scales of 21120 cores. 
+% Furthermore, we provide preliminary
+% strong scaling results using ESMACS and TIES individually, demonstrating
+% linear speedup, and consistent overhead. 
+Furthermore, we validate binding free energies computed with HTBAC 
+with both experimental and previously published computational results.
 
 % We show ideal weak scaling behavior reaching scales of 21120 cores.
 
 We compare computational consumption and free energy accuracy in our adaptive
-and non-adaptive TIES results. Given a fixed amount of computational resources
-between both approaches, we show improvements in $\Delta \Delta$G on average
-by 77\% for the physical systems tested. By reducing the $\lambda$ windows on
-average by 32\%, we reduce the Total Task Execution Time by the same amount.
-The adaptive implementation of the TIES protocol saves compute resources and
-reduces time to insight on average by 16\%. To the best of our knowledge,
+and non-adaptive TIES results. Using the adaptive quadrature algorithm, we
+show improvements in $\Delta \Delta$G on average by 77\% over the 5 physical
+systems tested. By reducing the $\lambda$ windows on average by 32\%, we
+reduce execution time by the same amount. The adaptive
+termination implementation of the TIES protocol saves compute resources and
+reduces time to solution on average by 16\%. To the best of our knowledge,
 adaptive TIES protocols have not been benchmarked against non-adaptive
 implementations before.
 

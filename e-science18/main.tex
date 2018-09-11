@@ -29,7 +29,7 @@ accuracy ($\leq$ 1 kcal/mol). For this predictive accuracy to impact clinical
 decision making, binding free energy results must be turned around rapidly
 and without loss of accuracy. This demands advances in algorithms, scalable
 software systems, and efficient utilization of supercomputing resources. We
-introduce the use of a framework called HTBAC, designed to support accurate
+introduce a framework called HTBAC, designed to support accurate
 and scalable drug binding affinity calculations, while marshaling large
 simulation campaigns. We show that HTBAC supports the specification and
 execution of adaptive free-energy protocols at scale and with minimal
@@ -57,6 +57,7 @@ consumption of TIES, a widely used free-energy protocol.
 \section{Introduction}\label{sec:intro}
 \input{introduction}
 
+% \vspace{-0.1in}
 
 % ---------------------------------------------------------------------------
 % S2
@@ -64,14 +65,14 @@ consumption of TIES, a widely used free-energy protocol.
 \section{Related Work}\label{sec:related-work}
 \input{related_work2}
 
-
 % ---------------------------------------------------------------------------
 % S3
 % ---------------------------------------------------------------------------
+
 \section{Science Drivers}\label{sec:science-drivers}
+% \vspace{-0.2in}
 \input{fe_protocols}
 \input{physical_systems}
-
 
 % ---------------------------------------------------------------------------
 % S4
@@ -80,6 +81,7 @@ consumption of TIES, a widely used free-energy protocol.
 (HTBAC)}\label{sec:htbac}
 \input{design_implementation}
 
+\vspace{-0.2in}
 
 % ---------------------------------------------------------------------------
 % S5
@@ -95,12 +97,17 @@ consumption of TIES, a widely used free-energy protocol.
 \section{Experiments}\label{sec:experiments}
 \input{experiments}
 
-
 % ---------------------------------------------------------------------------
 % S7
 % ---------------------------------------------------------------------------
 \section{Discussion and Conclusion}\label{sec:discussion}
 \input{conclusions}
+
+\subsubsection*{Software and Data}
+
+{\footnotesize All experimental data can be found at 
+https://github.com/radical-experiments/htbac-escience-18. HTBAC (MIT license) 
+can be found at: https://github.com/radical-cybertools/htbac}
 
 \subsubsection*{Acknowledgements}
 %\input{acknowledgements}
@@ -111,6 +118,7 @@ EUDAT2020 (654065) and ComPat (671564) projects. Access to Blue Waters was
 made possible by NSF 1713749. The software capabilities were supported by
 RADICAL-Cybertools (NSF 1440677). We thank Vivek Balasubramanian and Andre
 Merzky for support with RADICAL-Cybertools.}
+
 \newpage
 
 % ---------------------------------------------------------------------------

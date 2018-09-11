@@ -7,7 +7,7 @@ and its overheads on Blue Waters. We validate the results of the free energy
 calculations produced using HTBAC against published results.
 
 Given that protocols like TIES are more computationally demanding than
-protocols like ESMACS, it is paramount to use resource efficiently,
+protocols like ESMACS, it is paramount to use resources efficiently,
 especially for campaigns that have a predefined computational budget. As
 described in Sections~\ref{sec:science-drivers} and~\ref{sec:htbac}, adaptive
 simulation methods have the potential to reduce the number of simulations
@@ -99,10 +99,10 @@ computational load.
 % A -------------------------------------------------------------------------
 \subsection{Experiment Setup}\label{ssec:exp_design}
 
-Table~\ref{tab:experiments} shows 7 experiments we designed to characterize
+Table~\ref{tab:experiments} shows 9 experiments we designed to characterize
 the behavior of HTBAC on Blue Waters. Each experiment executes the ESMACS
-and/or TIES protocol for different physical systems. Experiments 1--5 use the
-BRD4 physical systems provided by GlaxoSmithKline, while experiments 6 and 7
+and/or TIES protocol for different physical systems. Experiments 1--6 use the
+BRD4 physical systems provided by GlaxoSmithKline, while experiments 7--9 
 utilize the PTP1B, MC1, and TYK2 physical systems. 
 % which are a diverse set of proteins.
 
@@ -172,7 +172,16 @@ utilize the PTP1B, MC1, and TYK2 physical systems.
     (16, 16, 16)                      &  % number of protocols
     6400, 3200, 1600                  \\ % total cores
     %
+    %
     \B{6}                             &  % Experiment ID
+    Strong scaling                    &  % experiment type
+    BRD4                              &  % physical system
+    % Blue Waters                       &. % CI
+    ESMACS + TIES                     &  % protocol type
+    (20, 20, 20)                      &  % number of protocols
+    22120, 10560, 5280                  \\ % total cores
+    %
+    \B{7}                             &  % Experiment ID
     Non-adaptivity                    &  % experiment type
     PTP1B, MC1, TYK2                  &  % physical system
     % Blue Waters                       &  % CI
@@ -180,7 +189,7 @@ utilize the PTP1B, MC1, and TYK2 physical systems.
     (1, 1, 1)                         &  % number of protocols
     2080, 2080, 2080                  \\ % total cores
     %
-    \B{7}                             &  % Experiment ID
+    \B{8}                             &  % Experiment ID
     Adaptivity                        &  % experiment type
     PTP1B, MC1, TYK2                  &  % physical system
     % Blue Waters                       &  % CI
@@ -188,7 +197,7 @@ utilize the PTP1B, MC1, and TYK2 physical systems.
     (1, 1, 1)                         &  % number of protocols
     2080, 2080, 2080                  \\ % total cores
     %
-    \B{8}                             &  % Experiment ID
+    \B{9}                             &  % Experiment ID
     Reference                         &  % experiment type
     PTP1B, MC1, TYK2                  &  % physical system
     % Blue Waters                       &  % CI
@@ -204,12 +213,14 @@ utilize the PTP1B, MC1, and TYK2 physical systems.
 \end{table*}
 
 Experiment 1 and 2 measure the weak scaling of HTBAC using the ESMACS
-(Experiment 1) and TIES (Experiment 2) protocols. Experiments 3 uses both the
-TIES and ESMACS protocols, characterizing the weak scaling of heterogeneous
-protocol executions. Experiments 4 and 5 measure the strong scaling of
-HTBAC using a fix number of instances of the ESMACS (Experiment 4) and TIES
-(Experiment 5) protocols. Experiments 6--8 characterize nonadaptive and
-adaptive simulation methods using the TIES protocol.
+and TIES protocols. Experiments 3 uses both the TIES and ESMACS protocols, 
+characterizing the weak scaling of heterogeneous protocol executions. 
+Experiments 4 and 5 measure the strong scaling of
+HTBAC using a fix number of instances of the ESMACS and TIES protocols. 
+Experiments 6 uses both the TIES and ESMACS protocols, 
+characterizing the strong scaling of heterogeneous protocol executions.
+Experiments 7--9 characterize nonadaptive and adaptive simulation methods using 
+the TIES protocol.
 
 % We leverage strong scaling to support the objective in this work, which is
 % to characterize: (a) the time-to-solution differences between adaptive and
@@ -222,7 +233,7 @@ In each weak scaling experiment (1--3), we keep the ratio between resources
 allocated and protocol instances constant. Consistently, for each experiment
 we progressively increase both the number of cores (i.e., measure of
 resource) and the number of protocol instances by a factor of 2. In each
-strong scaling experiment (4--5), we change the ratio between resources
+strong scaling experiment (4--6), we change the ratio between resources
 allocated and the number of protocol instances: we fix the number of protocol
 instances and reduce the number of cores by a factor of 2.
 
@@ -232,16 +243,18 @@ show how the time duration of the workload scales when adding resources. For
 all the weak and strong scaling experiments we characterize the overheads of
 HTBAC, EnTK and RP, and we show an approximation of the time taken by the
 resources to become available. This offers insight about the impact of HTBAC
-and its middleware on the time to completion of each workload.
+and its middleware on the time to completion of each workload. 
+In~\cite{dakka2017}, we show baseline performance of the overheads using ESMACS 
+with a null workload. 
 
 For weak and strong scaling experiments, we reduced the number of time-steps
 of the protocols and omitted the analysis steps $S5$ and $S6$ of their
 workflows (Fig.~\ref{fig:ties_esmacs_application}). These simplifications
 are consistent with characterizing scalability performance instead of
-simulation duration. For the experiments 1--5 we used the following
+simulation duration. For the experiments 1--6 we used the following
 time-steps: $S1=1000$; $S2=5000$; $S3=5000$; and $S4=50000$.
 
-We measure the following durations for Experiments 1--5:
+We measure the following durations for Experiments 1--6:
 \begin{itemize}
     \item \textbf{Total Task Execution Time}: Time taken by all the
     task executables to run on the computing infrastructure.
@@ -260,11 +273,12 @@ for each task, we measure the difference between the task execution time and
 its \texttt{NAMD} kernel execution time, provided by the \texttt{NAMD} output
 logs. In this way, we approximate the time taken by \texttt{aprun} to launch
 the task. Once aggregated, these measures constitute what we defined as
-\texttt{aprun} Overhead.
+\texttt{aprun} Overhead. The summation of all durations provides the average
+wall-time of the job. 
 
-Experiments 6--8 compare the accuracy and time to solution of nonadaptive and
+Experiments 7--9 compare the accuracy and time to solution of nonadaptive and
 adaptive simulation methods. For the nonadaptive simulation method of
-Experiment 6 we use 13 preassigned and approximated $\lambda$ windows,
+Experiment 7 we use 13 preassigned and approximated $\lambda$ windows,
 consistent with the value reported in Ref.~\cite{Bhati2017}. In this way, we
 produce 65 concurrent simulations for stages $S1$--$S4$ of TIES (see
 Fig.~\ref{fig:ties_esmacs_application}). The production simulation stage $S4$
@@ -284,10 +298,10 @@ $\lambda$ values.
 % differences in time duration between adaptive and non-adaptive methods as
 % well as the differences in accuracy.
 
-We use Experiment 8 to compare the adaptive and non-adaptive execution of
-TIES. We use a large number of (65) equally spaced $\lambda$ windows to
-calculate the free energy with high accuracy. This creates a baseline
-against which to compare the adaptive and non-adaptive results.
+We use Experiment 9 to compare the adaptive and non-adaptive execution of
+TIES. We use a large number of (65) simulations, derived from 13 equally spaced 
+$\lambda$ windows to calculate the free energy with high accuracy. This creates 
+a baseline against which to compare the adaptive and non-adaptive results.
 
 \begin{figure}
   \centering
@@ -302,9 +316,9 @@ against which to compare the adaptive and non-adaptive results.
 \up{}
 \end{figure}
 
-We assigned the following simulation time-steps in Experiment 6 and 8:
+We assigned the following simulation time-steps in Experiment 7 and 9:
 $S1=3000$; $S2=50000$; $S3=50000$; and $S4=2000000$. The adaptive simulation
-of Experiment 7 uses the same time-steps, apart from $S4$ which is divided
+of Experiment 8 uses the same time-steps, apart from $S4$ which is divided
 into 4 sub-stages of 500000 time-steps each.
 
 We performed all the experiments on Blue Waters, a 26868 node Cray XE6/XK6
@@ -312,23 +326,31 @@ SuperComputer with peak performance of 13.3 petaFLOPS managed by NCSA.
 consistent with NCSA policies, we initiated the experiments from a virtual
 machine outside NCSA, avoiding to run persistent process on the NCSA login
 node. We used HTBAC 0.1, EnTK 0.6, and RP 0.47 and the \texttt{NAMD-MPI} MD
-kernel, compiled according to the capabilities of each environment and of
-\texttt{NAMD} itself, and launched via the \texttt{aprun} command. For the
+kernel, 
+% , compiled according to the capabilities of each environment and of
+% \texttt{NAMD} itself
+and launched via the \texttt{aprun} command. For the
 analysis stages in the TIES protocol we used \texttt{AmberTools}.
 
 NCSA sets a system policy on the maximum number of processes that
 \texttt{aprun} can spawn, limiting the number of concurrent tasks we can
-execute on Blue Waters to $\approx$450. During the execution of Experiment 2,
-we observed failing tasks with 8 TIES protocol instances, i.e., 520
-concurrent tasks. In a trial of 10 repetitions at this scale, we observed an
-average of $70\pm6.67$ failing tasks.% , and range of 59--83 tasks. 
+execute on Blue Waters to $\approx$450. \jdnote{Wanted to clear up the ideas in 
+this sentence: APRUN is the launch method, ALPS is the scheduler. 
+The limit is in the number of \texttt{aprun} calls per user per ALPS. The 
+limitation in the number of concurrent tasks are caused by ALPS limiting the 
+number of concurrent \texttt{apruns}. The workflow can launch as many 
+apruns as required by the user but ALPS controls the placement and scheduling of 
+those apruns.} During the execution of Experiment 2, we observed failing tasks 
+with 8 TIES protocol instances, i.e., 520 concurrent tasks. In a trial of 10 
+repetitions at this scale, we observed an average of $70\pm6.67$ failing 
+tasks.
+% , and range of 59--83 tasks. 
 More data would be required to model the distribution type of these results.
 
 NCSA allows to run only one MPI application for each compute node. Thus, we
-had to run each MD simulation with 32 cores (i.e., one compute node) even if
-our performance measurement of \texttt{NAMD} on Blue Waters indicated that 16
-cores would offer the best trade-off between computing time and communication
-overhead.
+run each MD simulation with 32 cores (i.e., one compute node) even if
+our performance of \texttt{NAMD} on Blue Waters indicated that 16 cores offers 
+the best trade-off between computing time and communication overhead.
 
 % \mtnote{I had to simply this paragraph a lot. Please check whether I
 % omitted some essential detail or got the algorithm wrong.}
@@ -773,7 +795,8 @@ Each instance of the TIES protocol contains a single pipeline with 4 stages
 and 65 concurrent tasks. We increase the number of protocol instances
 linearly, between 2 and 8. When scaling to 8 protocol instances, we execute
 more than 450 concurrent tasks, the average limit supported by
-\texttt{aprun}, as described in \S\ref{ssec:exp_design}. This introduces some failures that contribute to a slight degradation in performance. 
+\texttt{aprun}, as described in \S\ref{ssec:exp_design}. This introduces some 
+failures that contribute to a slight degradation in performance. 
 
 % Nevertheless, we include results at this scale to show HTBAC's performance
 % when supporting higher orders of concurrent simulations.
@@ -809,16 +832,12 @@ For all weak scaling experiments (1--3) we use physical systems from the
 properties. The uniformity of these physical systems ensures a consistent
 workload with insignificant variability when characterizing their performance
 under different conditions.%\mtnote{moving to design?}
-%
-% \dwwnote{The figure captions and legends don't appear to agree which axis
-% applies to which measurement. Also the legend should be inside the plots.}
-% \jdnote{addressed, except with subplots I figured it would look cleaner
-% with the legend at the bottom.}
 
 In all weak scaling experiments (Fig.~\ref{fig:ws}) we observe that the value
 of Total Task Execution Time (green bar) shows minimal variation as the
-number of protocol instances increases. We conclude that HTBAC shows
-near-ideal weak scaling behavior under these conditions.
+number of protocol instances increases, suggesting that HTBAC is invariant to 
+the protocol. We conclude that HTBAC shows near-ideal weak scaling behavior 
+under these conditions. 
 
 The HTBAC overhead depends mostly on the number of protocol instances that
 need to be generated for an application. This overhead shows a super linear
@@ -831,7 +850,7 @@ when scaling to 8 TIES protocol instances (Fig.~\ref{fig:ws}(a)), we see
 that the increase in \texttt{aprun} overhead occurs due to task failure. This
 is explained by noticing that attempts to relaunch failed tasks require
 additional communication among the nodes that were running the tasks and the
-MOM Nodes from which the execution is coordinated.
+MOM Nodes from which the execution is coordinated. 
 
 EnTK and RP overheads mostly depend on the number of tasks that need to be
 translated in-memory from a Python object to a task
@@ -1047,6 +1066,11 @@ In Experiment 5 we fix the number of instances of the ESMACS protocols to 16
 and vary the amount of resources between 3200, 6400 and 12800 cores. In this
 way, we obtain the same number of generations as in Experiment 4.
 
+In Experiment 6 we fix the number of instances of the ESMACS and TIES protocols 
+to 16 and 4 respectively, and vary the amount of resources between 5280, 10560
+and 22120 cores. In this way, we obtain the same number of generations as in 
+Experiment 4 and 5.
+
 Fig.~\ref{fig:ss} shows a linear speedup in Total Task Execution Time for
 both experiments, proportional to the increase in the number of cores. The
 availability of more resources for a fixed number of protocols explains this
@@ -1060,8 +1084,8 @@ overheads (Ref.~\cite{merzky2018}).
    \includegraphics[width=\columnwidth]{figures/ss_all_base2.pdf} 
    \caption{Strong scaling of HTBAC. The number of protocol instances is
     fixed while the number of core increases. Task Execution Time with and
-    HTBAC, EnTK+RP, \texttt{aprun} overheads with (a) TIES (Experiment 4) and
-    ESMACS (Experiment 5).}\label{fig:ss}
+    HTBAC, EnTK+RP, \texttt{aprun} overheads with (a) TIES (Experiment 4),
+    ESMACS (Experiment 5) and ESMACS + TIES (Experiment 6).}\label{fig:ss}
 \up{}
 \up{}
 \up{}
@@ -1151,7 +1175,7 @@ overheads (Ref.~\cite{merzky2018}).
 \subsection{Validation}
 
 In order to validate the correctness of the results produced in Experiment
-1--5, using HTBAC and the BRD4-GSK physical systems, we compare our results
+1--6, using HTBAC and the BRD4-GSK physical systems, we compare our results
 with those previously published in Wan et al.~\cite{Wan2017brd4}. In this
 way, we can confirm that we calculated the correct binding free energies
 values.
@@ -1176,7 +1200,10 @@ study, validating the results we produced with HTBAC.
   % \begin{tabular}{l@{\hskip 1in}r@{\hskip 0.2in}r@{\hskip 0.2in}r}
   \begin{tabular}{lrrr}
     \toprule
-    System & HTBAC & Wan et al. & Experiment \\
+    System & 
+    {\makecell{HTBAC \\ (\si{\kilo\calorie\per\mole})}} & 
+    {\makecell{Wan et al. \\ (\si{\kilo\calorie\per\mole})}} & 
+    {\makecell{Experiment \\ (\si{\kilo\calorie\per\mole})}} \\
     \midrule
     BRD4 \textbf{3 to 1} & \num{0.39 +- 0.10} &   \num{0.41 +- 0.04} &  \num{0.3 +- 0.09} \\
     BRD4 \textbf{3 to 4} & \num{0.02 +- 0.12} &   \num{0.01 +- 0.06} &  \num{0.0 +- 0.13} \\
@@ -1350,7 +1377,7 @@ Table~\ref{tab:adapquad} shows the results of running adaptive quadrature on
 accuracy versus the non-adaptive case. The number of lambda windows are
 reduced on average by \SI{32}{\percent}, hence reducing Total Task Execution
 Time by the same amount. The error on the adaptive results is also decreased,
-on average by \SI{77}{\percent} (see figure~\ref{fig:savings}). More
+on average by \SI{77}{\percent} (see fig.~\ref{fig:savings}). More
 importantly, the error on all of the systems are reduced to below
 \SI{0.2}{\kilo\calorie\per\mole}, which has recently been shown to be the
 upper bound of reproducibility across different simulation
@@ -1359,20 +1386,20 @@ engines~\cite{Loeffler2018}.
 The Total Task Execution Time of the TYK2 L7--L8 system has increased for the
 adaptive run by 1 $\lambda$ window, compared to the non-adaptive case. This
 is due to the non-adaptive error being very low, and matching that same
-accuracy required in the use of a large number of windows. Nonetheless due to
+accuracy required the use of a large number of windows. Nonetheless due to
 the efficient placing of the windows, the accuracy of the free energy still
 increased by \SI{40}{\percent}.
 
 \begin{table*}
   \caption{Comparing results of adaptive, non-adaptive and reference
-  runs}\label{tab:adapquad}
+  runs.}\label{tab:adapquad}
   \begin{tabular}{lSSSSS[table-format=5.1]S[table-format=5.1]}
     \toprule
     {System}                               & 
     {\makecell{Ref $\Delta \Delta$G \\ (\si{\kilo\calorie\per\mole})}}  &
-    {Non-adaptive $\Delta \Delta$G}        &
-    {Adaptive $\Delta \Delta$G}            &
-    {Num. of $\lambda$ windows}            &
+    {\makecell{Non-adaptive $\Delta \Delta$G \\ (\si{\kilo\calorie\per\mole})}}       &
+    {\makecell{Adaptive $\Delta \Delta$G \\ (\si{\kilo\calorie\per\mole})}}           &
+    {No. of $\lambda$ windows}            &
     {Decrease in TTX}       &
     {Increase in accuracy}                 \\
     \midrule
@@ -1421,10 +1448,11 @@ increased by \SI{40}{\percent}.
 
 % \jhanote{This para is difficult to parse. How does one appreciate the
 % iteration count? Needs complete rewrite.} \kfnote{rewrote}
-Figure~\ref{fig:adapconv} compares the error on the adaptive and non-adaptive
+Fig.~\ref{fig:adapconv} compares the error on the adaptive and non-adaptive
 simulations as a time series plot. As fewer lambda windows are calculated the
-adaptive algorithm uses less resources. Still, the error is drastically
-reduced as the windows are places ideally to capture the changes in function.
+adaptive algorithm uses less resources. Remarkably, the error is drastically
+reduced as the windows are placed adaptively to capture the changes in
+function.
 
 \begin{figure}
   \input{figures/fig-adapt.tex}
@@ -1443,7 +1471,7 @@ Adaptive quadrature is specific to alchemical free energy calculations.
 offers dynamic termination for any simulation protocol that has as its aim
 the prediction of an observable value. The protocol monitors the convergence
 of the observable as the simulation progresses, and stops the execution when
-a criterion has been met. Non- adaptive protocols usually have a predefined
+a criterion has been met. Non-adaptive protocols usually have a predefined
 simulation time, set based on the assumption that the simulation will
 converge by that time. This means that in practical examples the simulation
 might have converged before the predefined time interval.
@@ -1469,14 +1497,12 @@ on average by \SI{16}{\percent} for the physical systems tested.
   (hence simulation time). The adaptive termination algorithm checks the
   convergence of the observable every $\tau = \SI{0.5}{\nano\second}$ and if
   the threshold (\SI{0.01}{\kilo\calorie\per\mole}) has been met, terminates
-  the simulation. \jhanote{Reviwer will want to know what happens with
-  remaining two candidates?}\kfnote{Results are in the table for all the
-  systems.}}\label{fig:termination}
+  the simulation.}\label{fig:termination}
 \end{figure}
 
 \begin{table}
   \caption{Simulation time of non-adaptive and adaptively terminated runs for
-  a given convergence criterion.}\label{tab:adapterm}
+  a given convergence criterion}\label{tab:adapterm}
   \centering
   \begin{tabular}{lSSS[table-format=5.1, table-column-width=2cm]}
     \toprule
