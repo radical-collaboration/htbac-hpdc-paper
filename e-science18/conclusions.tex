@@ -1,72 +1,48 @@
-Ensemble-based protocols provide are showing considerable predictive potential 
-% a method for producing robust estimates of binding free energy, 
-in computational drug campaigns. As drug screening can cover millions of
-compounds and hundreds of millions of core-hours, it is important for
-binding affinity calculations to optimize the accuracy and precision of
+Ensemble-based protocols provide are showing considerable predictive
+potential in computational drug campaigns. As drug screening can cover
+millions of compounds and hundreds of millions of core-hours, it is important
+for binding affinity calculations to optimize the accuracy and precision of
 results obtained from a given set of resources. However, the optimal protocol
 for a given system is difficult to determine {\it a priori}, thus requiring
-runtime adaptation to workflow executions. We introduce HTBAC to enable 
-scalable and adaptive binding affinity energy calculations on HPC. 
-% However, variations in the chemical and biophysical properties of different
-% systems impact the optimal protocol choice for different proteins and
-% classes of drugs targeting them.
+runtime adaptation to workflow executions. We introduce HTBAC to enable
+scalable and adaptive binding affinity energy calculations on HPC.
 
 Specifically, this paper makes the following contributions: (1) shows
 adaptive approaches within a ensemble-based free energy protocol (TIES) to
 improve binding affinity accuracy given a fixed amount of computing
-resources; (2) characterizes HTBAC, the software systems we developed to address
-the aforementioned requirements;
-%, the software system we developed to
-% enable the scalable execution of adaptive applications; 
-and (3) shows the capability to execute adaptive applications at scale, 
-validating their scientific results.
+resources; (2) characterizes HTBAC, the software systems we developed to
+address the aforementioned requirements; and (3) shows the capability to
+execute adaptive applications at scale, validating their scientific results.
 
 We characterize the performance of HTBAC on NCSA Blue Waters. We show
-near-ideal weak and strong scaling behavior for ESMACS and TIES, individually 
-and together, reaching scales of 21120 cores. 
-% Furthermore, we provide preliminary
-% strong scaling results using ESMACS and TIES individually, demonstrating
-% linear speedup, and consistent overhead. 
-Furthermore, we validate binding free energies computed with HTBAC 
-with both experimental and previously published computational results.
-
-% We show ideal weak scaling behavior reaching scales of 21120 cores.
+near-ideal weak and strong scaling behavior for ESMACS and TIES, individually
+and together, reaching scales of 21120 cores. Furthermore, we validate
+binding free energies computed with HTBAC with both experimental and
+previously published computational results.
 
 We compare computational consumption and free energy accuracy in our adaptive
 and non-adaptive TIES results. Using the adaptive quadrature algorithm, we
 show improvements in $\Delta \Delta$G on average by 77\% over the 5 physical
 systems tested. By reducing the $\lambda$ windows on average by 32\%, we
-reduce execution time by the same amount. The adaptive
-termination implementation of the TIES protocol saves compute resources and
-reduces time to solution on average by 16\%. To the best of our knowledge,
-adaptive TIES protocols have not been benchmarked against non-adaptive
-implementations before.
+reduce execution time by the same amount. The adaptive termination
+implementation of the TIES protocol saves compute resources and reduces time
+to solution on average by 16\%. To the best of our knowledge, adaptive TIES
+protocols have not been benchmarked against non-adaptive implementations
+before.
 
-% In this paper we demonstrate: (i) How HTBAC allows the concurrent screening
-% for drug binding affinities of multiple compounds at unprecedented scales,
-% both in the number of candidates and resources utilized. Specifically, we
-% investigated weak scaling behavior for screening 8 drug candidates
-% concurrently on more than 16,000 cores. This permits a rapid
-% time-to-solution that is essentially invariant with respect to the
-% calculation protocol, size of target system and number of ensemble
-% simulations. (ii) The validation of binding free energies computed using
-% HTBAC with both experimental and previously published computational
-% results; (iii) HTBAC enabled the adaptive execution of the TIES protocol
-% providing greater convergence (i.e., lower errors) for a given amount of
-% computational resources. To the best of our knowledge, adaptive TIES
-% protocols have not been benchmarked against non-adaptive implementations.
+% ---------------------------------------------------------------------------
+\subsubsection*{Software and Data}
 
-% nor have they been implemented at such scales before.
+{\footnotesize All experimental data can be found at
+\url{https://github.com/radical-experiments/htbac-escience-18}. HTBAC (MIT
+license) can be found at: \url{https://github.com/radical-cybertools/htbac}}
 
-% HTBAC can also support a wide range of adaptivite scenarios.
+% ---------------------------------------------------------------------------
+\subsubsection*{Acknowledgements}
 
-% As such, HTBAC advances the state of the scale and sophistication of
-% binding affinity calculation. In addition to reporting increasingly
-% sophisticated adaptive scenarios, in future, we will extend HTBAC to
-% support the ``design of experiments", facilitating optimization at the
-% level of the overall computational campaign and time-to-insight for a large
-% database of drug candidates, as opposed to for single simple calculations.
-
-% HTBAC uses readily available building blocks to attain both workflow
-% flexibility and performance; our scaling experiments are performed on the
-% Blue Waters machine at NCSA.
+{\footnotesize JD acknowledges Dept. of Education Award P200A150217 for her
+fellowship. PVC acknowledges the support of the EU H2020 CompBioMed (675451),
+EUDAT2020 (654065) and ComPat (671564) projects. Access to Blue Waters was
+made possible by NSF 1713749. The software capabilities were supported by
+RADICAL-Cybertools (NSF 1440677). We thank Vivek Balasubramanian and Andre
+Merzky for support with RADICAL-Cybertools.}
