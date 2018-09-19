@@ -1,18 +1,19 @@
-Ensemble-based binding affinity protocols have  considerable predictive
+Ensemble-based binding affinity protocols have considerable predictive
 potential in computational drug campaigns. As drug screening can cover
 millions of compounds and hundreds of millions of core-hours, it is important
 for binding affinity calculations to optimize the accuracy and precision of
-results. However, the optimal protocol configuration for a given system is
-difficult to determine {\it a priori}, thus requiring runtime adaptations to
-workflow executions. We introduce HTBAC to enable scalable and adaptive
+results. However, the optimal protocol configuration for a given compound is
+difficult to determine \textit{a priori}, thus requiring runtime adaptations
+to workflow executions. We introduce HTBAC to enable scalable and adaptive
 binding affinity energy calculations on HPC.
 
 Specifically, this paper makes the following contributions: (1) shows how
 adaptive execution of ensemble-based free energy protocol (TIES) improve
 binding affinity accuracy given a fixed amount of computing resources; (2)
-characterizes HTBAC, the software system we developed to address the
-aforementioned requirements; and (3) shows the capability to execute adaptive
-applications at scale, validating their scientific results.
+characterizes HTBAC, the software system we developed to enable the adaptive
+execution of ensemble-based binding affinity protocols on HPC; and (3) shows
+the capability to execute adaptive applications at scale, validating their
+scientific results.
 
 We characterize the performance of HTBAC on NCSA Blue Waters. We show
 near-ideal weak and strong scaling behavior for ESMACS and TIES, individually
@@ -31,18 +32,18 @@ protocols have not been benchmarked against non-adaptive implementations
 before.
 
 % ---------------------------------------------------------------------------
-\subsubsection*{Software and Data}
+\section*{Software and Data}
 
-{\footnotesize All experimental data can be found at
+All experimental data can be found at
 \url{https://github.com/radical-experiments/htbac-escience-18}. HTBAC (MIT
-license) can be found at: \url{https://github.com/radical-cybertools/htbac}}
+license) can be found at: \url{https://github.com/radical-cybertools/htbac}
 
 % ---------------------------------------------------------------------------
-\subsubsection*{Acknowledgements}
+\section*{Acknowledgments}
 
-{\footnotesize JD acknowledges Dept. of Education Award P200A150217 for her
+JD acknowledges Dept. of Education Award P200A150217 for her
 fellowship. PVC acknowledges the support of the EU H2020 CompBioMed (675451),
 EUDAT2020 (654065) and ComPat (671564) projects. Access to Blue Waters was
 made possible by NSF 1713749. The software capabilities were supported by
 RADICAL-Cybertools (NSF 1440677). We thank Vivek Balasubramanian and Andre
-Merzky for support with RADICAL-Cybertools.}
+Merzky for support with RADICAL-Cybertools.
