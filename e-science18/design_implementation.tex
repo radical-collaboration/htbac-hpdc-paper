@@ -10,8 +10,8 @@ types of protocols and alternative runtime middleware.
 
 HTBAC satisfies three main requirements: (1) enable the scalable execution of
 concurrent free energy protocols; (2) abstract protocol specification from
-execution and resource management; and, (3) provide runtime protocol
-adaptivity.
+execution and resource management; and, (3) enable adaptive execution of
+protocols.
 
 Computational drug campaigns increasingly depend on scalable ensemble-based
 protocols. This poses at least two major computational challenges. First,
@@ -22,12 +22,11 @@ has to preserve efficient resource utilization. These challenges need to be
 addressed by HTBAC as well as the underlying ensemble management and runtime
 system.
 
-Adaptivity is another feature required by modern computational drug
-campaigns. Adaptive protocols allow to change the control logic of the
-ensemble execution, based on intermediate results of the ongoing computation.
-Thus, HTBAC has to support resource redistribution, according to the logic of
-the adaptive algorithms, enabling the optimization of computational
-efficiency.
+Adaptive execution of protocols require the ability to change the control
+logic of the ensemble execution, based on intermediate results of the ongoing
+computation. Thus, HTBAC has to support resource redistribution, according to
+the logic of the adaptive algorithms, enabling the optimization of
+computational efficiency.
 
 Finally, usability plays an important role in the development of HTBAC. HTBAC
 has to provide a flexible interface which enables users to easily scale the
@@ -125,9 +124,9 @@ LSF. Pilot systems execute tasks directly on the resources, without queuing
 them on the infrastructure's scheduler.
 
 % C -------------------------------------------------------------------------
-\subsection{Adaptive Execution Model}\label{ssec:adaptive_execution}
+\subsection{Execution Model}\label{ssec:adaptive_execution}
 
-Users describe one or more adaptive or nonadaptive protocols alongside their
+Users describe one or more protocols alongside their
 resource requirements via HTBAC's API. Descriptor takes these descriptions as
 input and returns an application description (Fig.~\ref{fig:architecture}.1).
 As seen in \S\ref{ssec:design_arch}, this application consists of a set or

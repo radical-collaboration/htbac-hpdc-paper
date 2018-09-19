@@ -1,28 +1,28 @@
-Ensemble-based protocols provide are showing considerable predictive
+Ensemble-based binding affinity protocols have  considerable predictive
 potential in computational drug campaigns. As drug screening can cover
 millions of compounds and hundreds of millions of core-hours, it is important
 for binding affinity calculations to optimize the accuracy and precision of
-results obtained from a given set of resources. However, the optimal protocol
-for a given system is difficult to determine {\it a priori}, thus requiring
-runtime adaptation to workflow executions. We introduce HTBAC to enable
-scalable and adaptive binding affinity energy calculations on HPC.
+results. However, the optimal protocol configuration for a given system is
+difficult to determine {\it a priori}, thus requiring runtime adaptations to
+workflow executions. We introduce HTBAC to enable scalable and adaptive
+binding affinity energy calculations on HPC.
 
-Specifically, this paper makes the following contributions: (1) shows
-adaptive approaches within a ensemble-based free energy protocol (TIES) to
-improve binding affinity accuracy given a fixed amount of computing
-resources; (2) characterizes HTBAC, the software systems we developed to
-address the aforementioned requirements; and (3) shows the capability to
-execute adaptive applications at scale, validating their scientific results.
+Specifically, this paper makes the following contributions: (1) shows how
+adaptive execution of ensemble-based free energy protocol (TIES) improve
+binding affinity accuracy given a fixed amount of computing resources; (2)
+characterizes HTBAC, the software system we developed to address the
+aforementioned requirements; and (3) shows the capability to execute adaptive
+applications at scale, validating their scientific results.
 
 We characterize the performance of HTBAC on NCSA Blue Waters. We show
 near-ideal weak and strong scaling behavior for ESMACS and TIES, individually
-and together, reaching scales of 21120 cores. Furthermore, we validate
-binding free energies computed with HTBAC with both experimental and
+and together, reaching scales of 21,120 cores. Furthermore, we validate
+binding free energies computed using HTBAC with both experimental and
 previously published computational results.
 
-We compare computational consumption and free energy accuracy in our adaptive
-and non-adaptive TIES results. Using the adaptive quadrature algorithm, we
-show improvements in $\Delta \Delta$G on average by 77\% over the 5 physical
+We compare resource consumption and free energy accuracy in our adaptive and
+non-adaptive TIES results. Using the adaptive quadrature algorithm, we show
+improvements in $\Delta \Delta$G on average by 77\% over the 5 physical
 systems tested. By reducing the $\lambda$ windows on average by 32\%, we
 reduce execution time by the same amount. The adaptive termination
 implementation of the TIES protocol saves compute resources and reduces time
