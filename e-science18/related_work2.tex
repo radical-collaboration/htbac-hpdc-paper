@@ -21,12 +21,40 @@ random walk in state space~\cite{Lyubartsev1992}. Approaches that learn by
 exchanging information have been found to improve sampling results and
 decorrolate as fast or faster than standard simulations.
 
-In binding affinity calculations sampling is performed
-at discrete regions along the transformation between the two compounds.
-The choice of where exactly this sampling occurs is a key
-determinant of the uncertainty in and accuracy of the
-calculations~\cite{Ruiter2013, Ruiter2016}. Increasing simulations in regions of 
-most rapid change reduces errors on the predicated binding affinity.
+In binding affinity calculations sampling is performed at discrete regions
+along the transformation between the two compounds. The choice of where
+exactly this sampling occurs is a key determinant of the uncertainty in and
+accuracy of the calculations~\cite{Ruiter2013, Ruiter2016}. Increasing
+simulations in regions of most rapid change reduces errors on the predicated
+binding affinity.
+
+Computing the binding free energy of a large number of drug candidate involves
+a hierarchy of computational processes and activites: at the lowest level is
+the specific {\bf algorithm} (or equivalentally {\bf protocol}) that is used
+to compute the binding free energy of a single drug candidate. There are
+multiple protocols that can be used, each comes with its specific trade-offs.
+For example, TIES and ESMACS are two protocols to compute binding affinities
+that differ in their accuracy but also their computational cost. The
+computational instance implementing a protocol -- specific parameter values,
+number of simulations and other specific computational aspects of that the
+protocol constitute the {\bf workflow}. A given binding affinity calculation
+for a given drug candidate can be computed using different workflows. A
+workflow may be fully specified a priori, or it may adapt some aspect, say
+parameters as a consequence of intermediate results. Typically, there is a
+1-to-many relationship between protocol and workflows. When multiple drug
+candidates need to be evaluated with certain constraints and a defined
+objective The entire computational activity, e.g., computing binding
+affinities for multiple drug candidates, which need to be evaluated with
+certain constraints and a defined objective is referred to as a {\bf
+computational campaign}.
+
+The objective of the computational campaign of relevance to this paper is to
+maximize the number of drug candidates for which the binding affinity of each
+inidividual candidate is determined to within a (given) acceptable level of
+error. The campaign is constrained by the computational resources available
+(measured in thousand of core-hours). To meet this objective, each workflow
+computing the binding affinity of a drug candidate is adaptively executed.
+
 
 Executing scalable and adaptive simulation methods directly on High
 Performance Computers (HPCs) and other infrastructures using ensemble-based

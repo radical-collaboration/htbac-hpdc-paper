@@ -31,24 +31,24 @@ integration approach as implemented in NAMD \cite{Phillips2005, Straatsma1991}.
 These protocols have demonstrated statistically meaningful results for 
 industrial computational drug campaign~\cite{Wan2017brd4}.
 
-In recent years considerable effort has been put into improving the efficiency 
-\jhanote{Efficiency as measured by what?}
-of free energy calculations \cite{Klimovich2015, Naden2016, Kaus2013}.
 % Nonetheless many, perhaps most, computational campaigns are executed in a fire 
 % and forget manner which consumes core hours in inefficient ways.
-As drug screening campaigns can cover millions of compounds and hundreds of
-millions of core-hours, it is important that these calculations be effective
-and aim to optimize the accuracy and precision of results.
-This is challenging as, by definition, drug discovery involves
-screening compounds that are highly varied and potentially unique in their
-chemical properties. The variability in the drug candidate chemistry results
-in diverse sampling behavior that contributes to the statistical uncertainty of
-binding free energy predictions.
-Further, a particular difficulty comes from
-the fact that not all changes induced in protein shape or behavior are local
-to the drug binding site and, in some cases, simulation protocols will need
-to adjust to account for complex interactions between drugs and their targets
-within individual studies.
+
+%\jhanote{Efficiency as measured by what?}
+
+In recent years considerable effort has been put into improving the efficiency
+of free energy calculations~\cite{Klimovich2015, Naden2016, Kaus2013}. As drug
+screening campaigns can cover millions of compounds and hundreds of millions
+of core-hours, it is important that these calculations be effective and aim to
+optimize the accuracy and precision of results. This is challenging as, by
+definition, drug discovery involves screening compounds that are highly varied
+and potentially unique in their chemical properties. The variability in the
+drug candidate chemistry results in diverse sampling behavior that contributes
+to the statistical uncertainty of binding free energy predictions. Further, a
+particular difficulty comes from the fact that not all changes induced in
+protein shape or behavior are local to the drug binding site and, in some
+cases, simulation protocols will need to adjust to account for complex
+interactions between drugs and their targets within individual studies.
 
 Traditionally, simulation protocols have been deployed with the worst case
 scenario and with sufficient sampling conducted to account for the slowest
