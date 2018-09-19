@@ -66,11 +66,16 @@ before runtime.
 Another driver of adaptivity is that, on occasion, alchemical methods may
 converge very slowly. This means that the most effective way to gain accurate
 and precise free energy results on industrially or clinically relevant
-timescales is to adapt both sampling (\textbf{intra-protocol}) and the type
-of calculation (\textbf{inter-protocol}) used at runtime. With potentially
-thousands of simulations, often employing multiple analysis methodologies,
-this provides the most effective way to utilize these techniques and
-resources at scale.
+timescales is to adapt either the workflow corresponding to a specific
+protocol or adapt different workflows in relation to each other. The latter is
+referred to as \textbf{inter-protocol} adaptivity; the former as
+\textbf{intra-protocol} wherein, for example, the parameter values associated
+with a specific protocol might change. With thousands of workflows
+(corresponding to a protocol instances) to adapt in different ways, this has
+the potential to allow for significant optimization.
+
+% simulations, often employing multiple analysis methodologies, this provides
+% the most effective way to utilize these techniques and resources at scale.
 
 In TIES, the change in free energy associated with the transformation is
 calculated using an adaptive quadrature function which numerically integrates
@@ -93,9 +98,11 @@ $\lambda$ windows is likely to better capture the shape of the $\partial
 U/\partial\lambda$ curve, leading to more accurate and precise results for a
 comparable computational cost.
 
-In this work, we use adaptive middleware to automate runtime decisions based
-on partial simulation data, and redistribute resources at runtime to support
-dynamically generated simulations. We focus on intra-protocol adaptivity
+% we use adaptive middleware to automate runtime decisions based
+% on partial simulation data, and redistribute resources at runtime to support
+% dynamically generated simulations. We
+
+In this work, we focus on intra-protocol adaptivity
 which relies on intermediate runtime results \textit{within} a protocol
 instance to define the following set of simulations. Instead of approximating
 the placement of all the $\lambda$ windows prior to execution, we run TIES
