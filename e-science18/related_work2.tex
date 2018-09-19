@@ -1,109 +1,62 @@
-Free-energy calculations using MD simulations occur in
-a wide range of research including protein folding and assessing small molecule 
-binding. Free-energy calculation require three main components: 
-(1) suitable model Hamiltonian; (2) sampling protocol;
-and (3) estimator for free energy. Several approaches to computing binding
-free energies exist, amongst which relative binding free energy (or binding
-affinity) calculations are generating accurate predictions, delivering
-considerable promise for computational drug campaigns~\cite{Karplus2005}.
+Free-energy calculations using MD simulations occur in a wide range of
+research including protein folding and assessing small molecule binding.
+Free-energy calculation require three main components: (1) suitable
+Hamiltonian model; (2) sampling protocol; and (3) estimator of free energy.
+Several approaches to computing binding free energies exist, amongst which
+relative binding free energy (or binding affinity) calculations are
+generating accurate predictions, delivering considerable promise for
+computational drug campaigns~\cite{Karplus2005}.
 
 Ensemble-based simulations have been shown to reduce the sampling time
 required to deliver the precision necessary to meet the requirements of drug
-design campaigns. Several ensemble-based methods are widely used to compute 
-binding free energies, studying different problem spaces. For example, a popular 
-approach is to use Markov state models to learn a simplified representation of 
-the explored phase space and to choose which regions should be further 
-sampled~\cite{Bowman2010}. Replica exchange with solute tempering use the 
-Metropolis-Hastings criteria to make periodic decisions about what regions of 
-the phase space to sample~\cite{Earl2005,Hritz2008,Kim2012}. In
+design campaigns. Several ensemble-based methods are widely used to compute
+binding free energies, studying different problem spaces. For example, a
+popular approach is to use Markov state models to learn a simplified
+representation of the explored phase space and to choose which regions should
+be further sampled~\cite{Bowman2010}. Replica exchange with solute tempering
+use the Metropolis-Hastings criteria to make periodic decisions about what
+regions of the phase space to sample~\cite{Earl2005,Hritz2008,Kim2012}. In
 expanded ensemble simulations, thermodynamic states are explored via a biased
 random walk in state space~\cite{Lyubartsev1992}. Approaches that learn by
 exchanging information have been found to improve sampling results and
-decorrolate as fast or faster than standard simulations.
+decorrelate as fast or faster than standard simulations.
 
 In binding affinity calculations sampling is performed at discrete regions
 along the transformation between the two compounds. The choice of where
 exactly this sampling occurs is a key determinant of the uncertainty in and
-accuracy of the calculations~\cite{Ruiter2013, Ruiter2016}. Increasing
+accuracy of the calculations~\cite{Ruiter2013,Ruiter2016}. Increasing
 simulations in regions of most rapid change reduces errors on the predicated
 binding affinity.
 
-Computing the binding free energy of a large number of drug candidate involves
-a hierarchy of computational processes and activites: at the lowest level is
-the specific {\bf algorithm} (or equivalentally {\bf protocol}) that is used
-to compute the binding free energy of a single drug candidate. There are
-multiple protocols that can be used, each comes with its specific trade-offs.
-For example, TIES and ESMACS are two protocols to compute binding affinities
-that differ in their accuracy but also their computational cost. The
-computational instance implementing a protocol -- specific parameter values,
-number of simulations and other specific computational aspects of that the
-protocol constitute the {\bf workflow}. A given binding affinity calculation
-for a given drug candidate can be computed using different workflows. A
-workflow may be fully specified a priori, or it may adapt some aspect, say
-parameters as a consequence of intermediate results. Typically, there is a
-1-to-many relationship between protocol and workflows. When multiple drug
-candidates need to be evaluated with certain constraints and a defined
-objective The entire computational activity, e.g., computing binding
-affinities for multiple drug candidates, which need to be evaluated with
-certain constraints and a defined objective is referred to as a {\bf
-computational campaign}.
+Computing the binding free energy of a large number of drug candidate
+involves a hierarchy of computational processes and activities: at the lowest
+level is the specific \textbf{algorithm} (or equivalently \textbf{protocol})
+that is used to compute the binding free energy of a single drug candidate.
+There are multiple protocols that can be used, each comes with its specific
+trade-offs. For example, TIES and ESMACS are two protocols to compute binding
+affinities that differ in their accuracy but also their computational cost.
+The computational instance implementing a protocol with specific parameter
+values, number of simulations and other computational aspects of that
+protocol, constitutes a \textbf{workflow}. A workflow may be fully specified
+a priori, or it may adapt one or more of its aspect, say parameters, as a
+consequence of intermediate results. Typically, there is a 1-to-many
+relationship between protocol and workflows and different workflows can be
+used to compute a given binding affinity calculation for a given drug
+candidate.
 
-The objective of the computational campaign of relevance to this paper is to
-maximize the number of drug candidates for which the binding affinity of each
-inidividual candidate is determined to within a (given) acceptable level of
-error. The campaign is constrained by the computational resources available
-(measured in thousand of core-hours). To meet this objective, each workflow
-computing the binding affinity of a drug candidate is adaptively executed.
+When multiple drug candidates need to be evaluated with certain constraints
+and a defined objective, the entire computational activity (i.e., computing
+binding affinities for multiple drug candidates) is referred to as a
+\textbf{computational campaign}. The objective of the computational campaign
+of relevance to this paper is to maximize the number of drug candidates for
+which the binding affinity of each individual candidate is determined to
+within a (given) acceptable level of error. The campaign is constrained by
+the computational resources available, measured in thousand of core-hours. To
+meet this objective, each workflow computing the binding affinity of a drug
+candidate is adaptively executed.
 
-Executing scalable and adaptive simulation methods directly HPC using
-ensemble-based methods presents several
-challenges~\cite{cosb18,adaptivebiomolecular}. HTBAC is motivated by these
-specific challenges in the context of a computational campaign to compute
+Executing scalable and adaptive simulation methods on production-grade HPC
+resources using ensemble-based methods presents several
+challenges~\cite{cosb18,adaptivebiomolecular}. HTBAC addresses these
+challenges in the context of a computational campaign to compute
 ensemble-based free energy methods.
-
-
-% By designing ensemble-based methods to use MPI, it is difficult to implement
-% existing applications in other programming models. This is especially the
-% case when running ensemble-based methods on clouds. The ensemble-based
-% methods designed using MPI specifically on HPCs cannot be transported without
-% rewriting the algorithm to fit into a specific programming model such as
-% MapReduce.
-
-% As we reach higher scales of concurrency required by ensemble-based methods,
-% the use of middleware becomes a necessity in order to provide reliable
-% coordination and distribution mechanisms and low performance overheads. Some
-% existing software tools enable execution of ensemble-based methods on HPCs,
-% yet only offer end-to-end solutions and lack in providing portability and
-% flexibility, bounding the user to a particular infrastructure. In
-% domain-specific projects or languages, the user is limited to
-% adaptive features that target specific adaptive sampling methods, and require
-% explicit management of resources.
-
-% Domain scientists who wish to create adaptive methods require a solution that
-% provides the flexibility to create ensemble-based free energy
-% calculations with the ability to incorporate user-defined adaptivity. 
-
-
-% \begin{itemize}
-%   \item Binding affinity calculations in general
-%   \item Binding affinity using ensemble approach
-%   \item How are people doing scalable binding affinity calculations
-%   currently
-%   \item Overview of adaptive algorithms used for free energy calculations
-%   i.e. MSM, REST, EE
-%   \item How are adaptive algorithms managed
-%   \item What are the existing tools: HPCs: MPI mainly, clouds and
-%   ensemble-based middleware
-%   \item Appreciate why ensemble-based methods are not done in clouds
-% \end{itemize}
-
-% In this approach the Hamiltonian used in the calculation is gradually
-% transformed from a description of an initial compound into that of a second
-% molecule and the difference in binding strength between the two is
-% computed.
-
-% The improvements in hardware, namely GPGPUs, are leveraging more rapid
-% simulations, however to deliver clinical insight for drug screening
-% campaigns requires more rapid timescales and better binding precision...
-% \jdnote{EnTK paper mentions D.E. Shaw paper on specialized hardware and
-% running single long simulation}
