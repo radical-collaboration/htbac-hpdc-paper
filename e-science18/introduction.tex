@@ -46,40 +46,59 @@ local to the drug binding site and, in some cases, simulation protocols will
 need to adjust to account for complex interactions between drugs and their
 targets within individual studies.
 
-Traditionally, simulation protocols have been deployed with the worst case
-scenario and with sufficient sampling conducted to account for the slowest
-convergence previously encountered. This approach has at least two
-shortcomings: it potentially wastes valuable computational resources  and
-fails to account for the different value of the simulations results. For
-example, in a drug campaign it is more important to understand how strong is
-the binding of the best compound candidates than precisely know how weak is
-the interactions of the worst compound.
+Traditionally, the simulated duration of free energy calculation are
+conservatively determined to account for likely slowest convergence and worst
+case scenarios. This approach has at least two shortcomings: it potentially
+wastes valuable computational resources  and fails to account for the
+different value of the simulations results. For example, in a drug campaign it
+is more important to understand how strong is the binding of the best compound
+candidates than precisely know how weak is the interactions of the worst
+compound.
+
+
+% Traditionally, simulation protocols have been deployed with the worst case
+% scenario and with sufficient sampling conducted to account for the slowest
+% convergence previously encountered. This approach has at least two
+% shortcomings: it potentially wastes valuable computational resources  and
+% fails to account for the different value of the simulations results. For
+% example, in a drug campaign it is more important to understand how strong is
+% the binding of the best compound candidates than precisely know how weak is
+% the interactions of the worst compound.
+
 
 Key to successful campaigns is identifying when small chemical changes result
-in large binding strength changes. This can mean that the parameters which
-are important to campaigns evolve as the study progresses. Here we show how
-adaptive approaches within ensemble-based free energy protocols can be
-designed to capture unique chemical properties and thereby customize the
-simulations for a candidate to make the most effective use of computational
-resources, delivering better fidelity of statistical uncertainties than
-general approaches.
+in large binding strength changes. This can mean that the parameters which are
+important to campaigns evolve as the study progresses. Here we show how
+adaptive approaches using ensemble-based free energy protocols can be designed
+to capture unique chemical properties and customize the simulations for a
+candidate to make the most effective use of computational resources, thereby
+improving statistical uncertainties.
 
-Implementation of adaptive algorithms on high performance computers (HPC)
-require runtime systems that support adaptivity, i.e., provide the ability to
-make runtime decisions based on intermediate results and can manage resources
-efficiently. To achieve scalability and efficiency, such adaptivity cannot be
-performed via user intervention and hence automation of the control logic and
-execution is important. We have developed the High-Throughput Binding
-Affinity Calculator (HTBAC) to enable the scalable execution of adaptive
-algorithms.
+Adaptive approaches on high performance computers (HPC) require software
+systems that make runtime decisions based on intermediate
+results~\cite{cosb18,adaptivebiomolecular}. To achieve scalability and
+efficiency, these software systems must also support efficient dynamic
+resource allocation. Further, such adaptivity cannot be performed via user
+intervention and hence automation of the control logic and execution is
+important. We have developed the High-Throughput Binding Affinity Calculator
+(HTBAC) to enable the scalable execution of adaptive algorithms.
 
-This paper identifies the challenge in advancing adaptive methodologies. It
-makes three main contributions: (1) shows the importance of using adaptive
-approaches within ensemble-based free energy protocols to improve binding
-affinity accuracy given a fixed amount of computing resources; (2) presents
-and characterizes HTBAC, a software system that enables the scalable
-execution of adaptive applications; and (3) shows the capability to execute
-adaptive applications at scale, validating their scientific results.
+This paper makes three main contributions: (1) shows the importance of
+adaptive execution for ensemble-based free energy protocols to improve binding
+affinity accuracy; (2) presents and characterizes HTBAC, a software system
+that enables the scalable and adaptive execution of binding affinity protocols
+at scale; and (3) for a widely used free-energy protocol (TIES), shows
+improvements in the accuracy of simulations for a fixed amount of resource, or
+reduced resource consumption for a fixed accuracy as a consequence of adaptive
+execution.
+
+
+% This paper makes three main contributions: (1) shows the importance of using
+% adaptive approaches within ensemble-based free energy protocols to improve
+% binding affinity accuracy; (2) presents and characterizes HTBAC, a software
+% system that enables the scalable execution of adaptive applications; and (3)
+% shows improvements in the accuracy of simulations for a fixed amount of
+% resource as a consequence of adaptive execution at scale.
 
 This paper is organized as follows: Section~\ref{sec:science-drivers}
 introduces ESMACS and TIES, two ensemble-based free energy protocols, arguing
