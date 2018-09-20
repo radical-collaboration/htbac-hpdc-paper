@@ -1,6 +1,6 @@
 Free-energy calculations using MD simulations occur in a wide range of
 research including protein folding and assessing small molecule binding.
-Free-energy calculation require three main components: (1) suitable
+Free-energy calculations require three main components: (1) suitable
 Hamiltonian model; (2) sampling protocol; and (3) estimator of free energy.
 Several approaches to computing binding free energies exist, amongst which
 relative binding free energy (or binding affinity) calculations are
@@ -28,18 +28,20 @@ accuracy of the calculations~\cite{Ruiter2013,Ruiter2016}. Increasing
 simulations in regions of most rapid change reduces errors on the predicated
 binding affinity.
 
-Computing the binding free energy of a large number of drug candidate
-involves a hierarchy of computational processes and activities: at the lowest
-level is the specific \textbf{algorithm} (or equivalently \textbf{protocol})
-that is used to compute the binding free energy of a single drug candidate.
-There are multiple protocols that can be used, each comes with its specific
-trade-offs. For example, TIES and ESMACS are two protocols to compute binding
-affinities that differ in their accuracy but also their computational cost.
-The computational instance implementing a protocol with specific parameter
-values, number of simulations and other computational aspects of that
-protocol, constitutes a \textbf{workflow}. A workflow may be fully specified
-a priori, or it may adapt one or more of its aspect, say parameters, as a
-consequence of intermediate results. Typically, there is a 1-to-many
+Using ensemble-based methods to compute binding affinities of a large number
+of drug candidate involves a hierarchy of computational processes: at the
+lowest level is the specific molecular dynamics (MD) simulation using an MD
+engine, such as Gromacs or AMBER. An ensemble-based \textbf{algorithm} (or
+equivalently \textbf{protocol}) is comprised of multiple such MD simulations
+that are collectively used to compute the binding free energy of a single drug
+candidate. There are multiple protocols that can be used, each comes with its
+specific trade-offs. For example, TIES and ESMACS are two protocols to compute
+binding affinities that differ in their accuracy but also their computational
+cost. The computational instance implementing a protocol with specific
+parameter values, number of simulations and other computational aspects of
+that protocol, constitutes a \textbf{workflow}. A workflow may be fully
+specified a priori, or it may adapt one or more of its properties, say parameters,
+as a consequence of intermediate results. Typically, there is a 1-to-many
 relationship between protocol and workflows and different workflows can be
 used to compute a given binding affinity calculation for a given drug
 candidate.
