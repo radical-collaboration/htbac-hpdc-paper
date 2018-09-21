@@ -1,7 +1,7 @@
 Typically, a computational campaign for drug discovery explores a large
 number of drug candidates by running several workflows multiple times, each
 requiring thousands of concurrent simulations. Before embarking on a campaign
-that will utilize 150 million core hours on NCSA Blue Waters, we perform
+that will utilize 150 million core-hours on NCSA Blue Waters, we perform
 experiments to characterize the weak and strong scaling performance of HTBAC
 and its overheads on Blue Waters. We validate the results of the free energy
 calculations produced using HTBAC against published results.
@@ -217,7 +217,7 @@ into 4 sub-stages of 500000 time-steps each.
 
 We performed all the experiments on Blue Waters, a 26868 node Cray XE6/XK6
 SuperComputer with peak performance of 13.3 petaFLOPS managed by NCSA.
-consistent with NCSA policies, we initiated the experiments from a virtual
+Consistent with NCSA policies, we initiated the experiments from a virtual
 machine outside NCSA, avoiding to run persistent process on the NCSA login
 node. We used HTBAC 0.1, EnTK 0.6, and RP 0.47 and the \texttt{NAMD-MPI} MD
 kernel, and launched via the \texttt{aprun} command. For the analysis stages
@@ -251,7 +251,7 @@ failures that contribute to a slight degradation in performance.
   \centering
     \includegraphics[width=\columnwidth]{figures/ws_all_base2.pdf}
     \caption{Weak scaling of HTBAC. The ratio number of protocol instances to
-    resources is constant. Task Execution Time with and HTBAC, EnTK+RP,
+    resources is constant. Task Execution Time, and HTBAC, EnTK+RP,
     \texttt{aprun} overheads with (a) TIES (Experiment 1), (b) ESMACS
     (Experiment 2), and (c) TIES and ESMACS (Experiment 3).}\label{fig:ws}
 \up{}
@@ -349,7 +349,7 @@ overheads (Ref.~\cite{merzky2018}).
   \centering
    \includegraphics[width=\columnwidth]{figures/ss_all_base2.pdf}
    \caption{Strong scaling of HTBAC. The number of protocol instances is
-    fixed while the number of core increases. Task Execution Time with and
+    fixed while the number of cores increases. Task Execution Time, and
     HTBAC, EnTK+RP, \texttt{aprun} overheads with (a) TIES (Experiment 4),
     ESMACS (Experiment 5) and ESMACS + TIES (Experiment 6).}\label{fig:ss}
 \up{}
@@ -409,7 +409,7 @@ obtain more accurate scientific results.
 The aim of introducing adaptive quadrature for alchemical free energy
 calculation protocols (e.g., TIES) is to reduce time to completion while
 maintaining (or increasing) the accuracy of the results. Time to completion
-is measured by the number of core hours consumed by the simulations. Accuracy
+is measured by the number of core-hours consumed by the simulations. Accuracy
 is defined as the error with respect to a reference value, calculated via a
 dense $\lambda$ window spacing (65 windows). This reference value is used to
 establish the accuracy of the non-adaptive protocol (which has 13 $\lambda$

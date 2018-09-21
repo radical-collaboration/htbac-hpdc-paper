@@ -110,7 +110,7 @@ applications~\cite{power-of-many17}. EnTK exposes three constructs:
 \textbf{Task}, \textbf{Stage} and \textbf{Pipeline}. Tasks contain
 information regarding an executable, its software environment and its data
 dependencies. Stages are sets of tasks without mutual dependencies that can
-execute concurrently. Pipeline are lists of stages, where stages can execute
+execute concurrently. Pipelines are lists of stages, where stages can execute
 only sequentially. Pipelines can execute independently. HTBAC uses a
 Middleware Connector for EnTK to encode a protocol instance as a single
 pipeline that contains stages of individual simulations and analyses tasks.
@@ -118,7 +118,7 @@ pipeline that contains stages of individual simulations and analyses tasks.
 EnTK is designed to be coupled with different runtime systems. In this paper,
 EnTK uses RP to execute tasks via pilots. RP supports task-level parallelism
 and high-throughput by acquiring resources from a computing infrastructure
-and scheduling tasks on those resources for execution. RP uses RADICAL SAGA
+and scheduling tasks on those resources for execution. RP uses RADICAL-SAGA
 to interface with several resource managers, including SLURM, PBS (pro), and
 LSF. Pilot systems execute tasks directly on the resources, without queuing
 them on the infrastructure's scheduler.
